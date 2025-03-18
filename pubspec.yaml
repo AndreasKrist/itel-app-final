@@ -29,6 +29,8 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   url_launcher: ^6.2.1
+  table_calendar: ^3.0.9
+
   
   flutter:
     sdk: flutter

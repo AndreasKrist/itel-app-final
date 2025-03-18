@@ -50,6 +50,12 @@ class User {
     );
   }
 
+  // Add a static variable to track if the user is a guest
+  static bool isGuest = true;
+  
+  // Add a static variable to track if the user is authenticated
+  static bool isAuthenticated = false;
+
   static User currentUser = User(
     id: '1',
     name: 'Andreas Kristianto',

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../models/user.dart';
 import '../screens/course_detail_screen.dart';
+import '../models/schedule.dart';
+import 'login_screen.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -11,7 +14,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String activeTab = 'profile';
+  String activeTab = 'profile'; // Default tab is profile
+  bool _showCalendar = false;
+  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.now();
+  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   void _toggleFavorite(Course course) {
     setState(() {
@@ -27,142 +34,380 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  void _signOut() {
+    // Reset authentication state
+    User.isGuest = true;
+    User.isAuthenticated = false;
+    
+    // Navigate back to login screen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(
+          onLoginStatusChanged: (bool isLoggedIn) {
+            // This won't be called immediately since we're replacing the route
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Profile header
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.blue[700],
-            child: Row(
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: Colors.blue[100],
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      User.currentUser.name.split(' ').map((e) => e[0]).join(),
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue[700],
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Profile header
+              Container(
+                padding: const EdgeInsets.all(16),
+                color: Colors.blue[700],
+                child: Row(
+                  children: [
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: Colors.blue[100],
+                        shape: BoxShape.circle,
                       ),
+                      child: Center(
+                        child: Text(
+                          User.currentUser.name.split(' ').map((e) => e.isNotEmpty ? e[0] : '').join(),
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[700],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            User.currentUser.name,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                User.currentUser.tier == MembershipTier.pro
+                                    ? 'PRO Member'
+                                    : 'Standard Member',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                              if (User.currentUser.tier == MembershipTier.pro) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    'PRO',
+                                    style: TextStyle(
+                                      color: Colors.blue[700],
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.logout, color: Colors.white),
+                      onPressed: _signOut,
+                      tooltip: 'Sign Out',
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Tab selector
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey[200]!),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    _buildTabButton('Profile', 'profile'),
+                    _buildTabButton('My Courses', 'courses'),
+                    _buildTabButton('Membership', 'membership'),
+                  ],
+                ),
+              ),
+              
+              // Tab content
+              if (activeTab == 'profile')
+                _buildProfileTab()
+              else if (activeTab == 'courses')
+                _buildCoursesTab()
+              else if (activeTab == 'membership')
+                _buildMembershipTab(),
+            ],
+          ),
+        ),
+        
+        // Calendar overlay
+        if (_showCalendar)
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _showCalendar = false;
+              });
+            },
+            child: Container(
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {}, // Prevent taps from closing the overlay
+                  child: Container(
+                    margin: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Course Schedule',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue[800],
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  setState(() {
+                                    _showCalendar = false;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: TableCalendar(
+                            firstDay: DateTime.utc(2023, 1, 1),
+                            lastDay: DateTime.utc(2030, 12, 31),
+                            focusedDay: _focusedDay,
+                            calendarFormat: _calendarFormat,
+                            selectedDayPredicate: (day) {
+                              return isSameDay(_selectedDay, day);
+                            },
+                            onDaySelected: (selectedDay, focusedDay) {
+                              setState(() {
+                                _selectedDay = selectedDay;
+                                _focusedDay = focusedDay;
+                              });
+                            },
+                            onFormatChanged: (format) {
+                              setState(() {
+                                _calendarFormat = format;
+                              });
+                            },
+                            onPageChanged: (focusedDay) {
+                              _focusedDay = focusedDay;
+                            },
+                            eventLoader: (day) {
+                              // Return a list of events for the given day
+                              return Schedule.getDummySchedules()
+                                  .where((schedule) => isSameDay(schedule.date, day))
+                                  .toList();
+                            },
+                            calendarStyle: CalendarStyle(
+                              markerDecoration: BoxDecoration(
+                                color: Colors.blue[700],
+                                shape: BoxShape.circle,
+                              ),
+                              selectedDecoration: BoxDecoration(
+                                color: Colors.blue[700],
+                                shape: BoxShape.circle,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: Colors.blue[200],
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        
+                        // Events for selected day
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Sessions on ${_selectedDay.day}/${_selectedDay.month}/${_selectedDay.year}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.blue[800],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              
+                              // List events for the selected day
+                              ...Schedule.getDummySchedules()
+                                  .where((schedule) => isSameDay(schedule.date, _selectedDay))
+                                  .map((schedule) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(color: Colors.blue[100]!),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            schedule.title,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.access_time_filled, 
+                                                size: 14, 
+                                                color: Colors.blue[700]
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                '${schedule.startTime} - ${schedule.endTime}',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey[700],
+                                                ),
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Icon(Icons.location_on, 
+                                                size: 14, 
+                                                color: Colors.blue[700]
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                schedule.location ?? 'Online',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey[700],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ))
+                                  .toList(),
+                              
+                              if (Schedule.getDummySchedules()
+                                  .where((schedule) => isSameDay(schedule.date, _selectedDay))
+                                  .isEmpty)
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Text(
+                                      'No scheduled sessions',
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        User.currentUser.name,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            User.currentUser.tier == MembershipTier.pro
-                                ? 'PRO Member'
-                                : 'Standard Member',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          if (User.currentUser.tier == MembershipTier.pro) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                'PRO',
-                                style: TextStyle(
-                                  color: Colors.blue[700],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          // Tab selector
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(color: Colors.grey[200]!),
               ),
             ),
-            child: Row(
-              children: [
-                _buildTabButton('Profile', 'profile'),
-                _buildTabButton('My Courses', 'courses'),
-                _buildTabButton('Membership', 'membership'),
-              ],
-            ),
           ),
-          
-          // Tab content
-          if (activeTab == 'profile')
-            _buildProfileTab()
-          else if (activeTab == 'courses')
-            _buildCoursesTab()
-          else if (activeTab == 'membership')
-            _buildMembershipTab(),
-        ],
-      ),
+      ],
     );
   }
   
   Widget _buildTabButton(String title, String tabId) {
     final isActive = activeTab == tabId;
     
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          activeTab = tabId;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isActive ? Colors.blue[600]! : Colors.transparent,
-              width: 2,
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            activeTab = tabId;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: isActive ? Colors.blue[600]! : Colors.transparent,
+                width: 2,
+              ),
             ),
           ),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: isActive ? Colors.blue[600] : Colors.grey[600],
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: isActive ? Colors.blue[600] : Colors.grey[600],
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ),
       ),
@@ -170,7 +415,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
   
   Widget _buildProfileTab() {
-    final courseHistory = Course.userCourseHistory;
+    final upcomingSchedules = Schedule.getDummySchedules();
+    final ongoingCourses = Course.userCourseHistory.where((course) => course.progress != null).toList();
+    final completedCourses = Course.userCourseHistory.where((course) => course.completionDate != null).toList();
     
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -212,6 +459,174 @@ class _ProfileScreenState extends State<ProfileScreen> {
           
           const SizedBox(height: 24),
           
+          // Dashboard Section
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Learning Dashboard',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                
+                // Stats Cards
+                Row(
+                  children: [
+                    _buildStatCard(
+                      'In Progress',
+                      '${ongoingCourses.length}',
+                      Icons.pending_actions,
+                      Colors.orange,
+                    ),
+                    const SizedBox(width: 12),
+                    _buildStatCard(
+                      'Completed',
+                      '${completedCourses.length}',
+                      Icons.check_circle,
+                      Colors.green,
+                    ),
+                    const SizedBox(width: 12),
+                    _buildStatCard(
+                      'Upcoming',
+                      '${upcomingSchedules.length}',
+                      Icons.event,
+                      Colors.blue,
+                    ),
+                  ],
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Upcoming Schedule
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Upcoming Schedule',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _showCalendar = true;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.blue[200]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_month,
+                              size: 16,
+                              color: Colors.blue[700],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'View Calendar',
+                              style: TextStyle(
+                                color: Colors.blue[700],
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                
+                if (upcomingSchedules.isEmpty)
+                  _buildEmptyState(
+                    'No upcoming sessions',
+                    'Your scheduled learning sessions will appear here',
+                    Icons.event_busy,
+                  )
+                else
+                  Column(
+                    children: upcomingSchedules
+                        .take(2)
+                        .map((schedule) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: _buildScheduleCard(schedule),
+                            ))
+                        .toList(),
+                  ),
+                  
+                if (upcomingSchedules.length > 2)
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _showCalendar = true;
+                      });
+                    },
+                    child: Text(
+                      'View More',
+                      style: TextStyle(
+                        color: Colors.blue[700],
+                      ),
+                    ),
+                  ),
+                
+                const SizedBox(height: 16),
+                
+                // Course Progress
+                if (ongoingCourses.isNotEmpty) ...[
+                  Text(
+                    'Course Progress',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  Column(
+                    children: ongoingCourses
+                        .map((course) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: _buildDetailedCourseProgressCard(course),
+                            ))
+                        .toList(),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 24),
+          
           // Course History
           Text(
             'Course History',
@@ -222,139 +637,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 12),
           
-          if (courseHistory.isEmpty)
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Center(
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.history,
-                      size: 48,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'No course history yet',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Your completed courses will appear here',
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 14,
-                      ),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: Course.userCourseHistory.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final course = Course.userCourseHistory[index];
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-              ),
-            )
-          else
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: courseHistory.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final course = courseHistory[index];
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          if (course.certType != null) ...[
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[50],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                course.certType!,
-                                style: TextStyle(
-                                  color: Colors.blue[700],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        if (course.certType != null) ...[
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
                             ),
-                            const SizedBox(width: 8),
-                          ],
-                          Expanded(
+                            decoration: BoxDecoration(
+                              color: Colors.blue[50],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             child: Text(
-                              course.title,
-                              style: const TextStyle(
-                                fontSize: 16,
+                              course.certType!,
+                              style: TextStyle(
+                                color: Colors.blue[700],
                                 fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
                             ),
                           ),
+                          const SizedBox(width: 8),
                         ],
-                      ),
-                      const SizedBox(height: 8),
-                      if (course.completionDate != null)
-                        Text(
-                          'Completed ${course.completionDate}',
-                          style: TextStyle(
-                            color: Colors.green[700],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      else if (course.progress != null)
-                        Text(
-                          course.progress!,
-                          style: TextStyle(
-                            color: Colors.orange[700],
-                            fontWeight: FontWeight.w500,
+                        Expanded(
+                          child: Text(
+                            course.title,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.book,
-                            size: 16,
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    if (course.completionDate != null)
+                      Text(
+                        'Completed ${course.completionDate}',
+                        style: TextStyle(
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    else if (course.progress != null)
+                      Text(
+                        course.progress!,
+                        style: TextStyle(
+                          color: Colors.orange[700],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.book,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Course Code: ${course.courseCode}',
+                          style: TextStyle(
                             color: Colors.grey[600],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Course Code: ${course.courseCode}',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
           
           const SizedBox(height: 24),
           
@@ -376,6 +754,435 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+  
+  Widget _buildStatCard(String title, String value, IconData icon, MaterialColor color) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color[100]!),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: color[700],
+              size: 24,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: color[800],
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                color: color[800],
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildScheduleCard(Schedule schedule) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.blue[50],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  schedule.date.day.toString(),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[700],
+                  ),
+                ),
+                Text(
+                  _getMonthAbbreviation(schedule.date.month),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.blue[700],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  schedule.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  schedule.courseTitle,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: Colors.grey[500],
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${schedule.startTime} - ${schedule.endTime}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: schedule.isPending ? Colors.orange[50] : Colors.green[50],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: schedule.isPending ? Colors.orange[200]! : Colors.green[200]!,
+              ),
+            ),
+            child: Text(
+              schedule.isPending ? 'Upcoming' : 'Confirmed',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: schedule.isPending ? Colors.orange[800] : Colors.green[800],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildDetailedCourseProgressCard(Course course) {
+    // Extract progress percentage from the progress string
+    final progressRegex = RegExp(r'(\d+)%');
+    final match = progressRegex.firstMatch(course.progress ?? '0% complete');
+    final progressPercent = match != null 
+        ? double.parse(match.group(1) ?? '0') / 100 
+        : 0.0;
+    
+    // Generate a list of course outline with current progress
+    final outlineList = course.outline != null 
+        ? course.outline!.entries.expand((entry) => entry.value.map((item) => {'section': entry.key, 'item': item})).toList()
+        : [];
+    
+    // Calculate which items are completed based on progress
+    final completedItemCount = (outlineList.length * progressPercent).round();
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (course.certType != null) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    course.certType!,
+                    style: TextStyle(
+                      color: Colors.blue[700],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
+              Expanded(
+                child: Text(
+                  course.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                course.courseCode,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          // Progress bar
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Progress',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          course.progress ?? '',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.blue[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Stack(
+                      children: [
+                        Container(
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        FractionallySizedBox(
+                          widthFactor: progressPercent,
+                          child: Container(
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: Colors.blue[600],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Course duration
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_today,
+                size: 14,
+                color: Colors.grey[600],
+              ),
+              const SizedBox(width: 4),
+              Text(
+                'Course duration: ${course.duration}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                Icons.timer,
+                size: 14,
+                color: progressPercent >= 0.5 ? Colors.green[600] : Colors.orange[600],
+              ),
+              const SizedBox(width: 4),
+              Text(
+                progressPercent >= 0.5 
+                    ? 'On track to complete' 
+                    : 'Next session in 2 days',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: progressPercent >= 0.5 ? Colors.green[600] : Colors.orange[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Upcoming outline items
+          if (completedItemCount < outlineList.length) ...[
+            Text(
+              'Coming up next:',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
+              ),
+            ),
+            const SizedBox(height: 8),
+            
+            ...outlineList
+                .skip(completedItemCount)
+                .take(2)
+                .map((item) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.circle,
+                        size: 10,
+                        color: Colors.orange[400],
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '${item['item']}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ))
+                .toList(),
+          ],
+          
+          const SizedBox(height: 12),
+          
+          // View details button
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CourseDetailScreen(course: course),
+                  ),
+                );
+              },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                'Course Details',
+                style: TextStyle(
+                  color: Colors.blue[600],
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              size: 32,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: Colors.grey[500],
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  String _getMonthAbbreviation(int month) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[month - 1];
   }
   
   Widget _buildCoursesTab() {
