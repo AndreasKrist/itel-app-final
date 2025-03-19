@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../models/user.dart';
-import '../screens/course_detail_screen.dart';
 import '../models/schedule.dart';
-import 'login_screen.dart';
+import 'course_outline_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final VoidCallback onSignOut;
+
+  const ProfileScreen({
+    super.key,
+    required this.onSignOut,
+  });
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -32,24 +36,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         favoriteCoursesIds: updatedFavorites,
       );
     });
-  }
-
-  void _signOut() {
-    // Reset authentication state
-    User.isGuest = true;
-    User.isAuthenticated = false;
-    
-    // Navigate back to login screen
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LoginScreen(
-          onLoginStatusChanged: (bool isLoggedIn) {
-            // This won't be called immediately since we're replacing the route
-          },
-        ),
-      ),
-    );
   }
 
   @override
@@ -135,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.logout, color: Colors.white),
-                      onPressed: _signOut,
+                      onPressed: widget.onSignOut,
                       tooltip: 'Sign Out',
                     ),
                   ],
@@ -417,6 +403,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildProfileTab() {
     final upcomingSchedules = Schedule.getDummySchedules();
     final ongoingCourses = Course.userCourseHistory.where((course) => course.progress != null).toList();
+    // Only show completed courses in course history
     final completedCourses = Course.userCourseHistory.where((course) => course.completionDate != null).toList();
     
     return Padding(
@@ -627,7 +614,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           
           const SizedBox(height: 24),
           
-          // Course History
+          // Course History - Show only completed courses
           Text(
             'Course History',
             style: TextStyle(
@@ -637,102 +624,101 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 12),
           
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: Course.userCourseHistory.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final course = Course.userCourseHistory[index];
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        if (course.certType != null) ...[
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
+          if (completedCourses.isEmpty)
+            _buildEmptyState(
+              'No completed courses',
+              'Your completed courses will appear here',
+              Icons.school,
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: completedCourses.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final course = completedCourses[index];
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          if (course.certType != null) ...[
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[50],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                course.certType!,
+                                style: TextStyle(
+                                  color: Colors.blue[700],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          Expanded(
                             child: Text(
-                              course.certType!,
-                              style: TextStyle(
-                                color: Colors.blue[700],
+                              course.title,
+                              style: const TextStyle(
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
                         ],
-                        Expanded(
-                          child: Text(
-                            course.title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      if (course.completionDate != null)
+                        Text(
+                          'Completed ${course.completionDate}',
+                          style: TextStyle(
+                            color: Colors.green[700],
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    if (course.completionDate != null)
-                      Text(
-                        'Completed ${course.completionDate}',
-                        style: TextStyle(
-                          color: Colors.green[700],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
-                    else if (course.progress != null)
-                      Text(
-                        course.progress!,
-                        style: TextStyle(
-                          color: Colors.orange[700],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.book,
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Course Code: ${course.courseCode}',
-                          style: TextStyle(
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.book,
+                            size: 16,
                             color: Colors.grey[600],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Course Code: ${course.courseCode}',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           
           const SizedBox(height: 24),
           
@@ -902,244 +888,246 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
   
-  Widget _buildDetailedCourseProgressCard(Course course) {
-    // Extract progress percentage from the progress string
-    final progressRegex = RegExp(r'(\d+)%');
-    final match = progressRegex.firstMatch(course.progress ?? '0% complete');
-    final progressPercent = match != null 
-        ? double.parse(match.group(1) ?? '0') / 100 
-        : 0.0;
-    
-    // Generate a list of course outline with current progress
-    final outlineList = course.outline != null 
-        ? course.outline!.entries.expand((entry) => entry.value.map((item) => {'section': entry.key, 'item': item})).toList()
-        : [];
-    
-    // Calculate which items are completed based on progress
-    final completedItemCount = (outlineList.length * progressPercent).round();
-    
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              if (course.certType != null) ...[
+// Replace the _buildDetailedCourseProgressCard method in ProfileScreen with this updated version
+
+Widget _buildDetailedCourseProgressCard(Course course) {
+  // Extract progress percentage from the progress string
+  final progressRegex = RegExp(r'(\d+)%');
+  final match = progressRegex.firstMatch(course.progress ?? '0% complete');
+  final progressPercent = match != null 
+      ? double.parse(match.group(1) ?? '0') / 100 
+      : 0.0;
+  
+  // Generate a list of course outline with current progress
+  final outlineList = course.outline != null 
+      ? course.outline!.entries.expand((entry) => entry.value.map((item) => {'section': entry.key, 'item': item})).toList()
+      : [];
+  
+  // Calculate which items are completed based on progress
+  final completedItemCount = (outlineList.length * progressPercent).round();
+  
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: Colors.grey[200]!),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Header with title and course code
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Certification badge
+            if (course.certType != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  course.certType!,
+                  style: TextStyle(
+                    color: Colors.blue[700],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            const SizedBox(width: 12),
+            
+            // Course title
+            Expanded(
+              child: Text(
+                course.title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            
+            // Course code
+            Text(
+              course.courseCode,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        
+        // Progress section
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Progress label and percentage
+            Row(
+              children: [
+                Text(
+                  'Progress',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  course.progress ?? '',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.blue[700],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            
+            // Progress bar
+            Stack(
+              children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
+                  height: 8,
                   decoration: BoxDecoration(
-                    color: Colors.blue[50],
-                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  child: Text(
-                    course.certType!,
-                    style: TextStyle(
-                      color: Colors.blue[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                ),
+                FractionallySizedBox(
+                  widthFactor: progressPercent,
+                  child: Container(
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: Colors.blue[600],
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
               ],
-              Expanded(
-                child: Text(
-                  course.title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+            ),
+          ],
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Course duration and next session
+        Row(
+          children: [
+            // Course duration with icon
+            Icon(
+              Icons.calendar_today,
+              size: 14,
+              color: Colors.grey[600],
+            ),
+            const SizedBox(width: 4),
+            Text(
+              'Course duration: ${course.duration}',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
               ),
-              Text(
-                course.courseCode,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+            ),
+            const Spacer(),
+            
+            // Next session
+            Icon(
+              Icons.access_time_filled,
+              size: 14,
+              color: Colors.orange[600],
+            ),
+            const SizedBox(width: 4),
+            Text(
+              'Next session in 2 days',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.orange[600],
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
+          ],
+        ),
+        
+        const SizedBox(height: 16),
+        
+        // Coming up next section
+        if (completedItemCount < outlineList.length) ...[
+          Text(
+            'Coming up next:',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[800],
+            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           
-          // Progress bar
-          Row(
-            children: [
-              Expanded(
-                child: Column(
+          ...outlineList
+              .skip(completedItemCount)
+              .take(2)
+              .map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Progress',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          course.progress ?? '',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.circle,
+                      size: 8,
+                      color: Colors.orange[400],
                     ),
-                    const SizedBox(height: 4),
-                    Stack(
-                      children: [
-                        Container(
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '${item['item']}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[800],
                         ),
-                        FractionallySizedBox(
-                          widthFactor: progressPercent,
-                          child: Container(
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: Colors.blue[600],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 12),
-          
-          // Course duration
-          Row(
-            children: [
-              Icon(
-                Icons.calendar_today,
-                size: 14,
-                color: Colors.grey[600],
-              ),
-              const SizedBox(width: 4),
-              Text(
-                'Course duration: ${course.duration}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const Spacer(),
-              Icon(
-                Icons.timer,
-                size: 14,
-                color: progressPercent >= 0.5 ? Colors.green[600] : Colors.orange[600],
-              ),
-              const SizedBox(width: 4),
-              Text(
-                progressPercent >= 0.5 
-                    ? 'On track to complete' 
-                    : 'Next session in 2 days',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: progressPercent >= 0.5 ? Colors.green[600] : Colors.orange[600],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Upcoming outline items
-          if (completedItemCount < outlineList.length) ...[
-            Text(
-              'Coming up next:',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
-              ),
-            ),
-            const SizedBox(height: 8),
-            
-            ...outlineList
-                .skip(completedItemCount)
-                .take(2)
-                .map((item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.circle,
-                        size: 10,
-                        color: Colors.orange[400],
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          '${item['item']}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ))
-                .toList(),
-          ],
-          
-          const SizedBox(height: 12),
-          
-          // View details button
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CourseDetailScreen(course: course),
-                  ),
-                );
-              },
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: Text(
-                'Course Details',
-                style: TextStyle(
-                  color: Colors.blue[600],
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                ),
-              ),
-            ),
-          ),
+              ))
+              .toList(),
         ],
-      ),
-    );
-  }
+        
+        // Course Outline button 
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () {
+              // Navigate to dedicated course outline screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CourseOutlineScreen(course: course),
+                ),
+              );
+            },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              'Course Outline',
+              style: TextStyle(
+                color: Colors.blue[600],
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
   
   Widget _buildEmptyState(String title, String subtitle, IconData icon) {
     return Container(
@@ -1420,10 +1408,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(),
                           TextButton(
                             onPressed: () {
+                              // Navigate to course outline instead of details
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CourseDetailScreen(course: course),
+                                  builder: (context) => CourseOutlineScreen(course: course),
                                 ),
                               );
                             },
@@ -1433,7 +1422,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: Text(
-                              'View Details',
+                              'View Outline',
                               style: TextStyle(
                                 color: Colors.blue[600],
                                 fontWeight: FontWeight.w500,

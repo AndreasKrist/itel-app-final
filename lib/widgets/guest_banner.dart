@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../screens/login_screen.dart';
 
 class GuestBanner extends StatelessWidget {
-  const GuestBanner({Key? key}) : super(key: key);
+  const GuestBanner({super.key});
 
   @override
   Widget build(BuildContext context) {

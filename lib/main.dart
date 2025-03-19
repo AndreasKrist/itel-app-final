@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'screens/home_screen.dart';
 import 'screens/courses_screen.dart';
 import 'screens/trending_screen.dart';
@@ -39,28 +40,67 @@ class AuthWrapper extends StatefulWidget {
 
 class _AuthWrapperState extends State<AuthWrapper> {
   // Initialize with current authentication state
-  bool _isLoggedIn = User.isAuthenticated;
+  late bool _isLoggedIn;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoggedIn = User.isAuthenticated;
+    
+    // Reset user's authentication state when app starts
+    // This ensures a clean state for testing during development
+    if (!_isLoggedIn) {
+      User.isGuest = true;
+      User.isAuthenticated = false;
+    }
+  }
 
   void _handleLoginStatusChanged(bool isLoggedIn) {
+    // Make sure to update the state when login status changes
     setState(() {
       _isLoggedIn = isLoggedIn;
     });
   }
 
+  // This method will be passed to the AppMockup to handle sign out
+  void _handleSignOut() {
+    // Reset authentication state
+    User.isGuest = true;
+    User.isAuthenticated = false;
+    
+    // Update state to trigger re-render to login screen
+    setState(() {
+      _isLoggedIn = false;
+    });
+    
+    // Use a post-frame callback to rebuild with the login screen
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _isLoggedIn = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _isLoggedIn 
-        ? AppMockup(isGuest: User.isGuest) 
-        : LoginScreen(onLoginStatusChanged: _handleLoginStatusChanged);
+    // Force rebuild based on authentication state
+    if (_isLoggedIn) {
+      return AppMockup(isGuest: User.isGuest, onSignOut: _handleSignOut);
+    } else {
+      // When not logged in, always return a fresh LoginScreen
+      return LoginScreen(onLoginStatusChanged: _handleLoginStatusChanged);
+    }
   }
 }
 
 class AppMockup extends StatefulWidget {
   final bool isGuest;
+  final VoidCallback onSignOut;
   
   const AppMockup({
     super.key,
     this.isGuest = false,
+    required this.onSignOut,
   });
 
   @override
@@ -72,12 +112,14 @@ class _AppMockupState extends State<AppMockup> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _screens = [
+    // Recreate screens list on each build to ensure fresh instances
+    final List<Widget> screens = [
       const HomeScreen(),
       const CoursesScreen(),
       const TrendingScreen(),
       const AboutScreen(),
-      const ProfileScreen(),
+      // Pass the sign out callback to the profile screen
+      ProfileScreen(onSignOut: widget.onSignOut),
     ];
 
     return Scaffold(
@@ -128,8 +170,8 @@ class _AppMockupState extends State<AppMockup> {
             // Main Content
             Expanded(
               child: _currentIndex == 4 && widget.isGuest
-                  ? const GuestProfileScreen() // Show guest profile screen if the user is a guest
-                  : _screens[_currentIndex],
+                  ? GuestProfileScreen(onSignOut: widget.onSignOut) // Pass sign out callback
+                  : screens[_currentIndex],
             ),
             
             // Bottom Navigation
@@ -178,7 +220,12 @@ class _AppMockupState extends State<AppMockup> {
 }
 
 class GuestProfileScreen extends StatelessWidget {
-  const GuestProfileScreen({super.key});
+  final VoidCallback onSignOut;
+  
+  const GuestProfileScreen({
+    super.key, 
+    required this.onSignOut,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -229,16 +276,8 @@ class GuestProfileScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(
-                            onLoginStatusChanged: (bool isLoggedIn) {
-                              // Handle login
-                            },
-                          ),
-                        ),
-                      );
+                      // Use the passed onSignOut callback
+                      onSignOut();
                     },
                     icon: const Icon(Icons.login),
                     label: const Text('Sign In'),
@@ -254,18 +293,20 @@ class GuestProfileScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   OutlinedButton(
                     onPressed: () {
-                      // Navigate to signup
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(
-                            onLoginStatusChanged: (bool isLoggedIn) {
-                              // Handle login
-                            },
-                            initialSignup: true,
+                      // Use the passed onSignOut callback with initialSignup flag
+                      onSignOut();
+                      // Use a post-frame callback to navigate to signup after the state is updated
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(
+                              onLoginStatusChanged: (bool _) {},
+                              initialSignup: true,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      });
                     },
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),

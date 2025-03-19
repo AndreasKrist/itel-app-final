@@ -84,8 +84,10 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    // Simulate network delay
+    // Simulate network delay with a proper future
     Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return; // Check if the widget is still mounted
+      
       // Set current user data (simulating a successful signup)
       User.currentUser = User.currentUser.copyWith(
         name: _nameController.text,
@@ -97,6 +99,11 @@ class _SignupScreenState extends State<SignupScreen> {
       // Update user status
       User.isGuest = false;
       User.isAuthenticated = true;
+      
+      // Make sure to set loading to false before completing signup
+      setState(() {
+        _isLoading = false;
+      });
       
       // Complete signup
       widget.onLoginStatusChanged(true);

@@ -1107,7 +1107,7 @@ static List<Course> sampleCourses = [
       rating: 4.6,
       duration: '10 weeks',
       price: '\$1,499',
-      progress: '40% complete',
+      completionDate: 'Feb 25, 2025',
     ),
   ];
 }

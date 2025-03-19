@@ -29,16 +29,22 @@ class _LoginScreenState extends State<LoginScreen> {
     // If initialSignup is true, navigate to signup screen after a short delay
     if (widget.initialSignup) {
       Future.delayed(Duration.zero, () {
-        Navigator.push(
-          context, 
-          MaterialPageRoute(
-            builder: (context) => SignupScreen(
-              onLoginStatusChanged: widget.onLoginStatusChanged,
+        if (mounted) {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => SignupScreen(
+                onLoginStatusChanged: widget.onLoginStatusChanged,
+              ),
             ),
-          ),
-        );
+          );
+        }
       });
     }
+    
+    // Clear any existing user session
+    User.isGuest = true;
+    User.isAuthenticated = false;
   }
 
   @override
@@ -54,15 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
       _errorMessage = null;
     });
 
-    print("Login attempt with: ${_emailController.text}");
-
     // Validate inputs
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       setState(() {
         _errorMessage = "Please enter both email and password";
         _isLoading = false;
       });
-      print("Login failed: Empty fields");
       return;
     }
 
@@ -72,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _errorMessage = "Please enter a valid email address";
         _isLoading = false;
       });
-      print("Login failed: Invalid email format");
       return;
     }
 
@@ -81,36 +83,54 @@ class _LoginScreenState extends State<LoginScreen> {
         _errorMessage = "Password must be at least 6 characters";
         _isLoading = false;
       });
-      print("Login failed: Password too short");
       return;
     }
 
-    // Since this is just a demo, accept any valid-looking credentials
-    print("Login successful - updating user state");
-    
-    // Set current user data
-    User.currentUser = User.currentUser.copyWith(
-      email: _emailController.text,
-      name: _emailController.text.split('@')[0], // Use part of email as name
-    );
-    
-    // Update authentication state
-    User.isGuest = false;
-    User.isAuthenticated = true;
-    
-    // Complete login - this navigates the user to the main app
-    widget.onLoginStatusChanged(true);
+    // Add a delay to simulate network request and ensure UI updates properly
+    Future.delayed(const Duration(seconds: 1), () {
+      if (!mounted) return; // Check if widget is still mounted
+      
+      // Set current user data
+      User.currentUser = User.currentUser.copyWith(
+        email: _emailController.text,
+        name: _emailController.text.split('@')[0], // Use part of email as name
+      );
+      
+      // Update authentication state
+      User.isGuest = false;
+      User.isAuthenticated = true;
+      
+      // Reset loading state
+      setState(() {
+        _isLoading = false;
+      });
+      
+      // Complete login - this navigates the user to the main app
+      widget.onLoginStatusChanged(true);
+    });
   }
 
   void _loginAsGuest() {
-    print("Logging in as guest");
+    setState(() {
+      _isLoading = true;
+    });
     
-    // Update authentication state
-    User.isGuest = true;
-    User.isAuthenticated = true;
-    
-    // Navigate to the main app
-    widget.onLoginStatusChanged(true);
+    // Add a delay to ensure UI updates properly
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (!mounted) return; // Check if widget is still mounted
+      
+      // Update authentication state
+      User.isGuest = true;
+      User.isAuthenticated = true;
+      
+      // Reset loading state
+      setState(() {
+        _isLoading = false;
+      });
+      
+      // Navigate to the main app
+      widget.onLoginStatusChanged(true);
+    });
   }
 
   @override
@@ -130,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: const Color.fromARGB(255, 255, 255, 255),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -309,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 
                 // Login as guest
                 OutlinedButton(
-                  onPressed: _loginAsGuest,
+                  onPressed: _isLoading ? null : _loginAsGuest,
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: Colors.blue[200]!),
@@ -333,7 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
+                      onPressed: _isLoading ? null : () {
                         Navigator.push(
                           context, 
                           MaterialPageRoute(
