@@ -7,9 +7,9 @@ class SignupScreen extends StatefulWidget {
   final Function(bool) onLoginStatusChanged;
   
   const SignupScreen({
-    Key? key,
+    super.key,
     required this.onLoginStatusChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
