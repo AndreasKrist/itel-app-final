@@ -250,14 +250,16 @@ class GuestProfileScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  // Changed from lock icon to a more friendly user icon
                   Icon(
-                    Icons.lock,
+                    Icons.person_outline,
                     size: 64,
                     color: Colors.blue[300],
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Profile Access Limited',
+                    'You are currently a guest, to view more please sign in',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -266,7 +268,7 @@ class GuestProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Sign in to view your profile, track your course progress, and manage your account settings.',
+                    'Sign in or be a member now to view profile, track your course progress, and experience more benefits here',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.grey[600],
@@ -280,7 +282,7 @@ class GuestProfileScreen extends StatelessWidget {
                       onSignOut();
                     },
                     icon: const Icon(Icons.login),
-                    label: const Text('Sign In'),
+                    label: const Text('Sign In as Member'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue[600],
                       foregroundColor: Colors.white,
@@ -314,7 +316,7 @@ class GuestProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Create Account'),
+                    child: const Text('Create Member Account'),
                   ),
                 ],
               ),
