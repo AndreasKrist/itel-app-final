@@ -181,12 +181,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          " ''Learning you today for tomorrow's future'' ",
+                          " ''Training You Today for Tomorrow'' ",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                             color: Colors.blue[700],
-                            fontSize: 19,
+                            fontSize: 20,
                           ),
                         ),
                       ],
