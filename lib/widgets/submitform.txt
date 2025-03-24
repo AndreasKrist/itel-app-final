@@ -1,0 +1,61 @@
+  void _submitForm() async {
+  if (_formKey.currentState!.validate()) {
+    // Show loading indicator
+    setState(() {
+      _isSubmitting = true;
+    });
+    
+    // Create a map with all form values
+    final Map<String, dynamic> formData = {
+      'name': _nameController.text,
+      'email': _emailController.text,
+      'phone': _phoneController.text,
+      'occupation': _occupationController.text,
+      'experience': _experienceController.text,
+      'course': widget.course.title,
+      'courseCode': widget.course.courseCode,
+      'enquiryType': _getEnquiryTypes(),
+      'consultant': _consultantController.text,
+      'heardFrom': _getHeardFromSources(),
+      'remarks': _remarksController.text,
+      'joinMailingList': _joinMailingList,
+      'consentToPrivacyPolicy': _consentToPrivacyPolicy,
+    };
+    
+    // Submit the form data to Google Sheets
+    final result = await FormSubmissionService.submitEnquiry(formData);
+    
+    // Hide loading indicator
+    setState(() {
+      _isSubmitting = false;
+    });
+    
+    // Show success or error message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(result['success'] 
+                ? 'Enquiry submitted successfully!' 
+                : 'Failed to submit enquiry'),
+            Text(
+              result['success']
+                ? 'A confirmation email will be sent to ${_emailController.text}'
+                : result['message'],
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        backgroundColor: result['success'] ? Colors.green : Colors.red,
+        duration: Duration(seconds: 5),
+      ),
+    );
+    
+    // Only close the form if submission was successful
+    if (result['success']) {
+      widget.onSubmit();
+    }
+  }
+}

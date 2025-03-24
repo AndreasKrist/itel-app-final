@@ -1087,7 +1087,7 @@ static List<Course> sampleCourses = [
     Course(
   id: '21',
   courseCode: 'MSO101',
-  title: 'Microsoft Excel Essential Skills',
+  title: 'Essential Excel for Office Worker',
   category: 'Office Productivity',
   certType: null,
   rating: 4.5,
@@ -1133,9 +1133,9 @@ static List<Course> sampleCourses = [
 ),
 
 Course(
-  id: '22',
+  id: '24',
   courseCode: 'MSO102',
-  title: 'Microsoft Excel Advanced Techniques',
+  title: 'Microsoft Excel Advanced Techniques for Data Science',
   category: 'Office Productivity',
   certType: null,
   rating: 4.7,
@@ -1183,7 +1183,7 @@ Course(
 Course(
   id: '23',
   courseCode: 'MSO201',
-  title: 'Microsoft PowerPoint Mastery',
+  title: 'Microsoft PowerPoint Mastery the Mind Control',
   category: 'Office Productivity',
   certType: null,
   rating: 4.6,
@@ -1229,9 +1229,9 @@ Course(
 ),
 
 Course(
-  id: '24',
+  id: '22',
   courseCode: 'MSO301',
-  title: 'Microsoft Word Professional Documents',
+  title: 'Essential Word for Office Worker',
   category: 'Office Productivity',
   certType: null,
   rating: 4.5,

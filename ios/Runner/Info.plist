@@ -59,6 +59,18 @@
 		<string>https</string>
 		<string>http</string>
 		</array>
+
+
+	<!-- File: ios/Runner/Info.plist -->
+<!-- Add this in the <dict> section of your Info.plist file -->
+
+	<!-- moodle -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+		<string>moodlemobile</string>
+	</array>
 		
 </dict>
 </plist>

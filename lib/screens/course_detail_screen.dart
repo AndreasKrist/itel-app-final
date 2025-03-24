@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../models/user.dart';
 import '../widgets/enquiry_form.dart';
+import '../models/enrolled_course.dart';
+import '../models/user.dart';
+
+
 
 class CourseDetailScreen extends StatefulWidget {
   final Course course;
@@ -16,6 +20,44 @@ class CourseDetailScreen extends StatefulWidget {
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  void _joinFreeClass() {
+  // Create an EnrolledCourse object for the free course
+  final newEnrollment = EnrolledCourse(
+    courseId: widget.course.id,
+    enrollmentDate: DateTime.now(),
+    status: EnrollmentStatus.active, // Start as active for free courses
+    isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
+    // Set next session to 3 days from now
+    nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
+    nextSessionTime: '10:00 AM - 12:00 PM',
+    location: widget.course.deliveryMethods?.contains('OLL') ?? false 
+        ? 'https://online.itel.com.sg'
+        : 'ITEL Training Center (Room 101)',
+    progress: '0% complete', // Start with 0% progress
+  );
+  
+  // Update the user's enrolled courses
+  User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+  
+  // Show success message
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('You have successfully joined the class!'),
+          Text(
+            'Check your Profile to access the course materials',
+            style: TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.green,
+      duration: Duration(seconds: 4),
+    ),
+  );
+}
   late bool isFavorite;
   bool _showEnquiryForm = false;
   final Map<String, bool> _expandedSections = {};
@@ -632,46 +674,62 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           
           // Bottom button - Enquire Now
           if (!_showEnquiryForm)
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, -5),
-                  ),
-                ],
-              ),
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _showEnquiryForm = true;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[600],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, -5),
+                    ),
+                  ],
                 ),
-                child: const Text(
-                  'Enquire Now',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Check if the course is free
+                    if (widget.course.price == '\$0' || 
+                        widget.course.price.contains('Free') || 
+                        widget.course.funding == 'Complimentary') {
+                      // Directly add to enrolled courses without form
+                      _joinFreeClass();
+                    } else {
+                      // Show enquiry form for paid courses
+                      setState(() {
+                        _showEnquiryForm = true;
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: widget.course.price == '\$0' || 
+                                    widget.course.price.contains('Free') || 
+                                    widget.course.funding == 'Complimentary' 
+                                  ? Colors.green[600] : Colors.blue[600],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    widget.course.price == '\$0' || 
+                    widget.course.price.contains('Free') || 
+                    widget.course.funding == 'Complimentary'
+                    ? 'Join the Class Now'
+                    : 'Enquire Now',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

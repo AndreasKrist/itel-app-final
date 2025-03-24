@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../services/form_submission_service.dart';
+import '../models/enrolled_course.dart';
+import '../models/user.dart';
 
 class EnquiryForm extends StatefulWidget {
   final Course course;
@@ -60,7 +62,7 @@ class _EnquiryFormState extends State<EnquiryForm> {
     super.dispose();
   }
 
-  void _submitForm() async {
+void _submitForm() async {
   if (_formKey.currentState!.validate()) {
     // Show loading indicator
     setState(() {
@@ -86,6 +88,26 @@ class _EnquiryFormState extends State<EnquiryForm> {
     
     // Submit the form data to Google Sheets
     final result = await FormSubmissionService.submitEnquiry(formData);
+    
+    // If submission was successful, add course to user's enrolled courses
+    if (result['success']) {
+      // Create an EnrolledCourse object for the enquired course
+      final newEnrollment = EnrolledCourse(
+        courseId: widget.course.id,
+        enrollmentDate: DateTime.now(),
+        status: EnrollmentStatus.pending, // Start as pending
+        isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
+        // Set next session to 7 days from now (just for demo purposes)
+        nextSessionDate: DateTime.now().add(const Duration(days: 7)), 
+        nextSessionTime: '09:00 AM - 11:00 AM',
+        location: widget.course.deliveryMethods?.contains('OLL') ?? false 
+            ? 'https://online.itel.com.sg'
+            : 'ITEL Training Center (Room assignment pending)',
+      );
+      
+      // Update the user's enrolled courses
+      User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+    }
     
     // Hide loading indicator
     setState(() {
