@@ -14,7 +14,7 @@ class CourseOutlineScreen extends StatefulWidget {
 }
 
 class _CourseOutlineScreenState extends State<CourseOutlineScreen> {
-  Map<String, bool> _expandedSections = {};
+  final Map<String, bool> _expandedSections = {};
   late Course _currentCourse;
   late Map<String, List<String>> _outlineData;
 

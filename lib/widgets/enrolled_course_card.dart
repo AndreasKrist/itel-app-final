@@ -11,10 +11,10 @@ class EnrolledCourseCard extends StatelessWidget {
   final Course course;
 
   const EnrolledCourseCard({
-    Key? key,
+    super.key,
     required this.enrollment,
     required this.course,
-  }) : super(key: key);
+  });
 
   // Helper function to format date
   String _formatDate(DateTime date) {

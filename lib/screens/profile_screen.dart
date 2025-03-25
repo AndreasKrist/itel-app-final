@@ -338,7 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   ))
-                                  .toList(),
+                                  ,
                               
                               if (Schedule.getDummySchedules()
                                   .where((schedule) => isSameDay(schedule.date, _selectedDay))
@@ -549,7 +549,7 @@ Widget _buildProfileTab() {
                     enrollment: item['enrollment'] as EnrolledCourse,
                     course: item['course'] as Course,
                   ),
-                )).toList(),
+                )),
               ],
               
               const SizedBox(height: 16),
@@ -576,7 +576,7 @@ Widget _buildProfileTab() {
                     enrollment: item['enrollment'] as EnrolledCourse,
                     course: item['course'] as Course,
                   ),
-                )).toList(),
+                )),
               ],
               
               const SizedBox(height: 16),
@@ -1147,7 +1147,7 @@ Widget _buildDetailedCourseProgressCard(Course course) {
                   ],
                 ),
               ))
-              .toList(),
+              ,
         ],
         
         // Course Outline button 

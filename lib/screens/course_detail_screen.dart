@@ -3,7 +3,6 @@ import '../models/course.dart';
 import '../models/user.dart';
 import '../widgets/enquiry_form.dart';
 import '../models/enrolled_course.dart';
-import '../models/user.dart';
 
 
 
@@ -720,7 +719,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     widget.course.price == '\$0' || 
                     widget.course.price.contains('Free') || 
                     widget.course.funding == 'Complimentary'
-                    ? 'Join the Class Now'
+                    ? 'Access Course Now'
                     : 'Enquire Now',
                     style: const TextStyle(
                       fontSize: 16,

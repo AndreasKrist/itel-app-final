@@ -7,10 +7,10 @@ class LoginScreen extends StatefulWidget {
   final bool initialSignup;
   
   const LoginScreen({
-    Key? key,
+    super.key,
     required this.onLoginStatusChanged,
     this.initialSignup = false,
-  }) : super(key: key);
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -372,7 +372,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't a member yet? ",
+                      "Not a member yet? ",
                       style: TextStyle(
                         color: Colors.grey[700],
                       ),
