@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Text(
                                 User.currentUser.tier == MembershipTier.pro
-                                    ? 'PRO Member'
+                                    ? 'Private Member'
                                     : 'Standard Member',
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.8),
@@ -103,11 +103,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: const Color.fromARGB(255, 218, 218, 218),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Text(
-                                    'PRO',
+                                    'Silver',
                                     style: TextStyle(
                                       color: Colors.blue[700],
                                       fontWeight: FontWeight.bold,
@@ -141,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   children: [
                     _buildTabButton('Profile', 'profile'),
-                    _buildTabButton('My Courses', 'courses'),
+                    _buildTabButton('Wishlist', 'courses'),
                     _buildTabButton('Membership', 'membership'),
                   ],
                 ),
@@ -1243,7 +1243,7 @@ Widget _buildDetailedCourseProgressCard(Course course) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Wishlist',
+                'Liked Courses',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -1516,7 +1516,7 @@ Widget _buildDetailedCourseProgressCard(Course course) {
                   children: [
                     Text(
                       User.currentUser.tier == MembershipTier.pro
-                          ? 'PRO Membership'
+                          ? 'Private Membership'
                           : 'Standard Membership',
                       style: TextStyle(
                         fontSize: 18,
@@ -1562,9 +1562,8 @@ Widget _buildDetailedCourseProgressCard(Course course) {
                 const SizedBox(height: 8),
                 if (User.currentUser.tier == MembershipTier.pro) ...[
                   _buildBenefitItem('Priority access to new courses'),
-                  _buildBenefitItem('20% discount on all certifications'),
+                  _buildBenefitItem('25% discount on all certifications'),
                   _buildBenefitItem('Exclusive webinars and events'),
-                  _buildBenefitItem('Direct access to consultants'),
                   _buildBenefitItem('Career counseling sessions'),
                 ] else ...[
                   _buildBenefitItem('Access to standard courses'),
@@ -1618,7 +1617,7 @@ Widget _buildDetailedCourseProgressCard(Course course) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Upgrade to PRO',
+                  'Upgrade to Private GOLD',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -1626,7 +1625,7 @@ Widget _buildDetailedCourseProgressCard(Course course) {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Get exclusive access to premium features and content with our PRO membership.',
+                  'Get even more benefits than a Silver membership by upgrading to a Gold membership with our latest offers!',
                 ),
                 const SizedBox(height: 8),
                 Row(
