@@ -6,10 +6,12 @@ import 'course_outline_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../widgets/enrolled_course_card.dart';
 import '../models/enrolled_course.dart';
+import '../services/auth_service.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
-
+  
   const ProfileScreen({
     super.key,
     required this.onSignOut,

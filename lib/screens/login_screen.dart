@@ -1,6 +1,9 @@
+// lib/screens/login_screen.dart
 import 'package:flutter/material.dart';
 import '../models/user.dart';
+import '../services/auth_service.dart';
 import 'signup_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class LoginScreen extends StatefulWidget {
   final Function(bool) onLoginStatusChanged;
@@ -19,6 +22,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+  
   bool _isLoading = false;
   bool _obscurePassword = true;
   String? _errorMessage;
@@ -41,10 +46,6 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       });
     }
-    
-    // Clear any existing user session
-    User.isGuest = true;
-    User.isAuthenticated = false;
   }
 
   @override
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login() {
+  Future<void> _login() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -69,68 +70,72 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Simple validation - just for demo purposes
-    if (!_emailController.text.contains('@')) {
-      setState(() {
-        _errorMessage = "Please enter a valid email address";
-        _isLoading = false;
-      });
-      return;
-    }
-
-    if (_passwordController.text.length < 6) {
-      setState(() {
-        _errorMessage = "Password must be at least 6 characters";
-        _isLoading = false;
-      });
-      return;
-    }
-
-    // Add a delay to simulate network request and ensure UI updates properly
-    Future.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return; // Check if widget is still mounted
-      
-      // Set current user data
-      User.currentUser = User.currentUser.copyWith(
-        email: _emailController.text,
-        name: _emailController.text.split('@')[0], // Use part of email as name
+    try {
+      // Sign in with Firebase
+      await _authService.signInWithEmailPassword(
+        _emailController.text.trim(),
+        _passwordController.text,
       );
       
-      // Update authentication state
-      User.isGuest = false;
-      User.isAuthenticated = true;
+      if (!mounted) return;
       
-      // Reset loading state
+      // If we get here without an exception, login was successful
+      widget.onLoginStatusChanged(true);
+      
+    } on firebase_auth.FirebaseAuthException catch (e) {
       setState(() {
+        switch (e.code) {
+          case 'user-not-found':
+            _errorMessage = "No user found with this email";
+            break;
+          case 'wrong-password':
+            _errorMessage = "Wrong password provided";
+            break;
+          case 'invalid-credential':
+            _errorMessage = "Email or password is incorrect";
+            break;
+          case 'invalid-email':
+            _errorMessage = "Invalid email format";
+            break;
+          case 'user-disabled':
+            _errorMessage = "This account has been disabled";
+            break;
+          default:
+            _errorMessage = "Login failed: ${e.message}";
+        }
         _isLoading = false;
       });
-      
-      // Complete login - this navigates the user to the main app
-      widget.onLoginStatusChanged(true);
-    });
+    } catch (e) {
+      setState(() {
+        _errorMessage = "An error occurred during login";
+        _isLoading = false;
+        print("Login error: ${e.toString()}");
+      });
+    }
   }
 
-  void _loginAsGuest() {
+  Future<void> _loginAsGuest() async {
     setState(() {
       _isLoading = true;
+      _errorMessage = null;
     });
     
-    // Add a delay to ensure UI updates properly
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted) return; // Check if widget is still mounted
+    try {
+      // Sign in anonymously with Firebase
+      await _authService.signInAnonymously();
       
-      // Update authentication state
-      User.isGuest = true;
-      User.isAuthenticated = true;
+      if (!mounted) return;
       
-      // Reset loading state
-      setState(() {
-        _isLoading = false;
-      });
-      
-      // Navigate to the main app
+      // Update state
       widget.onLoginStatusChanged(true);
-    });
+      
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Guest login failed. Please try again later.";
+        _isLoading = false;
+        print("Anonymous login error: ${e.toString()}");
+      });
+    }
   }
 
   @override
@@ -146,63 +151,53 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Logo and title
-                  Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 120,
-                          height: 120,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Image.asset(
-                            'assets/images/itel-logo.png',
-                            fit: BoxFit.contain,
-                          ),
+                Center(
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 120,
+                        height: 120,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'ITEL',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue[800],
-                          ),
+                        child: Image.asset(
+                          'assets/images/itel-logo.png',
+                          fit: BoxFit.contain,
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          " ''Training You Today for Tomorrow'' ",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            color: Colors.blue[700],
-                            fontSize: 20,
-                          ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'ITEL',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[800],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        " ''Training You Today for Tomorrow'' ",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.blue[700],
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
                 const SizedBox(height: 24),
-                // Text(
-                //   'ITEL',
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(
-                //     fontSize: 28,
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.blue[800],
-                //   ),
-                // ),
-                const SizedBox(height: 8),
                 Text(
                   'Sign in now to start learning!',
                   textAlign: TextAlign.center,
@@ -211,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.grey[700],
                   ),
                 ),
-                const SizedBox(height: 22),//tadinya 32
+                const SizedBox(height: 22),
                 
                 // Error message
                 if (_errorMessage != null) ...[
@@ -342,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       )
                     : const Text(
-                        'Sign In as Member',
+                        'Sign In',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

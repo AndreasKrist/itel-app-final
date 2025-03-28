@@ -1,5 +1,8 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'services/auth_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/courses_screen.dart';
 import 'screens/trending_screen.dart';
@@ -9,7 +12,13 @@ import 'screens/login_screen.dart';
 import 'models/user.dart';
 import 'widgets/guest_banner.dart';
 
-void main() {
+void main() async {
+  // Ensure Flutter bindings are initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp();
+  
   runApp(const MyApp());
 }
 
@@ -39,20 +48,23 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
-  // Initialize with current authentication state
+  final AuthService _authService = AuthService();
   late bool _isLoggedIn;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _isLoggedIn = User.isAuthenticated;
+    _checkAuthState();
+  }
+  
+  Future<void> _checkAuthState() async {
+    setState(() => _isLoading = true);
     
-    // Reset user's authentication state when app starts
-    // This ensures a clean state for testing during development
-    if (!_isLoggedIn) {
-      User.isGuest = true;
-      User.isAuthenticated = false;
-    }
+    // Check if user is already authenticated
+    _isLoggedIn = _authService.isAuthenticated;
+    
+    setState(() => _isLoading = false);
   }
 
   void _handleLoginStatusChanged(bool isLoggedIn) {
@@ -63,29 +75,39 @@ class _AuthWrapperState extends State<AuthWrapper> {
   }
 
   // This method will be passed to the AppMockup to handle sign out
-  void _handleSignOut() {
-    // Reset authentication state
-    User.isGuest = true;
-    User.isAuthenticated = false;
-    
-    // Update state to trigger re-render to login screen
-    setState(() {
-      _isLoggedIn = false;
-    });
-    
-    // Use a post-frame callback to rebuild with the login screen
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+  Future<void> _handleSignOut() async {
+    try {
+      await _authService.signOut();
+      
+      // Update state to trigger re-render to login screen
       setState(() {
         _isLoggedIn = false;
       });
-    });
+    } catch (e) {
+      print('Sign out error: $e');
+      // Show error message to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign out failed: ${e.toString()}')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     // Force rebuild based on authentication state
     if (_isLoggedIn) {
-      return AppMockup(isGuest: User.isGuest, onSignOut: _handleSignOut);
+      final isGuest = _authService.currentUser == null || 
+                      _authService.currentUser!.id.isEmpty ||
+                      _authService.currentUser!.email.isEmpty;
+      return AppMockup(isGuest: isGuest, onSignOut: _handleSignOut);
     } else {
       // When not logged in, always return a fresh LoginScreen
       return LoginScreen(onLoginStatusChanged: _handleLoginStatusChanged);

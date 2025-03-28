@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "679610273050",
+    "project_id": "itel-27136",
+    "storage_bucket": "itel-27136.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679610273050:android:46192f125e9b5a585bf0a3",
+        "android_client_info": {
+          "package_name": "com.example.itel_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679610273050-859dfsnkt12ak4ngpfprrk1cl5i6fskh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAUUklop1hNf6zaSQfsqArHFKIExddUOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679610273050-859dfsnkt12ak4ngpfprrk1cl5i6fskh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "679610273050-jhksi3pddt3n0qm90q076haabi8d1qla.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.itelApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

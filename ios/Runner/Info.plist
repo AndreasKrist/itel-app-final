@@ -60,7 +60,6 @@
 		<string>http</string>
 		</array>
 
-
 	<!-- File: ios/Runner/Info.plist -->
 <!-- Add this in the <dict> section of your Info.plist file -->
 
@@ -71,6 +70,19 @@
 		<string>http</string>
 		<string>moodlemobile</string>
 	</array>
+	<!-- Authentication -->
+	<key>CFBundleURLTypes</key>
+		<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<!-- Replace with your reversed client ID from GoogleService-Info.plist -->
+			<string>com.googleusercontent.apps.679610273050-jhksi3pddt3n0qm90q076haabi8d1qla</string>
+			</array>
+		</dict>
+		</array>
 		
 </dict>
 </plist>

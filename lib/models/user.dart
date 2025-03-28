@@ -1,5 +1,4 @@
-// File: lib/models/user.dart
-// Add these imports
+// lib/models/user.dart
 import 'enrolled_course.dart';
 
 enum MembershipTier {
@@ -17,19 +16,20 @@ class User {
   final MembershipTier tier;
   final String membershipExpiryDate;
   final List<String> favoriteCoursesIds;
-  final List<EnrolledCourse> enrolledCourses; // New field for enrolled courses
+  final List<EnrolledCourse> enrolledCourses;
 
+  // Updated constructor with safer defaults
   User({
     required this.id,
     required this.name,
     required this.email,
-    required this.phone,
+    this.phone = '',  // Default to empty string
     this.company,
     this.profileImage,
-    required this.tier,
-    required this.membershipExpiryDate,
-    this.favoriteCoursesIds = const [],
-    this.enrolledCourses = const [], // Default to empty list
+    this.tier = MembershipTier.standard,  // Default tier
+    this.membershipExpiryDate = 'Not applicable',  // Default expiry
+    this.favoriteCoursesIds = const [],  // Default to empty list
+    this.enrolledCourses = const [],  // Default to empty list
   });
 
   User copyWith({
@@ -42,7 +42,7 @@ class User {
     MembershipTier? tier,
     String? membershipExpiryDate,
     List<String>? favoriteCoursesIds,
-    List<EnrolledCourse>? enrolledCourses, // Add to copyWith
+    List<EnrolledCourse>? enrolledCourses,
   }) {
     return User(
       id: id ?? this.id,
@@ -75,11 +75,16 @@ class User {
     return copyWith(enrolledCourses: updatedCourses);
   }
 
-  // Other static variables and methods remain the same
-  static bool isGuest = true;
-  static bool isAuthenticated = false;
+  // Default user for anonymous/guest sessions
+  static User get guestUser => User(
+    id: '',
+    name: 'Guest',
+    email: '',
+    tier: MembershipTier.standard,
+    membershipExpiryDate: 'Not applicable',
+  );
 
-  // Update the sample user with enrolled courses
+  // Sample user for logged-in state - will be replaced by Firebase user data
   static User currentUser = User(
     id: '1',
     name: 'Andreas Kristianto',
@@ -90,8 +95,6 @@ class User {
     membershipExpiryDate: 'March 7, 2027',
     favoriteCoursesIds: ['1', '3'],
     enrolledCourses: [
-      // We removed the Network Security Fundamentals example
-      // Leave this list initially empty or with other courses you want to appear by default
       EnrolledCourse(
         courseId: '7',
         enrollmentDate: DateTime.now().subtract(const Duration(days: 7)),

@@ -1,5 +1,8 @@
+// lib/screens/signup_screen.dart
 import 'package:flutter/material.dart';
 import '../models/user.dart';
+import '../services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 enum AccountType { corporate, private, trial }
 
@@ -21,6 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
+  final AuthService _authService = AuthService();
   
   AccountType _selectedAccountType = AccountType.private;
   bool _isLoading = false;
@@ -38,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  void _signup() {
+Future<void> _signup() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -58,7 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     // Validate email format
-    if (!_emailController.text.contains('@')) {
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text)) {
       setState(() {
         _errorMessage = "Please enter a valid email address";
         _isLoading = false;
@@ -84,30 +88,63 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    // Simulate network delay with a proper future
-    Future.delayed(const Duration(seconds: 1), () {
-      if (!mounted) return; // Check if the widget is still mounted
+    try {
+      // Register with Firebase
+      print("Attempting to register user with email: ${_emailController.text}");
       
-      // Set current user data (simulating a successful signup)
-      User.currentUser = User.currentUser.copyWith(
-        name: _nameController.text,
-        email: _emailController.text,
-        company: _selectedAccountType == AccountType.corporate ? _companyController.text : null,
-        tier: _selectedAccountType == AccountType.trial ? MembershipTier.standard : MembershipTier.pro,
+      await _authService.registerWithEmailPassword(
+        _emailController.text.trim(),
+        _passwordController.text,
+        _nameController.text.trim(),
       );
       
-      // Update user status
-      User.isGuest = false;
-      User.isAuthenticated = true;
+      if (!mounted) return;
       
-      // Make sure to set loading to false before completing signup
+      print("Registration successful, updating UI");
+      
+      // Make sure we reset loading state just in case
       setState(() {
         _isLoading = false;
       });
       
-      // Complete signup
+      // If we get here without an exception, registration was successful
+      // Navigate the user to the main app
       widget.onLoginStatusChanged(true);
-    });
+      
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      print("Firebase Auth Error during signup: ${e.code} - ${e.message}");
+      
+      if (!mounted) return;
+      
+      setState(() {
+        switch (e.code) {
+          case 'email-already-in-use':
+            _errorMessage = "Email is already in use";
+            break;
+          case 'invalid-email':
+            _errorMessage = "Invalid email format";
+            break;
+          case 'weak-password':
+            _errorMessage = "Password is too weak";
+            break;
+          case 'operation-not-allowed':
+            _errorMessage = "Email/password accounts are not enabled";
+            break;
+          default:
+            _errorMessage = "Registration failed: ${e.message}";
+        }
+        _isLoading = false;
+      });
+    } catch (e) {
+      print("General error during signup: ${e.toString()}");
+      
+      if (!mounted) return;
+      
+      setState(() {
+        _errorMessage = "An error occurred during registration: ${e.toString()}";
+        _isLoading = false;
+      });
+    }
   }
 
   @override
