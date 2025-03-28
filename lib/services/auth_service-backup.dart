@@ -1,4 +1,4 @@
-// lib/services/auth_service.dart
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../models/user.dart' as app_user;
 
@@ -23,10 +23,9 @@ class AuthService {
         name: firebaseUser.displayName ?? 'User',
         email: firebaseUser.email ?? '',
         // Use empty strings/defaults for other required fields
-        phone: '+62 821xxxxxxxx', // Default phone
-        company: 'Lilo Store LTD', // Default company
-        tier: app_user.MembershipTier.pro, // Default tier for all signed-up users
-        membershipExpiryDate: 'March 7, 2027', // Default expiry
+        phone: '',
+        tier: app_user.MembershipTier.standard,
+        membershipExpiryDate: 'Not applicable',
       );
     } catch (e) {
       print('Error converting Firebase user: $e');
@@ -106,47 +105,6 @@ class AuthService {
       await _firebaseAuth.signOut();
     } catch (e) {
       print('Sign out failed: $e');
-      rethrow;
-    }
-  }
-  
-  // Update user profile data
-  Future<app_user.User?> updateUserProfile({
-    String? displayName,
-    String? phoneNumber,
-    String? company,
-    app_user.MembershipTier? tier,
-  }) async {
-    try {
-      final firebase_auth.User? firebaseUser = _firebaseAuth.currentUser;
-      if (firebaseUser == null) {
-        return null;
-      }
-      
-      // Update display name if provided
-      if (displayName != null && displayName.isNotEmpty) {
-        await firebaseUser.updateDisplayName(displayName);
-      }
-      
-      // For now, we're just returning an updated user object
-      // In a real app, you would save the additional data to Firestore
-      
-      // Get current user from our model
-      app_user.User currentUser = _userFromFirebase(firebaseUser) ?? 
-                                app_user.User(
-                                  id: firebaseUser.uid,
-                                  name: firebaseUser.displayName ?? 'User',
-                                  email: firebaseUser.email ?? '',
-                                );
-      
-      // Return updated user (in a real app, this would be saved to Firestore)
-      return currentUser.copyWith(
-        phone: phoneNumber ?? currentUser.phone,
-        company: company ?? currentUser.company,
-        tier: tier ?? currentUser.tier,
-      );
-    } catch (e) {
-      print('Error updating user profile: $e');
       rethrow;
     }
   }
