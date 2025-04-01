@@ -7,6 +7,8 @@ import 'package:table_calendar/table_calendar.dart';
 import '../widgets/enrolled_course_card.dart';
 import '../models/enrolled_course.dart';
 import '../services/auth_service.dart';
+import '../services/user_preferences_service.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -29,23 +31,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
   
   // Add Auth Service
   final AuthService _authService = AuthService();
+  final UserPreferencesService _preferencesService = UserPreferencesService();
 
-  void _toggleFavorite(Course course) {
-    setState(() {
-      final firebaseUser = _authService.currentUser;
-      final currentUser = firebaseUser ?? User.currentUser;
-      
-      List<String> updatedFavorites = List.from(currentUser.favoriteCoursesIds);
-      if (updatedFavorites.contains(course.id)) {
-        updatedFavorites.remove(course.id);
-      } else {
-        updatedFavorites.add(course.id);
+
+void _toggleFavorite(Course course) async {
+  try {
+    // Get current user
+    final currentUser = _authService.currentUser;
+    
+    if (currentUser == null || currentUser.id.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please log in to save favorites')),
+        );
       }
-      User.currentUser = User.currentUser.copyWith(
-        favoriteCoursesIds: updatedFavorites,
+      return;
+    }
+    
+    // Update favorites in Firestore
+    final updatedFavorites = await _preferencesService.toggleFavorite(
+      userId: currentUser.id,
+      courseId: course.id,
+      currentFavorites: User.currentUser.favoriteCoursesIds,
+    );
+    
+    // Update local state
+    if (mounted) {
+      setState(() {
+        User.currentUser = User.currentUser.copyWith(
+          favoriteCoursesIds: updatedFavorites,
+        );
+      });
+    }
+  } catch (e) {
+    print('Error toggling favorite: $e');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update favorite: ${e.toString()}')),
       );
-    });
+    }
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   children: [
                     _buildTabButton('Profile', 'profile'),
-                    _buildTabButton('Favourite', 'courses'),
+                    _buildTabButton('Favorite', 'courses'),
                     _buildTabButton('Membership', 'membership'),
                   ],
                 ),
@@ -413,40 +439,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
   
-  Widget _buildTabButton(String title, String tabId) {
-    final isActive = activeTab == tabId;
-    
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            activeTab = tabId;
-          });
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: isActive ? Colors.blue.withOpacity(0.05) : Colors.transparent,
-            border: Border(
-              bottom: BorderSide(
-                color: isActive ? Colors.blue[600]! : Colors.transparent,
-                width: 3,
-              ),
-            ),
-          ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isActive ? Colors.blue[600] : Colors.grey[600],
-              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-              fontSize: 15,
+Widget _buildTabButton(String title, String tabId) {
+  final isActive = activeTab == tabId;
+  
+  return Expanded(
+    child: GestureDetector(
+      onTap: () {
+        setState(() {
+          activeTab = tabId;
+          
+          // If switching to favorites tab, ensure we refresh the display
+          if (tabId == 'courses') {
+            print("Switched to favorites tab");
+            print("Current favorites: ${User.currentUser.favoriteCoursesIds}");
+          }
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.blue.withOpacity(0.05) : Colors.transparent,
+          border: Border(
+            bottom: BorderSide(
+              color: isActive ? Colors.blue[600]! : Colors.transparent,
+              width: 3,
             ),
           ),
         ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isActive ? Colors.blue[600] : Colors.grey[600],
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            fontSize: 15,
+          ),
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
   
   Widget _buildProfileTab() {
     // Get current user data from Firebase Auth
@@ -849,279 +881,284 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
   
-  Widget _buildCoursesTab() {
-    // Get current user data from Firebase Auth
-    final firebaseUser = _authService.currentUser;
-    
-    // Use Firebase user data or fall back to static data if not available
-    final currentUser = firebaseUser ?? User.currentUser;
-    
-    // Get all favorited courses
-    final favoriteIds = currentUser.favoriteCoursesIds;
-    final favoriteCourses = Course.sampleCourses
-        .where((course) => favoriteIds.contains(course.id))
-        .toList();
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Liked Courses',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+Widget _buildCoursesTab() {
+  // Get current user data from Firebase Auth
+  final firebaseUser = _authService.currentUser;
+  
+  // Use Firebase user data or fall back to static data if not available
+  final currentUser = firebaseUser ?? User.currentUser;
+  
+  // Get all favorited courses
+  final favoriteIds = User.currentUser.favoriteCoursesIds;
+  print("Favorite IDs in profile: $favoriteIds");
+  
+  // Filter courses to only include those with IDs in the favorites list
+  final favoriteCourses = Course.sampleCourses
+      .where((course) => favoriteIds.contains(course.id))
+      .toList();
+  
+  print("Found ${favoriteCourses.length} favorite courses");
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 16),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Favorite Courses',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.pink[50],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.favorite,
-                    size: 16,
-                    color: Colors.pink[400],
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${favoriteCourses.length} ${favoriteCourses.length == 1 ? 'Course' : 'Courses'}',
-                    style: TextStyle(
-                      color: Colors.pink[700],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        
-        if (favoriteCourses.isEmpty)
-          Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: Center(
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.favorite_border,
-                    size: 48,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Your liked courses is empty',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Save your favorite courses by tapping the heart icon',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  OutlinedButton(
-                    onPressed: () {
-                      // Navigate to courses tab/screen
-                    },
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      side: BorderSide(color: Colors.blue[600]!),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      'Browse Courses',
-                      style: TextStyle(
-                        color: Colors.blue[600],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: favoriteCourses.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final course = favoriteCourses[index];
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                course.title,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                course.category,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                              if (course.certType != null) ...[
-                                const SizedBox(height: 4),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue[50],
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    course.certType!,
-                                    style: TextStyle(
-                                      color: Colors.blue[700],
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.favorite,
-                            color: Colors.pink[400],
-                          ),
-                          onPressed: () => _toggleFavorite(course),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.access_time, color: Colors.grey[400], size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              course.duration,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 16),
-                        Row(
-                          children: [
-                            Icon(Icons.attach_money, color: Colors.grey[400], size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              course.price,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (course.nextAvailableDate != null)
-                          Text(
-                            'Next start: ${course.nextAvailableDate}',
-                            style: TextStyle(
-                              color: Colors.blue[700],
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        else
-                          const SizedBox(),
-                        TextButton(
-                          onPressed: () {
-                            // Navigate to course outline instead of details
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CourseOutlineScreen(course: course),
-                              ),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            'View Outline',
-                            style: TextStyle(
-                              color: Colors.blue[600],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
           ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.pink[50],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.favorite,
+                  size: 16,
+                  color: Colors.pink[400],
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${favoriteCourses.length} ${favoriteCourses.length == 1 ? 'Course' : 'Courses'}',
+                  style: TextStyle(
+                    color: Colors.pink[700],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      
+      if (favoriteCourses.isEmpty)
+        Container(
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.grey[300]!),
+          ),
+          child: Center(
+            child: Column(
+              children: [
+                Icon(
+                  Icons.favorite_border,
+                  size: 48,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Your favorites collection is empty',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Save your favorite courses by tapping the heart icon',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                OutlinedButton(
+                  onPressed: () {
+                    // Navigate to courses tab/screen
+                  },
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    side: BorderSide(color: Colors.blue[600]!),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'Browse Courses',
+                    style: TextStyle(
+                      color: Colors.blue[600],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      else
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: favoriteCourses.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final course = favoriteCourses[index];
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              course.title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              course.category,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                            if (course.certType != null) ...[
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  course.certType!,
+                                  style: TextStyle(
+                                    color: Colors.blue[700],
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.favorite,
+                          color: Colors.pink[400],
+                        ),
+                        onPressed: () => _toggleFavorite(course),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.access_time, color: Colors.grey[400], size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            course.duration,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      Row(
+                        children: [
+                          Icon(Icons.attach_money, color: Colors.grey[400], size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            course.price,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (course.nextAvailableDate != null)
+                        Text(
+                          'Next start: ${course.nextAvailableDate}',
+                          style: TextStyle(
+                            color: Colors.blue[700],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      else
+                        const SizedBox(),
+                      TextButton(
+                        onPressed: () {
+                          // Navigate to course outline instead of details
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CourseOutlineScreen(course: course),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'View Outline',
+                          style: TextStyle(
+                            color: Colors.blue[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
           
-          const SizedBox(height: 24),
-      ],
-    );
-  }
+      const SizedBox(height: 24),
+    ],
+  );
+}
   
   Widget _buildMembershipTab() {
     // Get current user data from Firebase Auth

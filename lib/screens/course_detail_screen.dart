@@ -3,6 +3,8 @@ import '../models/course.dart';
 import '../models/user.dart';
 import '../widgets/enquiry_form.dart';
 import '../models/enrolled_course.dart';
+import '../services/user_preferences_service.dart';
+import '../services/auth_service.dart';
 
 
 
@@ -19,6 +21,8 @@ class CourseDetailScreen extends StatefulWidget {
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  final UserPreferencesService _preferencesService = UserPreferencesService();
+  final AuthService _authService = AuthService();
   void _joinFreeClass() {
   // Create an EnrolledCourse object for the free course
   final newEnrollment = EnrolledCourse(
@@ -84,20 +88,58 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     }).take(5).toList();
   }
 
-  void _toggleFavorite() {
-    setState(() {
-      List<String> updatedFavorites = List.from(User.currentUser.favoriteCoursesIds);
-      if (isFavorite) {
-        updatedFavorites.remove(widget.course.id);
-      } else {
-        updatedFavorites.add(widget.course.id);
+void _toggleFavorite() async {
+  try {
+    // Get current user from AuthService
+    final currentUser = _authService.currentUser;
+    
+    if (currentUser == null || currentUser.id.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please log in to save favorites')),
+        );
       }
-      User.currentUser = User.currentUser.copyWith(
-        favoriteCoursesIds: updatedFavorites,
-      );
+      return;
+    }
+
+    print('Toggle favorite for course ${widget.course.id} by user ${currentUser.id}');
+    
+    // First, update the UI immediately for responsive feel
+    setState(() {
       isFavorite = !isFavorite;
     });
+    
+    // Then update Firestore
+    final updatedFavorites = await _preferencesService.toggleFavorite(
+      userId: currentUser.id,
+      courseId: widget.course.id,
+      currentFavorites: User.currentUser.favoriteCoursesIds,
+    );
+    
+    // Update User model
+    if (mounted) {
+      setState(() {
+        User.currentUser = User.currentUser.copyWith(
+          favoriteCoursesIds: updatedFavorites,
+        );
+        isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
+        print('UI updated with favorites: ${User.currentUser.favoriteCoursesIds}');
+      });
+    }
+  } catch (e) {
+    print('Error toggling favorite: $e');
+    if (mounted) {
+      setState(() {
+        // Revert the UI change if there was an error
+        isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update favorite: ${e.toString()}')),
+      );
+    }
   }
+}
 
   void _toggleSection(String sectionKey) {
     setState(() {

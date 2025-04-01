@@ -10,6 +10,9 @@ import 'screens/about_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/login_screen.dart';
 import 'widgets/guest_banner.dart';
+import 'services/user_preferences_service.dart';
+
+
 
 void main() async {
   // Ensure Flutter bindings are initialized
@@ -48,6 +51,8 @@ class AuthWrapper extends StatefulWidget {
 
 class _AuthWrapperState extends State<AuthWrapper> {
   final AuthService _authService = AuthService();
+  final UserPreferencesService _preferencesService = UserPreferencesService();
+
   late bool _isLoggedIn;
   bool _isLoading = true;
 
@@ -63,15 +68,40 @@ class _AuthWrapperState extends State<AuthWrapper> {
     // Check if user is already authenticated
     _isLoggedIn = _authService.isAuthenticated;
     
+    // If logged in, load user data including favorites
+    if (_isLoggedIn) {
+      try {
+        await _authService.loadUserData();
+      } catch (e) {
+        print('Error loading user data: $e');
+      }
+    }
+    
     setState(() => _isLoading = false);
   }
 
-  void _handleLoginStatusChanged(bool isLoggedIn) {
-    // Make sure to update the state when login status changes
-    setState(() {
-      _isLoggedIn = isLoggedIn;
-    });
+void _handleLoginStatusChanged(bool isLoggedIn) async {
+  // Set loading state
+  setState(() {
+    _isLoading = true;
+  });
+  
+  // Update login status
+  _isLoggedIn = isLoggedIn;
+  
+  // If logged in, load user data
+  if (isLoggedIn) {
+    try {
+      await _authService.loadUserData();
+    } catch (e) {
+      print('Error loading user data: $e');
+    }
   }
+  
+  setState(() {
+    _isLoading = false;
+  });
+}
 
   // This method will be passed to the AppMockup to handle sign out
   Future<void> _handleSignOut() async {

@@ -4,6 +4,8 @@ import '../models/trending_item.dart';
 import '../models/user.dart';
 import '../widgets/course_card.dart';
 import '../widgets/trending_card.dart';
+import '../services/user_preferences_service.dart';
+import '../services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +17,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Course> courses = Course.sampleCourses;
   List<TrendingItem> trendingItems = TrendingItem.sampleItems.take(2).toList();
+  bool _isLoading = false;
+  
+  // Service instances
+  final UserPreferencesService _preferencesService = UserPreferencesService();
+  final AuthService _authService = AuthService();
   
   // Search controller and query
   final TextEditingController _searchController = TextEditingController();
@@ -24,11 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Reset user's favorite courses to empty list when app starts
-    User.currentUser = User.currentUser.copyWith(
-      favoriteCoursesIds: [],
-    );
-    
     // Add listener to search controller
     _searchController.addListener(_onSearchChanged);
   }
@@ -47,19 +49,59 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
   
-  void _toggleFavorite(Course course) {
-    setState(() {
-      List<String> updatedFavorites = List.from(User.currentUser.favoriteCoursesIds);
-      if (updatedFavorites.contains(course.id)) {
-        updatedFavorites.remove(course.id);
-      } else {
-        updatedFavorites.add(course.id);
+  // Handle favorite toggling with Firestore persistence
+void _toggleFavorite(Course course) async {
+  try {
+    // Get current user from AuthService
+    final currentUser = _authService.currentUser;
+    
+    if (currentUser == null || currentUser.id.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please log in to save favorites')),
+        );
       }
+      return;
+    }
+
+    print('Toggle favorite for course ${course.id} by user ${currentUser.id}');
+    
+    // First, update the UI immediately for responsive feel
+    setState(() {
+      List<String> tempFavorites = List.from(User.currentUser.favoriteCoursesIds);
+      if (tempFavorites.contains(course.id)) {
+        tempFavorites.remove(course.id);
+      } else {
+        tempFavorites.add(course.id);
+      }
+      User.currentUser = User.currentUser.copyWith(
+        favoriteCoursesIds: tempFavorites,
+      );
+    });
+    
+    // Then update Firestore
+    final updatedFavorites = await _preferencesService.toggleFavorite(
+      userId: currentUser.id,
+      courseId: course.id,
+      currentFavorites: User.currentUser.favoriteCoursesIds,
+    );
+    
+    // Update local state again with the server response
+    setState(() {
       User.currentUser = User.currentUser.copyWith(
         favoriteCoursesIds: updatedFavorites,
       );
+      print('UI updated with favorites: ${User.currentUser.favoriteCoursesIds}');
     });
+  } catch (e) {
+    print('Error toggling favorite: $e');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update favorite: ${e.toString()}')),
+      );
+    }
   }
+}
   
   void _clearSearch() {
     setState(() {

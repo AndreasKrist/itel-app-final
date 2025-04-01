@@ -1,11 +1,13 @@
 // lib/services/auth_service.dart
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
-import '../models/user.dart' as app_user;
+import '../models/user.dart';
+import 'user_preferences_service.dart';
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final UserPreferencesService _preferencesService = UserPreferencesService();
 
   // Check if user is authenticated
   bool get isAuthenticated {
@@ -13,21 +15,21 @@ class AuthService {
   }
 
   // Simplified user conversion to avoid type issues
-  app_user.User? _userFromFirebase(firebase_auth.User? firebaseUser) {
+  User? _userFromFirebase(firebase_auth.User? firebaseUser) {
     if (firebaseUser == null) {
       return null;
     }
     
     try {
       // Create a minimal user object to avoid type conversion issues
-      return app_user.User(
+      return User(
         id: firebaseUser.uid,
         name: firebaseUser.displayName ?? 'User',
         email: firebaseUser.email ?? '',
         // Use empty strings/defaults for other required fields
         phone: '+62 821xxxxxxxx', // Default phone
         company: 'Lilo Store LTD', // Default company
-        tier: app_user.MembershipTier.pro, // Default tier for all signed-up users
+        tier: MembershipTier.pro, // Default tier for all signed-up users
         membershipExpiryDate: 'March 7, 2027', // Default expiry
       );
     } catch (e) {
@@ -37,7 +39,7 @@ class AuthService {
   }
 
   // Get current user
-  app_user.User? get currentUser {
+  User? get currentUser {
     try {
       final firebase_auth.User? firebaseUser = _firebaseAuth.currentUser;
       return _userFromFirebase(firebaseUser);
@@ -47,8 +49,64 @@ class AuthService {
     }
   }
 
+  // Load user data including favorites
+Future<void> loadUserData() async {
+  final firebase_auth.User? firebaseUser = _firebaseAuth.currentUser;
+  if (firebaseUser == null) return;
+  
+  try {
+    print('Loading user data for ${firebaseUser.uid}');
+    
+    // Get user favorites first
+    final favorites = await _preferencesService.loadFavorites(firebaseUser.uid);
+    print('Loaded favorites: $favorites');
+    
+    // Get user profile data
+    final userProfile = await _preferencesService.getUserProfile(firebaseUser.uid);
+    
+    // If profile doesn't exist, create it
+    if (userProfile == null) {
+      print('User profile not found, creating one');
+      await _preferencesService.saveUserProfile(
+        userId: firebaseUser.uid,
+        name: firebaseUser.displayName ?? 'User',
+        email: firebaseUser.email ?? '',
+        phone: '+62 821xxxxxxxx',
+        company: 'Lilo Store LTD',
+        tier: MembershipTier.pro,
+        membershipExpiryDate: 'March 7, 2027',
+        favoriteCoursesIds: favorites, // Pass the loaded favorites
+      );
+    }
+    
+    // Update the currentUser with the loaded data
+    User.currentUser = User(
+      id: firebaseUser.uid,
+      name: firebaseUser.displayName ?? userProfile?['name'] ?? 'User',
+      email: firebaseUser.email ?? userProfile?['email'] ?? '',
+      phone: userProfile?['phone'] ?? '+62 821xxxxxxxx',
+      company: userProfile?['company'] ?? 'Lilo Store LTD',
+      tier: _getTierFromString(userProfile?['tier']),
+      membershipExpiryDate: userProfile?['membershipExpiryDate'] ?? 'March 7, 2027',
+      favoriteCoursesIds: favorites, // Use the loaded favorites
+    );
+    
+    print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds}');
+  } catch (e) {
+    print('Error loading user data: $e');
+  }
+}
+
+  // Helper method to convert string to MembershipTier
+  MembershipTier _getTierFromString(String? tierString) {
+    if (tierString == 'pro') {
+      return MembershipTier.pro;
+    }
+    return MembershipTier.standard;
+  }
+
   // Sign in with Google
-  Future<app_user.User?> signInWithGoogle() async {
+  Future<User?> signInWithGoogle() async {
     try {
       // Begin interactive sign-in process
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -71,6 +129,28 @@ class AuthService {
       final firebase_auth.UserCredential userCredential = 
           await _firebaseAuth.signInWithCredential(credential);
           
+      if (userCredential.user != null) {
+        // Check if user profile exists
+        final userProfile = await _preferencesService.getUserProfile(userCredential.user!.uid);
+        
+        // If not, create one
+        if (userProfile == null) {
+          await _preferencesService.saveUserProfile(
+            userId: userCredential.user!.uid,
+            name: userCredential.user!.displayName ?? 'User',
+            email: userCredential.user!.email ?? '',
+            phone: '+62 821xxxxxxxx',
+            company: 'Lilo Store LTD',
+            tier: MembershipTier.pro,
+            membershipExpiryDate: 'March 7, 2027',
+            favoriteCoursesIds: [],
+          );
+        }
+        
+        // Load user data including favorites
+        await loadUserData();
+      }
+      
       // Return user data
       return _userFromFirebase(userCredential.user);
     } catch (e) {
@@ -80,12 +160,18 @@ class AuthService {
   }
 
   // Sign in with email and password
-  Future<app_user.User?> signInWithEmailPassword(String email, String password) async {
+  Future<User?> signInWithEmailPassword(String email, String password) async {
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      
+      if (credential.user != null) {
+        // Load user data including favorites
+        await loadUserData();
+      }
+      
       return _userFromFirebase(credential.user);
     } on firebase_auth.FirebaseAuthException catch (e) {
       print('Firebase Auth Error: ${e.code} - ${e.message}');
@@ -96,8 +182,8 @@ class AuthService {
     }
   }
 
-  // Register with email and password - simplified
-  Future<app_user.User?> registerWithEmailPassword(String email, String password, String name) async {
+  // Register with email and password
+  Future<User?> registerWithEmailPassword(String email, String password, String name) async {
     try {
       // Create the user first
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -108,6 +194,21 @@ class AuthService {
       // Update display name separately (don't wait for it to complete)
       if (credential.user != null) {
         await credential.user!.updateDisplayName(name);
+        
+        // Create Firestore profile
+        await _preferencesService.saveUserProfile(
+          userId: credential.user!.uid,
+          name: name,
+          email: email,
+          phone: '+62 821xxxxxxxx',
+          company: 'Lilo Store LTD',
+          tier: MembershipTier.pro,
+          membershipExpiryDate: 'March 7, 2027',
+          favoriteCoursesIds: [],
+        );
+        
+        // Load user data including favorites
+        await loadUserData();
       }
       
       // Return user without relying on the updateProfile or reload operations
@@ -122,9 +223,23 @@ class AuthService {
   }
 
   // Sign in as guest
-  Future<app_user.User?> signInAnonymously() async {
+  Future<User?> signInAnonymously() async {
     try {
       final credential = await _firebaseAuth.signInAnonymously();
+      
+      if (credential.user != null) {
+        // Create a basic profile for anonymous users
+        await _preferencesService.saveUserProfile(
+          userId: credential.user!.uid,
+          name: 'Guest',
+          email: '',
+          favoriteCoursesIds: [],
+        );
+        
+        // Load user data (though it's minimal for anonymous users)
+        await loadUserData();
+      }
+      
       return _userFromFirebase(credential.user);
     } catch (e) {
       print('Anonymous sign in failed: $e');
@@ -141,47 +256,6 @@ class AuthService {
       await _firebaseAuth.signOut();
     } catch (e) {
       print('Sign out failed: $e');
-      rethrow;
-    }
-  }
-  
-  // Update user profile data
-  Future<app_user.User?> updateUserProfile({
-    String? displayName,
-    String? phoneNumber,
-    String? company,
-    app_user.MembershipTier? tier,
-  }) async {
-    try {
-      final firebase_auth.User? firebaseUser = _firebaseAuth.currentUser;
-      if (firebaseUser == null) {
-        return null;
-      }
-      
-      // Update display name if provided
-      if (displayName != null && displayName.isNotEmpty) {
-        await firebaseUser.updateDisplayName(displayName);
-      }
-      
-      // For now, we're just returning an updated user object
-      // In a real app, you would save the additional data to Firestore
-      
-      // Get current user from our model
-      app_user.User currentUser = _userFromFirebase(firebaseUser) ?? 
-                                app_user.User(
-                                  id: firebaseUser.uid,
-                                  name: firebaseUser.displayName ?? 'User',
-                                  email: firebaseUser.email ?? '',
-                                );
-      
-      // Return updated user (in a real app, this would be saved to Firestore)
-      return currentUser.copyWith(
-        phone: phoneNumber ?? currentUser.phone,
-        company: company ?? currentUser.company,
-        tier: tier ?? currentUser.tier,
-      );
-    } catch (e) {
-      print('Error updating user profile: $e');
       rethrow;
     }
   }
