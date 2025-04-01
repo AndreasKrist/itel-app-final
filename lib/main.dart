@@ -9,7 +9,6 @@ import 'screens/trending_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/login_screen.dart';
-import 'models/user.dart';
 import 'widgets/guest_banner.dart';
 
 void main() async {

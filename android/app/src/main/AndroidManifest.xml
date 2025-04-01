@@ -59,11 +59,16 @@
     </queries> -->
 
     <queries>
-    <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="https" />
-    </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+    <!-- For Google Sign-In -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="com.google.android.gms.auth.api.signin.GoogleSignIn" />
+        </intent>
     </queries>
 
     <!-- moodle -->

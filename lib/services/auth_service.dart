@@ -1,9 +1,11 @@
 // lib/services/auth_service.dart
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user.dart' as app_user;
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // Check if user is authenticated
   bool get isAuthenticated {
@@ -45,6 +47,38 @@ class AuthService {
     }
   }
 
+  // Sign in with Google
+  Future<app_user.User?> signInWithGoogle() async {
+    try {
+      // Begin interactive sign-in process
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      
+      // Abort if sign in is aborted by user
+      if (googleUser == null) {
+        return null;
+      }
+      
+      // Obtain auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      
+      // Create new credential for Firebase
+      final firebase_auth.OAuthCredential credential = firebase_auth.GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      
+      // Sign in with credential
+      final firebase_auth.UserCredential userCredential = 
+          await _firebaseAuth.signInWithCredential(credential);
+          
+      // Return user data
+      return _userFromFirebase(userCredential.user);
+    } catch (e) {
+      print('Error during Google sign in: $e');
+      rethrow;
+    }
+  }
+
   // Sign in with email and password
   Future<app_user.User?> signInWithEmailPassword(String email, String password) async {
     try {
@@ -73,9 +107,7 @@ class AuthService {
       
       // Update display name separately (don't wait for it to complete)
       if (credential.user != null) {
-        credential.user!.updateDisplayName(name).catchError((e) {
-          print('Could not update display name: $e');
-        });
+        await credential.user!.updateDisplayName(name);
       }
       
       // Return user without relying on the updateProfile or reload operations
@@ -103,6 +135,9 @@ class AuthService {
   // Sign out
   Future<void> signOut() async {
     try {
+      // Sign out from Google
+      await _googleSignIn.signOut();
+      // Sign out from Firebase
       await _firebaseAuth.signOut();
     } catch (e) {
       print('Sign out failed: $e');

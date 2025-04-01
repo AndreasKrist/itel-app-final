@@ -1,6 +1,5 @@
 // lib/screens/signup_screen.dart
 import 'package:flutter/material.dart';
-import '../models/user.dart';
 import '../services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 

@@ -25,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
   
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
   bool _obscurePassword = true;
   String? _errorMessage;
 
@@ -110,6 +111,36 @@ class _LoginScreenState extends State<LoginScreen> {
         _errorMessage = "An error occurred during login";
         _isLoading = false;
         print("Login error: ${e.toString()}");
+      });
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    setState(() {
+      _isGoogleLoading = true;
+      _errorMessage = null;
+    });
+    
+    try {
+      // Sign in with Google
+      final user = await _authService.signInWithGoogle();
+      
+      if (!mounted) return;
+      
+      if (user != null) {
+        // If we have a user, sign-in was successful
+        widget.onLoginStatusChanged(true);
+      } else {
+        // User cancelled Google sign-in
+        setState(() {
+          _isGoogleLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Google sign-in failed. Please try again.";
+        _isGoogleLoading = false;
+        print("Google sign-in error: ${e.toString()}");
       });
     }
   }
@@ -347,9 +378,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 
                 const SizedBox(height: 16),
                 
+                // Google Sign In Button
+                ElevatedButton.icon(
+                  onPressed: _isGoogleLoading ? null : _loginWithGoogle,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.grey[800],
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 1,
+                  ),
+                  icon: _isGoogleLoading
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.red,
+                          strokeWidth: 3,
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/g.png', // You need to add this image
+                        height: 24,
+                        width: 24,
+                      ),
+                  label: Text(
+                    'Continue with Google',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: 16),
+                
                 // Login as guest
                 OutlinedButton(
-                  onPressed: _isLoading ? null : _loginAsGuest,
+                  onPressed: _isLoading || _isGoogleLoading ? null : _loginAsGuest,
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: Colors.blue[200]!),
@@ -373,7 +441,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     TextButton(
-                      onPressed: _isLoading ? null : () {
+                      onPressed: _isLoading || _isGoogleLoading ? null : () {
                         Navigator.push(
                           context, 
                           MaterialPageRoute(
