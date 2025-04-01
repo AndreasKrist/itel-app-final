@@ -23,6 +23,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _showPersonalInfo = true;
   String activeTab = 'profile'; // Default tab is profile
   bool _showCalendar = false;
   DateTime _focusedDay = DateTime.now();
@@ -32,6 +33,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Add Auth Service
   final AuthService _authService = AuthService();
   final UserPreferencesService _preferencesService = UserPreferencesService();
+  String _maskEmail(String email) {
+  if (email.isEmpty) return '********';
+  
+  final parts = email.split('@');
+  if (parts.length != 2) return '********';
+  
+  // Show first character and last character of username part, mask the rest
+  String username = parts[0];
+  if (username.length <= 2) {
+    return '**@${parts[1]}';
+  }
+  
+  String maskedUsername = '${username[0]}****${username[username.length - 1]}';
+  return '$maskedUsername@${parts[1]}';
+}
+
+// Helper method to mask phone number
+String _maskPhone(String phone) {
+  if (phone.isEmpty) return '********';
+  
+  // Keep the last 4 digits visible, mask the rest
+  if (phone.length <= 4) {
+    return '****$phone';
+  }
+  
+  return '****${phone.substring(phone.length - 4)}';
+}
 
 
 void _toggleFavorite(Course course) async {
@@ -518,37 +546,79 @@ Widget _buildTabButton(String title, String tabId) {
         const SizedBox(height: 16),
         
         // Personal Information - Using Firebase user data
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
+// Personal Information - Using Firebase user data
+Container(
+  padding: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(12),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.05),
+        blurRadius: 10,
+        offset: const Offset(0, 2),
+      ),
+    ],
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Personal Information',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Personal Information',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+          // Toggle button for showing/hiding information
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _showPersonalInfo = !_showPersonalInfo;
+              });
+            },
+            child: Row(
+              children: [
+                Icon(
+                  _showPersonalInfo ? Icons.visibility : Icons.visibility_off,
+                  size: 18,
+                  color: Colors.blue[600],
                 ),
-              ),
-              const SizedBox(height: 16),
-              _buildInfoRow('Email', currentUser.email),
-              _buildInfoRow('Phone', currentUser.phone),
-              if (currentUser.company != null)
-                _buildInfoRow('Company', currentUser.company!),
-            ],
+                const SizedBox(width: 4),
+                Text(
+                  _showPersonalInfo ? 'Hide' : 'Show',
+                  style: TextStyle(
+                    color: Colors.blue[600],
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
+      ),
+      const SizedBox(height: 16),
+
+      // Show masked or actual information based on visibility setting
+      if (_showPersonalInfo) ...[
+        _buildInfoRow('Email', currentUser.email),
+        _buildInfoRow('Phone', currentUser.phone),
+        if (currentUser.company != null)
+          _buildInfoRow('Company', currentUser.company!),
+      ] else ...[
+        // Show masked information
+        _buildInfoRow('Email', _maskEmail(currentUser.email)),
+        _buildInfoRow('Phone', _maskPhone(currentUser.phone)),
+        if (currentUser.company != null)
+          _buildInfoRow('Company', '********'),
+      ],
+    ],
+  ),
+),
         
         const SizedBox(height: 24),
         
@@ -1316,6 +1386,62 @@ Widget _buildCoursesTab() {
           ),
         ),
         
+                Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Privacy Settings',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Show personal information',
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  Switch(
+                    value: _showPersonalInfo,
+                    onChanged: (value) {
+                      setState(() {
+                        _showPersonalInfo = value;
+                      });
+                    },
+                    activeColor: Colors.blue[600],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'When turned off, your personal information will be masked for privacy.',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+
         const SizedBox(height: 24),
       ],
     );

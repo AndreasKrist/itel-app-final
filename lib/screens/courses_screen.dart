@@ -24,7 +24,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   String activeSort = 'none';
   bool showFilters = false;
   bool showSortOptions = false;
-  bool _isLoading = false;
+  final bool _isLoading = false;
   
   // Service instances
   final UserPreferencesService _preferencesService = UserPreferencesService();

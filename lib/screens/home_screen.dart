@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Course> courses = Course.sampleCourses;
   List<TrendingItem> trendingItems = TrendingItem.sampleItems.take(2).toList();
-  bool _isLoading = false;
+  final bool _isLoading = false;
   
   // Service instances
   final UserPreferencesService _preferencesService = UserPreferencesService();

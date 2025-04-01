@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../models/user.dart';
 import '../screens/course_detail_screen.dart';
-import '../services/user_preferences_service.dart';
-import '../services/auth_service.dart'; 
 
 
 
