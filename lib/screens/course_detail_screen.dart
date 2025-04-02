@@ -5,6 +5,8 @@ import '../widgets/enquiry_form.dart';
 import '../models/enrolled_course.dart';
 import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 
@@ -24,42 +26,74 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AuthService _authService = AuthService();
   void _joinFreeClass() {
-  // Create an EnrolledCourse object for the free course
-  final newEnrollment = EnrolledCourse(
-    courseId: widget.course.id,
-    enrollmentDate: DateTime.now(),
-    status: EnrollmentStatus.active, // Start as active for free courses
-    isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
-    // Set next session to 3 days from now
-    nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
-    nextSessionTime: '10:00 AM - 12:00 PM',
-    location: widget.course.deliveryMethods?.contains('OLL') ?? false 
-        ? 'https://online.itel.com.sg'
-        : 'ITEL Training Center (Room 101)',
-    progress: '0% complete', // Start with 0% progress
-  );
-  
-  // Update the user's enrolled courses
-  User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
-  
-  // Show success message
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('You have successfully joined the class!'),
-          Text(
-            'Check your Profile to access the course materials',
-            style: TextStyle(fontSize: 12),
+      // Create an EnrolledCourse object for the free course
+      final newEnrollment = EnrolledCourse(
+        courseId: widget.course.id,
+        enrollmentDate: DateTime.now(),
+        status: EnrollmentStatus.active, // Start as active for free courses
+        isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
+        // Set next session to 3 days from now
+        nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
+        nextSessionTime: '10:00 AM - 12:00 PM',
+        location: widget.course.deliveryMethods?.contains('OLL') ?? false 
+            ? 'https://online.itel.com.sg'
+            : 'ITEL Training Center (Room assignment pending)',
+        progress: '0% complete', // Start with 0% progress
+      );
+      
+      // Update the user's enrolled courses
+      User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+      
+      // Save to Firebase (this part is missing!)
+      _saveEnrollmentToFirebase(newEnrollment);
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('You have successfully joined the class!'),
+              Text(
+                'Check your Profile to access the course materials',
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
           ),
-        ],
-      ),
-      backgroundColor: Colors.green,
-      duration: Duration(seconds: 4),
-    ),
-  );
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 4),
+        ),
+      );
+    }
+
+    // Add this new function to save enrollment data to Firebase
+    Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
+  try {
+    final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+    
+    final enrollmentData = {
+      'courseId': enrollment.courseId,
+      'enrollmentDate': enrollment.enrollmentDate.toIso8601String(),
+      'status': enrollment.status.toString().split('.').last,
+      'isOnline': enrollment.isOnline,
+      'nextSessionDate': enrollment.nextSessionDate?.toIso8601String(),
+      'nextSessionTime': enrollment.nextSessionTime,
+      'location': enrollment.location,
+      'progress': enrollment.progress,
+      'timestamp': FieldValue.serverTimestamp(),
+    };
+    
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('enrolledCourses')
+        .doc(enrollment.courseId)
+        .set(enrollmentData);
+  } catch (e) {
+    print('Error saving enrollment: $e');
+  }
 }
   late bool isFavorite;
   bool _showEnquiryForm = false;

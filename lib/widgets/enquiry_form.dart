@@ -3,6 +3,9 @@ import '../models/course.dart';
 import '../services/form_submission_service.dart';
 import '../models/enrolled_course.dart';
 import '../models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EnquiryForm extends StatefulWidget {
   final Course course;
@@ -97,8 +100,7 @@ void _submitForm() async {
         enrollmentDate: DateTime.now(),
         status: EnrollmentStatus.pending, // Start as pending
         isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
-        // Set next session to 7 days from now (just for demo purposes)
-        nextSessionDate: DateTime.now().add(const Duration(days: 7)), 
+        nextSessionDate: DateTime.now().add(const Duration(days: 7)),
         nextSessionTime: '09:00 AM - 11:00 AM',
         location: widget.course.deliveryMethods?.contains('OLL') ?? false 
             ? 'https://online.itel.com.sg'
@@ -107,6 +109,9 @@ void _submitForm() async {
       
       // Update the user's enrolled courses
       User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+      
+      // Save to Firebase (add this!)
+      await _saveEnrollmentToFirebase(newEnrollment);
     }
     
     // Hide loading indicator
@@ -141,6 +146,40 @@ void _submitForm() async {
     if (result['success']) {
       widget.onSubmit();
     }
+  }
+}
+
+// Add this function to save to Firebase
+Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
+  try {
+    // Get current user
+    final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+    
+    // Create enrollment data to save
+    final enrollmentData = {
+      'courseId': enrollment.courseId,
+      'enrollmentDate': enrollment.enrollmentDate.toIso8601String(),
+      'status': enrollment.status.toString().split('.').last,
+      'isOnline': enrollment.isOnline,
+      'nextSessionDate': enrollment.nextSessionDate?.toIso8601String(),
+      'nextSessionTime': enrollment.nextSessionTime,
+      'location': enrollment.location,
+      'progress': enrollment.progress,
+      'timestamp': FieldValue.serverTimestamp(),
+    };
+    
+    // Save to Firestore
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('enrolledCourses')
+        .doc(enrollment.courseId)
+        .set(enrollmentData);
+        
+    print('Enrollment saved to Firebase successfully');
+  } catch (e) {
+    print('Error saving enrollment to Firebase: $e');
   }
 }
 

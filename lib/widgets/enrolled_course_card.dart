@@ -61,79 +61,32 @@ class EnrolledCourseCard extends StatelessWidget {
   }
 
   // Launch the course URL
-  void _launchCourseURL(BuildContext context) async {
-    if (enrollment.isOnline && enrollment.location != null) {
-      try {
-        // First try to launch the Moodle app using the moodlemobile:// scheme
-        final moodleAppUri = Uri.parse('moodlemobile://link=https://online.itel.com.sg');
-        
-        // Check if the Moodle app is installed
-        if (await canLaunchUrl(moodleAppUri)) {
-          // Launch the Moodle app
-          await launchUrl(moodleAppUri);
-        } else {
-          // If Moodle app is not installed, try the web URL
-          final webUri = Uri.parse('https://online.itel.com.sg');
-          
-          if (await canLaunchUrl(webUri)) {
-            // Show dialog prompting to install the app
-            showDialog(
-              context: context,
-              builder: (BuildContext dialogContext) {
-                return AlertDialog(
-                  title: Text('Moodle App Not Found'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('For the best learning experience, we recommend using the Moodle app.'),
-                      SizedBox(height: 12),
-                      Text('Would you like to install the app or continue to the website?'),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                        // Open app store based on platform
-                        if (Theme.of(context).platform == TargetPlatform.iOS) {
-                          launchUrl(Uri.parse('https://apps.apple.com/app/moodle-mobile/id633359593'));
-                        } else {
-                          launchUrl(Uri.parse('https://play.google.com/store/apps/details?id=com.moodle.moodlemobile'));
-                        }
-                      },
-                      child: Text('Install App'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                        // Open in browser
-                        launchUrl(webUri, mode: LaunchMode.externalApplication);
-                      },
-                      child: Text('Continue to Website'),
-                    ),
-                  ],
-                );
-              },
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Could not open Moodle LMS')),
-            );
-          }
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
-        );
-      }
-    } else {
-      // For offline courses, just show the location
+void _launchCourseURL(BuildContext context) async {
+  if (enrollment.isOnline && enrollment.location != null) {
+    try {
+      // Define your Moodle URL
+      String moodleUrl = 'https://online.itel.com.sg';
+      
+      // Create the login URL that will trigger Google authentication
+      final loginUrl = '${moodleUrl}/login/index.php?authCAS=Google';
+      
+      // Launch the URL in external browser
+      await launchUrl(
+        Uri.parse(loginUrl),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Course location details: ${enrollment.location ?? "Not available"}')),
+        SnackBar(content: Text('Error opening course: ${e.toString()}')),
       );
     }
+  } else {
+    // For offline courses, just show the location
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Course location: ${enrollment.location ?? "Not available"}')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

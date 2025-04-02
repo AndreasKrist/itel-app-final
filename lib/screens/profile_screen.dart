@@ -8,6 +8,8 @@ import '../widgets/enrolled_course_card.dart';
 import '../models/enrolled_course.dart';
 import '../services/auth_service.dart';
 import '../services/user_preferences_service.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -30,6 +32,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   
+  // initState and loadEnrollments Functions - cla
+  // Add to the _ProfileScreenState class
+  @override
+  void initState() {
+    super.initState();
+    _loadEnrollmentsFromFirebase();
+  }
+
+Future<void> _loadEnrollmentsFromFirebase() async {
+  try {
+    // Get current user
+    final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+    
+    print('Loading enrollments for user: ${currentUser.uid}');
+    
+    // Fetch enrollments from Firestore
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('enrolledCourses')
+        .get();
+        
+    List<EnrolledCourse> enrollments = [];
+    
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      print('Found enrollment for course: ${data['courseId']}');
+      
+      // Parse status
+      EnrollmentStatus status = EnrollmentStatus.pending;
+      if (data['status'] != null) {
+        switch (data['status']) {
+          case 'pending': status = EnrollmentStatus.pending; break;
+          case 'confirmed': status = EnrollmentStatus.confirmed; break;
+          case 'active': status = EnrollmentStatus.active; break;
+          case 'completed': status = EnrollmentStatus.completed; break;
+          case 'cancelled': status = EnrollmentStatus.cancelled; break;
+        }
+      }
+      
+      // Create enrollment object
+      final enrollment = EnrolledCourse(
+        courseId: data['courseId'],
+        enrollmentDate: data['enrollmentDate'] != null 
+            ? DateTime.parse(data['enrollmentDate']) 
+            : DateTime.now(),
+        status: status,
+        isOnline: data['isOnline'] ?? false,
+        nextSessionDate: data['nextSessionDate'] != null 
+            ? DateTime.parse(data['nextSessionDate']) 
+            : null,
+        nextSessionTime: data['nextSessionTime'],
+        location: data['location'],
+        progress: data['progress'],
+      );
+      
+      enrollments.add(enrollment);
+    }
+    
+    // Update the user model with fetched enrollments
+    if (mounted) {
+      setState(() {
+        User.currentUser = User.currentUser.copyWith(
+          enrolledCourses: enrollments,
+        );
+      });
+    }
+  } catch (e) {
+    print('Error loading enrollments: $e');
+  }
+}
+
+
   // Add Auth Service
   final AuthService _authService = AuthService();
   final UserPreferencesService _preferencesService = UserPreferencesService();
