@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user.dart';
 import 'user_preferences_service.dart';
+import '../models/enrolled_course.dart';
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
@@ -64,6 +65,33 @@ Future<void> loadUserData() async {
     // Get user profile data
     final userProfile = await _preferencesService.getUserProfile(firebaseUser.uid);
     
+    // Load enrolled courses data from profile
+    List<EnrolledCourse> enrolledCourses = [];
+    if (userProfile != null && userProfile.containsKey('enrolledCourses')) {
+      try {
+        final enrolledCoursesData = List<Map<String, dynamic>>.from(userProfile['enrolledCourses'] ?? []);
+        enrolledCourses = enrolledCoursesData.map((data) => EnrolledCourse(
+          courseId: data['courseId'] ?? '',
+          enrollmentDate: data['enrollmentDate'] != null 
+            ? DateTime.parse(data['enrollmentDate']) 
+            : DateTime.now(),
+          status: _getEnrollmentStatusFromString(data['status'] ?? 'pending'),
+          isOnline: data['isOnline'] ?? false,
+          nextSessionDate: data['nextSessionDate'] != null 
+            ? DateTime.parse(data['nextSessionDate']) 
+            : null,
+          nextSessionTime: data['nextSessionTime'],
+          location: data['location'],
+          instructorName: data['instructorName'],
+          progress: data['progress'],
+          gradeOrCertificate: data['gradeOrCertificate'],
+        )).toList();
+        print('Loaded ${enrolledCourses.length} enrolled courses');
+      } catch (e) {
+        print('Error parsing enrolled courses: $e');
+      }
+    }
+    
     // If profile doesn't exist, create it
     if (userProfile == null) {
       print('User profile not found, creating one');
@@ -76,6 +104,7 @@ Future<void> loadUserData() async {
         tier: MembershipTier.pro,
         membershipExpiryDate: 'March 7, 2027',
         favoriteCoursesIds: favorites, // Pass the loaded favorites
+        enrolledCourses: [], // Empty enrolled courses for new users
       );
     }
     
@@ -89,11 +118,29 @@ Future<void> loadUserData() async {
       tier: _getTierFromString(userProfile?['tier']),
       membershipExpiryDate: userProfile?['membershipExpiryDate'] ?? 'March 7, 2027',
       favoriteCoursesIds: favorites, // Use the loaded favorites
+      enrolledCourses: enrolledCourses, // Use the loaded enrolled courses
     );
     
-    print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds}');
+    print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds}, Enrolled Courses: ${User.currentUser.enrolledCourses.length}');
   } catch (e) {
     print('Error loading user data: $e');
+  }
+}
+
+// Helper method to convert string to EnrollmentStatus
+EnrollmentStatus _getEnrollmentStatusFromString(String statusString) {
+  switch (statusString) {
+    case 'active':
+      return EnrollmentStatus.active;
+    case 'confirmed':
+      return EnrollmentStatus.confirmed;
+    case 'completed':
+      return EnrollmentStatus.completed;
+    case 'cancelled':
+      return EnrollmentStatus.cancelled;
+    case 'pending':
+    default:
+      return EnrollmentStatus.pending;
   }
 }
 

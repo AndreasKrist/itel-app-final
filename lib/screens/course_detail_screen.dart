@@ -8,8 +8,6 @@ import '../services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-
 class CourseDetailScreen extends StatefulWidget {
   final Course course;
 
@@ -23,83 +21,13 @@ class CourseDetailScreen extends StatefulWidget {
 }
 
 class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  // All state variables
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AuthService _authService = AuthService();
-  void _joinFreeClass() {
-      // Create an EnrolledCourse object for the free course
-      final newEnrollment = EnrolledCourse(
-        courseId: widget.course.id,
-        enrollmentDate: DateTime.now(),
-        status: EnrollmentStatus.active, // Start as active for free courses
-        isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
-        // Set next session to 3 days from now
-        nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
-        nextSessionTime: '10:00 AM - 12:00 PM',
-        location: widget.course.deliveryMethods?.contains('OLL') ?? false 
-            ? 'https://online.itel.com.sg'
-            : 'ITEL Training Center (Room assignment pending)',
-        progress: '0% complete', // Start with 0% progress
-      );
-      
-      // Update the user's enrolled courses
-      User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
-      
-      // Save to Firebase (this part is missing!)
-      _saveEnrollmentToFirebase(newEnrollment);
-      
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('You have successfully joined the class!'),
-              Text(
-                'Check your Profile to access the course materials',
-                style: TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 4),
-        ),
-      );
-    }
-
-    // Add this new function to save enrollment data to Firebase
-    Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
-  try {
-    final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
-    
-    final enrollmentData = {
-      'courseId': enrollment.courseId,
-      'enrollmentDate': enrollment.enrollmentDate.toIso8601String(),
-      'status': enrollment.status.toString().split('.').last,
-      'isOnline': enrollment.isOnline,
-      'nextSessionDate': enrollment.nextSessionDate?.toIso8601String(),
-      'nextSessionTime': enrollment.nextSessionTime,
-      'location': enrollment.location,
-      'progress': enrollment.progress,
-      'timestamp': FieldValue.serverTimestamp(),
-    };
-    
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .collection('enrolledCourses')
-        .doc(enrollment.courseId)
-        .set(enrollmentData);
-  } catch (e) {
-    print('Error saving enrollment: $e');
-  }
-}
+  bool _isLoading = false;
   late bool isFavorite;
   bool _showEnquiryForm = false;
   final Map<String, bool> _expandedSections = {};
-  
-  // For Related Courses Section
   late List<Course> relatedCourses;
 
   @override
@@ -122,58 +50,181 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     }).take(5).toList();
   }
 
-void _toggleFavorite() async {
-  try {
-    // Get current user from AuthService
-    final currentUser = _authService.currentUser;
-    
-    if (currentUser == null || currentUser.id.isEmpty) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please log in to save favorites')),
-        );
-      }
-      return;
-    }
-
-    print('Toggle favorite for course ${widget.course.id} by user ${currentUser.id}');
-    
-    // First, update the UI immediately for responsive feel
+  void _joinFreeClass() async {
+    print("Starting _joinFreeClass method");
+    // Set loading state
     setState(() {
-      isFavorite = !isFavorite;
+      _isLoading = true;
     });
-    
-    // Then update Firestore
-    final updatedFavorites = await _preferencesService.toggleFavorite(
-      userId: currentUser.id,
-      courseId: widget.course.id,
-      currentFavorites: User.currentUser.favoriteCoursesIds,
-    );
-    
-    // Update User model
-    if (mounted) {
-      setState(() {
-        User.currentUser = User.currentUser.copyWith(
-          favoriteCoursesIds: updatedFavorites,
+
+    try {
+      // Get current user ID
+      final currentUser = _authService.currentUser;
+      if (currentUser == null || currentUser.id.isEmpty) {
+        print("No current user found, showing error");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please log in to join this course')),
         );
-        isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
-        print('UI updated with favorites: ${User.currentUser.favoriteCoursesIds}');
-      });
-    }
-  } catch (e) {
-    print('Error toggling favorite: $e');
-    if (mounted) {
-      setState(() {
-        // Revert the UI change if there was an error
-        isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
-      });
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update favorite: ${e.toString()}')),
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      print("Creating enrollment for course: ${widget.course.id}");
+      // Create an EnrolledCourse object for the free course
+      final newEnrollment = EnrolledCourse(
+        courseId: widget.course.id,
+        enrollmentDate: DateTime.now(),
+        status: EnrollmentStatus.active, // Start as active for free courses
+        isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
+        // Set next session to 3 days from now
+        nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
+        nextSessionTime: '10:00 AM - 12:00 PM',
+        location: widget.course.deliveryMethods?.contains('OLL') ?? false 
+            ? 'https://online.itel.com.sg'
+            : 'ITEL Training Center (Room 101)',
+        progress: '0% complete', // Start with 0% progress
       );
+      
+      // Update the user's enrolled courses locally
+      print("Current enrolled courses: ${User.currentUser.enrolledCourses.length}");
+      User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+      print("Updated enrolled courses: ${User.currentUser.enrolledCourses.length}");
+      
+      // For debugging - print all enrolled courses
+      for (var course in User.currentUser.enrolledCourses) {
+        print("Enrolled in course: ${course.courseId}, status: ${course.status}");
+      }
+      
+      print("Saving to Firestore...");
+      // Save the updated enrolled courses to Firestore
+      await _preferencesService.saveUserProfile(
+        userId: currentUser.id,
+        name: currentUser.name,
+        email: currentUser.email,
+        phone: currentUser.phone,
+        company: currentUser.company,
+        tier: currentUser.tier,
+        membershipExpiryDate: currentUser.membershipExpiryDate,
+        favoriteCoursesIds: currentUser.favoriteCoursesIds,
+        enrolledCourses: User.currentUser.enrolledCourses,
+      );
+      
+      // Also save to the new structure
+      await _saveEnrollmentToFirebase(newEnrollment);
+      
+      print("Successfully saved to Firestore");
+      
+      // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('You have successfully joined the class!'),
+                Text(
+                  'Check your Profile to access the course materials',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 4),
+          ),
+        );
+      
+      print("Success message shown");
+    } catch (e) {
+        print('Error joining free class: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to join class: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+    } finally {
+        setState(() {
+          _isLoading = false;
+        });
+        print("_joinFreeClass completed");
     }
   }
-}
+
+  void _toggleFavorite() async {
+    try {
+      // Get current user from AuthService
+      final currentUser = _authService.currentUser;
+      
+      if (currentUser == null || currentUser.id.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please log in to save favorites')),
+          );
+        }
+        return;
+      }
+
+      print('Toggle favorite for course ${widget.course.id} by user ${currentUser.id}');
+      
+      // First, update the UI immediately for responsive feel
+      setState(() {
+        isFavorite = !isFavorite;
+      });
+
+void _toggleFavorite() async {
+    try {
+      // Get current user from AuthService
+      final currentUser = _authService.currentUser;
+      
+      if (currentUser == null || currentUser.id.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please log in to save favorites')),
+          );
+        }
+        return;
+      }
+
+      print('Toggle favorite for course ${widget.course.id} by user ${currentUser.id}');
+    
+      // First, update the UI immediately for responsive feel
+      setState(() {
+        isFavorite = !isFavorite;
+      });
+      
+      // Then update Firestore
+      final updatedFavorites = await _preferencesService.toggleFavorite(
+        userId: currentUser.id,
+        courseId: widget.course.id,
+        currentFavorites: User.currentUser.favoriteCoursesIds,
+      );
+      
+      // Update User model
+      if (mounted) {
+        setState(() {
+          User.currentUser = User.currentUser.copyWith(
+            favoriteCoursesIds: updatedFavorites,
+          );
+          isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
+          print('UI updated with favorites: ${User.currentUser.favoriteCoursesIds}');
+        });
+      }
+    } catch (e) {
+      print('Error toggling favorite: $e');
+      if (mounted) {
+        setState(() {
+          // Revert the UI change if there was an error
+          isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update favorite: ${e.toString()}')),
+        );
+      }
+    }
+  }
 
   void _toggleSection(String sectionKey) {
     setState(() {
@@ -1007,7 +1058,7 @@ String _getDiscountedValue(String? priceString) {
     );
   }
   
-  Widget _buildTableCell(String text, {bool isHeader = false}) {
+Widget _buildTableCell(String text, {bool isHeader = false}) {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Text(
