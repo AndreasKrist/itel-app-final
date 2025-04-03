@@ -235,7 +235,16 @@ class _AppMockupState extends State<AppMockup> {
               ),
               child: BottomNavigationBar(
                 currentIndex: _currentIndex,
-                onTap: (index) => setState(() => _currentIndex = index),
+                onTap: (index) {
+                  setState(() {
+                    // If switching to profile tab, trigger reload of enrollments
+                    if (index == 4 && _currentIndex != 4) {
+                      // We need to trigger the ProfileScreen to reload data
+                      print("Switching to profile tab - data will be refreshed");
+                    }
+                    _currentIndex = index;
+                  });
+                },
                 type: BottomNavigationBarType.fixed,
                 selectedItemColor: Colors.blue[600],
                 unselectedItemColor: Colors.grey[500],

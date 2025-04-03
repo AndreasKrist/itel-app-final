@@ -10,6 +10,8 @@ class UserPreferencesService {
   CollectionReference get _usersCollection => _firestore.collection('users');
 
   // Create or update user profile
+// Replace the saveUserProfile method in user_preferences_service.dart
+
 Future<void> saveUserProfile({
   required String userId,
   required String name,
@@ -22,34 +24,111 @@ Future<void> saveUserProfile({
   List<EnrolledCourse> enrolledCourses = const [],
 }) async {
   try {
-    // Convert EnrolledCourse objects to maps for Firestore
-    final List<Map<String, dynamic>> enrolledCoursesData = enrolledCourses.map((course) => {
-          'courseId': course.courseId,
-          'enrollmentDate': course.enrollmentDate.toIso8601String(),
-          'status': course.status.toString().split('.').last,
-          'isOnline': course.isOnline,
-          'nextSessionDate': course.nextSessionDate?.toIso8601String(),
-          'nextSessionTime': course.nextSessionTime,
-          'location': course.location,
-          'instructorName': course.instructorName,
-          'progress': course.progress,
-          'gradeOrCertificate': course.gradeOrCertificate,
-        }).toList();
+    print('Saving user profile for $userId with ${enrolledCourses.length} enrolled courses');
     
-    // Use SetOptions(merge: true) to ensure we don't overwrite other fields
-    await _usersCollection.doc(userId).set({
+    // Convert EnrolledCourse objects to maps for Firestore using simple string status
+    final List<Map<String, dynamic>> enrolledCoursesData = enrolledCourses.map((course) {
+      // Convert enum to simple string
+      String statusString;
+      switch (course.status) {
+        case EnrollmentStatus.pending:
+          statusString = 'pending';
+          break;
+        case EnrollmentStatus.confirmed:
+          statusString = 'confirmed';
+          break;
+        case EnrollmentStatus.active:
+          statusString = 'active';
+          break;
+        case EnrollmentStatus.completed:
+          statusString = 'completed';
+          break;
+        case EnrollmentStatus.cancelled:
+          statusString = 'cancelled';
+          break;
+        default:
+          statusString = 'pending';
+      }
+      
+      return {
+        'courseId': course.courseId,
+        'enrollmentDate': course.enrollmentDate.toIso8601String(),
+        'status': statusString,
+        'isOnline': course.isOnline,
+        'nextSessionDate': course.nextSessionDate?.toIso8601String(),
+        'nextSessionTime': course.nextSessionTime,
+        'location': course.location,
+        'instructorName': course.instructorName,
+        'progress': course.progress,
+        'gradeOrCertificate': course.gradeOrCertificate,
+      };
+    }).toList();
+    
+    // Update in batches to avoid timeouts on large data
+    final batch = _firestore.batch();
+    
+    // Main user document update
+    final userDocRef = _usersCollection.doc(userId);
+    batch.set(userDocRef, {
       'name': name,
       'email': email,
       'phone': phone,
       'company': company,
-      'tier': tier.toString().split('.').last,
+      'tier': tier == MembershipTier.pro ? 'pro' : 'standard',
       'membershipExpiryDate': membershipExpiryDate,
       'favoriteCoursesIds': favoriteCoursesIds,
       'enrolledCourses': enrolledCoursesData,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
     
-    print('User profile saved successfully');
+    // Also update each enrollment in the subcollection for redundancy and reliability
+    for (var course in enrolledCourses) {
+      // Convert enum to simple string
+      String statusString;
+      switch (course.status) {
+        case EnrollmentStatus.pending:
+          statusString = 'pending';
+          break;
+        case EnrollmentStatus.confirmed:
+          statusString = 'confirmed';
+          break;
+        case EnrollmentStatus.active:
+          statusString = 'active';
+          break;
+        case EnrollmentStatus.completed:
+          statusString = 'completed';
+          break;
+        case EnrollmentStatus.cancelled:
+          statusString = 'cancelled';
+          break;
+        default:
+          statusString = 'pending';
+      }
+      
+      final courseDocRef = _usersCollection
+          .doc(userId)
+          .collection('enrolledCourses')
+          .doc(course.courseId);
+      
+      batch.set(courseDocRef, {
+        'courseId': course.courseId,
+        'enrollmentDate': course.enrollmentDate.toIso8601String(),
+        'status': statusString,
+        'isOnline': course.isOnline,
+        'nextSessionDate': course.nextSessionDate?.toIso8601String(),
+        'nextSessionTime': course.nextSessionTime,
+        'location': course.location,
+        'instructorName': course.instructorName,
+        'progress': course.progress,
+        'gradeOrCertificate': course.gradeOrCertificate,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    }
+    
+    // Commit all changes
+    await batch.commit();
+    
+    print('User profile saved successfully with enrolled courses');
   } catch (e) {
     print('Error saving user profile: $e');
     rethrow;

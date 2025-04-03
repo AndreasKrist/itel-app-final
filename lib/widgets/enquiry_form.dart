@@ -245,11 +245,35 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
     final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
     if (currentUser == null) return;
     
+    print('Saving enrollment to Firebase subcollection for course: ${enrollment.courseId}');
+    
+    // Convert enum to string properly
+    String statusString;
+    switch (enrollment.status) {
+      case EnrollmentStatus.pending:
+        statusString = 'pending';
+        break;
+      case EnrollmentStatus.confirmed:
+        statusString = 'confirmed';
+        break;
+      case EnrollmentStatus.active:
+        statusString = 'active';
+        break;
+      case EnrollmentStatus.completed:
+        statusString = 'completed';
+        break;
+      case EnrollmentStatus.cancelled:
+        statusString = 'cancelled';
+        break;
+      default:
+        statusString = 'pending';
+    }
+    
     // Create enrollment data to save
     final enrollmentData = {
       'courseId': enrollment.courseId,
       'enrollmentDate': enrollment.enrollmentDate.toIso8601String(),
-      'status': enrollment.status.toString().split('.').last,
+      'status': statusString, // Use simple string instead of enum string
       'isOnline': enrollment.isOnline,
       'nextSessionDate': enrollment.nextSessionDate?.toIso8601String(),
       'nextSessionTime': enrollment.nextSessionTime,
@@ -265,8 +289,46 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
         .collection('enrolledCourses')
         .doc(enrollment.courseId)
         .set(enrollmentData);
+    
+    // Also add to the main user document's enrolledCourses array
+    try {
+      // Get current enrolled courses
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+      
+      List<Map<String, dynamic>> enrolledCourses = [];
+      
+      if (userDoc.exists && userDoc.data()!.containsKey('enrolledCourses')) {
+        // Extract existing enrolled courses
+        final existingEnrolledCourses = userDoc.data()!['enrolledCourses'] as List<dynamic>;
         
-    print('Enrollment saved to Firebase subcollection successfully');
+        // Convert to proper format and filter out this course if it exists
+        enrolledCourses = existingEnrolledCourses
+            .where((item) => item['courseId'] != enrollment.courseId)
+            .map((item) => Map<String, dynamic>.from(item))
+            .toList();
+      }
+      
+      // Add the new/updated enrollment
+      enrolledCourses.add(enrollmentData);
+      
+      // Update the user document
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .update({
+            'enrolledCourses': enrolledCourses,
+          });
+      
+      print('Enrollment saved to main user document successfully');
+    } catch (e) {
+      print('Error updating main user document: $e');
+      // Continue anyway since we saved to subcollection
+    }
+        
+    print('Enrollment saved to Firebase successfully');
   } catch (e) {
     print('Error saving enrollment to Firebase: $e');
     rethrow; // Rethrow to let the caller handle it

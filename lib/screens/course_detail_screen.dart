@@ -184,40 +184,100 @@ void _joinFreeClass() async {
 
   // Add the missing function here
   Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
+  try {
+    // Get current user
+    final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+    
+    print('Saving enrollment to Firebase subcollection for course: ${enrollment.courseId}');
+    
+    // Convert enum to string properly
+    String statusString;
+    switch (enrollment.status) {
+      case EnrollmentStatus.pending:
+        statusString = 'pending';
+        break;
+      case EnrollmentStatus.confirmed:
+        statusString = 'confirmed';
+        break;
+      case EnrollmentStatus.active:
+        statusString = 'active';
+        break;
+      case EnrollmentStatus.completed:
+        statusString = 'completed';
+        break;
+      case EnrollmentStatus.cancelled:
+        statusString = 'cancelled';
+        break;
+      default:
+        statusString = 'pending';
+    }
+    
+    // Create enrollment data to save
+    final enrollmentData = {
+      'courseId': enrollment.courseId,
+      'enrollmentDate': enrollment.enrollmentDate.toIso8601String(),
+      'status': statusString, // Use simple string instead of enum string
+      'isOnline': enrollment.isOnline,
+      'nextSessionDate': enrollment.nextSessionDate?.toIso8601String(),
+      'nextSessionTime': enrollment.nextSessionTime,
+      'location': enrollment.location,
+      'progress': enrollment.progress,
+      'timestamp': FieldValue.serverTimestamp(),
+    };
+    
+    // Save to Firestore subcollection
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('enrolledCourses')
+        .doc(enrollment.courseId)
+        .set(enrollmentData);
+    
+    // Also add to the main user document's enrolledCourses array
     try {
-      // Get current user
-      final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
-      if (currentUser == null) return;
+      // Get current enrolled courses
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
       
-      print('Saving enrollment to Firebase subcollection for course: ${enrollment.courseId}');
+      List<Map<String, dynamic>> enrolledCourses = [];
       
-      // Create enrollment data to save
-      final enrollmentData = {
-        'courseId': enrollment.courseId,
-        'enrollmentDate': enrollment.enrollmentDate.toIso8601String(),
-        'status': enrollment.status.toString().split('.').last,
-        'isOnline': enrollment.isOnline,
-        'nextSessionDate': enrollment.nextSessionDate?.toIso8601String(),
-        'nextSessionTime': enrollment.nextSessionTime,
-        'location': enrollment.location,
-        'progress': enrollment.progress,
-        'timestamp': FieldValue.serverTimestamp(),
-      };
+      if (userDoc.exists && userDoc.data()!.containsKey('enrolledCourses')) {
+        // Extract existing enrolled courses
+        final existingEnrolledCourses = userDoc.data()!['enrolledCourses'] as List<dynamic>;
+        
+        // Convert to proper format and filter out this course if it exists
+        enrolledCourses = existingEnrolledCourses
+            .where((item) => item['courseId'] != enrollment.courseId)
+            .map((item) => Map<String, dynamic>.from(item))
+            .toList();
+      }
       
-      // Save to Firestore subcollection
+      // Add the new/updated enrollment
+      enrolledCourses.add(enrollmentData);
+      
+      // Update the user document
       await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
-          .collection('enrolledCourses')
-          .doc(enrollment.courseId)
-          .set(enrollmentData);
-          
-      print('Enrollment saved to Firebase subcollection successfully');
+          .update({
+            'enrolledCourses': enrolledCourses,
+          });
+      
+      print('Enrollment saved to main user document successfully');
     } catch (e) {
-      print('Error saving enrollment to Firebase: $e');
-      rethrow; // Rethrow to let the caller handle it
+      print('Error updating main user document: $e');
+      // Continue anyway since we saved to subcollection
     }
+        
+    print('Enrollment saved to Firebase successfully');
+  } catch (e) {
+    print('Error saving enrollment to Firebase: $e');
+    rethrow; // Rethrow to let the caller handle it
   }
+}
 
   // Replace the _toggleFavorite method in course_detail_screen.dart with this improved version
 void _toggleFavorite() async {

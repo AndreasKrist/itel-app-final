@@ -28,11 +28,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _showPersonalInfo = true;
   String activeTab = 'profile'; // Default tab is profile
   bool _showCalendar = false;
+  bool _isProfileLoading = false;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   
-  // initState and loadEnrollments Functions - cla
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload enrollments whenever the screen comes into focus
+    _loadEnrollmentsFromFirebase();
+  }
   // Add to the _ProfileScreenState class
   @override
   void initState() {
@@ -42,9 +48,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 Future<void> _loadEnrollmentsFromFirebase() async {
   try {
+    setState(() {
+      _isProfileLoading = true; // Use the new variable name
+    });
+    
     // Get current user
     final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
+    if (currentUser == null) {
+      setState(() {
+        _isProfileLoading = false; // Use the new variable name
+      });
+      return;
+    }
     
     print('Loading enrollments for user: ${currentUser.uid}');
     
@@ -72,12 +87,16 @@ Future<void> _loadEnrollmentsFromFirebase() async {
       // Parse status
       EnrollmentStatus status = EnrollmentStatus.pending;
       if (data['status'] != null) {
-        switch (data['status']) {
-          case 'pending': status = EnrollmentStatus.pending; break;
-          case 'confirmed': status = EnrollmentStatus.confirmed; break;
-          case 'active': status = EnrollmentStatus.active; break;
-          case 'completed': status = EnrollmentStatus.completed; break;
-          case 'cancelled': status = EnrollmentStatus.cancelled; break;
+        if (data['status'] == 'pending' || data['status'] == 'EnrollmentStatus.pending') {
+          status = EnrollmentStatus.pending;
+        } else if (data['status'] == 'confirmed' || data['status'] == 'EnrollmentStatus.confirmed') {
+          status = EnrollmentStatus.confirmed;
+        } else if (data['status'] == 'active' || data['status'] == 'EnrollmentStatus.active') {
+          status = EnrollmentStatus.active;
+        } else if (data['status'] == 'completed' || data['status'] == 'EnrollmentStatus.completed') {
+          status = EnrollmentStatus.completed;
+        } else if (data['status'] == 'cancelled' || data['status'] == 'EnrollmentStatus.cancelled') {
+          status = EnrollmentStatus.cancelled;
         }
       }
       
@@ -94,6 +113,7 @@ Future<void> _loadEnrollmentsFromFirebase() async {
             : null,
         nextSessionTime: data['nextSessionTime'],
         location: data['location'],
+        instructorName: data['instructorName'],
         progress: data['progress'],
       );
       
@@ -109,15 +129,19 @@ Future<void> _loadEnrollmentsFromFirebase() async {
         for (var data in embeddedEnrollments) {
           print('Found enrollment in user document for course: ${data['courseId']}');
           
-          // Parse status
+          // Parse status - handle both enum strings and direct values
           EnrollmentStatus status = EnrollmentStatus.pending;
           if (data['status'] != null) {
-            switch (data['status']) {
-              case 'pending': status = EnrollmentStatus.pending; break;
-              case 'confirmed': status = EnrollmentStatus.confirmed; break;
-              case 'active': status = EnrollmentStatus.active; break;
-              case 'completed': status = EnrollmentStatus.completed; break;
-              case 'cancelled': status = EnrollmentStatus.cancelled; break;
+            if (data['status'] == 'pending' || data['status'] == 'EnrollmentStatus.pending') {
+              status = EnrollmentStatus.pending;
+            } else if (data['status'] == 'confirmed' || data['status'] == 'EnrollmentStatus.confirmed') {
+              status = EnrollmentStatus.confirmed;
+            } else if (data['status'] == 'active' || data['status'] == 'EnrollmentStatus.active') {
+              status = EnrollmentStatus.active;
+            } else if (data['status'] == 'completed' || data['status'] == 'EnrollmentStatus.completed') {
+              status = EnrollmentStatus.completed;
+            } else if (data['status'] == 'cancelled' || data['status'] == 'EnrollmentStatus.cancelled') {
+              status = EnrollmentStatus.cancelled;
             }
           }
           
@@ -134,6 +158,7 @@ Future<void> _loadEnrollmentsFromFirebase() async {
                 : null,
             nextSessionTime: data['nextSessionTime'],
             location: data['location'],
+            instructorName: data['instructorName'],
             progress: data['progress'],
           );
           
@@ -155,10 +180,16 @@ Future<void> _loadEnrollmentsFromFirebase() async {
         User.currentUser = User.currentUser.copyWith(
           enrolledCourses: enrollments,
         );
+        _isProfileLoading = false; // Use the new variable name
       });
     }
   } catch (e) {
     print('Error loading enrollments: $e');
+    if (mounted) {
+      setState(() {
+        _isProfileLoading = false; // Use the new variable name
+      });
+    }
   }
 }
 
