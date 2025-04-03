@@ -49,145 +49,189 @@ class _ProfileScreenState extends State<ProfileScreen> {
 Future<void> _loadEnrollmentsFromFirebase() async {
   try {
     setState(() {
-      _isProfileLoading = true; // Use the new variable name
+      _isProfileLoading = true;
     });
     
     // Get current user
     final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       setState(() {
-        _isProfileLoading = false; // Use the new variable name
+        _isProfileLoading = false;
       });
       return;
     }
     
     print('Loading enrollments for user: ${currentUser.uid}');
     
-    // Fetch enrollments from Firestore subcollection
-    final snapshotSubcollection = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .collection('enrolledCourses')
-        .get();
-    
-    // Also fetch the main user document that might have embedded enrollments
-    final userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
-    
+    // Create a set to track unique course IDs
+    Set<String> processedCourseIds = {};
     List<EnrolledCourse> enrollments = [];
-    Map<String, EnrolledCourse> enrollmentMap = {}; // To avoid duplicates
     
-    // Process subcollection enrollments
-    for (var doc in snapshotSubcollection.docs) {
-      final data = doc.data();
-      print('Found enrollment in subcollection for course: ${data['courseId']}');
-      
-      // Parse status
-      EnrollmentStatus status = EnrollmentStatus.pending;
-      if (data['status'] != null) {
-        if (data['status'] == 'pending' || data['status'] == 'EnrollmentStatus.pending') {
-          status = EnrollmentStatus.pending;
-        } else if (data['status'] == 'confirmed' || data['status'] == 'EnrollmentStatus.confirmed') {
-          status = EnrollmentStatus.confirmed;
-        } else if (data['status'] == 'active' || data['status'] == 'EnrollmentStatus.active') {
-          status = EnrollmentStatus.active;
-        } else if (data['status'] == 'completed' || data['status'] == 'EnrollmentStatus.completed') {
-          status = EnrollmentStatus.completed;
-        } else if (data['status'] == 'cancelled' || data['status'] == 'EnrollmentStatus.cancelled') {
-          status = EnrollmentStatus.cancelled;
-        }
-      }
-      
-      // Create enrollment object
-      final enrollment = EnrolledCourse(
-        courseId: data['courseId'],
-        enrollmentDate: data['enrollmentDate'] != null 
-            ? DateTime.parse(data['enrollmentDate']) 
-            : DateTime.now(),
-        status: status,
-        isOnline: data['isOnline'] ?? false,
-        nextSessionDate: data['nextSessionDate'] != null 
-            ? DateTime.parse(data['nextSessionDate']) 
-            : null,
-        nextSessionTime: data['nextSessionTime'],
-        location: data['location'],
-        instructorName: data['instructorName'],
-        progress: data['progress'],
-      );
-      
-      // Store in map by courseId
-      enrollmentMap[data['courseId']] = enrollment;
-    }
-    
-    // Process embedded enrollments (from main user document)
-    if (userDoc.exists) {
-      final userData = userDoc.data();
-      if (userData != null && userData.containsKey('enrolledCourses')) {
-        final List<dynamic> embeddedEnrollments = userData['enrolledCourses'];
-        for (var data in embeddedEnrollments) {
-          print('Found enrollment in user document for course: ${data['courseId']}');
+    // First try to fetch from subcollection (more reliable)
+    try {
+      final snapshotSubcollection = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .collection('enrolledCourses')
+          .get();
           
-          // Parse status - handle both enum strings and direct values
-          EnrollmentStatus status = EnrollmentStatus.pending;
-          if (data['status'] != null) {
-            if (data['status'] == 'pending' || data['status'] == 'EnrollmentStatus.pending') {
-              status = EnrollmentStatus.pending;
-            } else if (data['status'] == 'confirmed' || data['status'] == 'EnrollmentStatus.confirmed') {
-              status = EnrollmentStatus.confirmed;
-            } else if (data['status'] == 'active' || data['status'] == 'EnrollmentStatus.active') {
-              status = EnrollmentStatus.active;
-            } else if (data['status'] == 'completed' || data['status'] == 'EnrollmentStatus.completed') {
-              status = EnrollmentStatus.completed;
-            } else if (data['status'] == 'cancelled' || data['status'] == 'EnrollmentStatus.cancelled') {
-              status = EnrollmentStatus.cancelled;
+      print('Found ${snapshotSubcollection.docs.length} enrollments in subcollection');
+      
+      for (var doc in snapshotSubcollection.docs) {
+        final data = doc.data();
+        if (data['courseId'] != null) {
+          print('Processing subcollection enrollment for course: ${data['courseId']}');
+          
+          // Parse dates properly with null safety
+          DateTime? enrollmentDate;
+          if (data['enrollmentDate'] != null) {
+            try {
+              enrollmentDate = DateTime.parse(data['enrollmentDate']);
+            } catch (e) {
+              print('Error parsing enrollment date: $e');
+              enrollmentDate = DateTime.now();
             }
           }
           
-          // Create enrollment object
+          DateTime? nextSessionDate;
+          if (data['nextSessionDate'] != null) {
+            try {
+              nextSessionDate = DateTime.parse(data['nextSessionDate']);
+            } catch (e) {
+              print('Error parsing next session date: $e');
+              nextSessionDate = null;
+            }
+          }
+          
+          // Parse status with more robust handling
+          EnrollmentStatus status = EnrollmentStatus.pending;
+          if (data['status'] != null) {
+            String statusStr = data['status'].toString().toLowerCase();
+            if (statusStr.contains('confirm')) {
+              status = EnrollmentStatus.confirmed;
+            } else if (statusStr.contains('active')) {
+              status = EnrollmentStatus.active;
+            } else if (statusStr.contains('complet')) {
+              status = EnrollmentStatus.completed;
+            } else if (statusStr.contains('cancel')) {
+              status = EnrollmentStatus.cancelled;
+            }
+            // Default is pending
+          }
+          
           final enrollment = EnrolledCourse(
             courseId: data['courseId'],
-            enrollmentDate: data['enrollmentDate'] != null 
-                ? DateTime.parse(data['enrollmentDate']) 
-                : DateTime.now(),
+            enrollmentDate: enrollmentDate ?? DateTime.now(),
             status: status,
             isOnline: data['isOnline'] ?? false,
-            nextSessionDate: data['nextSessionDate'] != null 
-                ? DateTime.parse(data['nextSessionDate']) 
-                : null,
+            nextSessionDate: nextSessionDate,
             nextSessionTime: data['nextSessionTime'],
             location: data['location'],
             instructorName: data['instructorName'],
             progress: data['progress'],
           );
           
-          // If not already in map from subcollection, add it
-          if (!enrollmentMap.containsKey(data['courseId'])) {
-            enrollmentMap[data['courseId']] = enrollment;
+          enrollments.add(enrollment);
+          processedCourseIds.add(data['courseId']);
+        }
+      }
+    } catch (e) {
+      print('Error fetching subcollection enrollments: $e');
+      // Continue to try the main document
+    }
+    
+    // Then check the main user document
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+          
+      if (userDoc.exists) {
+        final userData = userDoc.data();
+        if (userData != null && userData.containsKey('enrolledCourses')) {
+          final List<dynamic> embeddedEnrollments = userData['enrolledCourses'];
+          print('Found ${embeddedEnrollments.length} enrollments in main user document');
+          
+          for (var data in embeddedEnrollments) {
+            // Skip if we already processed this course ID from the subcollection
+            if (data['courseId'] != null && !processedCourseIds.contains(data['courseId'])) {
+              print('Processing main document enrollment for course: ${data['courseId']}');
+              
+              // Parse dates properly with null safety
+              DateTime? enrollmentDate;
+              if (data['enrollmentDate'] != null) {
+                try {
+                  enrollmentDate = DateTime.parse(data['enrollmentDate']);
+                } catch (e) {
+                  print('Error parsing enrollment date: $e');
+                  enrollmentDate = DateTime.now();
+                }
+              }
+              
+              DateTime? nextSessionDate;
+              if (data['nextSessionDate'] != null) {
+                try {
+                  nextSessionDate = DateTime.parse(data['nextSessionDate']);
+                } catch (e) {
+                  print('Error parsing next session date: $e');
+                  nextSessionDate = null;
+                }
+              }
+              
+              // Parse status with more robust handling
+              EnrollmentStatus status = EnrollmentStatus.pending;
+              if (data['status'] != null) {
+                String statusStr = data['status'].toString().toLowerCase();
+                if (statusStr.contains('confirm')) {
+                  status = EnrollmentStatus.confirmed;
+                } else if (statusStr.contains('active')) {
+                  status = EnrollmentStatus.active;
+                } else if (statusStr.contains('complet')) {
+                  status = EnrollmentStatus.completed;
+                } else if (statusStr.contains('cancel')) {
+                  status = EnrollmentStatus.cancelled;
+                }
+                // Default is pending
+              }
+              
+              final enrollment = EnrolledCourse(
+                courseId: data['courseId'],
+                enrollmentDate: enrollmentDate ?? DateTime.now(),
+                status: status,
+                isOnline: data['isOnline'] ?? false,
+                nextSessionDate: nextSessionDate,
+                nextSessionTime: data['nextSessionTime'],
+                location: data['location'],
+                instructorName: data['instructorName'],
+                progress: data['progress'],
+              );
+              
+              enrollments.add(enrollment);
+              processedCourseIds.add(data['courseId']);
+            }
           }
         }
       }
+    } catch (e) {
+      print('Error fetching main document enrollments: $e');
     }
     
-    // Convert map values to list
-    enrollments = enrollmentMap.values.toList();
-    print('Total enrollments found: ${enrollments.length}');
-    
-    // Update the user model with fetched enrollments
+    // Make sure the component is still mounted before updating state
     if (mounted) {
       setState(() {
+        print('Updating User.currentUser with ${enrollments.length} enrollments');
         User.currentUser = User.currentUser.copyWith(
           enrolledCourses: enrollments,
         );
-        _isProfileLoading = false; // Use the new variable name
+        _isProfileLoading = false;
       });
     }
   } catch (e) {
-    print('Error loading enrollments: $e');
+    print('Error in _loadEnrollmentsFromFirebase: $e');
     if (mounted) {
       setState(() {
-        _isProfileLoading = false; // Use the new variable name
+        _isProfileLoading = false;
       });
     }
   }
@@ -689,6 +733,7 @@ Widget _buildTabButton(String title, String tabId) {
 }
   
   Widget _buildProfileTab() {
+
     // Get current user data from Firebase Auth
     final firebaseUser = _authService.currentUser;
     
