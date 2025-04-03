@@ -49,10 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
   
-  // Handle favorite toggling with Firestore persistence
+  // Replace the _toggleFavorite method in home_screen.dart
 void _toggleFavorite(Course course) async {
   try {
-    // Get current user from AuthService
+    // Get current user
     final currentUser = _authService.currentUser;
     
     if (currentUser == null || currentUser.id.isEmpty) {
@@ -64,35 +64,36 @@ void _toggleFavorite(Course course) async {
       return;
     }
 
-    print('Toggle favorite for course ${course.id} by user ${currentUser.id}');
+    // Create an updated favorites list
+    List<String> updatedFavorites = List.from(User.currentUser.favoriteCoursesIds);
+    bool shouldAdd = !updatedFavorites.contains(course.id);
     
-    // First, update the UI immediately for responsive feel
-    setState(() {
-      List<String> tempFavorites = List.from(User.currentUser.favoriteCoursesIds);
-      if (tempFavorites.contains(course.id)) {
-        tempFavorites.remove(course.id);
-      } else {
-        tempFavorites.add(course.id);
-      }
-      User.currentUser = User.currentUser.copyWith(
-        favoriteCoursesIds: tempFavorites,
-      );
-    });
+    // Update list based on new state
+    if (shouldAdd) {
+      updatedFavorites.add(course.id);
+    } else {
+      updatedFavorites.remove(course.id);
+    }
     
-    // Then update Firestore
-    final updatedFavorites = await _preferencesService.toggleFavorite(
-      userId: currentUser.id,
-      courseId: course.id,
-      currentFavorites: User.currentUser.favoriteCoursesIds,
-    );
-    
-    // Update local state again with the server response
+    // Update local state immediately for responsive UI
     setState(() {
       User.currentUser = User.currentUser.copyWith(
         favoriteCoursesIds: updatedFavorites,
       );
-      print('UI updated with favorites: ${User.currentUser.favoriteCoursesIds}');
     });
+    
+    // Update in Firestore directly with saveUserProfile
+    await _preferencesService.saveUserProfile(
+      userId: currentUser.id,
+      name: currentUser.name,
+      email: currentUser.email,
+      phone: currentUser.phone, 
+      company: currentUser.company,
+      tier: currentUser.tier,
+      membershipExpiryDate: currentUser.membershipExpiryDate,
+      favoriteCoursesIds: updatedFavorites,
+      enrolledCourses: User.currentUser.enrolledCourses,
+    );
   } catch (e) {
     print('Error toggling favorite: $e');
     if (mounted) {

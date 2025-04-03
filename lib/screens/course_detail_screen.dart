@@ -219,7 +219,8 @@ void _joinFreeClass() async {
     }
   }
 
-  void _toggleFavorite() async {
+  // Replace the _toggleFavorite method in course_detail_screen.dart with this improved version
+void _toggleFavorite() async {
   try {
     // Get current user from AuthService
     final currentUser = _authService.currentUser;
@@ -233,62 +234,49 @@ void _joinFreeClass() async {
       return;
     }
 
-    print('Toggle favorite for course ${widget.course.id} by user ${currentUser.id}');
-    print('Current favorites before toggle: ${User.currentUser.favoriteCoursesIds}');
-    print('Current isFavorite state: $isFavorite');
+    // Store the new state we want
+    final newFavoriteState = !isFavorite;
     
-    // Create a new list and update it
-    List<String> tempFavorites = List.from(User.currentUser.favoriteCoursesIds);
-    bool newFavoriteState = !isFavorite;
+    // Update UI immediately 
+    setState(() {
+      isFavorite = newFavoriteState;
+    });
     
+    // Create a new list with the updated favorite
+    List<String> updatedFavorites = List.from(User.currentUser.favoriteCoursesIds);
     if (newFavoriteState) {
       // Adding to favorites
-      if (!tempFavorites.contains(widget.course.id)) {
-        tempFavorites.add(widget.course.id);
+      if (!updatedFavorites.contains(widget.course.id)) {
+        updatedFavorites.add(widget.course.id);
       }
     } else {
       // Removing from favorites
-      tempFavorites.remove(widget.course.id);
+      updatedFavorites.remove(widget.course.id);
     }
     
-    // Update local state first
-    setState(() {
-      isFavorite = newFavoriteState;
-      User.currentUser = User.currentUser.copyWith(
-        favoriteCoursesIds: tempFavorites,
-      );
-    });
-    
-    print('Updated favorites locally: ${User.currentUser.favoriteCoursesIds}');
-    print('Updated isFavorite state: $isFavorite');
-    
-    // Then update Firestore
-    final updatedFavorites = await _preferencesService.toggleFavorite(
-      userId: currentUser.id,
-      courseId: widget.course.id,
-      currentFavorites: tempFavorites, // Pass the already updated list
+    // Update User.currentUser with new favorites
+    User.currentUser = User.currentUser.copyWith(
+      favoriteCoursesIds: updatedFavorites,
     );
     
-    // Update again with server response if needed
-    if (mounted) {
-      setState(() {
-        User.currentUser = User.currentUser.copyWith(
-          favoriteCoursesIds: updatedFavorites,
-        );
-        isFavorite = updatedFavorites.contains(widget.course.id);
-      });
-      
-      print('Final favorites after server update: ${User.currentUser.favoriteCoursesIds}');
-      print('Final isFavorite state: $isFavorite');
-    }
+    // Then update Firestore
+    await _preferencesService.saveUserProfile(
+      userId: currentUser.id,
+      name: currentUser.name,
+      email: currentUser.email,
+      phone: currentUser.phone,
+      company: currentUser.company,
+      tier: currentUser.tier,
+      membershipExpiryDate: currentUser.membershipExpiryDate,
+      favoriteCoursesIds: updatedFavorites,
+      enrolledCourses: User.currentUser.enrolledCourses,
+    );
   } catch (e) {
-    print('Error toggling favorite: $e');
+    // If there's an error, revert the UI
     if (mounted) {
-      // Revert on error
       setState(() {
         isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
       });
-      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update favorite: ${e.toString()}')),
       );

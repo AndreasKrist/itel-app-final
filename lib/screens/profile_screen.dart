@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../models/user.dart';
 import '../models/schedule.dart';
-import 'course_outline_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../widgets/enrolled_course_card.dart';
 import '../models/enrolled_course.dart';
@@ -10,6 +9,7 @@ import '../services/auth_service.dart';
 import '../services/user_preferences_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../widgets/course_card.dart';//import 'course_outline_screen.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -195,6 +195,7 @@ String _maskPhone(String phone) {
 }
 
 
+// Replace the _toggleFavorite method in profile_screen.dart
 void _toggleFavorite(Course course) async {
   try {
     // Get current user
@@ -208,22 +209,37 @@ void _toggleFavorite(Course course) async {
       }
       return;
     }
+
+    // Create an updated favorites list
+    List<String> updatedFavorites = List.from(User.currentUser.favoriteCoursesIds);
+    bool shouldAdd = !updatedFavorites.contains(course.id);
     
-    // Update favorites in Firestore
-    final updatedFavorites = await _preferencesService.toggleFavorite(
-      userId: currentUser.id,
-      courseId: course.id,
-      currentFavorites: User.currentUser.favoriteCoursesIds,
-    );
-    
-    // Update local state
-    if (mounted) {
-      setState(() {
-        User.currentUser = User.currentUser.copyWith(
-          favoriteCoursesIds: updatedFavorites,
-        );
-      });
+    // Update list based on new state
+    if (shouldAdd) {
+      updatedFavorites.add(course.id);
+    } else {
+      updatedFavorites.remove(course.id);
     }
+    
+    // Update local state immediately for responsive UI
+    setState(() {
+      User.currentUser = User.currentUser.copyWith(
+        favoriteCoursesIds: updatedFavorites,
+      );
+    });
+    
+    // Update in Firestore directly with saveUserProfile
+    await _preferencesService.saveUserProfile(
+      userId: currentUser.id,
+      name: currentUser.name,
+      email: currentUser.email,
+      phone: currentUser.phone, 
+      company: currentUser.company,
+      tier: currentUser.tier,
+      membershipExpiryDate: currentUser.membershipExpiryDate,
+      favoriteCoursesIds: updatedFavorites,
+      enrolledCourses: User.currentUser.enrolledCourses,
+    );
   } catch (e) {
     print('Error toggling favorite: $e');
     if (mounted) {
@@ -1093,14 +1109,9 @@ Widget _buildCoursesTab() {
   
   // Get all favorited courses
   final favoriteIds = User.currentUser.favoriteCoursesIds;
-  print("Favorite IDs in profile: $favoriteIds");
-  
-  // Filter courses to only include those with IDs in the favorites list
   final favoriteCourses = Course.sampleCourses
       .where((course) => favoriteIds.contains(course.id))
       .toList();
-  
-  print("Found ${favoriteCourses.length} favorite courses");
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1202,158 +1213,16 @@ Widget _buildCoursesTab() {
           ),
         )
       else
+        // Use the standard CourseCard component instead of custom implementation
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: favoriteCourses.length,
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
-            final course = favoriteCourses[index];
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              course.title,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              course.category,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 14,
-                              ),
-                            ),
-                            if (course.certType != null) ...[
-                              const SizedBox(height: 4),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  course.certType!,
-                                  style: TextStyle(
-                                    color: Colors.blue[700],
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.favorite,
-                          color: Colors.pink[400],
-                        ),
-                        onPressed: () => _toggleFavorite(course),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.access_time, color: Colors.grey[400], size: 16),
-                          const SizedBox(width: 4),
-                          Text(
-                            course.duration,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 16),
-                      Row(
-                        children: [
-                          Icon(Icons.attach_money, color: Colors.grey[400], size: 16),
-                          const SizedBox(width: 4),
-                          Text(
-                            course.price,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (course.nextAvailableDate != null)
-                        Text(
-                          'Next start: ${course.nextAvailableDate}',
-                          style: TextStyle(
-                            color: Colors.blue[700],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      else
-                        const SizedBox(),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to course outline instead of details
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CourseOutlineScreen(course: course),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: Text(
-                          'View Outline',
-                          style: TextStyle(
-                            color: Colors.blue[600],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            return CourseCard(
+              course: favoriteCourses[index],
+              onFavoriteToggle: _toggleFavorite,
             );
           },
         ),

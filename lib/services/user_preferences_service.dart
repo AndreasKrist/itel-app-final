@@ -10,52 +10,51 @@ class UserPreferencesService {
   CollectionReference get _usersCollection => _firestore.collection('users');
 
   // Create or update user profile
-  Future<void> saveUserProfile({
-    required String userId,
-    required String name,
-    required String email,
-    String phone = '',
-    String? company,
-    MembershipTier tier = MembershipTier.standard,
-    String membershipExpiryDate = 'Not applicable',
-    List<String> favoriteCoursesIds = const [],
-    List<EnrolledCourse> enrolledCourses = const [],
-  }) async {
-    try {
-      print('Saving user profile for $userId with ${enrolledCourses.length} enrolled courses');
-      
-      // Convert EnrolledCourse objects to maps for Firestore
-      final List<Map<String, dynamic>> enrolledCoursesData = enrolledCourses.map((course) => {
-            'courseId': course.courseId,
-            'enrollmentDate': course.enrollmentDate.toIso8601String(),
-            'status': course.status.toString().split('.').last,
-            'isOnline': course.isOnline,
-            'nextSessionDate': course.nextSessionDate?.toIso8601String(),
-            'nextSessionTime': course.nextSessionTime,
-            'location': course.location,
-            'instructorName': course.instructorName,
-            'progress': course.progress,
-            'gradeOrCertificate': course.gradeOrCertificate,
-          }).toList();  
-      
-          await _usersCollection.doc(userId).set({
-                'name': name,
-                'email': email,
-                'phone': phone,
-                'company': company,
-                'tier': tier.toString().split('.').last,
-                'membershipExpiryDate': membershipExpiryDate,
-                'favoriteCoursesIds': favoriteCoursesIds,
-                'enrolledCourses': enrolledCoursesData,
-                'updatedAt': FieldValue.serverTimestamp(),
-              }, SetOptions(merge: true));
-      
-          print('User profile saved successfully with enrolled courses');
-            } catch (e) {
-              print('Error saving user profile: $e');
-              rethrow;
-            }
-          }
+Future<void> saveUserProfile({
+  required String userId,
+  required String name,
+  required String email,
+  String phone = '',
+  String? company,
+  MembershipTier tier = MembershipTier.standard,
+  String membershipExpiryDate = 'Not applicable',
+  List<String> favoriteCoursesIds = const [],
+  List<EnrolledCourse> enrolledCourses = const [],
+}) async {
+  try {
+    // Convert EnrolledCourse objects to maps for Firestore
+    final List<Map<String, dynamic>> enrolledCoursesData = enrolledCourses.map((course) => {
+          'courseId': course.courseId,
+          'enrollmentDate': course.enrollmentDate.toIso8601String(),
+          'status': course.status.toString().split('.').last,
+          'isOnline': course.isOnline,
+          'nextSessionDate': course.nextSessionDate?.toIso8601String(),
+          'nextSessionTime': course.nextSessionTime,
+          'location': course.location,
+          'instructorName': course.instructorName,
+          'progress': course.progress,
+          'gradeOrCertificate': course.gradeOrCertificate,
+        }).toList();
+    
+    // Use SetOptions(merge: true) to ensure we don't overwrite other fields
+    await _usersCollection.doc(userId).set({
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'company': company,
+      'tier': tier.toString().split('.').last,
+      'membershipExpiryDate': membershipExpiryDate,
+      'favoriteCoursesIds': favoriteCoursesIds,
+      'enrolledCourses': enrolledCoursesData,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+    
+    print('User profile saved successfully');
+  } catch (e) {
+    print('Error saving user profile: $e');
+    rethrow;
+  }
+}
 
   // Get user profile
   Future<Map<String, dynamic>?> getUserProfile(String userId) async {
