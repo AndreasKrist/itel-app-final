@@ -566,7 +566,7 @@ static List<Course> sampleCourses = [
       certType: 'CISM',
       rating: 4.8,
       duration: '4 days',
-      price: '\$3,800.00',
+      price: '\$3,700.00',
       funding: 'Eligible for funding',
       deliveryMethods: ['OLL', 'ILT'],
       nextAvailableDate: 'April 25, 2025',
