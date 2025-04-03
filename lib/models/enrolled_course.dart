@@ -1,5 +1,3 @@
-// File: lib/models/enrolled_course.dart
-
 // Define the possible enrollment statuses
 enum EnrollmentStatus {
   pending,   // Enquiry submitted but not confirmed
@@ -59,4 +57,5 @@ class EnrolledCourse {
       gradeOrCertificate: gradeOrCertificate ?? this.gradeOrCertificate,
     );
   }
+  
 }
