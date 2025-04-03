@@ -68,7 +68,7 @@ void _launchCourseURL(BuildContext context) async {
       String moodleUrl = 'https://online.itel.com.sg';
       
       // Create the login URL that will trigger Google authentication
-      final loginUrl = '${moodleUrl}/login/index.php?authCAS=Google';
+      final loginUrl = '$moodleUrl/login/index.php?authCAS=Google';
       
       // Launch the URL in external browser
       await launchUrl(

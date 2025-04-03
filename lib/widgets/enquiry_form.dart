@@ -120,7 +120,80 @@ void _submitForm() async {
       
       print("Form submission result: $result");
       
-      // Show success message (this will run even if we use mockSubmitEnquiry)
+      // IMPORTANT NEW PART: Create an enrollment record with pending status
+      final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+      
+      if (currentUser != null) {
+        print("Creating pending enrollment for course: ${widget.course.id}");
+        
+        // Create an EnrolledCourse object with pending status
+        final newEnrollment = EnrolledCourse(
+          courseId: widget.course.id,
+          enrollmentDate: DateTime.now(),
+          status: EnrollmentStatus.pending, // Set as pending for enquiries
+          isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
+          // Next session date is typically provided after confirmation
+          nextSessionDate: null,
+          nextSessionTime: null,
+          // Location depends on delivery method
+          location: widget.course.deliveryMethods?.contains('OLL') ?? false 
+              ? 'Online (to be confirmed)' 
+              : 'ITEL Training Center (to be confirmed)',
+          progress: null, // No progress for pending courses
+        );
+        
+        // 1. Save to subcollection first
+        try {
+          print("Saving pending enrollment to Firebase subcollection...");
+          await _saveEnrollmentToFirebase(newEnrollment);
+          print("Successfully saved to Firebase subcollection");
+        } catch (e) {
+          print("Error saving to Firebase subcollection: $e");
+          // Continue anyway - we'll try the main user document
+        }
+        
+        // 2. Update the user's enrolled courses locally
+        print("Updating local User model...");
+        User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+        
+        // 3. Then save to the main user document
+        try {
+          print("Saving to main user document...");
+          // Get user from authentication service
+          final authUser = _authService.currentUser;
+          
+          if (authUser != null) {
+            await _preferencesService.saveUserProfile(
+              userId: currentUser.uid,
+              name: authUser.name,
+              email: authUser.email,
+              phone: authUser.phone,
+              company: authUser.company,
+              tier: authUser.tier,
+              membershipExpiryDate: authUser.membershipExpiryDate,
+              favoriteCoursesIds: authUser.favoriteCoursesIds,
+              enrolledCourses: User.currentUser.enrolledCourses,
+            );
+          } else {
+            // Fallback with form data if auth user isn't available
+            await _preferencesService.saveUserProfile(
+              userId: currentUser.uid,
+              name: _nameController.text,
+              email: _emailController.text,
+              phone: _phoneController.text,
+              enrolledCourses: User.currentUser.enrolledCourses,
+            );
+          }
+          print("Successfully saved to user document");
+        } catch (e) {
+          print("Error saving to user document: $e");
+          // We'll still show success since the enquiry was submitted
+        }
+      } else {
+        print("No logged in user found, cannot create enrollment record");
+      }
+      
+      // Show success message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -185,7 +258,7 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
       'timestamp': FieldValue.serverTimestamp(),
     };
     
-    // Save to Firestore
+    // Save to Firestore subcollection
     await FirebaseFirestore.instance
         .collection('users')
         .doc(currentUser.uid)
@@ -193,9 +266,10 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
         .doc(enrollment.courseId)
         .set(enrollmentData);
         
-    print('Enrollment saved to Firebase successfully');
+    print('Enrollment saved to Firebase subcollection successfully');
   } catch (e) {
     print('Error saving enrollment to Firebase: $e');
+    throw e; // Rethrow to let the caller handle it
   }
 }
 

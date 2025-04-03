@@ -48,18 +48,26 @@ Future<void> _loadEnrollmentsFromFirebase() async {
     
     print('Loading enrollments for user: ${currentUser.uid}');
     
-    // Fetch enrollments from Firestore
-    final snapshot = await FirebaseFirestore.instance
+    // Fetch enrollments from Firestore subcollection
+    final snapshotSubcollection = await FirebaseFirestore.instance
         .collection('users')
         .doc(currentUser.uid)
         .collection('enrolledCourses')
         .get();
-        
-    List<EnrolledCourse> enrollments = [];
     
-    for (var doc in snapshot.docs) {
+    // Also fetch the main user document that might have embedded enrollments
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    
+    List<EnrolledCourse> enrollments = [];
+    Map<String, EnrolledCourse> enrollmentMap = {}; // To avoid duplicates
+    
+    // Process subcollection enrollments
+    for (var doc in snapshotSubcollection.docs) {
       final data = doc.data();
-      print('Found enrollment for course: ${data['courseId']}');
+      print('Found enrollment in subcollection for course: ${data['courseId']}');
       
       // Parse status
       EnrollmentStatus status = EnrollmentStatus.pending;
@@ -89,8 +97,57 @@ Future<void> _loadEnrollmentsFromFirebase() async {
         progress: data['progress'],
       );
       
-      enrollments.add(enrollment);
+      // Store in map by courseId
+      enrollmentMap[data['courseId']] = enrollment;
     }
+    
+    // Process embedded enrollments (from main user document)
+    if (userDoc.exists) {
+      final userData = userDoc.data();
+      if (userData != null && userData.containsKey('enrolledCourses')) {
+        final List<dynamic> embeddedEnrollments = userData['enrolledCourses'];
+        for (var data in embeddedEnrollments) {
+          print('Found enrollment in user document for course: ${data['courseId']}');
+          
+          // Parse status
+          EnrollmentStatus status = EnrollmentStatus.pending;
+          if (data['status'] != null) {
+            switch (data['status']) {
+              case 'pending': status = EnrollmentStatus.pending; break;
+              case 'confirmed': status = EnrollmentStatus.confirmed; break;
+              case 'active': status = EnrollmentStatus.active; break;
+              case 'completed': status = EnrollmentStatus.completed; break;
+              case 'cancelled': status = EnrollmentStatus.cancelled; break;
+            }
+          }
+          
+          // Create enrollment object
+          final enrollment = EnrolledCourse(
+            courseId: data['courseId'],
+            enrollmentDate: data['enrollmentDate'] != null 
+                ? DateTime.parse(data['enrollmentDate']) 
+                : DateTime.now(),
+            status: status,
+            isOnline: data['isOnline'] ?? false,
+            nextSessionDate: data['nextSessionDate'] != null 
+                ? DateTime.parse(data['nextSessionDate']) 
+                : null,
+            nextSessionTime: data['nextSessionTime'],
+            location: data['location'],
+            progress: data['progress'],
+          );
+          
+          // If not already in map from subcollection, add it
+          if (!enrollmentMap.containsKey(data['courseId'])) {
+            enrollmentMap[data['courseId']] = enrollment;
+          }
+        }
+      }
+    }
+    
+    // Convert map values to list
+    enrollments = enrollmentMap.values.toList();
+    print('Total enrollments found: ${enrollments.length}');
     
     // Update the user model with fetched enrollments
     if (mounted) {

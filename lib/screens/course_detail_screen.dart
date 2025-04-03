@@ -50,105 +50,170 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     }).take(5).toList();
   }
 
-  void _joinFreeClass() async {
-    print("Starting _joinFreeClass method");
-    // Set loading state
-    setState(() {
-      _isLoading = true;
-    });
+  // Replace the _joinFreeClass method in course_detail_screen.dart
 
+void _joinFreeClass() async {
+  print("Starting _joinFreeClass method");
+  // Set loading state
+  setState(() {
+    _isLoading = true;
+  });
+
+  try {
+    // Get current user ID using Firebase Auth directly for reliability
+    final firebaseUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) {
+      print("No Firebase user found, showing error");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please log in to join this course')),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    print("Creating enrollment for course: ${widget.course.id}");
+    // Create an EnrolledCourse object for the free course
+    final newEnrollment = EnrolledCourse(
+      courseId: widget.course.id,
+      enrollmentDate: DateTime.now(),
+      status: EnrollmentStatus.active, // Start as active for free courses
+      isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
+      // Set next session to 3 days from now
+      nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
+      nextSessionTime: '10:00 AM - 12:00 PM',
+      location: widget.course.deliveryMethods?.contains('OLL') ?? false 
+          ? 'https://online.itel.com.sg'
+          : 'ITEL Training Center (Room 101)',
+      progress: '0% complete', // Start with 0% progress
+    );
+    
+    // Save directly to the Firebase subcollection first
+    print("Saving to Firebase subcollection...");
     try {
-      // Get current user ID
-      final currentUser = _authService.currentUser;
-      if (currentUser == null || currentUser.id.isEmpty) {
-        print("No current user found, showing error");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please log in to join this course')),
-        );
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-
-      print("Creating enrollment for course: ${widget.course.id}");
-      // Create an EnrolledCourse object for the free course
-      final newEnrollment = EnrolledCourse(
-        courseId: widget.course.id,
-        enrollmentDate: DateTime.now(),
-        status: EnrollmentStatus.active, // Start as active for free courses
-        isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
-        // Set next session to 3 days from now
-        nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
-        nextSessionTime: '10:00 AM - 12:00 PM',
-        location: widget.course.deliveryMethods?.contains('OLL') ?? false 
-            ? 'https://online.itel.com.sg'
-            : 'ITEL Training Center (Room 101)',
-        progress: '0% complete', // Start with 0% progress
-      );
-      
-      // Update the user's enrolled courses locally
-      print("Current enrolled courses: ${User.currentUser.enrolledCourses.length}");
-      User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
-      print("Updated enrolled courses: ${User.currentUser.enrolledCourses.length}");
-      
-      // For debugging - print all enrolled courses
-      for (var course in User.currentUser.enrolledCourses) {
-        print("Enrolled in course: ${course.courseId}, status: ${course.status}");
-      }
-      
-      print("Saving to Firestore...");
-      // Save the updated enrolled courses to Firestore
-      await _preferencesService.saveUserProfile(
-        userId: currentUser.id,
-        name: currentUser.name,
-        email: currentUser.email,
-        phone: currentUser.phone,
-        company: currentUser.company,
-        tier: currentUser.tier,
-        membershipExpiryDate: currentUser.membershipExpiryDate,
-        favoriteCoursesIds: currentUser.favoriteCoursesIds,
-        enrolledCourses: User.currentUser.enrolledCourses,
-      );
-      
-      // Also save to the new structure
       await _saveEnrollmentToFirebase(newEnrollment);
-      
-      print("Successfully saved to Firestore");
-      
-      // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('You have successfully joined the class!'),
-                Text(
-                  'Check your Profile to access the course materials',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 4),
-          ),
-        );
-      
-      print("Success message shown");
+      print("Successfully saved to Firebase subcollection");
     } catch (e) {
-        print('Error joining free class: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to join class: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
+      print("Error saving to Firebase subcollection: $e");
+      // Continue execution even if this fails
+    }
+    
+    // Update the user's enrolled courses locally
+    print("Updating local User model...");
+    User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+    
+    // Save to the main user document
+    print("Saving to main user document...");
+    try {
+      // Get current user from AuthService for user data
+      final currentUser = _authService.currentUser;
+      if (currentUser != null) {
+        await _preferencesService.saveUserProfile(
+          userId: firebaseUser.uid,
+          name: currentUser.name,
+          email: currentUser.email,
+          phone: currentUser.phone,
+          company: currentUser.company,
+          tier: currentUser.tier,
+          membershipExpiryDate: currentUser.membershipExpiryDate,
+          favoriteCoursesIds: currentUser.favoriteCoursesIds,
+          enrolledCourses: User.currentUser.enrolledCourses,
         );
-    } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        print("_joinFreeClass completed");
+        print("Successfully saved to main user document");
+      } else {
+        print("AuthService user is null, using minimal data");
+        // Fallback if AuthService user is not available
+        await _preferencesService.saveUserProfile(
+          userId: firebaseUser.uid,
+          name: firebaseUser.displayName ?? "User",
+          email: firebaseUser.email ?? "",
+          enrolledCourses: User.currentUser.enrolledCourses,
+        );
+      }
+    } catch (e) {
+      print("Error saving to main user document: $e");
+      // Continue execution even if this fails
+    }
+    
+    // Show success message regardless of storage method success
+    // (as long as we have the enrollment in the User.currentUser model)
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('You have successfully joined the class!'),
+              Text(
+                'Check your Profile to access the course materials',
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 4),
+        ),
+      );
+    }
+    
+    print("Success message shown, enrollment complete");
+  } catch (e) {
+    print('Error joining free class: $e');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to join class: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } finally {
+    // Always reset loading state
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    print("_joinFreeClass completed");
+  }
+}
+
+  // Add the missing function here
+  Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
+    try {
+      // Get current user
+      final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
+      
+      print('Saving enrollment to Firebase subcollection for course: ${enrollment.courseId}');
+      
+      // Create enrollment data to save
+      final enrollmentData = {
+        'courseId': enrollment.courseId,
+        'enrollmentDate': enrollment.enrollmentDate.toIso8601String(),
+        'status': enrollment.status.toString().split('.').last,
+        'isOnline': enrollment.isOnline,
+        'nextSessionDate': enrollment.nextSessionDate?.toIso8601String(),
+        'nextSessionTime': enrollment.nextSessionTime,
+        'location': enrollment.location,
+        'progress': enrollment.progress,
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+      
+      // Save to Firestore subcollection
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .collection('enrolledCourses')
+          .doc(enrollment.courseId)
+          .set(enrollmentData);
+          
+      print('Enrollment saved to Firebase subcollection successfully');
+    } catch (e) {
+      print('Error saving enrollment to Firebase: $e');
+      throw e; // Rethrow to let the caller handle it
     }
   }
 
@@ -168,27 +233,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
       print('Toggle favorite for course ${widget.course.id} by user ${currentUser.id}');
       
-      // First, update the UI immediately for responsive feel
-      setState(() {
-        isFavorite = !isFavorite;
-      });
-
-void _toggleFavorite() async {
-    try {
-      // Get current user from AuthService
-      final currentUser = _authService.currentUser;
-      
-      if (currentUser == null || currentUser.id.isEmpty) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please log in to save favorites')),
-          );
-        }
-        return;
-      }
-
-      print('Toggle favorite for course ${widget.course.id} by user ${currentUser.id}');
-    
       // First, update the UI immediately for responsive feel
       setState(() {
         isFavorite = !isFavorite;
@@ -817,7 +861,7 @@ void _toggleFavorite() async {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: _isLoading ? null : () {
                     // Check if the course is free
                     if (widget.course.price == '\$0' || 
                         widget.course.price.contains('Free') || 
@@ -842,17 +886,26 @@ void _toggleFavorite() async {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
-                    widget.course.price == '\$0' || 
-                    widget.course.price.contains('Free') || 
-                    widget.course.funding == 'Complimentary'
-                    ? 'Access Course Now'
-                    : 'Enquire Now',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  child: _isLoading 
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3,
+                        ),
+                      )
+                    : Text(
+                      widget.course.price == '\$0' || 
+                      widget.course.price.contains('Free') || 
+                      widget.course.funding == 'Complimentary'
+                      ? 'Access Course Now'
+                      : 'Enquire Now',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
                 ),
               ),
             ),
@@ -900,148 +953,148 @@ void _toggleFavorite() async {
     );
   }
   
-Widget _buildFeeTable() {
-  final feeStructure = widget.course.feeStructure;
-  if (feeStructure == null) return Container();
-  
-  final userTier = User.currentUser.tier;
-  final isProMember = userTier == MembershipTier.pro;
-  final isDiscountEligible = widget.course.isDiscountEligible();
-  
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (isProMember && isDiscountEligible)
-        Container(
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            color: Colors.blue[50],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.blue[200]!),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.blue[700],
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  'PRO',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'As a PRO member, you receive a 25% discount on this course!',
-                  style: TextStyle(
-                    color: Colors.blue[800],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      Table(
-        border: TableBorder.all(
-          color: Colors.grey[300]!,
-          width: 1,
-        ),
-        columnWidths: const {
-          0: FlexColumnWidth(2.5),
-          1: FlexColumnWidth(1),
-          2: FlexColumnWidth(1),
-          3: FlexColumnWidth(1),
-        },
-        children: [
-          // Table header
-          TableRow(
+  Widget _buildFeeTable() {
+    final feeStructure = widget.course.feeStructure;
+    if (feeStructure == null) return Container();
+    
+    final userTier = User.currentUser.tier;
+    final isProMember = userTier == MembershipTier.pro;
+    final isDiscountEligible = widget.course.isDiscountEligible();
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (isProMember && isDiscountEligible)
+          Container(
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
-              color: Colors.blue[700],
+              color: Colors.blue[50],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue[200]!),
             ),
-            children: [
-              _buildTableHeaderCell('Criteria', isFirstColumn: true),
-              _buildTableHeaderCell('Individual'),
-              _buildTableHeaderCell('Company Sponsored (Non-SME)'),
-              _buildTableHeaderCell('Company Sponsored (SME)'),
-            ],
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[700],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'PRO',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'As a PRO member, you receive a 25% discount on this course!',
+                    style: TextStyle(
+                      color: Colors.blue[800],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          // Full course fee row
-          if (feeStructure.containsKey('Full Course Fee'))
+        Table(
+          border: TableBorder.all(
+            color: Colors.grey[300]!,
+            width: 1,
+          ),
+          columnWidths: const {
+            0: FlexColumnWidth(2.5),
+            1: FlexColumnWidth(1),
+            2: FlexColumnWidth(1),
+            3: FlexColumnWidth(1),
+          },
+          children: [
+            // Table header
             TableRow(
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Colors.blue[700],
               ),
               children: [
-                _buildTableCell('Full Course Fee', isHeader: true),
-                _buildTableCell(''),
-                _buildTableCell(''),
-                _buildTableCell(
-                  isProMember && isDiscountEligible
-                    ? '${feeStructure['Full Course Fee']?['Price'] ?? ''}\n(PRO: ${widget.course.getDiscountedPrice(userTier)})'
-                    : feeStructure['Full Course Fee']?['Price'] ?? ''
-                ),
+                _buildTableHeaderCell('Criteria', isFirstColumn: true),
+                _buildTableHeaderCell('Individual'),
+                _buildTableHeaderCell('Company Sponsored (Non-SME)'),
+                _buildTableHeaderCell('Company Sponsored (SME)'),
               ],
             ),
-          // Other fee rows with PRO discount applied if eligible
-          ...feeStructure.entries.where((entry) => entry.key != 'Full Course Fee').map((entry) {
-            return TableRow(
-              children: [
-                _buildTableCell(entry.key, isHeader: true),
-                _buildTableCell(
-                  isProMember && isDiscountEligible && entry.value['Individual'] != null
-                    ? '${entry.value['Individual']}\n(PRO: ${_getDiscountedValue(entry.value['Individual'])})'
-                    : entry.value['Individual'] ?? ''
+            // Full course fee row
+            if (feeStructure.containsKey('Full Course Fee'))
+              TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
                 ),
-                _buildTableCell(
-                  isProMember && isDiscountEligible && entry.value['Company Sponsored (Non-SME)'] != null
-                    ? '${entry.value['Company Sponsored (Non-SME)']}\n(PRO: ${_getDiscountedValue(entry.value['Company Sponsored (Non-SME)'])})'
-                    : entry.value['Company Sponsored (Non-SME)'] ?? ''
-                ),
-                _buildTableCell(
-                  isProMember && isDiscountEligible && entry.value['Company Sponsored (SME)'] != null
-                    ? '${entry.value['Company Sponsored (SME)']}\n(PRO: ${_getDiscountedValue(entry.value['Company Sponsored (SME)'])})'
-                    : entry.value['Company Sponsored (SME)'] ?? ''
-                ),
-              ],
-            );
-          }),
-        ],
-      ),
-    ],
-  );
-}
-
-// Helper method to calculate discounted price for the fee table
-String _getDiscountedValue(String? priceString) {
-  if (priceString == null || priceString.isEmpty) return '';
-  
-  // Extract numeric value
-  final valueString = priceString.replaceAll(RegExp(r'[^\d.]'), '');
-  if (valueString.isEmpty) return priceString;
-  
-  try {
-    double value = double.parse(valueString);
-    double discountedValue = value * 0.75; // 25% discount
-    
-    // Format with same currency symbol
-    if (priceString.contains('\$')) {
-      return '\$${discountedValue.toStringAsFixed(2)}';
-    } else {
-      return discountedValue.toStringAsFixed(2);
-    }
-  } catch (e) {
-    return priceString;
+                children: [
+                  _buildTableCell('Full Course Fee', isHeader: true),
+                  _buildTableCell(''),
+                  _buildTableCell(''),
+                  _buildTableCell(
+                    isProMember && isDiscountEligible
+                      ? '${feeStructure['Full Course Fee']?['Price'] ?? ''}\n(PRO: ${widget.course.getDiscountedPrice(userTier)})'
+                      : feeStructure['Full Course Fee']?['Price'] ?? ''
+                  ),
+                ],
+              ),
+            // Other fee rows with PRO discount applied if eligible
+            ...feeStructure.entries.where((entry) => entry.key != 'Full Course Fee').map((entry) {
+              return TableRow(
+                children: [
+                  _buildTableCell(entry.key, isHeader: true),
+                  _buildTableCell(
+                    isProMember && isDiscountEligible && entry.value['Individual'] != null
+                      ? '${entry.value['Individual']}\n(PRO: ${_getDiscountedValue(entry.value['Individual'])})'
+                      : entry.value['Individual'] ?? ''
+                  ),
+                  _buildTableCell(
+                    isProMember && isDiscountEligible && entry.value['Company Sponsored (Non-SME)'] != null
+                      ? '${entry.value['Company Sponsored (Non-SME)']}\n(PRO: ${_getDiscountedValue(entry.value['Company Sponsored (Non-SME)'])})'
+                      : entry.value['Company Sponsored (Non-SME)'] ?? ''
+                  ),
+                  _buildTableCell(
+                    isProMember && isDiscountEligible && entry.value['Company Sponsored (SME)'] != null
+                      ? '${entry.value['Company Sponsored (SME)']}\n(PRO: ${_getDiscountedValue(entry.value['Company Sponsored (SME)'])})'
+                      : entry.value['Company Sponsored (SME)'] ?? ''
+                  ),
+                ],
+              );
+            }),
+          ],
+        ),
+      ],
+    );
   }
-}
+
+  // Helper method to calculate discounted price for the fee table
+  String _getDiscountedValue(String? priceString) {
+    if (priceString == null || priceString.isEmpty) return '';
+    
+    // Extract numeric value
+    final valueString = priceString.replaceAll(RegExp(r'[^\d.]'), '');
+    if (valueString.isEmpty) return priceString;
+    
+    try {
+      double value = double.parse(valueString);
+      double discountedValue = value * 0.75; // 25% discount
+      
+      // Format with same currency symbol
+      if (priceString.contains('\$')) {
+        return '\$${discountedValue.toStringAsFixed(2)}';
+      } else {
+        return discountedValue.toStringAsFixed(2);
+      }
+    } catch (e) {
+      return priceString;
+    }
+  }
 
   Widget _buildTableHeaderCell(String text, {bool isFirstColumn = false}) {
     return Container(
@@ -1058,7 +1111,7 @@ String _getDiscountedValue(String? priceString) {
     );
   }
   
-Widget _buildTableCell(String text, {bool isHeader = false}) {
+  Widget _buildTableCell(String text, {bool isHeader = false}) {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Text(
