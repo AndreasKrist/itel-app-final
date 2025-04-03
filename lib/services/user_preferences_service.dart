@@ -103,13 +103,14 @@ class UserPreferencesService {
   }) async {
     try {
       print('Toggling favorite for user $userId, course $courseId');
-      print('Current favorites: $currentFavorites');
+      print('Current favorites before toggle: $currentFavorites');
       
       if (userId.isEmpty) {
         throw Exception('User ID cannot be empty');
       }
 
       List<String> updatedFavorites = List.from(currentFavorites);
+
       
       // Toggle the course in favorites
       if (updatedFavorites.contains(courseId)) {
@@ -120,26 +121,18 @@ class UserPreferencesService {
         print('Added course to favorites');
       }
       
-      print('Updated favorites: $updatedFavorites');
+        print('Updated favorites: $updatedFavorites');
       
       // Check if document exists first
       DocumentSnapshot docSnapshot = await _usersCollection.doc(userId).get();
       
-      if (docSnapshot.exists) {
-        // Document exists, use update
-        await _usersCollection.doc(userId).update({
-          'favoriteCoursesIds': updatedFavorites,
-          'updatedAt': FieldValue.serverTimestamp(),
-        });
-        print('Favorites updated successfully (update)');
-      } else {
-        // Document doesn't exist, use set with merge
-        await _usersCollection.doc(userId).set({
-          'favoriteCoursesIds': updatedFavorites,
-          'updatedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
-        print('Favorites updated successfully (set with merge)');
-      }
+      // Always use set with merge instead of update
+      await _usersCollection.doc(userId).set({
+        'favoriteCoursesIds': updatedFavorites,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    
+    print('Favorites updated successfully');
       
       return updatedFavorites;
     } catch (e) {
