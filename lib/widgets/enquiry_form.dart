@@ -269,7 +269,7 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
     print('Enrollment saved to Firebase subcollection successfully');
   } catch (e) {
     print('Error saving enrollment to Firebase: $e');
-    throw e; // Rethrow to let the caller handle it
+    rethrow; // Rethrow to let the caller handle it
   }
 }
 
