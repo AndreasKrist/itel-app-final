@@ -559,10 +559,34 @@ void _toggleFavorite(Course course) async {
                               _focusedDay = focusedDay;
                             },
                             eventLoader: (day) {
-                              // Return a list of events for the given day
-                              return Schedule.getDummySchedules()
-                                  .where((schedule) => isSameDay(schedule.date, day))
-                                  .toList();
+                              // Return a list of events for the given day based on enrolled courses
+                              final enrolledDates = [];
+                              
+                              // Add active enrollment dates from the user
+                              for (var enrollment in User.currentUser.enrolledCourses) {
+                                if (enrollment.nextSessionDate != null && 
+                                    isSameDay(enrollment.nextSessionDate!, day)) {
+                                  enrolledDates.add(enrollment);
+                                }
+                              }
+                              
+                              // Add demo enrollment dates if no real enrollments
+                              if (User.currentUser.enrolledCourses.isEmpty) {
+                                // Demo course dates
+                                final demoDates = [
+                                  DateTime.now().add(const Duration(days: 2)),
+                                  DateTime.now().add(const Duration(days: 5)),
+                                  DateTime.now().add(const Duration(days: 12)),
+                                ];
+                                
+                                for (var demoDate in demoDates) {
+                                  if (isSameDay(demoDate, day)) {
+                                    enrolledDates.add("Demo Session");
+                                  }
+                                }
+                              }
+                              
+                              return enrolledDates;
                             },
                             calendarStyle: CalendarStyle(
                               markerDecoration: BoxDecoration(
@@ -597,86 +621,61 @@ void _toggleFavorite(Course course) async {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Sessions on ${_selectedDay.day}/${_selectedDay.month}/${_selectedDay.year}',
+                                'Course Sessions on ${_selectedDay.day}/${_selectedDay.month}/${_selectedDay.year}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                   color: Colors.blue[800],
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 12),
                               
-                              // List events for the selected day
-                              ...Schedule.getDummySchedules()
-                                  .where((schedule) => isSameDay(schedule.date, _selectedDay))
-                                  .map((schedule) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(12),
+                              // Just show a simple message about the enrolled course
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: Colors.blue[100]!),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(color: Colors.blue[100]!),
+                                        color: Colors.blue[50],
+                                        shape: BoxShape.circle,
                                       ),
+                                      child: Icon(
+                                        Icons.school,
+                                        color: Colors.blue[700],
+                                        size: 24,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            schedule.title,
-                                            style: const TextStyle(
+                                            'Network Security Fundamentals',
+                                            style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.access_time_filled, 
-                                                size: 14, 
-                                                color: Colors.blue[700]
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                '${schedule.startTime} - ${schedule.endTime}',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey[700],
-                                                ),
-                                              ),
-                                              const SizedBox(width: 12),
-                                              Icon(Icons.location_on, 
-                                                size: 14, 
-                                                color: Colors.blue[700]
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                schedule.location ?? 'Online',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey[700],
-                                                ),
-                                              ),
-                                            ],
+                                          Text(
+                                            'Session scheduled for this day',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[800],
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  )),
-                              
-                              if (Schedule.getDummySchedules()
-                                  .where((schedule) => isSameDay(schedule.date, _selectedDay))
-                                  .isEmpty)
-                                Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Text(
-                                      'No scheduled sessions',
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ),
+                                  ],
                                 ),
+                              ),
                             ],
                           ),
                         ),
@@ -907,7 +906,7 @@ Container(
               const SizedBox(height: 24),
               
               // Enrolled Courses section
-              if (activeEnrollments.isNotEmpty) ...[
+                // Enrolled Courses section - Always show this section
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -917,19 +916,100 @@ Container(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _showCalendar = true;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.blue[200]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_month,
+                              size: 16,
+                              color: Colors.blue[700],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'View Calendar',
+                              style: TextStyle(
+                                color: Colors.blue[700],
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                
-                // List enrolled courses
-                ...activeEnrollments.map((item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: EnrolledCourseCard(
-                    enrollment: item['enrollment'] as EnrolledCourse,
-                    course: item['course'] as Course,
-                  ),
-                )),
-              ],
+
+                // If no real enrollments, show demo enrollments without any button
+                if (activeEnrollments.isEmpty)
+                  Column(
+                    children: [
+                      // Demo course 1
+                      EnrolledCourseCard(
+                        enrollment: EnrolledCourse(
+                          courseId: '1', // Network Security Fundamentals
+                          enrollmentDate: DateTime.now().subtract(const Duration(days: 14)),
+                          status: EnrollmentStatus.active,
+                          isOnline: true,
+                          nextSessionDate: DateTime.now().add(const Duration(days: 2)),
+                          nextSessionTime: '10:00 AM - 12:00 PM',
+                          location: 'Online (Zoom)',
+                          instructorName: 'Dr. Sarah Chen',
+                          progress: null, // No progress indicator
+                        ),
+                        course: Course.sampleCourses.firstWhere(
+                          (c) => c.id == '1',
+                          orElse: () => Course.sampleCourses.first,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Demo course 2
+                      EnrolledCourseCard(
+                        enrollment: EnrolledCourse(
+                          courseId: '4', // Data Security and Privacy
+                          enrollmentDate: DateTime.now().subtract(const Duration(days: 7)),
+                          status: EnrollmentStatus.pending,
+                          isOnline: false,
+                          nextSessionDate: null,
+                          nextSessionTime: null,
+                          location: 'ITEL Training Center (to be confirmed)',
+                          progress: null, // No progress indicator
+                        ),
+                        course: Course.sampleCourses.firstWhere(
+                          (c) => c.id == '4',
+                          orElse: () => Course.sampleCourses.first,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  // List actual enrolled courses
+                  ...activeEnrollments.map((item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: EnrolledCourseCard(
+                      enrollment: item['enrollment'] as EnrolledCourse,
+                      course: item['course'] as Course,
+                    ),
+                  )),
+
+                const SizedBox(height: 16),
               
               const SizedBox(height: 16),
               
