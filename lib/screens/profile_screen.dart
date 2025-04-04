@@ -997,45 +997,45 @@ Widget _buildProfileTab() {
             const SizedBox(height: 16),
             
             // Pending Enrollments section
-            if (User.currentUser.enrolledCourses
-                .where((e) => e.status == EnrollmentStatus.pending)
-                .isNotEmpty) 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Pending Enrollments',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+          if (User.currentUser.enrolledCourses
+              .where((e) => e.status == EnrollmentStatus.pending)
+              .isNotEmpty) 
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Pending Enrollments',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  
-                  // List pending enrollments by directly querying User.currentUser
-                  ...User.currentUser.enrolledCourses
-                    .where((e) => e.status == EnrollmentStatus.pending)
-                    .map((enrollment) {
-                      // Find the corresponding course data
-                      final courseData = Course.sampleCourses.firstWhere(
-                        (c) => c.id == enrollment.courseId,
-                        orElse: () => Course.sampleCourses.first, // Fallback
-                      );
-                      
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: EnrolledCourseCard(
-                          enrollment: enrollment,
-                          course: courseData,
-                        ),
-                      );
-                    }).toList(),
-                ],
-              )
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                
+                // List pending enrollments by directly querying User.currentUser
+                ...User.currentUser.enrolledCourses
+                  .where((e) => e.status == EnrollmentStatus.pending)
+                  .map((enrollment) {
+                    // Find the corresponding course data
+                    final courseData = Course.sampleCourses.firstWhere(
+                      (c) => c.id == enrollment.courseId,
+                      orElse: () => Course.sampleCourses.first, // Fallback
+                    );
+                    
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: EnrolledCourseCard(
+                        enrollment: enrollment,
+                        course: courseData,
+                      ),
+                    );
+                  }).toList(),
+              ],
+            )
             else if (pendingEnrollments.isNotEmpty)
               // Fallback to using the pendingEnrollments variable if needed
               Column(
