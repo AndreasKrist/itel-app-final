@@ -54,6 +54,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
   // Replace the _joinFreeClass method in course_detail_screen.dart
 
+// Replace this method in course_detail_screen.dart
+
 void _joinFreeClass() async {
   print("Starting _joinFreeClass method");
   // Set loading state
@@ -80,7 +82,7 @@ void _joinFreeClass() async {
     final newEnrollment = EnrolledCourse(
       courseId: widget.course.id,
       enrollmentDate: DateTime.now(),
-      status: EnrollmentStatus.active, // Start as active for free courses
+      status: EnrollmentStatus.active, // Set as active for free courses
       isOnline: widget.course.deliveryMethods?.contains('OLL') ?? false,
       // Set next session to 3 days from now
       nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
@@ -136,6 +138,13 @@ void _joinFreeClass() async {
     } catch (e) {
       print("Error saving to main user document: $e");
       // Continue execution even if this fails
+    }
+    
+    // Print enrollment status for debugging
+    print("Current enrollment status: ${newEnrollment.status}");
+    print("All enrolled courses:");
+    for (var course in User.currentUser.enrolledCourses) {
+      print("- Course ID: ${course.courseId}, Status: ${course.status}");
     }
     
     // Show success message regardless of storage method success
@@ -909,6 +918,21 @@ void _toggleFavorite() async {
                         setState(() {
                           _showEnquiryForm = false;
                         });
+                        
+                        // Add this code to provide feedback and navigate after submission
+                        Future.delayed(const Duration(seconds: 1), () {
+                          // Pop back to previous screen (typically the one showing list of courses)
+                          Navigator.pop(context);
+                          
+                          // Show a snackbar suggesting to check the profile
+                          final scaffoldMessenger = ScaffoldMessenger.of(context);
+                          scaffoldMessenger.showSnackBar(
+                            const SnackBar(
+                              content: Text('Check your Profile tab to view your pending enrollments'),
+                              duration: Duration(seconds: 4),
+                            ),
+                          );
+                        });
                       },
                     ),
                   ),
@@ -935,49 +959,63 @@ void _toggleFavorite() async {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : () {
-                    // Check if the course is free
-                    if (widget.course.price == '\$0' || 
-                        widget.course.price.contains('Free') || 
-                        widget.course.funding == 'Complimentary') {
-                      // Directly add to enrolled courses without form
-                      _joinFreeClass();
-                    } else {
-                      // Show enquiry form for paid courses
-                      setState(() {
-                        _showEnquiryForm = true;
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.course.price == '\$0' || 
-                                    widget.course.price.contains('Free') || 
-                                    widget.course.funding == 'Complimentary' 
-                                  ? Colors.green[600] : Colors.blue[600],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: _isLoading 
-                    ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 3,
-                        ),
-                      )
-                    : Text(
-                      widget.course.price == '\$0' || 
+                onPressed: _isLoading ? null : () {
+                  // Check if the course is free
+                  if (widget.course.price == '\$0' || 
                       widget.course.price.contains('Free') || 
-                      widget.course.funding == 'Complimentary'
-                      ? 'Access Course Now'
-                      : 'Enquire Now',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      widget.course.funding == 'Complimentary') {
+                    // Directly add to enrolled courses without form
+                    _joinFreeClass();
+                    
+                    // NEWLY ADDED: Navigate to profile tab after successful enrollment
+                    // This will be done after a short delay to allow the enrollment to complete
+                    Future.delayed(const Duration(seconds: 1), () {
+                      // Pop back to previous screen (typically the one showing list of courses)
+                      Navigator.pop(context);
+                      
+                      // Find the scaffold that contains the bottom navigation bar
+                      // and select the profile tab (index 4)
+                      final scaffoldMessenger = ScaffoldMessenger.of(context);
+                      scaffoldMessenger.showSnackBar(
+                        const SnackBar(content: Text('Check your Profile tab to access the course')),
+                      );
+                    });
+                  } else {
+                    // Show enquiry form for paid courses
+                    setState(() {
+                      _showEnquiryForm = true;
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: widget.course.price == '\$0' || 
+                                  widget.course.price.contains('Free') || 
+                                  widget.course.funding == 'Complimentary' 
+                                ? Colors.green[600] : Colors.blue[600],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: _isLoading 
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 3,
+                      ),
+                    )
+                  : Text(
+                    widget.course.price == '\$0' || 
+                    widget.course.price.contains('Free') || 
+                    widget.course.funding == 'Complimentary'
+                    ? 'Access Course Now'
+                    : 'Enquire Now',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                       ),
                     ),
                 ),

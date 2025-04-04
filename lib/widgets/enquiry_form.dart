@@ -86,6 +86,8 @@ class _EnquiryFormState extends State<EnquiryForm> {
 
 // Replace the entire _submitForm method in EnquiryForm with this version
 
+// Replace the _submitForm method in EnquiryForm with this improved version:
+
 void _submitForm() async {
   if (_formKey.currentState!.validate()) {
     // Show loading indicator
@@ -149,12 +151,17 @@ void _submitForm() async {
           print("Successfully saved to Firebase subcollection");
         } catch (e) {
           print("Error saving to Firebase subcollection: $e");
-          // Continue anyway - we'll try the main user document
         }
         
-        // 2. Update the user's enrolled courses locally
+        // 2. Update the user's enrolled courses locally - VERY IMPORTANT!
         print("Updating local User model...");
         User.currentUser = User.currentUser.enrollInCourse(newEnrollment);
+        
+        // Print current enrollments for debugging
+        print("Updated User.currentUser enrollments:");
+        for (var enrollment in User.currentUser.enrolledCourses) {
+          print("Course ID: ${enrollment.courseId}, Status: ${enrollment.status}");
+        }
         
         // 3. Then save to the main user document
         try {
@@ -187,7 +194,6 @@ void _submitForm() async {
           print("Successfully saved to user document");
         } catch (e) {
           print("Error saving to user document: $e");
-          // We'll still show success since the enquiry was submitted
         }
       } else {
         print("No logged in user found, cannot create enrollment record");

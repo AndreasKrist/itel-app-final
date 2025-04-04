@@ -46,6 +46,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadEnrollmentsFromFirebase();
   }
 
+// Replace this method in the ProfileScreen class
+
 Future<void> _loadEnrollmentsFromFirebase() async {
   try {
     setState(() {
@@ -226,6 +228,11 @@ Future<void> _loadEnrollmentsFromFirebase() async {
         );
         _isProfileLoading = false;
       });
+      
+      // Print enrollment status for debugging
+      for (var enrollment in User.currentUser.enrolledCourses) {
+        print('Loaded enrollment for course ${enrollment.courseId} with status: ${enrollment.status}');
+      }
     }
   } catch (e) {
     print('Error in _loadEnrollmentsFromFirebase: $e');
@@ -731,530 +738,549 @@ Widget _buildTabButton(String title, String tabId) {
   );
 }
   
-  Widget _buildProfileTab() {
+Widget _buildProfileTab() {
+  // Get current user data from Firebase Auth
+  final firebaseUser = _authService.currentUser;
+  
+  // Use Firebase user data or fall back to static data if not available
+  final currentUser = firebaseUser ?? User.currentUser;
+  
+  final upcomingSchedules = Schedule.getDummySchedules();
+  final completedCourses = Course.userCourseHistory.where((course) => course.completionDate != null).toList();
+  
+  // Get enrolled courses by matching them with their course data
+  final enrolledCoursesList = currentUser.enrolledCourses.map((enrollment) {
+    final courseData = Course.sampleCourses.firstWhere(
+      (c) => c.id == enrollment.courseId,
+      orElse: () => Course.sampleCourses.first, // Fallback
+    );
+    return {
+      'enrollment': enrollment,
+      'course': courseData,
+    };
+  }).toList();
+  
+  // Filter active and pending enrollments
+  final activeEnrollments = enrolledCoursesList.where(
+    (item) => (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.active ||
+              (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.confirmed
+  ).toList();
+  
+  final pendingEnrollments = enrolledCoursesList.where(
+    (item) => (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.pending
+  ).toList();
 
-    // Get current user data from Firebase Auth
-    final firebaseUser = _authService.currentUser;
-    
-    // Use Firebase user data or fall back to static data if not available
-    final currentUser = firebaseUser ?? User.currentUser;
-    
-    final upcomingSchedules = Schedule.getDummySchedules();
-    final completedCourses = Course.userCourseHistory.where((course) => course.completionDate != null).toList();
-    
-    // Get enrolled courses by matching them with their course data
-    final enrolledCoursesList = currentUser.enrolledCourses.map((enrollment) {
-      final courseData = Course.sampleCourses.firstWhere(
-        (c) => c.id == enrollment.courseId,
-        orElse: () => Course.sampleCourses.first, // Fallback
-      );
-      return {
-        'enrollment': enrollment,
-        'course': courseData,
-      };
-    }).toList();
-    
-    // Filter active and pending enrollments
-    final activeEnrollments = enrolledCoursesList.where(
-      (item) => (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.active ||
-                (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.confirmed
-    ).toList();
-    
-    final pendingEnrollments = enrolledCoursesList.where(
-      (item) => (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.pending
-    ).toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 16),
-        
-        // Personal Information - Using Firebase user data
-// Personal Information - Using Firebase user data
-Container(
-  padding: const EdgeInsets.all(16),
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(12),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black.withOpacity(0.05),
-        blurRadius: 10,
-        offset: const Offset(0, 2),
-      ),
-    ],
-  ),
-  child: Column(
+  return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Personal Information',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+      const SizedBox(height: 16),
+      
+      // Personal Information - Using Firebase user data
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
-          ),
-          // Toggle button for showing/hiding information
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _showPersonalInfo = !_showPersonalInfo;
-              });
-            },
-            child: Row(
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  _showPersonalInfo ? Icons.visibility : Icons.visibility_off,
-                  size: 18,
-                  color: Colors.blue[600],
-                ),
-                const SizedBox(width: 4),
                 Text(
-                  _showPersonalInfo ? 'Hide' : 'Show',
+                  'Personal Information',
                   style: TextStyle(
-                    color: Colors.blue[600],
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // Toggle button for showing/hiding information
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showPersonalInfo = !_showPersonalInfo;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        _showPersonalInfo ? Icons.visibility : Icons.visibility_off,
+                        size: 18,
+                        color: Colors.blue[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _showPersonalInfo ? 'Hide' : 'Show',
+                        style: TextStyle(
+                          color: Colors.blue[600],
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-      // Show masked or actual information based on visibility setting
-      if (_showPersonalInfo) ...[
-        _buildInfoRow('Email', currentUser.email),
-        _buildInfoRow('Phone', currentUser.phone),
-        if (currentUser.company != null)
-          _buildInfoRow('Company', currentUser.company!),
-      ] else ...[
-        // Show masked information
-        _buildInfoRow('Email', _maskEmail(currentUser.email)),
-        _buildInfoRow('Phone', _maskPhone(currentUser.phone)),
-        if (currentUser.company != null)
-          _buildInfoRow('Company', '********'),
-      ],
-    ],
-  ),
-),
-        
-        const SizedBox(height: 24),
-        
-        // Dashboard Section
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
+            // Show masked or actual information based on visibility setting
+            if (_showPersonalInfo) ...[
+              _buildInfoRow('Email', currentUser.email),
+              _buildInfoRow('Phone', currentUser.phone),
+              if (currentUser.company != null)
+                _buildInfoRow('Company', currentUser.company!),
+            ] else ...[
+              // Show masked information
+              _buildInfoRow('Email', _maskEmail(currentUser.email)),
+              _buildInfoRow('Phone', _maskPhone(currentUser.phone)),
+              if (currentUser.company != null)
+                _buildInfoRow('Company', '********'),
             ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Learning Dashboard',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+          ],
+        ),
+      ),
+      
+      const SizedBox(height: 24),
+      
+      // Dashboard Section
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Learning Dashboard',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              
-              // Stats Cards
-              Row(
-                children: [
-                  _buildStatCard(
-                    'In Progress',
-                    '${activeEnrollments.length}', // Use enrolled courses count
-                    Icons.pending_actions,
-                    Colors.orange,
-                  ),
-                  const SizedBox(width: 12),
-                  _buildStatCard(
-                    'Completed',
-                    '${completedCourses.length}',
-                    Icons.check_circle,
-                    Colors.green,
-                  ),
-                  const SizedBox(width: 12),
-                  _buildStatCard(
-                    'Pending',
-                    '${pendingEnrollments.length}', // Use pending enrollments count
-                    Icons.hourglass_empty,
-                    Colors.blue,
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 24),
-              
-              // Enrolled Courses section
-                // Enrolled Courses section - Always show this section
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'My Enrolled Courses',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _showCalendar = true;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.blue[200]!),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_month,
-                              size: 16,
-                              color: Colors.blue[700],
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'View Calendar',
-                              style: TextStyle(
-                                color: Colors.blue[700],
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
-                const SizedBox(height: 12),
+              ],
+            ),
+            const SizedBox(height: 12),
+            
+            // Stats Cards
+            Row(
+              children: [
+                _buildStatCard(
+                  'In Progress',
+                  '${activeEnrollments.length}', // Use enrolled courses count
+                  Icons.pending_actions,
+                  Colors.orange,
+                ),
+                const SizedBox(width: 12),
+                _buildStatCard(
+                  'Completed',
+                  '${completedCourses.length}',
+                  Icons.check_circle,
+                  Colors.green,
+                ),
+                const SizedBox(width: 12),
+                _buildStatCard(
+                  'Pending',
+                  '${pendingEnrollments.length}', // Use pending enrollments count
+                  Icons.hourglass_empty,
+                  Colors.blue,
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 24),
+            
+            // Enrolled Courses section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'My Enrolled Courses',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showCalendar = true;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.blue[200]!),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_month,
+                          size: 16,
+                          color: Colors.blue[700],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'View Calendar',
+                          style: TextStyle(
+                            color: Colors.blue[700],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
-                // If no real enrollments, show demo enrollments without any button
-                if (activeEnrollments.isEmpty)
-                  Column(
-                    children: [
-                      // Demo course 1
-                      EnrolledCourseCard(
-                        enrollment: EnrolledCourse(
-                          courseId: '1', // Network Security Fundamentals
-                          enrollmentDate: DateTime.now().subtract(const Duration(days: 14)),
-                          status: EnrollmentStatus.active,
-                          isOnline: true,
-                          nextSessionDate: DateTime.now().add(const Duration(days: 2)),
-                          nextSessionTime: '10:00 AM - 12:00 PM',
-                          location: 'Online (Zoom)',
-                          instructorName: 'Dr. Sarah Chen',
-                          progress: null, // No progress indicator
-                        ),
-                        course: Course.sampleCourses.firstWhere(
-                          (c) => c.id == '1',
-                          orElse: () => Course.sampleCourses.first,
-                        ),
+            // Check if we have actual active/confirmed enrollments
+            if (User.currentUser.enrolledCourses
+                .where((e) => e.status == EnrollmentStatus.active || 
+                          e.status == EnrollmentStatus.confirmed)
+                .isEmpty)
+              // No active enrollments, show empty state message instead of demo courses
+              _buildEmptyState(
+                'No enrolled courses',
+                'Courses you enroll in will appear here',
+                Icons.school,
+              )
+            else
+              // Display actual enrolled courses that are active or confirmed
+              Column(
+                children: User.currentUser.enrolledCourses
+                  .where((e) => e.status == EnrollmentStatus.active || 
+                              e.status == EnrollmentStatus.confirmed)
+                  .map((enrollment) {
+                    // Find the corresponding course data
+                    final courseData = Course.sampleCourses.firstWhere(
+                      (c) => c.id == enrollment.courseId,
+                      orElse: () => Course.sampleCourses.first, // Fallback
+                    );
+                    
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: EnrolledCourseCard(
+                        enrollment: enrollment,
+                        course: courseData,
                       ),
-                      const SizedBox(height: 16),
-                      
-                      // Demo course 2
-                      EnrolledCourseCard(
-                        enrollment: EnrolledCourse(
-                          courseId: '4', // Data Security and Privacy
-                          enrollmentDate: DateTime.now().subtract(const Duration(days: 7)),
-                          status: EnrollmentStatus.pending,
-                          isOnline: false,
-                          nextSessionDate: null,
-                          nextSessionTime: null,
-                          location: 'ITEL Training Center (to be confirmed)',
-                          progress: null, // No progress indicator
-                        ),
-                        course: Course.sampleCourses.firstWhere(
-                          (c) => c.id == '4',
-                          orElse: () => Course.sampleCourses.first,
+                    );
+                  }).toList(),
+              ),
+
+            const SizedBox(height: 16),
+            
+            // Pending Enrollments section
+            if (User.currentUser.enrolledCourses
+                .where((e) => e.status == EnrollmentStatus.pending)
+                .isNotEmpty) 
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Pending Enrollments',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
-                  )
-                else
-                  // List actual enrolled courses
-                  ...activeEnrollments.map((item) => Padding(
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  // List pending enrollments by directly querying User.currentUser
+                  ...User.currentUser.enrolledCourses
+                    .where((e) => e.status == EnrollmentStatus.pending)
+                    .map((enrollment) {
+                      // Find the corresponding course data
+                      final courseData = Course.sampleCourses.firstWhere(
+                        (c) => c.id == enrollment.courseId,
+                        orElse: () => Course.sampleCourses.first, // Fallback
+                      );
+                      
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: EnrolledCourseCard(
+                          enrollment: enrollment,
+                          course: courseData,
+                        ),
+                      );
+                    }).toList(),
+                ],
+              )
+            else if (pendingEnrollments.isNotEmpty)
+              // Fallback to using the pendingEnrollments variable if needed
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Pending Enrollments',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  
+                  ...pendingEnrollments.map((item) => Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: EnrolledCourseCard(
                       enrollment: item['enrollment'] as EnrolledCourse,
                       course: item['course'] as Course,
                     ),
                   )),
-
-                const SizedBox(height: 16),
-              
-              const SizedBox(height: 16),
-              
-              // Pending Enrollments section
-              if (pendingEnrollments.isNotEmpty) ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Pending Enrollments',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                
-                // List pending enrollments
-                ...pendingEnrollments.map((item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: EnrolledCourseCard(
-                    enrollment: item['enrollment'] as EnrolledCourse,
-                    course: item['course'] as Course,
-                  ),
-                )),
-              ],
-              
-              const SizedBox(height: 16),
-              
-              // Upcoming Schedule
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Upcoming Schedule',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _showCalendar = true;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.blue[50],
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.blue[200]!),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_month,
-                            size: 16,
-                            color: Colors.blue[700],
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'View Calendar',
-                            style: TextStyle(
-                              color: Colors.blue[700],
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
-              const SizedBox(height: 12),
-              
-              if (upcomingSchedules.isEmpty)
-                _buildEmptyState(
-                  'No upcoming sessions',
-                  'Your scheduled learning sessions will appear here',
-                  Icons.event_busy,
-                )
-              else
-                Column(
-                  children: upcomingSchedules
-                      .take(2)
-                      .map((schedule) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: _buildScheduleCard(schedule),
-                          ))
-                      .toList(),
+
+            const SizedBox(height: 16),
+            
+            // Upcoming Schedule
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Upcoming Schedule',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                  
-              if (upcomingSchedules.length > 2)
-                TextButton(
-                  onPressed: () {
+                GestureDetector(
+                  onTap: () {
                     setState(() {
                       _showCalendar = true;
                     });
                   },
-                  child: Text(
-                    'View More',
-                    style: TextStyle(
-                      color: Colors.blue[700],
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
                     ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        
-        const SizedBox(height: 24),
-        
-        // Course History - Show only completed courses
-        Text(
-          'Course History',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        
-        if (completedCourses.isEmpty)
-          _buildEmptyState(
-            'No completed courses',
-            'Your completed courses will appear here',
-            Icons.school,
-          )
-        else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: completedCourses.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final course = completedCourses[index];
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.blue[200]!),
                     ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        if (course.certType != null) ...[
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              course.certType!,
-                              style: TextStyle(
-                                color: Colors.blue[700],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                        Expanded(
-                          child: Text(
-                            course.title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    if (course.completionDate != null)
-                      Text(
-                        'Completed ${course.completionDate}',
-                        style: TextStyle(
-                          color: Colors.green[700],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    const SizedBox(height: 8),
-                    Row(
+                    child: Row(
                       children: [
                         Icon(
-                          Icons.book,
+                          Icons.calendar_month,
                           size: 16,
-                          color: Colors.grey[600],
+                          color: Colors.blue[700],
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Course Code: ${course.courseCode}',
+                          'View Calendar',
                           style: TextStyle(
-                            color: Colors.grey[600],
+                            color: Colors.blue[700],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              );
-            },
-          ),
-        
-        const SizedBox(height: 24),
-        
-        // Edit Profile Button
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: Colors.grey[300]!),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              ],
             ),
-            child: const Text('Edit Profile'),
-          ),
+            const SizedBox(height: 12),
+            
+            if (upcomingSchedules.isEmpty)
+              _buildEmptyState(
+                'No upcoming sessions',
+                'Your scheduled learning sessions will appear here',
+                Icons.event_busy,
+              )
+            else
+              Column(
+                children: upcomingSchedules
+                    .take(2)
+                    .map((schedule) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: _buildScheduleCard(schedule),
+                        ))
+                    .toList(),
+              ),
+                
+            if (upcomingSchedules.length > 2)
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _showCalendar = true;
+                  });
+                },
+                child: Text(
+                  'View More',
+                  style: TextStyle(
+                    color: Colors.blue[700],
+                  ),
+                ),
+              ),
+          ],
         ),
-        
-        const SizedBox(height: 24),
-      ],
-    );
-  }
+      ),
+      
+      const SizedBox(height: 24),
+      
+      // Course History - Show only completed courses
+      Text(
+        'Course History',
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 12),
+      
+      if (completedCourses.isEmpty)
+        _buildEmptyState(
+          'No completed courses',
+          'Your completed courses will appear here',
+          Icons.school,
+        )
+      else
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: completedCourses.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final course = completedCourses[index];
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      if (course.certType != null) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            course.certType!,
+                            style: TextStyle(
+                              color: Colors.blue[700],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      Expanded(
+                        child: Text(
+                          course.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  if (course.completionDate != null)
+                    Text(
+                      'Completed ${course.completionDate}',
+                      style: TextStyle(
+                        color: Colors.green[700],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.book,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Course Code: ${course.courseCode}',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      
+      const SizedBox(height: 24),
+      
+      // Edit Profile Button
+      SizedBox(
+        width: double.infinity,
+        child: OutlinedButton(
+          onPressed: () {},
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            side: BorderSide(color: Colors.grey[300]!),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text('Edit Profile'),
+        ),
+      ),
+      
+      const SizedBox(height: 24),
+    ],
+  );
+}
   
 Widget _buildCoursesTab() {
   // Get current user data from Firebase Auth
