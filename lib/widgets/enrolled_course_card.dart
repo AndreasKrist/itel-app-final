@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart';
 import '../models/enrolled_course.dart';
 import '../screens/course_outline_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+
 
 class EnrolledCourseCard extends StatelessWidget {
   final EnrolledCourse enrollment;

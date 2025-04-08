@@ -1033,7 +1033,7 @@ Widget _buildProfileTab() {
                         course: courseData,
                       ),
                     );
-                  }).toList(),
+                  }),
               ],
             )
             else if (pendingEnrollments.isNotEmpty)
