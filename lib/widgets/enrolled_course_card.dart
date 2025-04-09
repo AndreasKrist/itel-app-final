@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart';
 import '../models/enrolled_course.dart';
 import '../screens/course_outline_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 
 class EnrolledCourseCard extends StatelessWidget {
@@ -62,28 +61,48 @@ class EnrolledCourseCard extends StatelessWidget {
     }
   }
 
-  // Launch the course URL
-void _launchCourseURL(BuildContext context) async {
-  if (enrollment.isOnline && enrollment.location != null) {
+// Launch the course URL
+Future<void> _launchCourseURL(BuildContext context) async {
+  if (enrollment.isOnline) {
     try {
-      // Define your Moodle URL
-      String moodleUrl = 'https://online.itel.com.sg';
+      // Your Moodle site URL
+      final moodleSiteUrl = 'https://online.itel.com.sg';
       
-      // Create the login URL that will trigger Google authentication
-      final loginUrl = '$moodleUrl/login/index.php?authCAS=Google';
+      // Moodle app URL scheme with your site
+      final moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl';
       
-      // Launch the URL in external browser
-      await launchUrl(
-        Uri.parse(loginUrl),
-        mode: LaunchMode.externalApplication,
-      );
+      // Try to launch Moodle app first
+      final canOpenApp = await canLaunchUrl(Uri.parse(moodleAppUrl));
+      
+      if (canOpenApp) {
+        // Launch Moodle app if installed
+        await launchUrl(Uri.parse(moodleAppUrl));
+      } else {
+        // Fallback: open in browser if app is not installed
+        await launchUrl(
+          Uri.parse(moodleSiteUrl),
+          mode: LaunchMode.externalApplication,
+        );
+        
+        // Show app install suggestion
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Moodle app not found. Install it for a better experience.'),
+            duration: Duration(seconds: 5),
+            action: SnackBarAction(
+              label: 'OK',
+              onPressed: () {},
+            ),
+          ),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error opening course: ${e.toString()}')),
+        SnackBar(content: Text('Error opening Moodle: ${e.toString()}')),
       );
     }
   } else {
-    // For offline courses, just show the location
+    // For offline courses
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Course location: ${enrollment.location ?? "Not available"}')),
     );
