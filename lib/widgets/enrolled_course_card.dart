@@ -63,133 +63,67 @@ class EnrolledCourseCard extends StatelessWidget {
     }
   }
 
-  // Launch the course URL with improved error handling
+  // Launch the course URL with improved deep linking and SSO
   Future<void> _launchCourseURL(BuildContext context) async {
-    if (enrollment.isOnline) {
-      try {
-        // Show loading indicator
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Connecting to Moodle...'))
-        );
-        
-        // Get Moodle site URL - you could make this a configurable setting
-        final moodleSiteUrl = 'https://online.itel.com.sg';
-        
-        // Determine whether to use Moodle app or browser
-        final useBrowser = true; // For now, always use browser to avoid the error
-        
-        if (useBrowser) {
-          // Skip token retrieval and directly open course in browser
-          String webUrl;
-          if (course.moodleCourseId != null) {
-            webUrl = '$moodleSiteUrl/course/view.php?id=${course.moodleCourseId}';
-          } else {
-            webUrl = '$moodleSiteUrl/my/';
-          }
-          
-          print('Launching browser URL: $webUrl');
-          final success = await launchUrl(
-            Uri.parse(webUrl),
-            mode: LaunchMode.externalApplication,
-          );
-          
-          if (!success) {
-            throw Exception('Could not launch Moodle URL');
-          }
-        } else {
-          // This is the original method that's having issues - we'll skip this for now
-          // Get Moodle token (or authenticate if needed)
-          String? token;
-          try {
-            token = await _moodleService.getMoodleToken();
-            
-            if (token == null) {
-              // Try to authenticate with Google
-              final success = await _moodleService.authenticateWithGoogle();
-              if (success) {
-                token = await _moodleService.getMoodleToken();
-              }
-            }
-          } catch (e) {
-            print('Error getting Moodle token: $e');
-            // Continue without token
-          }
-          
-          // Fallback to browser if we couldn't get a token
-          if (token == null) {
-            String webUrl;
-            if (course.moodleCourseId != null) {
-              webUrl = '$moodleSiteUrl/course/view.php?id=${course.moodleCourseId}';
-            } else {
-              webUrl = moodleSiteUrl;
-            }
-            
-            await launchUrl(
-              Uri.parse(webUrl),
-              mode: LaunchMode.externalApplication,
-            );
-            return;
-          }
-          
-          // Format for course deep link with token
-          String moodleUrl;
-          if (course.moodleCourseId != null) {
-            moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token&courseid=${course.moodleCourseId}';
-          } else {
-            moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token';
-          }
-          
-          // Try to launch Moodle app
-          final canOpenApp = await canLaunchUrl(Uri.parse(moodleUrl));
-          
-          if (canOpenApp) {
-            await launchUrl(Uri.parse(moodleUrl));
-          } else {
-            // Fallback: open browser
-            String webUrl;
-            if (course.moodleCourseId != null) {
-              webUrl = '$moodleSiteUrl/course/view.php?id=${course.moodleCourseId}';
-            } else {
-              webUrl = moodleSiteUrl;
-            }
-            
-            await launchUrl(
-              Uri.parse(webUrl),
-              mode: LaunchMode.externalApplication,
-            );
-          }
-        }
-      } catch (e) {
-        print('Error opening Moodle: $e');
-        // Handle error gracefully
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Could not access Moodle. Opening course in browser instead.'),
-              duration: const Duration(seconds: 3),
-            ),
-          );
-          
-          // Fallback option: just open the main Moodle site
-          try {
-            await launchUrl(
-              Uri.parse('https://online.itel.com.sg'),
-              mode: LaunchMode.externalApplication,
-            );
-          } catch (browserError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Cannot open Moodle: $browserError')),
-            );
-          }
-        }
-      }
-    } else {
-      // For offline courses
+  if (enrollment.isOnline) {
+    try {
+      // Show loading indicator
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Course location: ${enrollment.location ?? "Not available"}')),
+        const SnackBar(content: Text('Connecting to Moodle...'))
       );
+      
+      // Get Moodle token 
+      String? token = await _moodleService.authenticateAndGetToken();
+      
+      if (token == null) {
+        throw Exception('Could not authenticate with Moodle');
+      }
+      
+      // Prepare deep link URL for Moodle mobile app
+      final moodleSiteUrl = 'https://online.itel.com.sg'; // Replace with your Moodle URL
+      String moodleUrl;
+      
+      if (course.moodleCourseId != null) {
+        moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token&courseid=${course.moodleCourseId}';
+      } else {
+        moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token';
+      }
+      
+      // Try to launch the Moodle mobile app
+      final canLaunchMoodleApp = await canLaunchUrl(Uri.parse(moodleUrl));
+      
+      if (canLaunchMoodleApp) {
+        await launchUrl(Uri.parse(moodleUrl));
+        return;
+      }
+      
+      // If we can't launch the app, use web browser with token
+      String webUrl;
+      if (course.moodleCourseId != null) {
+        webUrl = '$moodleSiteUrl/webservice/pluginfile.php?token=$token&redirect=1&courseid=${course.moodleCourseId}';
+      } else {
+        webUrl = '$moodleSiteUrl/webservice/pluginfile.php?token=$token&redirect=1';
+      }
+      
+      await launchUrl(
+        Uri.parse(webUrl),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      print('Error opening course: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open course: ${e.toString()}')),
+        );
+      }
     }
+  } else {
+    // For offline courses
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Course location: ${enrollment.location ?? "Not available"}')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
