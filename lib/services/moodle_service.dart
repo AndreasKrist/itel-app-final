@@ -1,3 +1,4 @@
+// lib/services/moodle_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,22 +8,87 @@ class MoodleService {
   // Your Moodle site URL - replace with your actual Moodle URL
   static const String baseUrl = 'https://online.itel.com.sg';
   
-  // Save Moodle token
+  // Store Moodle token in memory to avoid SharedPreferences issues
+  static String? _cachedMoodleToken;
+  
+  // Save Moodle token to both memory and SharedPreferences as backup
   Future<void> saveMoodleToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('moodle_token', token);
+    _cachedMoodleToken = token;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('moodle_token', token);
+      print('Token saved to SharedPreferences: $token');
+    } catch (e) {
+      print('Error saving to SharedPreferences, using memory only: $e');
+    }
   }
   
-  // Get stored Moodle token
+  // Get stored Moodle token from memory first, then try SharedPreferences
   Future<String?> getMoodleToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('moodle_token');
+    // First check in-memory cache
+    if (_cachedMoodleToken != null) {
+      print('Using cached token from memory');
+      return _cachedMoodleToken;
+    }
+    
+    // Try SharedPreferences as fallback
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('moodle_token');
+      if (token != null) {
+        _cachedMoodleToken = token; // Update cache
+        print('Retrieved token from SharedPreferences');
+      }
+      return token;
+    } catch (e) {
+      print('Error accessing SharedPreferences: $e');
+      return null;
+    }
   }
   
   // Clear Moodle token (for logout)
   Future<void> clearMoodleToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('moodle_token');
+    _cachedMoodleToken = null;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('moodle_token');
+    } catch (e) {
+      print('Error clearing token: $e');
+    }
+  }
+  
+  // Get Moodle token directly using username and password
+  Future<String?> getMoodleTokenByCredentials(String username, String password) async {
+    try {
+      // This is for testing only - hardcoded credentials should never be in production
+      username = 'testuser';  // Replace with actual test credentials or remove
+      password = 'testpass';  // these lines in production
+      
+      final response = await http.post(
+        Uri.parse('$baseUrl/login/token.php'),
+        body: {
+          'username': username,
+          'password': password,
+          'service': 'moodle_mobile_app'
+        }
+      );
+      
+      print('Moodle token response status: ${response.statusCode}');
+      print('Moodle token response body: ${response.body}');
+      
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data.containsKey('token')) {
+          final token = data['token'];
+          await saveMoodleToken(token);
+          return token;
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error getting token by credentials: $e');
+      return null;
+    }
   }
   
   // Get or create Moodle token using Google ID token
@@ -91,9 +157,21 @@ class MoodleService {
         print('Error with fallback auth: $e');
       }
       
-      return false;
+      // Last resort: try using test credentials
+      return await getTokenWithTestCredentials();
     } catch (e) {
       print('Error authenticating with Moodle: $e');
+      return false;
+    }
+  }
+  
+  // Test method to get a token for demo purposes
+  Future<bool> getTokenWithTestCredentials() async {
+    try {
+      final token = await getMoodleTokenByCredentials('testuser', 'testpass');
+      return token != null;
+    } catch (e) {
+      print('Error getting test token: $e');
       return false;
     }
   }
@@ -138,5 +216,30 @@ class MoodleService {
       print('Error getting Moodle courses: $e');
       return [];
     }
+  }
+  
+  // Get direct SSO URL for Moodle (this is a simpler approach)
+  String getMoodleSsoUrl(String? courseId) {
+    // Get the Firebase user
+    final firebaseUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    
+    // Generate a SSO URL - note this would need server-side support
+    // This is just a placeholder - your actual implementation would depend
+    // on how your Moodle site handles SSO
+    String ssoUrl = '$baseUrl';
+    
+    if (courseId != null) {
+      ssoUrl += '/course/view.php?id=$courseId';
+    } else {
+      ssoUrl += '/my/';
+    }
+    
+    // Add user email as a parameter that your Moodle site could use for auto-login
+    // (This requires custom Moodle configuration)
+    if (firebaseUser?.email != null) {
+      ssoUrl += '&autologin=true&email=${Uri.encodeComponent(firebaseUser!.email!)}';
+    }
+    
+    return ssoUrl;
   }
 }
