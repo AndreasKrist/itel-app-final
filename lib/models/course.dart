@@ -21,6 +21,7 @@ class Course {
   final Map<String, Map<String, String>>? feeStructure; // Added fee structure
   final String? progress;
   final String? completionDate;
+  final String? moodleCourseId; // The ID of this course in Moodle
 
   Course({
     required this.id,
@@ -44,6 +45,7 @@ class Course {
     this.feeStructure,
     this.progress,
     this.completionDate,
+    this.moodleCourseId,
   });
 
   Course copyWith({
@@ -68,6 +70,7 @@ class Course {
     Map<String, Map<String, String>>? feeStructure,
     String? progress,
     String? completionDate,
+    String? moodleCourseId,
   }) {
     return Course(
       id: id ?? this.id,
@@ -91,6 +94,7 @@ class Course {
       feeStructure: feeStructure ?? this.feeStructure,
       progress: progress ?? this.progress,
       completionDate: completionDate ?? this.completionDate,
+      moodleCourseId: moodleCourseId ?? this.moodleCourseId,
     );
   }
 
@@ -1240,6 +1244,7 @@ Course(
   funding: 'Complimentary',
   deliveryMethods: ['OLL'],
   nextAvailableDate: 'April 20, 2025',
+  moodleCourseId: '8',
   description: 'Master Microsoft Word to create professional-looking documents for business and academic purposes. This course covers document formatting, styles, templates, and advanced editing features.',
   outline: {
     'Module 1: Document Basics': [
@@ -1327,7 +1332,7 @@ Course(
 Course(
   id: '26',
   courseCode: 'MSO501',
-  title: 'Microsoft Teams for Collaboration',
+  title: 'Essential Word for Business Owner',
   category: 'Office Productivity',
   certType: null,
   rating: 4.8,
@@ -1336,6 +1341,7 @@ Course(
   funding: 'Complimentary',
   deliveryMethods: ['OLL'],
   nextAvailableDate: 'April 30, 2025',
+  moodleCourseId: '8',
   description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
   outline: {
     'Module 1: Teams Fundamentals': [

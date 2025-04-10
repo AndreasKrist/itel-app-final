@@ -4,13 +4,15 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart';
 import '../models/enrolled_course.dart';
 import '../screens/course_outline_screen.dart';
-
+import '../services/moodle_service.dart';
 
 class EnrolledCourseCard extends StatelessWidget {
   final EnrolledCourse enrollment;
   final Course course;
+  // Add Moodle service
+  final MoodleService _moodleService = MoodleService();
 
-  const EnrolledCourseCard({
+  EnrolledCourseCard({
     super.key,
     required this.enrollment,
     required this.course,
@@ -61,53 +63,97 @@ class EnrolledCourseCard extends StatelessWidget {
     }
   }
 
-// Launch the course URL
-Future<void> _launchCourseURL(BuildContext context) async {
-  if (enrollment.isOnline) {
-    try {
-      // Your Moodle site URL
-      final moodleSiteUrl = 'https://online.itel.com.sg';
-      
-      // Moodle app URL scheme with your site
-      final moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl';
-      
-      // Try to launch Moodle app first
-      final canOpenApp = await canLaunchUrl(Uri.parse(moodleAppUrl));
-      
-      if (canOpenApp) {
-        // Launch Moodle app if installed
-        await launchUrl(Uri.parse(moodleAppUrl));
-      } else {
-        // Fallback: open in browser if app is not installed
-        await launchUrl(
-          Uri.parse(moodleSiteUrl),
-          mode: LaunchMode.externalApplication,
+  // Launch the course URL with Moodle integration
+  Future<void> _launchCourseURL(BuildContext context) async {
+    if (enrollment.isOnline) {
+      try {
+        // Show loading indicator
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Connecting to Moodle...'))
         );
         
-        // Show app install suggestion
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Moodle app not found. Install it for a better experience.'),
-            duration: Duration(seconds: 5),
-            action: SnackBarAction(
-              label: 'OK',
-              onPressed: () {},
+        // Get Moodle token (or authenticate if needed)
+        String? token = await _moodleService.getMoodleToken();
+        
+        if (token == null) {
+          // Try to authenticate with Google
+          final success = await _moodleService.authenticateWithGoogle();
+          if (success) {
+            token = await _moodleService.getMoodleToken();
+          }
+        }
+        
+        if (token == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not connect to Moodle. Please log in to Moodle first.'))
+          );
+          return;
+        }
+        
+        // Your Moodle site URL
+        final moodleSiteUrl = 'https://online.itel.com.sg'; // Replace with your Moodle URL
+        
+        // Construct URL based on whether we have a course ID
+        String moodleUrl;
+        
+        if (course.moodleCourseId != null) {
+          // Format for course deep link with token
+          // For mobile app
+          moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token&courseid=${course.moodleCourseId}';
+        } else {
+          // Just basic auth without specific course
+          moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token';
+        }
+        
+        print('Attempting to launch Moodle URL: $moodleUrl');
+        
+        // Try to launch Moodle app
+        final canOpenApp = await canLaunchUrl(Uri.parse(moodleUrl));
+        
+        if (canOpenApp) {
+          // Launch Moodle app if installed
+          await launchUrl(Uri.parse(moodleUrl));
+          print('Launched Moodle app');
+        } else {
+          // Fallback: open browser
+          String webUrl;
+          if (course.moodleCourseId != null) {
+            webUrl = '$moodleSiteUrl/course/view.php?id=${course.moodleCourseId}';
+          } else {
+            webUrl = moodleSiteUrl;
+          }
+          
+          print('Launching browser URL: $webUrl');
+          await launchUrl(
+            Uri.parse(webUrl),
+            mode: LaunchMode.externalApplication,
+          );
+          
+          // Show app install suggestion
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Moodle app not installed. For better experience, install the Moodle app.'),
+              duration: Duration(seconds: 5),
+              action: SnackBarAction(
+                label: 'OK',
+                onPressed: () {},
+              ),
             ),
-          ),
+          );
+        }
+      } catch (e) {
+        print('Error opening Moodle: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error opening Moodle: ${e.toString()}')),
         );
       }
-    } catch (e) {
+    } else {
+      // For offline courses
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error opening Moodle: ${e.toString()}')),
+        SnackBar(content: Text('Course location: ${enrollment.location ?? "Not available"}')),
       );
     }
-  } else {
-    // For offline courses
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Course location: ${enrollment.location ?? "Not available"}')),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
