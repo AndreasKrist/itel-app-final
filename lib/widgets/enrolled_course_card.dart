@@ -1,16 +1,13 @@
-// File: lib/widgets/enrolled_course_card.dart
+// lib/widgets/enrolled_course_card.dart
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart';
 import '../models/enrolled_course.dart';
 import '../screens/course_outline_screen.dart';
-import '../services/moodle_service.dart';
 
 class EnrolledCourseCard extends StatelessWidget {
   final EnrolledCourse enrollment;
   final Course course;
-  // Add Moodle service
-  final MoodleService _moodleService = MoodleService();
 
   EnrolledCourseCard({
     super.key,
@@ -63,65 +60,68 @@ class EnrolledCourseCard extends StatelessWidget {
     }
   }
 
-  // Launch the course URL with improved deep linking and SSO
-  Future<void> _launchCourseURL(BuildContext context) async {
-  if (enrollment.isOnline) {
-    try {
-      // Show loading indicator
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Connecting to Moodle...'))
-      );
-      
-      // Get Moodle token 
-      String? token = await _moodleService.authenticateAndGetToken();
-      
-      if (token == null) {
-        throw Exception('Could not authenticate with Moodle');
-      }
-      
-      // Prepare deep link URL for Moodle mobile app
-      final moodleSiteUrl = 'https://online.itel.com.sg'; // Replace with your Moodle URL
-      String moodleUrl;
-      
-      if (course.moodleCourseId != null) {
-        moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token&courseid=${course.moodleCourseId}';
-      } else {
-        moodleUrl = 'moodlemobile://link=$moodleSiteUrl&token=$token';
-      }
-      
-      // Try to launch the Moodle mobile app
-      final canLaunchMoodleApp = await canLaunchUrl(Uri.parse(moodleUrl));
-      
-      if (canLaunchMoodleApp) {
-        await launchUrl(Uri.parse(moodleUrl));
-        return;
-      }
-      
-      // If we can't launch the app, use web browser with token
-      String webUrl;
-      if (course.moodleCourseId != null) {
-        webUrl = '$moodleSiteUrl/webservice/pluginfile.php?token=$token&redirect=1&courseid=${course.moodleCourseId}';
-      } else {
-        webUrl = '$moodleSiteUrl/webservice/pluginfile.php?token=$token&redirect=1';
-      }
-      
-      await launchUrl(
-        Uri.parse(webUrl),
-        mode: LaunchMode.externalApplication,
-      );
-    } catch (e) {
-      print('Error opening course: $e');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not open course: ${e.toString()}')),
-        );
-      }
+  // Simple method to launch course URL
+  // Updated _launchCourseURL method with course deep linking
+
+Future<void> _launchCourseURL(BuildContext context) async {
+  try {
+    // Base Moodle URL
+    final moodleSiteUrl = 'https://online.itel.com.sg'; // Replace with your actual Moodle URL
+    
+    // Get course ID if available
+    final courseId = course.moodleCourseId;
+    
+    // For mobile app, we need to include the course ID in the deep link if available
+    String moodleAppUrl;
+    if (courseId != null) {
+      // Format: moodlemobile://link=https://moodle.site/course/view.php?id=123
+      moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/course/view.php?id=$courseId';
+    } else {
+      // Default to site homepage if no course ID
+      moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl';
     }
-  } else {
-    // For offline courses
+    
+    // Try to launch Moodle mobile app first
+    final canLaunchMoodleApp = await canLaunchUrl(Uri.parse(moodleAppUrl));
+    
+    if (canLaunchMoodleApp) {
+      // Show message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Opening Moodle app...'))
+      );
+      
+      // Launch the Moodle mobile app with deep link to course
+      await launchUrl(Uri.parse(moodleAppUrl));
+      return;
+    }
+    
+    // For browser, create a URL that will redirect to the course after login
+    String webUrl;
+    if (courseId != null) {
+      // Direct to the course page
+      webUrl = '$moodleSiteUrl/course/view.php?id=$courseId';
+    } else {
+      // Default to login page
+      webUrl = '$moodleSiteUrl/login/index.php';
+    }
+    
+    // Show message
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Course location: ${enrollment.location ?? "Not available"}')),
+      const SnackBar(content: Text('Opening Moodle website...'))
     );
+    
+    // Launch in browser
+    await launchUrl(
+      Uri.parse(webUrl),
+      mode: LaunchMode.externalApplication,
+    );
+  } catch (e) {
+    print('Error opening course: $e');
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open Moodle. Please try again later.'))
+      );
+    }
   }
 }
 

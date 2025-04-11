@@ -1044,7 +1044,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '20',
       courseCode: 'PRJ101',
-      title: 'Agile Project Management',
+      title: 'Kunci Pemimpin Sejati',
       category: 'Project Management',
       certType: null,
       rating: 4.7,
@@ -1053,6 +1053,7 @@ static List<Course> sampleCourses = [
       funding: 'Complimentary',
       deliveryMethods: ['OLL', 'ILT'],
       nextAvailableDate: 'April 10, 2025',
+      moodleCourseId: '3',
       description: 'Learn the principles and practices of Agile project management, including Scrum, Kanban, and Lean methodologies. This course is offered complimentary as part of our community outreach program.',
       outline: {
         'Module 1: Agile Fundamentals': [
@@ -1100,6 +1101,7 @@ static List<Course> sampleCourses = [
   funding: 'Complimentary',
   deliveryMethods: ['OLL', 'ILT'],
   nextAvailableDate: 'April 5, 2025',
+  moodleCourseId: '12',
   description: 'Master the fundamentals of Microsoft Excel including formulas, formatting, and basic data analysis. This introductory course is perfect for beginners or those looking to refresh their Excel skills.',
   outline: {
     'Module 1: Excel Basics': [
@@ -1139,7 +1141,7 @@ static List<Course> sampleCourses = [
 Course(
   id: '24',
   courseCode: 'MSO102',
-  title: 'Microsoft Excel Advanced Techniques for Data Science',
+  title: 'Public Speaking',
   category: 'Office Productivity',
   certType: null,
   rating: 4.7,
@@ -1148,6 +1150,7 @@ Course(
   funding: 'Complimentary',
   deliveryMethods: ['OLL'],
   nextAvailableDate: 'April 15, 2025',
+  moodleCourseId: '5',
   description: 'Take your Excel skills to the next level with advanced functions, PivotTables, and data analysis techniques. This course builds on basic Excel knowledge to help you become more efficient in data manipulation and analysis.',
   outline: {
     'Module 1: Advanced Functions': [
@@ -1187,7 +1190,7 @@ Course(
 Course(
   id: '23',
   courseCode: 'MSO201',
-  title: 'Microsoft PowerPoint Mastery the Mind Control',
+  title: 'Essential PowerPoint for Sales & Marketing',
   category: 'Office Productivity',
   certType: null,
   rating: 4.6,
@@ -1196,6 +1199,7 @@ Course(
   funding: 'Complimentary',
   deliveryMethods: ['OLL', 'ILT'],
   nextAvailableDate: 'April 8, 2025',
+  moodleCourseId: '13',
   description: 'Learn to create engaging and professional presentations using Microsoft PowerPoint. This course covers everything from basic slides to advanced animations, transitions, and multimedia integration.',
   outline: {
     'Module 1: Presentation Fundamentals': [
@@ -1244,7 +1248,7 @@ Course(
   funding: 'Complimentary',
   deliveryMethods: ['OLL'],
   nextAvailableDate: 'April 20, 2025',
-  moodleCourseId: '8',
+  moodleCourseId: '13',
   description: 'Master Microsoft Word to create professional-looking documents for business and academic purposes. This course covers document formatting, styles, templates, and advanced editing features.',
   outline: {
     'Module 1: Document Basics': [
@@ -1284,7 +1288,7 @@ Course(
 Course(
   id: '25',
   courseCode: 'MSO401',
-  title: 'Microsoft Outlook Email Management',
+  title: 'Presentasi Memukau dengan Teknik Public Speaking',
   category: 'Office Productivity',
   certType: null,
   rating: 4.4,
@@ -1293,6 +1297,7 @@ Course(
   funding: 'Complimentary',
   deliveryMethods: ['OLL', 'ILT'],
   nextAvailableDate: 'May 3, 2025',
+  moodleCourseId: '4',
   description: 'Improve your email productivity and organization using Microsoft Outlook. Learn to manage emails, contacts, calendars, and tasks efficiently in a professional environment.',
   outline: {
     'Module 1: Email Management': [

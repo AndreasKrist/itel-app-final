@@ -4,15 +4,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user.dart';
 import 'user_preferences_service.dart';
 import '../models/enrolled_course.dart';
-import 'moodle_service.dart';
-
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final UserPreferencesService _preferencesService = UserPreferencesService();
-  final MoodleService _moodleService = MoodleService();
-
 
   // Check if user is authenticated
   bool get isAuthenticated {
@@ -301,10 +297,6 @@ EnrollmentStatus _getEnrollmentStatusFromString(String statusString) {
   // Sign out
   Future<void> signOut() async {
     try {
-      // Sign out from Moodle
-      await _moodleService.clearMoodleToken();
-      
-      // Your existing sign out code...
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
     } catch (e) {
