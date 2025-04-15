@@ -1382,6 +1382,28 @@ Course(
     'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
   },
 ),
+
+Course(
+  id: '6311',
+  courseCode: '',
+  title: 'VMware NSX: Troubleshooting and Operations [V4.x]',
+  category: 'General',
+  certType: null,
+  rating: 0.0,
+  duration: '5 Days',
+  price: '\$4,905',
+  funding: null,
+  deliveryMethods: ['Online'],
+  nextAvailableDate: '9 May 2025',
+  moodleCourseId: null,
+  description: 'This hands-on training course provides the advanced knowledge, skills, and tools to competently operate and troubleshoot the VMware NSX® infrastructure. This course introduces you to workflows of various networking and security constructs along with several operational and troubleshooting tools that help you manage and troubleshoot your VMware NSX environment. In addition, various types of technical [&hellip;]',
+  outline: {'Lesson: Course Introduction</strong>': ['Introductions and course logistics', 'Course objectives'], 'Lesson: NSX Operations and Tools</strong>': ['Explain and validate the native troubleshooting tools for NSX', 'Configure syslog, IPFIX, and log collections for the NSX environment', 'Integrate NSX with VMware Aria Operations for Logs and VMware Aria Operations for Networks', 'Validate and review the API methods available to configure the NSX environment'], 'Lesson: Troubleshooting the NSX Management Cluster</strong>': ['Describe the NSX Management cluster architecture, components, and communication channels', 'Identify the workflows involved in configuring the NSX Management cluster', 'Validate and troubleshoot the NSX Management cluster formation'], 'Lesson: Troubleshooting Infrastructure Preparation</strong>': ['Describe the data plane architecture, components, and communication channels', 'Explain and troubleshoot VMware ESXi™ transport node preparation issues', 'Explain and troubleshoot NSX Edge deployment issue'], 'Lesson: Troubleshooting Logical Switching': ['Describe the architecture of logical switching', 'List the modules and processes involved in configuring logical switching', 'Explain the importance of VDS in transport nodes', 'Review the architecture and workflows involved in attaching workloads to segments', 'Identify and troubleshoot common logical switching issues'], 'Lesson: Troubleshooting Logical Routing': ['Review the architecture of logical routing', 'Explain the workflows involved in the configuration of Tier-0 and Tier-1 gateways', 'Explain the high availability modes and validate logical router placements', 'Identify and troubleshoot common logical routing issues using both BGP and OSPF'], 'Lesson: Troubleshooting Security': ['Review the architecture of the Distributed Firewall', 'Explain the workflows involved in configuring the Distributed Firewall', 'Review the architecture of the Gateway Firewall', 'Explain the workflows involved in configuring the Gateway Firewall', 'Identify and troubleshoot common Distributed Firewall and Gateway Firewall issues', 'Review the architecture and workflows involved in configuring Distributed IDS/IPS', 'Identify and troubleshoot common Distributed IDS/IPS problems'], 'Lesson: Troubleshooting the NSX Advanced Load Balancer and VPN Services': ['Review NSX Advanced Load Balancer architecture and components', 'Identify and troubleshoot common NSX Advanced Load Balancer issues', 'Review the IPsec and L2 VPN architecture and components', 'Identify and troubleshoot common IPsec and L2 VPN issues'], 'Lesson: Datapath Walkthrough': ['Verify and validate the path of the packet on the NSX datapath', 'Identify and perform packet captures at various points in the datapath', 'Use NSX CLI and native hypervisor commands to retrieve configurations involved in the NSX datapath']},
+  prerequisites: null,
+  whoShouldAttend: null,
+  importantNotes: null,
+  feeStructure: {'Full Course Fee': {'Price': '\$4,905'}},
+),
+
   ];
 
   static List<Course> userCourseHistory = [
