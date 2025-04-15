@@ -9,7 +9,7 @@ class EnrolledCourseCard extends StatelessWidget {
   final EnrolledCourse enrollment;
   final Course course;
 
-  EnrolledCourseCard({
+  const EnrolledCourseCard({
     super.key,
     required this.enrollment,
     required this.course,
