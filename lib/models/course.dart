@@ -1378,7 +1378,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5665',
       courseCode: 'CCN665',
-      title: 'Cisco Certified Network Associate (CCNA) (SF) &#8211; (Synchronous e-learning)',
+      title: 'Cisco Certified Network Associate (CCNA) (SF) (Synchronous e-learning)',
       category: 'Networking',
       certType: 'CCNA',
       rating: 4.7,
@@ -1398,7 +1398,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5284',
       courseCode: 'CNE284',
-      title: 'CompTIA Network+ (SF) &#8211; (Synchronous e-learning)',
+      title: 'CompTIA Network+ (SF) (Synchronous e-learning)',
       category: 'Networking',
       certType: 'COMPTIA',
       rating: 4.7,
@@ -1418,7 +1418,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5278',
       courseCode: 'CTS278',
-      title: 'Cloud Technology Solutions Architect Associate (SF) &#8211; (Synchronous e-learning)',
+      title: 'Cloud Technology Solutions Architect Associate (SF) (Synchronous e-learning)',
       category: 'Cloud Computing',
       certType: null,
       rating: 4.7,
@@ -1438,7 +1438,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5285',
       courseCode: 'CSE285',
-      title: 'CompTIA Security+ (SF) &#8211; (Synchronous e-learning)',
+      title: 'CompTIA Security+ (SF) (Synchronous e-learning)',
       category: 'Cybersecurity',
       certType: 'COMPTIA',
       rating: 4.7,
@@ -1458,7 +1458,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5274',
       courseCode: 'CFI274',
-      title: 'Cyber Forensics Investigator (SF) &#8211; (Synchronous e-learning)',
+      title: 'Cyber Forensics Investigator (SF) (Synchronous e-learning)',
       category: 'Cybersecurity',
       certType: null,
       rating: 4.7,
@@ -1478,7 +1478,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5275',
       courseCode: 'CSI275',
-      title: 'Cyber Security Incident Handling and Response (SF) &#8211; (Synchronous e-learning)',
+      title: 'Cyber Security Incident Handling and Response (SF) (Synchronous e-learning)',
       category: 'Cybersecurity',
       certType: null,
       rating: 4.7,
@@ -1498,7 +1498,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5279',
       courseCode: 'IMA279',
-      title: 'Implementing Microsoft Azure Infrastructure Solutions (SF) &#8211; (Synchronous e-learning)',
+      title: 'Implementing Microsoft Azure Infrastructure Solutions (SF) (Synchronous e-learning)',
       category: 'Cloud Computing',
       certType: 'AZURE',
       rating: 4.7,
@@ -1518,7 +1518,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5276',
       courseCode: 'ISS276',
-      title: 'Information Systems Security (SF) &#8211; (Synchronous e-learning)',
+      title: 'Information Systems Security (SF) (Synchronous e-learning)',
       category: 'Cybersecurity',
       certType: null,
       rating: 4.7,
@@ -1538,7 +1538,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5282',
       courseCode: 'IFC282',
-      title: 'ITIL® Foundation Certificate in Service Management (SF) &#8211; (Synchronous e-learning)',
+      title: 'ITIL® Foundation Certificate in Service Management (SF) (Synchronous e-learning)',
       category: 'IT Service Management',
       certType: 'ITIL',
       rating: 4.7,
@@ -1558,7 +1558,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5287',
       courseCode: 'MCS287',
-      title: 'Microsoft Certified Solutions Associate (MCSA) – 20742 (SF) &#8211; (Synchronous e-learning)',
+      title: 'Microsoft Certified Solutions Associate (MCSA) – 20742 (SF) (Synchronous e-learning)',
       category: 'IT Training',
       certType: null,
       rating: 4.7,
@@ -1578,7 +1578,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5281',
       courseCode: 'PME281',
-      title: 'Project Management (SF) &#8211; (Synchronous e-learning)',
+      title: 'Project Management (SF) (Synchronous e-learning)',
       category: 'Project Management',
       certType: null,
       rating: 4.7,
@@ -1598,7 +1598,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5277',
       courseCode: 'SAA277',
-      title: 'Security Analysis and Penetration Testing (SF) &#8211; (Synchronous e-learning)',
+      title: 'Security Analysis and Penetration Testing (SF) (Synchronous e-learning)',
       category: 'Cybersecurity',
       certType: null,
       rating: 4.7,
@@ -1618,7 +1618,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5286',
       courseCode: 'VVI286',
-      title: 'VMware Vsphere: Install, Configure, Manage (SF) &#8211; (Synchronous e-learning)',
+      title: 'VMware Vsphere: Install, Configure, Manage (SF) (Synchronous e-learning)',
       category: 'IT Training',
       certType: null,
       rating: 4.7,
@@ -1638,7 +1638,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5280',
       courseCode: 'WSA280',
-      title: 'Windows Server 2019 Administration (SF) &#8211; (Synchronous e-learning)',
+      title: 'Windows Server 2019 Administration (SF) (Synchronous e-learning)',
       category: 'IT Training',
       certType: null,
       rating: 4.7,
@@ -1658,7 +1658,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5272',
       courseCode: 'CEH272',
-      title: 'Certified Ethical Hacker (CEH) (SF) &#8211; (Synchronous e-learning)',
+      title: 'Certified Ethical Hacker (CEH) (SF) (Synchronous e-learning)',
       category: 'Cybersecurity',
       certType: 'CEH',
       rating: 4.7,
@@ -1678,7 +1678,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5283',
       courseCode: 'CCE283',
-      title: 'CompTIA Cloud Essentials+ (SF) &#8211; (Synchronous e-learning)',
+      title: 'CompTIA Cloud Essentials+ (SF) (Synchronous e-learning)',
       category: 'Cloud Computing',
       certType: 'COMPTIA',
       rating: 4.7,
@@ -1718,7 +1718,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '5273',
       courseCode: 'CTI273',
-      title: 'Cyber Threat Intelligence Analyst (SF) &#8211; (Synchronous e-learning)',
+      title: 'Cyber Threat Intelligence Analyst (SF) (Synchronous e-learning)',
       category: 'Cybersecurity',
       certType: null,
       rating: 4.7,
@@ -2688,7 +2688,7 @@ static List<Course> sampleCourses = [
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The DCNX v1.0 course teaches you how to install, set up, and manage Cisco Nexus® switches in a scalable, reliable environment. Through lectures and hands-on labs, you&#8217;ll learn about Cisco Nexus products, including their management, security, programmability, and storage features. You&#8217;ll also cover device aliases, zoning, Fibre Channel over Ethernet (FCoE), and N-Port Virtualization (NPV) ...',
+      description: 'The DCNX v1.0 course teaches you how to install, set up, and manage Cisco Nexus® switches in a scalable, reliable environment. Through lectures and hands-on labs, you will learn about Cisco Nexus products, including their management, security, programmability, and storage features. You will also cover device aliases, zoning, Fibre Channel over Ethernet (FCoE), and N-Port Virtualization (NPV) ...',
       outline: null,
       prerequisites: null,
       whoShouldAttend: null,
@@ -2898,7 +2898,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '2179',
       courseCode: 'MMD179',
-      title: 'MB-330 Microsoft Dynamics 365 Supply Chain Management &#8211; Functional Consultant',
+      title: 'MB-330 Microsoft Dynamics 365 Supply Chain Management Functional Consultant',
       category: 'Data Science',
       certType: null,
       rating: 4.7,
@@ -5028,7 +5028,7 @@ static List<Course> sampleCourses = [
       deliveryMethods: ['ILT'],
       startDate: 'May 06, 2025',
       nextAvailableDate: 'May 06, 2025',
-      description: 'Cybersecurity has become a top priority for enterprises adapting to the post-COVID world, where remote work has shifted the security perimeter to workers&#8217; identities and devices. In this new landscape, cybersecurity is as critical as internet access itself. This course from EC-Council is designed for the world’s largest work-from-home experiment. Studies and news reports have ...',
+      description: 'Cybersecurity has become a top priority for enterprises adapting to the post-COVID world, where remote work has shifted the security perimeter to workers identities and devices. In this new landscape, cybersecurity is as critical as internet access itself. This course from EC-Council is designed for the world’s largest work-from-home experiment. Studies and news reports have ...',
       outline: null,
       prerequisites: null,
       whoShouldAttend: null,

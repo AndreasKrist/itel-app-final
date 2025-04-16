@@ -29,6 +29,38 @@ class _CoursesScreenState extends State<CoursesScreen> {
   // Service instances
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AuthService _authService = AuthService();
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  bool _isSearching = false;
+
+  @override
+void initState() {
+  super.initState();
+  // Add listener to search controller
+  _searchController.addListener(_onSearchChanged);
+}
+
+@override
+void dispose() {
+  _searchController.removeListener(_onSearchChanged);
+  _searchController.dispose();
+  super.dispose();
+}
+
+void _onSearchChanged() {
+  setState(() {
+    _searchQuery = _searchController.text;
+    _isSearching = _searchQuery.isNotEmpty;
+  });
+}
+
+void _clearSearch() {
+  setState(() {
+    _searchController.clear();
+    _searchQuery = '';
+    _isSearching = false;
+  });
+}
 
   // Replace the _toggleFavorite method in courses_screen.dart
 void _toggleFavorite(Course course) async {
@@ -89,16 +121,29 @@ void _toggleFavorite(Course course) async {
     // Start with all courses
     List<Course> result = courses;
     
-    // Apply funding filter
-    if (activeFilters['funding'] != 'all') {
-      if (activeFilters['funding'] == 'available') {
-        result = result.where((course) => course.funding?.contains('Eligible') ?? false).toList();
-      } else if (activeFilters['funding'] == 'none') {
-        result = result.where((course) => course.funding?.contains('Not eligible') ?? false).toList();
-      } else if (activeFilters['funding'] == 'free') {
-        result = result.where((course) => course.price.contains('Free') || course.price == '\$0').toList();
-      }
+    // Apply search filter first if there's a search query
+  if (_searchQuery.isNotEmpty) {
+    String query = _searchQuery.toLowerCase();
+    result = result.where((course) {
+      // Search in title, category, course code, and certification type
+      return course.title.toLowerCase().contains(query) ||
+             course.category.toLowerCase().contains(query) ||
+             course.courseCode.toLowerCase().contains(query) ||
+             (course.certType?.toLowerCase().contains(query) ?? false) ||
+             (course.description?.toLowerCase().contains(query) ?? false);
+    }).toList();
+  }
+  
+  // Apply funding filter
+  if (activeFilters['funding'] != 'all') {
+    if (activeFilters['funding'] == 'available') {
+      result = result.where((course) => course.funding?.contains('Eligible') ?? false).toList();
+    } else if (activeFilters['funding'] == 'none') {
+      result = result.where((course) => course.funding?.contains('Not eligible') ?? false).toList();
+    } else if (activeFilters['funding'] == 'free') {
+      result = result.where((course) => course.price.contains('Free') || course.price == '\$0').toList();
     }
+  }
     
     // Apply duration filter
     if (activeFilters['duration'] != 'all') {
@@ -287,9 +332,52 @@ void _toggleFavorite(Course course) async {
                   ),
                 ],
               ),
+              // Search bar
+const SizedBox(height: 16),
+Container(
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(16),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.1),
+        spreadRadius: 1,
+        blurRadius: 4,
+        offset: const Offset(0, 1),
+      ),
+    ],
+  ),
+  child: TextField(
+    controller: _searchController,
+    decoration: InputDecoration(
+      hintText: 'Search courses...',
+      prefixIcon: const Icon(Icons.search),
+      suffixIcon: _isSearching 
+          ? IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: _clearSearch,
+            )
+          : null,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: Colors.grey[200]!),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: Colors.grey[200]!),
+      ),
+    ),
+    onSubmitted: (value) {
+      setState(() {
+        _searchQuery = value;
+        _isSearching = value.isNotEmpty;
+      });
+    },
+  ),
+),
               
               // Active filters display
-              if (activeFilters.values.any((value) => value != 'all') || activeSort != 'none') ...[
+              if (activeFilters.values.any((value) => value != 'all') || activeSort != 'none' || _isSearching) ...[
                 const SizedBox(height: 16),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

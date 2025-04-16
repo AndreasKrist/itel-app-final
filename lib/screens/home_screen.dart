@@ -140,11 +140,11 @@ void _toggleFavorite(Course course) async {
 
   // Get popular courses (excluding complimentary courses)
   List<Course> get popularCourses {
+    // Define specific course IDs that you want to show as popular
+    final popularCourseIds = ['1276', '5272', '794', '5665', '1278', '1458', '5284', '1850', '5285', '1344', '5274', '1345', '5275', '1350', '5279', '1315', '5282', '1408', '940', '1997', '2047', '2056', '5286', '5291', '5280', '1441']; // Replace with your selected course IDs
+    
     List<Course> baseList = _isSearching ? filteredCourses : courses;
-    return baseList.where((course) => 
-      !(course.price == '\$0' || 
-      course.price.contains('Free') || 
-      course.funding == 'Complimentary')).toList();
+    return baseList.where((course) => popularCourseIds.contains(course.id)).toList();
   }
 
   @override
