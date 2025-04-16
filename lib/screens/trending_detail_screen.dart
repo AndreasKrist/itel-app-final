@@ -164,200 +164,279 @@ class TrendingDetailScreen extends StatelessWidget {
   }
   
   Widget _buildEventContent(BuildContext context) {
-    // Simulate event content
+  // Use provided fullContent or fallback to generated content
+  if (item.fullContent != null && item.fullContent!.isNotEmpty) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle('About This Event'),
-        const SizedBox(height: 12),
-        Text(
-          item.description ?? 'Join us for this exciting ${item.title} where industry experts will share insights and best practices on the latest trends and innovations. This event is designed for professionals looking to enhance their skills and network with peers.',
-          style: TextStyle(
-            height: 1.5,
-            color: Colors.grey[800],
-          ),
-        ),
-        const SizedBox(height: 24),
-        
-        _buildSectionTitle('Event Details'),
-        const SizedBox(height: 12),
-        _buildDetailRow('Date', item.date ?? 'TBA'),
-        _buildDetailRow('Time', '09:00 AM - 05:00 PM'),
-        _buildDetailRow('Location', 'ITEL Training Center, Singapore'),
-        _buildDetailRow('Format', 'In-person workshop'),
-        const SizedBox(height: 24),
-        
-        _buildSectionTitle('What You\'ll Learn'),
-        const SizedBox(height: 12),
-        _buildBulletPoint('Latest industry trends and technologies'),
-        _buildBulletPoint('Hands-on practical skills and techniques'),
-        _buildBulletPoint('Networking opportunities with industry experts'),
-        _buildBulletPoint('Certificate of participation'),
-        
-        const SizedBox(height: 24),
-        
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.amber[50],
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.amber[200]!),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.info_outline,
-                color: Colors.amber[800],
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Limited seats available. Registration closes one week before the event date.',
-                  style: TextStyle(
-                    color: Colors.amber[800],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+      children: _formatContent(item.fullContent!),
     );
   }
+  
+  // Fallback to default template if no fullContent is provided
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildSectionTitle('About This Event'),
+      const SizedBox(height: 12),
+      Text(
+        item.description ?? 'Join us for this exciting ${item.title} where industry experts will share insights and best practices on the latest trends and innovations. This event is designed for professionals looking to enhance their skills and network with peers.',
+        style: TextStyle(
+          height: 1.5,
+          color: Colors.grey[800],
+        ),
+      ),
+      const SizedBox(height: 24),
+      
+      _buildSectionTitle('Event Details'),
+      const SizedBox(height: 12),
+      _buildDetailRow('Date', item.date ?? 'TBA'),
+      _buildDetailRow('Time', '09:00 AM - 05:00 PM'),
+      _buildDetailRow('Location', 'ITEL Training Center, Singapore'),
+      _buildDetailRow('Format', 'In-person workshop'),
+      const SizedBox(height: 24),
+      
+      _buildSectionTitle('What You\'ll Learn'),
+      const SizedBox(height: 12),
+      _buildBulletPoint('Latest industry trends and technologies'),
+      _buildBulletPoint('Hands-on practical skills and techniques'),
+      _buildBulletPoint('Networking opportunities with industry experts'),
+      _buildBulletPoint('Certificate of participation'),
+      
+      const SizedBox(height: 24),
+      
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.amber[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.amber[200]!),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.info_outline,
+              color: Colors.amber[800],
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Limited seats available. Registration closes one week before the event date.',
+                style: TextStyle(
+                  color: Colors.amber[800],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
   
   Widget _buildNewsContent() {
-    // Simulate news content
+  // Use provided fullContent or fallback to generated content
+  if (item.fullContent != null && item.fullContent!.isNotEmpty) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          item.description ?? 'ITEL is pleased to announce ${item.title}, which aims to provide enhanced career pathways for IT professionals in Singapore.',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            color: Colors.grey[800],
-          ),
-        ),
-        const SizedBox(height: 16),
-        
-        Text(
-          'This new certification path has been developed in response to industry demands and technological advancements in the field. The program is designed to equip professionals with the skills needed to excel in today\'s rapidly evolving IT landscape.',
-          style: TextStyle(
-            height: 1.5,
-            color: Colors.grey[800],
-          ),
-        ),
-        const SizedBox(height: 16),
-        
-        Text(
-          'Key features of the new certification path include:',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[800],
-          ),
-        ),
-        const SizedBox(height: 8),
-        _buildBulletPoint('Industry-aligned curriculum with practical assessments'),
-        _buildBulletPoint('Flexible learning options including online and in-person classes'),
-        _buildBulletPoint('Fast-track options for professionals with relevant experience'),
-        _buildBulletPoint('Recognition by leading employers in the industry'),
-        
-        const SizedBox(height: 16),
-        
-        Text(
-          'This initiative is part of ITEL\'s ongoing commitment to providing world-class training and certification programs that meet the needs of both individuals and organizations.',
-          style: TextStyle(
-            height: 1.5,
-            color: Colors.grey[800],
-          ),
-        ),
-        
-        const SizedBox(height: 24),
-        
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.blue[50],
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blue[200]!),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Upcoming Information Sessions',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[700],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Join our free information sessions to learn more about the new certification path and how it can benefit your career.',
-                style: TextStyle(
-                  color: Colors.blue[700],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+      children: _formatContent(item.fullContent!),
     );
   }
   
+  // Fallback to default template if no fullContent is provided
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        item.description ?? 'ITEL is pleased to announce ${item.title}, which aims to provide enhanced career pathways for IT professionals in Singapore.',
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+          color: Colors.grey[800],
+        ),
+      ),
+      const SizedBox(height: 16),
+      
+      Text(
+        'This new certification path has been developed in response to industry demands and technological advancements in the field. The program is designed to equip professionals with the skills needed to excel in today\'s rapidly evolving IT landscape.',
+        style: TextStyle(
+          height: 1.5,
+          color: Colors.grey[800],
+        ),
+      ),
+      const SizedBox(height: 16),
+      
+      Text(
+        'Key features of the new certification path include:',
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          color: Colors.grey[800],
+        ),
+      ),
+      const SizedBox(height: 8),
+      _buildBulletPoint('Industry-aligned curriculum with practical assessments'),
+      _buildBulletPoint('Flexible learning options including online and in-person classes'),
+      _buildBulletPoint('Fast-track options for professionals with relevant experience'),
+      _buildBulletPoint('Recognition by leading employers in the industry'),
+      
+      const SizedBox(height: 16),
+      
+      Text(
+        'This initiative is part of ITEL\'s ongoing commitment to providing world-class training and certification programs that meet the needs of both individuals and organizations.',
+        style: TextStyle(
+          height: 1.5,
+          color: Colors.grey[800],
+        ),
+      ),
+      
+      const SizedBox(height: 24),
+      
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.blue[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.blue[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Upcoming Information Sessions',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue[700],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Join our free information sessions to learn more about the new certification path and how it can benefit your career.',
+              style: TextStyle(
+                color: Colors.blue[700],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+  
   Widget _buildArticleContent() {
-    // Simulate article content
+  // Use provided fullContent or fallback to generated content
+  if (item.fullContent != null && item.fullContent!.isNotEmpty) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          item.description ?? 'The technology landscape is constantly evolving, and staying ahead of the curve is essential for career growth and professional development.',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            color: Colors.grey[800],
-          ),
-        ),
-        const SizedBox(height: 16),
-        
-        Text(
-          'In this article, we explore ${item.title} and their importance in today\'s competitive job market. Whether you\'re just starting your IT career or looking to advance to the next level, understanding these key skills can give you a significant advantage.',
-          style: TextStyle(
-            height: 1.5,
-            color: Colors.grey[800],
-          ),
-        ),
-        const SizedBox(height: 24),
-        
-        _buildSectionTitle('Key Insights'),
-        const SizedBox(height: 12),
-        _buildBulletPoint('Cloud computing skills remain in high demand, with specific expertise in multi-cloud environments becoming increasingly valuable'),
-        _buildBulletPoint('Cybersecurity professionals continue to be among the most sought-after IT specialists, with a growing emphasis on cloud security'),
-        _buildBulletPoint('Data analysis and AI/ML skills are becoming essential across various IT roles, not just for specialists'),
-        _buildBulletPoint('DevOps and automation capabilities can significantly increase your marketability'),
-        
-        const SizedBox(height: 24),
-        
-        Text(
-          'According to recent industry reports, professionals who possess a combination of technical expertise and soft skills such as communication and problem-solving are particularly well-positioned for career advancement.',
-          style: TextStyle(
-            height: 1.5,
-            color: Colors.grey[800],
-          ),
-        ),
-        
-        const SizedBox(height: 16),
-        
-        Text(
-          'At ITEL, we offer comprehensive training programs designed to help you develop these in-demand skills and advance your career. Our courses are regularly updated to reflect the latest industry trends and technologies.',
-          style: TextStyle(
-            height: 1.5,
-            color: Colors.grey[800],
-          ),
-        ),
-      ],
+      children: _formatContent(item.fullContent!),
     );
   }
+  
+  // Fallback to default template if no fullContent is provided
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        item.description ?? 'The technology landscape is constantly evolving, and staying ahead of the curve is essential for career growth and professional development.',
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+          color: Colors.grey[800],
+        ),
+      ),
+      const SizedBox(height: 16),
+      
+      Text(
+        'In this article, we explore ${item.title} and their importance in today\'s competitive job market. Whether you\'re just starting your IT career or looking to advance to the next level, understanding these key skills can give you a significant advantage.',
+        style: TextStyle(
+          height: 1.5,
+          color: Colors.grey[800],
+        ),
+      ),
+      const SizedBox(height: 24),
+      
+      _buildSectionTitle('Key Insights'),
+      const SizedBox(height: 12),
+      _buildBulletPoint('Cloud computing skills remain in high demand, with specific expertise in multi-cloud environments becoming increasingly valuable'),
+      _buildBulletPoint('Cybersecurity professionals continue to be among the most sought-after IT specialists, with a growing emphasis on cloud security'),
+      _buildBulletPoint('Data analysis and AI/ML skills are becoming essential across various IT roles, not just for specialists'),
+      _buildBulletPoint('DevOps and automation capabilities can significantly increase your marketability'),
+      
+      const SizedBox(height: 24),
+      
+      Text(
+        'According to recent industry reports, professionals who possess a combination of technical expertise and soft skills such as communication and problem-solving are particularly well-positioned for career advancement.',
+        style: TextStyle(
+          height: 1.5,
+          color: Colors.grey[800],
+        ),
+      ),
+      
+      const SizedBox(height: 16),
+      
+      Text(
+        'At ITEL, we offer comprehensive training programs designed to help you develop these in-demand skills and advance your career. Our courses are regularly updated to reflect the latest industry trends and technologies.',
+        style: TextStyle(
+          height: 1.5,
+          color: Colors.grey[800],
+        ),
+      ),
+    ],
+  );
+}
+
+// Helper method to format text with proper paragraphs and bullet points
+List<Widget> _formatContent(String content) {
+  List<Widget> widgets = [];
+  List<String> paragraphs = content.split('\n\n');
+  
+  for (String paragraph in paragraphs) {
+    if (paragraph.trim().isEmpty) continue;
+    
+    // Check if paragraph is a bullet list
+    if (paragraph.contains('•')) {
+      // Process bullet list
+      List<String> lines = paragraph.split('\n');
+      
+      // Check if the first line is a heading (no bullet)
+      if (!lines[0].trim().startsWith('•')) {
+        widgets.add(
+          Text(
+            lines[0].trim(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[800],
+              fontSize: 16,
+            ),
+          ),
+        );
+        widgets.add(const SizedBox(height: 8));
+        lines = lines.sublist(1); // Remove the first line
+      }
+      
+      // Process remaining bullet points
+      for (String line in lines) {
+        if (line.trim().isEmpty) continue;
+        if (line.trim().startsWith('•')) {
+          widgets.add(_buildBulletPoint(line.replaceFirst('•', '').trim()));
+        }
+      }
+      widgets.add(const SizedBox(height: 8));
+    } else {
+      // Normal paragraph
+      widgets.add(
+        Text(
+          paragraph.trim(),
+          style: TextStyle(
+            height: 1.5,
+            color: Colors.grey[800],
+          ),
+        ),
+      );
+      widgets.add(const SizedBox(height: 16));
+    }
+  }
+  
+  return widgets;
+}
   
   Widget _buildBottomAction(BuildContext context, String? customLink) {
     if (item.type == TrendingItemType.event) {
