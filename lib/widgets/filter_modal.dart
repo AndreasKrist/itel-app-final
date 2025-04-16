@@ -144,9 +144,9 @@ class _FilterModalState extends State<FilterModal> {
           
           const SizedBox(height: 16),
           
-          // Certification Type section
+          // Vendor Type section
           Text(
-            'Certification Type',
+            'Vendor Type',
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 14,
@@ -163,34 +163,44 @@ class _FilterModalState extends State<FilterModal> {
                 onTap: () => _updateFilter('certType', 'all'),
               ),
               CategoryChip(
+                label: 'Microsoft',
+                isActive: _currentFilters['certType'] == 'Microsoft',
+                onTap: () => _updateFilter('certType', 'Microsoft'),
+              ),
+              CategoryChip(
+                label: 'CISCO',
+                isActive: _currentFilters['certType'] == 'CISCO',
+                onTap: () => _updateFilter('certType', 'CISCO'),
+              ),
+              CategoryChip(
+                label: 'VMWARE',
+                isActive: _currentFilters['certType'] == 'VMWARE',
+                onTap: () => _updateFilter('certType', 'VMWARE'),
+              ),
+              CategoryChip(
+                label: 'EC-Council',
+                isActive: _currentFilters['certType'] == 'EC-Council',
+                onTap: () => _updateFilter('certType', 'EC-Council'),
+              ),
+              CategoryChip(
+                label: 'CompTia',
+                isActive: _currentFilters['certType'] == 'COMPTIA',
+                onTap: () => _updateFilter('certType', 'COMPTIA'),
+              ),
+              CategoryChip(
                 label: 'ITIL',
                 isActive: _currentFilters['certType'] == 'ITIL',
                 onTap: () => _updateFilter('certType', 'ITIL'),
               ),
               CategoryChip(
-                label: 'CCNA',
-                isActive: _currentFilters['certType'] == 'CCNA',
-                onTap: () => _updateFilter('certType', 'CCNA'),
+                label: 'Adobe',
+                isActive: _currentFilters['certType'] == 'Adobe',
+                onTap: () => _updateFilter('certType', 'Adobe'),
               ),
               CategoryChip(
-                label: 'COMPTIA',
-                isActive: _currentFilters['certType'] == 'COMPTIA',
-                onTap: () => _updateFilter('certType', 'COMPTIA'),
-              ),
-              CategoryChip(
-                label: 'CEH',
-                isActive: _currentFilters['certType'] == 'CEH',
-                onTap: () => _updateFilter('certType', 'CEH'),
-              ),
-              CategoryChip(
-                label: 'CCISO',
-                isActive: _currentFilters['certType'] == 'CCISO',
-                onTap: () => _updateFilter('certType', 'CCISO'),
-              ),
-              CategoryChip(
-                label: 'CISM',
-                isActive: _currentFilters['certType'] == 'CISM',
-                onTap: () => _updateFilter('certType', 'CISM'),
+                label: 'SCTP',
+                isActive: _currentFilters['certType'] == 'SCTP',
+                onTap: () => _updateFilter('certType', 'SCTP'),
               ),
             ],
           ),

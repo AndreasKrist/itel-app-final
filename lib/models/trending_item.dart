@@ -277,14 +277,14 @@ Source from news from Cyber Security Agency of Singapore (CSA).
     ),
     TrendingItem(
       id: '16',
-      title: 'Tech Resume Optimization Workshop 2025',
+      title: 'Tech Skill-Up Festival 2025',
       category: 'Event',
       type: TrendingItemType.event,
-      date: 'April 15, 2025',
-      imageUrl: 'assets/images/6.webp',
-      customLink: 'https://itel.com.sg/resources/events/',
+      date: 'March 12, 2025',
+      imageUrl: 'assets/images/techskill.png',
+      customLink: 'https://itel.com.sg/itel-tech-skill-up-festival-2025/',
       description: 'A hands-on workshop introducing the fundamentals of artificial intelligence and machine learning for beginners.',
-      tags: ['AI', 'Machine Learning', 'Workshop'],
+      tags: ['Skill', 'Course', 'Workshop'],
     ),
   ];
 }
