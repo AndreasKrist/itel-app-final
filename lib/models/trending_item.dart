@@ -11,13 +11,17 @@ class TrendingItem {
   final TrendingItemType type;
   final String? date;
   final String? readTime;
-  final String? imageUrl;     // For banner/image
-  final String? customLink;   // For custom link
-  final String? description;  // Short description
-  final List<String>? tags;   // For tags
+  final String? imageUrl;
+  final String? customLink;
+  final String? description;
+  final List<String>? tags;
+  final String? fullContent;   
   
-  // Single field for full custom content
-  final String? fullContent;  // Complete article/news/event content
+  // Add new fields specifically for events
+  final String? eventTime;
+  final String? eventLocation;
+  final String? eventFormat;
+  final List<String>? eventLearningPoints; // What You'll Learn bullets
   
   TrendingItem({
     required this.id,
@@ -31,6 +35,11 @@ class TrendingItem {
     this.description,
     this.tags,
     this.fullContent,
+    // New parameters for event details
+    this.eventTime,
+    this.eventLocation,
+    this.eventFormat,
+    this.eventLearningPoints,
   });
   
   static List<TrendingItem> sampleItems = [
@@ -237,12 +246,12 @@ Source from news from Cyber Security Agency of Singapore (CSA).
     ),
     TrendingItem(
       id: '12',
-      title: 'New SCTP Certification Path',
+      title: "ITEL's Small Steps Towards Sustainability",
       category: 'Certification News',
       type: TrendingItemType.news,
       date: 'Just announced',
-      imageUrl: 'assets/images/2.webp',
-      description: 'ITEL introduces a new SCTP certification path designed to meet the evolving needs of IT professionals in Singapore.',
+      imageUrl: 'assets/images/green.png',
+      description: 'ITEL is advancing its commitment to green sustainability by integrating eco-friendly practices into its operations',
       tags: ['Certification', 'SCTP', 'Career Development'],
     ),
     TrendingItem(
@@ -276,15 +285,25 @@ Source from news from Cyber Security Agency of Singapore (CSA).
       tags: ['Cloud Computing', 'Security', 'Best Practices'],
     ),
     TrendingItem(
-      id: '16',
-      title: 'Tech Skill-Up Festival 2025',
-      category: 'Event',
-      type: TrendingItemType.event,
-      date: 'March 12, 2025',
-      imageUrl: 'assets/images/techskill.png',
-      customLink: 'https://itel.com.sg/itel-tech-skill-up-festival-2025/',
-      description: 'A hands-on workshop introducing the fundamentals of artificial intelligence and machine learning for beginners.',
-      tags: ['Skill', 'Course', 'Workshop'],
-    ),
+    id: '16',
+    title: 'Tech Skill-Up Festival 2025',
+    category: 'Event',
+    type: TrendingItemType.event,
+    date: 'March 12, 2025',
+    imageUrl: 'assets/images/techskill.png',
+    customLink: 'https://itel.com.sg/itel-tech-skill-up-festival-2025/',
+    description: 'A hands-on workshop introducing the fundamentals of artificial intelligence and machine learning for beginners.',
+    tags: ['Skill', 'Course', 'Workshop'],
+    // Structured event details
+    eventTime: '09:00 AM - 05:00 PM',
+    eventLocation: 'ITEL Training Center, Singapore',
+    eventFormat: 'In-person workshop',
+    eventLearningPoints: [
+      'Latest industry trends and technologies',
+      'Hands-on practical skills and techniques',
+      'Networking opportunities with industry experts',
+      'Certificate of participation',
+    ],
+  ),
   ];
 }

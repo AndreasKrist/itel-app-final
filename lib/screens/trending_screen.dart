@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/trending_item.dart';
 import '../widgets/trending_card.dart';
+import '../utils/link_handler.dart';
+
 
 class TrendingScreen extends StatelessWidget {
   const TrendingScreen({super.key});
@@ -103,7 +105,14 @@ class TrendingScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                
+                    LinkHandler.openLink(
+                      context, 
+                      'https://itel.com.sg/resources/events/',
+                      fallbackMessage: 'Opening subscription page...'
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[700],
                     foregroundColor: Colors.white,

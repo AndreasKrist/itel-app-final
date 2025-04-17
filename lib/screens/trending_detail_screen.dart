@@ -164,7 +164,7 @@ class TrendingDetailScreen extends StatelessWidget {
   }
   
   Widget _buildEventContent(BuildContext context) {
-  // Use provided fullContent or fallback to generated content
+  // If fullContent is provided, use that
   if (item.fullContent != null && item.fullContent!.isNotEmpty) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,14 +172,14 @@ class TrendingDetailScreen extends StatelessWidget {
     );
   }
   
-  // Fallback to default template if no fullContent is provided
+  // Otherwise use the structured event fields
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       _buildSectionTitle('About This Event'),
       const SizedBox(height: 12),
       Text(
-        item.description ?? 'Join us for this exciting ${item.title} where industry experts will share insights and best practices on the latest trends and innovations. This event is designed for professionals looking to enhance their skills and network with peers.',
+        item.description ?? 'Join us for this exciting event!',
         style: TextStyle(
           height: 1.5,
           color: Colors.grey[800],
@@ -190,19 +190,17 @@ class TrendingDetailScreen extends StatelessWidget {
       _buildSectionTitle('Event Details'),
       const SizedBox(height: 12),
       _buildDetailRow('Date', item.date ?? 'TBA'),
-      _buildDetailRow('Time', '09:00 AM - 05:00 PM'),
-      _buildDetailRow('Location', 'ITEL Training Center, Singapore'),
-      _buildDetailRow('Format', 'In-person workshop'),
+      _buildDetailRow('Time', item.eventTime ?? 'TBA'),
+      _buildDetailRow('Location', item.eventLocation ?? 'TBA'),
+      _buildDetailRow('Format', item.eventFormat ?? 'TBA'),
       const SizedBox(height: 24),
       
-      _buildSectionTitle('What You\'ll Learn'),
-      const SizedBox(height: 12),
-      _buildBulletPoint('Latest industry trends and technologies'),
-      _buildBulletPoint('Hands-on practical skills and techniques'),
-      _buildBulletPoint('Networking opportunities with industry experts'),
-      _buildBulletPoint('Certificate of participation'),
-      
-      const SizedBox(height: 24),
+      if (item.eventLearningPoints != null && item.eventLearningPoints!.isNotEmpty) ...[
+        _buildSectionTitle('What You\'ll Learn'),
+        const SizedBox(height: 12),
+        ...item.eventLearningPoints!.map((point) => _buildBulletPoint(point)),
+        const SizedBox(height: 24),
+      ],
       
       Container(
         padding: const EdgeInsets.all(16),
@@ -257,7 +255,7 @@ class TrendingDetailScreen extends StatelessWidget {
       const SizedBox(height: 16),
       
       Text(
-        'This new certification path has been developed in response to industry demands and technological advancements in the field. The program is designed to equip professionals with the skills needed to excel in today\'s rapidly evolving IT landscape.',
+        'The company has adopted digital learning platforms to reduce paper usage, implemented energy-efficient systems in its training centers, and prioritized virtual training sessions to minimize travel-related carbon emissions. ITEL also partners with local environmental organizations to promote sustainability awareness among IT professionals, aligning its programs with Singapore’s green initiatives. This effort reflects ITEL’s dedication to fostering a sustainable future while delivering top-tier IT training.',
         style: TextStyle(
           height: 1.5,
           color: Colors.grey[800],
@@ -266,17 +264,17 @@ class TrendingDetailScreen extends StatelessWidget {
       const SizedBox(height: 16),
       
       Text(
-        'Key features of the new certification path include:',
+        'Key Features of ITEL’s Sustainability Efforts Include:',
         style: TextStyle(
           fontWeight: FontWeight.w500,
           color: Colors.grey[800],
         ),
       ),
       const SizedBox(height: 8),
-      _buildBulletPoint('Industry-aligned curriculum with practical assessments'),
-      _buildBulletPoint('Flexible learning options including online and in-person classes'),
-      _buildBulletPoint('Fast-track options for professionals with relevant experience'),
-      _buildBulletPoint('Recognition by leading employers in the industry'),
+      _buildBulletPoint('Digital platforms to reduce paper consumption'),
+      _buildBulletPoint('Energy-efficient systems in training facilities'),
+      _buildBulletPoint('Virtual training to lower carbon emissions'),
+      _buildBulletPoint('Partnerships promoting environmental awareness'),
       
       const SizedBox(height: 16),
       
