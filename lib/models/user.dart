@@ -87,10 +87,10 @@ class User {
   // Sample user for logged-in state - will be replaced by Firebase user data
   static User currentUser = User(
     id: '1',
-    name: 'Andreas Kristianto',
-    email: 'andreaskrist2004@gmail.com',
-    phone: '+62 82111508130',
-    company: 'Lilo Store LTD',
+    name: 'User Name', // Generic name
+    email: 'user@example.com', // Generic email
+    phone: '+XX XXXXXXXXXX', // Generic phone
+    company: 'Company Name', // Generic company
     tier: MembershipTier.pro,
     membershipExpiryDate: 'March 7, 2027',
     favoriteCoursesIds: ['1', '3'],

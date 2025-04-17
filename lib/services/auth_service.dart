@@ -107,11 +107,11 @@ Future<void> loadUserData() async {
         userId: firebaseUser.uid,
         name: firebaseUser.displayName ?? 'User',
         email: firebaseUser.email ?? '',
-        phone: '+62 821xxxxxxxx',
-        company: 'Lilo Store LTD',
+        phone: '', // Empty phone instead of hardcoded number
+        company: '', // Empty company instead of hardcoded company
         tier: MembershipTier.pro,
         membershipExpiryDate: 'March 7, 2027',
-        favoriteCoursesIds: favorites, // Pass the loaded favorites
+        favoriteCoursesIds: [], // Pass the loaded favorites
         enrolledCourses: [], // Empty enrolled courses for new users
       );
     }
@@ -121,8 +121,8 @@ Future<void> loadUserData() async {
       id: firebaseUser.uid,
       name: firebaseUser.displayName ?? userProfile?['name'] ?? 'User',
       email: firebaseUser.email ?? userProfile?['email'] ?? '',
-      phone: userProfile?['phone'] ?? '+62 821xxxxxxxx',
-      company: userProfile?['company'] ?? 'Lilo Store LTD',
+      phone: userProfile?['phone'] ?? '',
+      company: userProfile?['company'] ?? '',
       tier: _getTierFromString(userProfile?['tier']),
       membershipExpiryDate: userProfile?['membershipExpiryDate'] ?? 'March 7, 2027',
       favoriteCoursesIds: favorites, // Use the loaded favorites
@@ -195,8 +195,8 @@ EnrollmentStatus _getEnrollmentStatusFromString(String statusString) {
             userId: userCredential.user!.uid,
             name: userCredential.user!.displayName ?? 'User',
             email: userCredential.user!.email ?? '',
-            phone: '+62 821xxxxxxxx',
-            company: 'Lilo Store LTD',
+            phone: '', // Empty phone instead of hardcoded number
+            company: '', // Empty company instead of hardcoded company
             tier: MembershipTier.pro,
             membershipExpiryDate: 'March 7, 2027',
             favoriteCoursesIds: [],
@@ -256,8 +256,8 @@ EnrollmentStatus _getEnrollmentStatusFromString(String statusString) {
           userId: credential.user!.uid,
           name: name,
           email: email,
-          phone: '+62 821xxxxxxxx',
-          company: 'Lilo Store LTD',
+          phone: '', // Empty phone instead of hardcoded number
+          company: '', // Empty company instead of hardcoded company
           tier: MembershipTier.pro,
           membershipExpiryDate: 'March 7, 2027',
           favoriteCoursesIds: [],

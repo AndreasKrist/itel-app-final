@@ -10,7 +10,7 @@ import '../services/user_preferences_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/course_card.dart';//import 'course_outline_screen.dart';
-
+import '../widgets/edit_profile_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -33,6 +33,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   
+
+void _showEditProfileDialog() {
+  showDialog(
+    context: context,
+    builder: (context) => EditProfileDialog(
+      currentUser: User.currentUser,
+      onSave: _updateProfile,
+    ),
+  );
+}
+
+// Update user profile
+  Future<void> _updateProfile(String name, String phone, String? company) async {
+  try {
+    // Get current user
+    final currentUser = _authService.currentUser;
+    
+    if (currentUser == null || currentUser.id.isEmpty) {
+      if (mounted) {
+        Navigator.pop(context); // Close dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('You need to be logged in to update your profile')),
+        );
+      }
+      return;
+    }
+
+    // Get Firebase user ID
+    final firebaseUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) {
+      if (mounted) {
+        Navigator.pop(context); // Close dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Authentication error')),
+        );
+      }
+      return;
+    }
+    
+    // First update in Firestore to ensure data is saved
+    await _preferencesService.saveUserProfile(
+      userId: firebaseUser.uid,
+      name: name,
+      email: User.currentUser.email,
+      phone: phone,
+      company: company,
+      tier: User.currentUser.tier,
+      membershipExpiryDate: User.currentUser.membershipExpiryDate,
+      favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
+      enrolledCourses: User.currentUser.enrolledCourses,
+    );
+    
+    // Update Firebase Auth display name
+    await firebaseUser.updateDisplayName(name);
+    
+    // Update local user model AFTER saving to ensure consistency
+    if (mounted) {
+      setState(() {
+        User.currentUser = User.currentUser.copyWith(
+          name: name,
+          phone: phone,
+          company: company,
+        );
+      });
+      
+      Navigator.pop(context); // Close dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Profile updated successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  } catch (e) {
+    print('Error updating profile: $e');
+    if (mounted) {
+      Navigator.pop(context); // Close dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating profile: ${e.toString()}')),
+      );
+    }
+  }
+}
 
 Future<void> _loadFavoritesFromFirebase() async {
   try {
@@ -307,6 +390,9 @@ Future<void> _loadEnrollmentsFromFirebase() async {
   // Add Auth Service
   final AuthService _authService = AuthService();
   final UserPreferencesService _preferencesService = UserPreferencesService();
+  // Show edit profile dialog
+
+  
   String _maskEmail(String email) {
   if (email.isEmpty) return '********';
   
@@ -522,7 +608,7 @@ void _toggleFavorite(Course course) async {
                 child: Row(
                   children: [
                     _buildTabButton('Profile', 'profile'),
-                    _buildTabButton('Favorite', 'courses'),
+                    _buildTabButton('Favourite', 'courses'),
                     _buildTabButton('Membership', 'membership'),
                   ],
                 ),
@@ -799,10 +885,8 @@ Widget _buildTabButton(String title, String tabId) {
   
 Widget _buildProfileTab() {
   // Get current user data from Firebase Auth
-  final firebaseUser = _authService.currentUser;
-  
-  // Use Firebase user data or fall back to static data if not available
-  final currentUser = firebaseUser ?? User.currentUser;
+  final currentUser = User.currentUser;
+
   
   final upcomingSchedules = Schedule.getDummySchedules();
   final completedCourses = Course.userCourseHistory.where((course) => course.completionDate != null).toList();
@@ -861,31 +945,66 @@ Widget _buildProfileTab() {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // Toggle button for showing/hiding information
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showPersonalInfo = !_showPersonalInfo;
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        _showPersonalInfo ? Icons.visibility : Icons.visibility_off,
-                        size: 18,
-                        color: Colors.blue[600],
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        _showPersonalInfo ? 'Hide' : 'Show',
-                        style: TextStyle(
-                          color: Colors.blue[600],
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                Row(
+                  children: [
+                    // Edit profile button
+                    GestureDetector(
+                      onTap: _showEditProfileDialog,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.blue[200]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.edit,
+                              size: 16,
+                              color: Colors.blue[700],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Edit',
+                              style: TextStyle(
+                                color: Colors.blue[700],
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 10),
+                    // Toggle visibility button
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _showPersonalInfo = !_showPersonalInfo;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            _showPersonalInfo ? Icons.visibility : Icons.visibility_off,
+                            size: 18,
+                            color: Colors.blue[600],
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            _showPersonalInfo ? 'Hide' : 'Show',
+                            style: TextStyle(
+                              color: Colors.blue[600],
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -1317,25 +1436,6 @@ Widget _buildProfileTab() {
             );
           },
         ),
-      
-      const SizedBox(height: 24),
-      
-      // Edit Profile Button
-      SizedBox(
-        width: double.infinity,
-        child: OutlinedButton(
-          onPressed: () {},
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            side: BorderSide(color: Colors.grey[300]!),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text('Edit Profile'),
-        ),
-      ),
-      
       const SizedBox(height: 24),
     ],
   );
@@ -1362,7 +1462,7 @@ Widget _buildCoursesTab() {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Favorite Courses',
+            'Favourite Courses',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -1628,62 +1728,62 @@ Widget _buildCoursesTab() {
             ],
           ),
         ),
-        
-                Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Privacy Settings',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Show personal information',
-                    style: TextStyle(
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  Switch(
-                    value: _showPersonalInfo,
-                    onChanged: (value) {
-                      setState(() {
-                        _showPersonalInfo = value;
-                      });
-                    },
-                    activeColor: Colors.blue[600],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'When turned off, your personal information will be masked for privacy.',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ),
+        // PRIVACY SETTING
+                // Container(
+                //   padding: const EdgeInsets.all(16),
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(12),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.black.withOpacity(0.05),
+                //         blurRadius: 10,
+                //         offset: const Offset(0, 2),
+                //       ),
+                //     ],
+                //   ),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       const Text(
+                //         'Privacy Settings',
+                //         style: TextStyle(
+                //           fontSize: 16,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //       const SizedBox(height: 16),
+                //       Row(
+                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //         children: [
+                //           Text(
+                //             'Show personal information',
+                //             style: TextStyle(
+                //               color: Colors.grey[800],
+                //             ),
+                //           ),
+                //           Switch(
+                //             value: _showPersonalInfo,
+                //             onChanged: (value) {
+                //               setState(() {
+                //                 _showPersonalInfo = value;
+                //               });
+                //             },
+                //             activeColor: Colors.blue[600],
+                //           ),
+                //         ],
+                //       ),
+                //       const SizedBox(height: 8),
+                //       Text(
+                //         'When turned off, your personal information will be masked for privacy.',
+                //         style: TextStyle(
+                //           color: Colors.grey[600],
+                //           fontSize: 12,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
 
         const SizedBox(height: 24),
       ],
