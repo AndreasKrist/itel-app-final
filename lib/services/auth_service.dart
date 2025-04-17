@@ -58,12 +58,20 @@ Future<void> loadUserData() async {
   try {
     print('Loading user data for ${firebaseUser.uid}');
     
-    // Get user favorites first
-    final favorites = await _preferencesService.loadFavorites(firebaseUser.uid);
-    print('Loaded favorites: $favorites');
-    
-    // Get user profile data
+    // Get user profile data first
     final userProfile = await _preferencesService.getUserProfile(firebaseUser.uid);
+    print('User profile loaded: ${userProfile != null}');
+    
+    // Extract favorites directly from the user profile
+    List<String> favorites = [];
+    if (userProfile != null && userProfile.containsKey('favoriteCoursesIds')) {
+      favorites = List<String>.from(userProfile['favoriteCoursesIds'] ?? []);
+      print('Favorites extracted from profile: $favorites');
+    } else {
+      // Try the dedicated loadFavorites method as fallback
+      favorites = await _preferencesService.loadFavorites(firebaseUser.uid);
+      print('Favorites loaded from dedicated method: $favorites');
+    }
     
     // Load enrolled courses data from profile
     List<EnrolledCourse> enrolledCourses = [];
@@ -121,7 +129,8 @@ Future<void> loadUserData() async {
       enrolledCourses: enrolledCourses, // Use the loaded enrolled courses
     );
     
-    print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds}, Enrolled Courses: ${User.currentUser.enrolledCourses.length}');
+    print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds.length} items');
+    print('Favorite IDs: ${User.currentUser.favoriteCoursesIds}');
   } catch (e) {
     print('Error loading user data: $e');
   }

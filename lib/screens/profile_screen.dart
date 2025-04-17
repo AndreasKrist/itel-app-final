@@ -33,17 +33,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   
+
+Future<void> _loadFavoritesFromFirebase() async {
+  try {
+    setState(() {
+      _isProfileLoading = true;
+    });
+    
+    // Get current user
+    final currentUser = firebase_auth.FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      setState(() {
+        _isProfileLoading = false;
+      });
+      return;
+    }
+    
+    print('Loading favorites for user: ${currentUser.uid}');
+    
+    try {
+      // Get user document
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+          
+      if (userDoc.exists && userDoc.data()!.containsKey('favoriteCoursesIds')) {
+        // Extract favorites
+        final favoriteIds = List<String>.from(userDoc.data()!['favoriteCoursesIds'] ?? []);
+        
+        print('Loaded ${favoriteIds.length} favorites from Firebase: $favoriteIds');
+        
+        // Update the current user
+        setState(() {
+          User.currentUser = User.currentUser.copyWith(
+            favoriteCoursesIds: favoriteIds,
+          );
+        });
+      } else {
+        print('No favorites found in user document');
+      }
+    } catch (e) {
+      print('Error loading favorites: $e');
+    }
+    
+    setState(() {
+      _isProfileLoading = false;
+    });
+  } catch (e) {
+    print('Error in _loadFavoritesFromFirebase: $e');
+    if (mounted) {
+      setState(() {
+        _isProfileLoading = false;
+      });
+    }
+  }
+}
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Reload enrollments whenever the screen comes into focus
     _loadEnrollmentsFromFirebase();
+    _loadFavoritesFromFirebase();
   }
   // Add to the _ProfileScreenState class
   @override
   void initState() {
     super.initState();
     _loadEnrollmentsFromFirebase();
+    _loadFavoritesFromFirebase();
   }
 
 // Replace this method in the ProfileScreen class
