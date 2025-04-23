@@ -138,7 +138,7 @@ static List<Course> sampleCourses = [
     Course(
       id: '1',
       courseCode: 'PRJ101',
-      title: 'Essential Excel for Sales & Marketing         (Part 1)',
+      title: 'Essential Excel for Sales & Marketing (Part 1)',
       category: 'Project Management',
       certType: 'Microsoft',
       rating: 4.7,
@@ -150,27 +150,27 @@ static List<Course> sampleCourses = [
       moodleCourseId: '19',
       description: 'Learn the principles and practices of Agile project management, including Scrum, Kanban, and Lean methodologies. This course is offered complimentary as part of our community outreach program.',
       outline: {
-        'Module 1: Agile Fundamentals': [
-          'Agile manifesto and principles',
-          'Traditional vs. Agile approaches',
-          'Agile mindset',
-        ],
-        'Module 2: Scrum Framework': [
-          'Scrum roles and responsibilities',
-          'Sprint planning and execution',
-          'Backlog management',
-        ],
-        'Module 3: Kanban System': [
-          'Visualizing workflow',
-          'WIP limits and flow',
-          'Continuous improvement',
-        ],
-        'Module 4: Agile Practices': [
-          'User stories',
-          'Estimation techniques',
-          'Retrospectives',
-        ],
-      },
+      'Module 1: Excel Basics': [
+        'Getting started with Excel interface',
+        'Cell navigation and selection techniques',
+        'Basic data entry and formatting',
+      ],
+      'Module 2: Essential Formulas': [
+        'Creating basic formulas',
+        'Using built-in functions (SUM, AVERAGE, MAX, MIN)',
+        'Relative vs. absolute cell references',
+      ],
+      'Module 3: Data Management': [
+        'Sorting and filtering data',
+        'Creating and formatting tables',
+        'Basic data validation',
+      ],
+      'Module 4: Charts and Visualization': [
+        'Creating basic charts',
+        'Customizing chart elements',
+        'Visual data presentation',
+      ],
+    },
       prerequisites: [
         'Basic understanding of project management concepts',
         'No prior Agile experience required',
