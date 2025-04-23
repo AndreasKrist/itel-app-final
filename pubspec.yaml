@@ -50,6 +50,18 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1  # Add this line
+
+flutter_launcher_icons:
+  android: "launcher_icon"  # Icon name for Android
+  ios: true  # Creates icons for iOS
+  image_path: "assets/images/itel2.png"  # Path to your existing icon
+  min_sdk_android: 21  # Minimum Android SDK version
+  adaptive_icon_background: "#FFFFFF"  # Background color for adaptive icons (Android 8.0+)
+  adaptive_icon_foreground: "assets/images/itel2.png"  # Foreground image for adaptive icons
+  remove_alpha_ios: true  # Removes transparency from iOS icons (recommended)
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
