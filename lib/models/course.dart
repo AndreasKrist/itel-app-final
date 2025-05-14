@@ -137,1178 +137,1095 @@ static List<Course> sampleCourses = [
     
     Course(
       id: '1',
-      courseCode: 'PRJ101',
+      courseCode: 'MSE01',
       title: 'Essential Excel for Sales & Marketing (Part 1)',
       category: 'Project Management',
       certType: 'Microsoft',
       rating: 4.7,
-      duration: '2 days',
+      duration: 'Unlimited Time',
       price: '\$0',
       funding: 'Complimentary',
-      deliveryMethods: ['OLL', 'ILT'],
-      nextAvailableDate: 'April 10, 2025',
+      deliveryMethods: ['OLL'],
+      nextAvailableDate: 'Available',
       moodleCourseId: '19',
-      description: 'Learn the principles and practices of Agile project management, including Scrum, Kanban, and Lean methodologies. This course is offered complimentary as part of our community outreach program.',
+      description: 'In this course, you will learn how to make the most of Excel features, which is excellent for simplifying your job as a Sales & Marketing. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Conditional Formatting, and Sparklines. During this course, you will discover how to utilise the conditional formatting feature in your Excel, which makes it easy to highlight specific values or make particular cells easy to identify. You will also be introduced to the Sparklines, a tiny chart in a worksheet cell that provides a visual representation of data',
       outline: {
-      'Module 1: Excel Basics': [
-        'Getting started with Excel interface',
-        'Cell navigation and selection techniques',
-        'Basic data entry and formatting',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Essential Formulas': [
-        'Creating basic formulas',
-        'Using built-in functions (SUM, AVERAGE, MAX, MIN)',
-        'Relative vs. absolute cell references',
+      'Topic 2: Basic Pivot Table': [
+        'Basic Pivot Table',
+        'Quiz 2',
       ],
-      'Module 3: Data Management': [
-        'Sorting and filtering data',
-        'Creating and formatting tables',
-        'Basic data validation',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Charts and Visualization': [
-        'Creating basic charts',
-        'Customizing chart elements',
-        'Visual data presentation',
+      'Topic 4: Conditional Formatting': [
+        'Conditional Formatting',
+        'Quiz 4',
+      ],
+      'Topic 5: Sparklines': [
+        'Sparklines',
+        'Quiz 5',
       ],
     },
       prerequisites: [
-        'Basic understanding of project management concepts',
-        'No prior Agile experience required',
+        'Basic computer skills',
+        'No prior Excel experience required',
       ],
-      whoShouldAttend: 'Project managers, team leaders, product owners, and anyone interested in learning Agile methodologies.',
-      importantNotes: 'This is a complimentary course, but registration is required as seats are limited. Priority is given to Singapore Citizens and Permanent Residents.',
+      whoShouldAttend: 'Sales & Marketing',
+      importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job, which is excellent for simplifying their task.',
       feeStructure: {
-        'Full Course Fee': {'Price': '\$0'},
-        'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-        'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
       },
     ),
     Course(
     id: '2',
-    courseCode: 'MSO101',
+    courseCode: 'MSE02',
     title: 'Essential Excel for Admin (Part 1)',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.5,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
-    deliveryMethods: ['OLL', 'ILT'],
-    nextAvailableDate: 'April 5, 2025',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
     moodleCourseId: '17',
-    description: 'Master the fundamentals of Microsoft Excel including formulas, formatting, and basic data analysis. This introductory course is perfect for beginners or those looking to refresh their Excel skills.',
+    description: 'In this course, you will discover how to effectively use Excel features to simplify your tasks and improve efficiency as an Administration. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Worksheet Protections, and Setup Printing. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Excel Basics': [
-        'Getting started with Excel interface',
-        'Cell navigation and selection techniques',
-        'Basic data entry and formatting',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Essential Formulas': [
-        'Creating basic formulas',
-        'Using built-in functions (SUM, AVERAGE, MAX, MIN)',
-        'Relative vs. absolute cell references',
+      'Topic 2: Basic Pivot Table': [
+        'Basic Pivot Table',
+        'Quiz 2',
       ],
-      'Module 3: Data Management': [
-        'Sorting and filtering data',
-        'Creating and formatting tables',
-        'Basic data validation',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Charts and Visualization': [
-        'Creating basic charts',
-        'Customizing chart elements',
-        'Visual data presentation',
+      'Topic 4: Worksheet Protection': [
+        'Worksheet Protection',
+        'Quiz 4',
+      ],
+      'Topic 5: Printing Setup': [
+        'Printing Setup',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
       'No prior Excel experience required',
     ],
-    whoShouldAttend: 'Office workers, students, job seekers, and anyone looking to improve their productivity with Excel.',
-    importantNotes: 'This is a complimentary course provided as part of our community outreach program. Participants must bring their own devices with Microsoft Excel installed.',
+    whoShouldAttend: 'Administrator',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job to streamline and improve efficiency.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
 
   Course(
     id: '3',
-    courseCode: 'MSO102',
+    courseCode: 'MSE03',
     title: 'Essential Excel for Business Owner (Part 1)',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.7,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 15, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '15',
-    description: 'Take your Excel skills to the next level with advanced functions, PivotTables, and data analysis techniques. This course builds on basic Excel knowledge to help you become more efficient in data manipulation and analysis.',
+    description: 'In this course, as a business owner, you will learn how to make the most of Excel features, which is excellent for managing your business more effectively. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Watch Window, and Data Validation. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Advanced Functions': [
-        'VLOOKUP, HLOOKUP, and INDEX-MATCH',
-        'Logical functions (IF, AND, OR, IFERROR)',
-        'Text and date manipulation functions',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Data Analysis': [
-        'PivotTables and PivotCharts',
-        'What-if analysis tools',
-        'Data analysis with slicers',
+      'Topic 2: Pivot Table': [
+        'Pivot Table',
+        'Quiz 2',
       ],
-      'Module 3: Excel Power Tools': [
-        'Power Query basics',
-        'Data modeling concepts',
-        'Introduction to Power Pivot',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Automation': [
-        'Recording basic macros',
-        'Customizing the Excel interface',
-        'Creating dashboard reports',
+      'Topic 4: Watch Window': [
+        'Watch Window',
+        'Quiz 4',
+      ],
+      'Topic 5: Data Validation': [
+        'Data Validation',
+        'Quiz 5',
       ],
     },
     prerequisites: [
-      'Microsoft Excel Essential Skills or equivalent experience',
-      'Basic understanding of Excel formulas and functions',
+      'Basic computer skills',
+      'No prior Excel experience required',
     ],
-    whoShouldAttend: 'Current Excel users looking to enhance their skills, data analysts, business professionals, and administrative staff who work with data.',
-    importantNotes: 'This complimentary course requires participants to have prior Excel experience. Please bring your own device with Microsoft Excel installed.',
+    whoShouldAttend: 'Bussiness Owner',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their business to streamline and enhance their business operations.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
+      
     },
   ),
 
   Course(
     id: '4',
-    courseCode: 'MSO201',
+    courseCode: 'MSE04',
     title: 'Essential Excel for HR',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.6,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
-    deliveryMethods: ['OLL', 'ILT'],
-    nextAvailableDate: 'April 8, 2025',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
     moodleCourseId: '14',
-    description: 'Learn to create engaging and professional presentations using Microsoft PowerPoint. This course covers everything from basic slides to advanced animations, transitions, and multimedia integration.',
+    description: 'In this course, you will learn how to make the most of Excel features as a Human Resources. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Automatic Subtotals, and Excel Table. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Presentation Fundamentals': [
-        'PowerPoint interface and navigation',
-        'Creating and organizing slides',
-        'Working with templates and themes',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Design and Formatting': [
-        'Text formatting and alignment',
-        'Working with images and shapes',
-        'Creating SmartArt graphics',
+      'Topic 2: Pivot Table': [
+        'Pivot Table',
+        'Quiz 2',
       ],
-      'Module 3: Animation and Media': [
-        'Adding slide transitions',
-        'Creating custom animations',
-        'Incorporating audio and video',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Delivering Presentations': [
-        'Presenter view and presentation tools',
-        'Creating handouts and notes',
-        'Exporting presentations to different formats',
+      'Topic 4: Automatic Subtotal': [
+        'Automatic Subtotal',
+        'Quiz 4',
+      ],
+      'Topic 5: Excel Tables': [
+        'Excel Tables',
+        'Quiz 5',
+      ],
+    },
+    prerequisites: [
+      'Basic computer skills',
+      'No prior Excel experience required',
+    ],
+    whoShouldAttend: 'Human Resources Person',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job to streamline and improve their productivity.',
+    feeStructure: {
+    },
+  ),
+
+  Course(
+    id: '5',
+    courseCode: 'MSE05',
+    title: 'Essential Excel for Office Worker (Part 1)',
+    category: 'Office Productivity',
+    certType: 'Microsoft',
+    rating: 4.5,
+    duration: 'Unlimited Time',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '12',
+    description: 'In this course, you will learn how to make the most of Excel features as a worker. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Filtering, and Header and footer. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+    outline: {
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
+      ],
+      'Topic 2: Pivot Table': [
+        'Pivot Table',
+        'Quiz 2',
+      ],
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
+      ],
+      'Topic 4: Automatic Subtotal': [
+        'Automatic Subtotal',
+        'Quiz 4',
+      ],
+      'Topic 5: Excel Tables': [
+        'Excel Tables',
+        'Quiz 5',
+      ],
+    },
+    prerequisites: [
+      'Basic computer skills',
+      'No prior Excel experience required',
+    ],
+    whoShouldAttend: 'Office Worker.',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their daily work, streamlining their work processes and boosting productivity.',
+    feeStructure: {
+    },
+  ),
+
+  Course(
+    id: '6',
+    courseCode: 'MSE06',
+    title: 'Fundamental Excel for Students (Part 1)',
+    category: 'Office Productivity',
+    certType: 'Microsoft',
+    rating: 4.4,
+    duration: 'Unlimited Time',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '9',
+    description: 'In this course, you will learn how to make the most of Excel features as a student. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Flash Fill, and Absolute Cell Referencing. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+    outline: {
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
+      ],
+      'Topic 2: Pivot Table': [
+        'Pivot Table',
+        'Quiz 2',
+      ],
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
+      ],
+      'Topic 4: Absolute Referencing': [
+        'Automatic Subtotal',
+        'Quiz 4',
+      ],
+      'Topic 5: Flash Fill': [
+        'Excel Tables',
+        'Quiz 5',
+      ],
+    },
+    prerequisites: [
+      'Basic computer skills',
+      'No prior Excel experience required',
+    ],
+    whoShouldAttend: 'Office workers, administrators, managers, and anyone who uses email in a professional capacity.',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental Excel features into their daily activities, making their tasks more efficient and productive.',
+    feeStructure: {
+    },
+  ),
+
+  Course(
+    id: '7',
+    courseCode: 'MSP01',
+    title: 'PPT for Worker (Part 1)',
+    category: 'Office Productivity',
+    certType: 'Microsoft',
+    rating: 4.8,
+    duration: 'Unlimited Time',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '23',
+    description: 'In this course, you will learn how to make the most of PowerPoint features as a worker. Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Sections, and working with images. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+    outline: {
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
+      ],
+      'Topic 2: Smart Art': [
+        'SmartArt',
+        'Quiz 2',
+      ],
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
+      ],
+      'Topic 4: Sections': [
+        'Sections',
+        'Quiz 4',
+      ],
+      'Topic 5: Remove Background': [
+        'Remove Background',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
       'No prior PowerPoint experience required',
     ],
-    whoShouldAttend: 'Anyone who needs to create and deliver presentations, including business professionals, educators, students, and sales personnel.',
-    importantNotes: 'This complimentary course is provided as part of our digital literacy initiative. Please bring a laptop with Microsoft PowerPoint installed.',
+    whoShouldAttend: 'Office Worker',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their daily work, streamlining their work processes and boosting productivity.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-    },
-  ),
-
-  Course(
-    id: '5',
-    courseCode: 'MSO301',
-    title: 'Essential Excel for Office Worker (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.5,
-    duration: '1 day',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 20, 2025',
-    moodleCourseId: '12',
-    description: 'Master Microsoft Word to create professional-looking documents for business and academic purposes. This course covers document formatting, styles, templates, and advanced editing features.',
-    outline: {
-      'Module 1: Document Basics': [
-        'Word interface and navigation',
-        'Document creation and formatting',
-        'Page layout and design',
-      ],
-      'Module 2: Professional Formatting': [
-        'Styles and themes',
-        'Headers, footers, and page numbering',
-        'Working with sections and columns',
-      ],
-      'Module 3: Advanced Features': [
-        'Tables and table formatting',
-        'Mail merge for mass communications',
-        'Creating and using templates',
-      ],
-      'Module 4: Collaboration Tools': [
-        'Track changes and comments',
-        'Document protection and sharing',
-        'Comparing and combining documents',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'Familiarity with word processing concepts',
-    ],
-    whoShouldAttend: 'Administrative professionals, students, job seekers, business owners, and anyone who needs to create professional documents.',
-    importantNotes: 'This complimentary course requires participants to have Microsoft Word installed on their devices.',
-    feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-    },
-  ),
-
-  Course(
-    id: '6',
-    courseCode: 'MSO401',
-    title: 'Fundamental Excel for Students (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.4,
-    duration: '1 day',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL', 'ILT'],
-    nextAvailableDate: 'May 3, 2025',
-    moodleCourseId: '9',
-    description: 'Improve your email productivity and organization using Microsoft Outlook. Learn to manage emails, contacts, calendars, and tasks efficiently in a professional environment.',
-    outline: {
-      'Module 1: Email Management': [
-        'Outlook interface overview',
-        'Email composition and formatting',
-        'Creating and using email templates',
-      ],
-      'Module 2: Organization Tools': [
-        'Folders and filing system',
-        'Search techniques and filters',
-        'Rules and automatic processing',
-      ],
-      'Module 3: Calendar and Scheduling': [
-        'Calendar views and navigation',
-        'Creating and managing appointments',
-        'Meeting scheduling and resource booking',
-      ],
-      'Module 4: Productivity Features': [
-        'Task management and follow-ups',
-        'Contact management',
-        'Notes and integration with other Office apps',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'Access to Microsoft Outlook',
-    ],
-    whoShouldAttend: 'Office workers, administrators, managers, and anyone who uses email in a professional capacity.',
-    importantNotes: 'This complimentary course is designed to help professionals better manage their digital communications. Participants should have Microsoft Outlook installed on their devices.',
-    feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-    },
-  ),
-
-  Course(
-    id: '7',
-    courseCode: 'MSO501',
-    title: 'PPT for Worker (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: '1 day',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
-    moodleCourseId: '23',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
-    outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
-      ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
-      ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
-      ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
-    ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
-    feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-    },
-  ),
-  Course(
-    id: '7',
-    courseCode: 'MSO501',
-    title: 'PPT for Worker (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: '1 day',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
-    moodleCourseId: '23',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
-    outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
-      ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
-      ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
-      ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
-    ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
-    feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '8',
-    courseCode: 'MSO501',
+    courseCode: 'MSP02',
     title: 'Essential PowerPoint for Sales & Marketing (Part 1)',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '20',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of PowerPoint features, which is excellent for simplifying your job as a Sales & Marketing. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Custom Slide Shows, and Merging Shapes. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Smart Art': [
+        'SmartArt',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Custom Slide Shows': [
+        'Custom Slide Shows',
+        'Quiz 4',
+      ],
+      'Topic 5: Merging Shapes': [
+        'Merging Shapes',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior PowerPoint experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Sales & Marketing',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their job, which is excellent for simplifying their task.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '9',
-    courseCode: 'MSO501',
+    courseCode: 'MSP03',
     title: 'Essential PowerPoint for Business Owner (Part 1)',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '16',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of PowerPoint features as a business owner, Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Custom Animations, and Reuse Slides. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Smart Art': [
+        'SmartArt',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Custom Animation': [
+        'Custom Animation',
+        'Quiz 4',
+      ],
+      'Topic 5: Reuse Slides': [
+        'Reuse Slides',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior PowerPoint experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Business Owner',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their business to streamline and enhance their business operations.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '10',
-    courseCode: 'MSO501',
+    courseCode: 'MSP04',
     title: 'Essential PowerPoint for Students',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '10',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of PowerPoint features as a student. Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Slides from Outline, and Annotation tools. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Smart Art Graphics': [
+        'SmartArt',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Slides from Outline': [
+        'Slides from Outline',
+        'Quiz 4',
+      ],
+      'Topic 5: Using Annotation Tools': [
+        'Using Annotation Tools',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior PowerPoint experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Students',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental PowerPoint features into their daily activities, making their tasks more efficient and productive.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '11',
-    courseCode: 'MSO501',
+    courseCode: 'MSO01',
     title: 'Essential Word for Sales & Marketing',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '22',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of Word features, which is excellent for simplifying your job as a Sales & Marketing,. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Screenshots, and Cropping Images. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Styles': [
+        'Styles',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Screenshot Tool': [
+        'Screenshot Tool',
+        'Quiz 4',
+      ],
+      'Topic 5: Cropping Image': [
+        'Cropping Image',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior Microsoft Word experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Sales & Marketing',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job, which is excellent for simplifying their task.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '12',
-    courseCode: 'MSO501',
+    courseCode: 'MSO02',
     title: 'Essential Word for Admin',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '21',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will discover how to effectively use Excel features to simplify your tasks and improve efficiency as an Administration. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Table Cell Layout, and Hyperlink. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills. ',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Styles': [
+        'Styles',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Table Cell Layout': [
+        'Table Cell Layout',
+        'Quiz 4',
+      ],
+      'Topic 5: Hyperlink': [
+        'Hyperlink',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior Microsoft Word experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Administrator',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job to streamline and improve efficiency.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '13',
-    courseCode: 'MSO501',
+    courseCode: 'MSO03',
     title: 'Essential Word for HR (Part 1)',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '18',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of Word features as a Human Resources. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Headers and Footers, and Setting Tab Stops. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Styles': [
+        'Styles',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Headers and Footers': [
+        'Headers and Footers',
+        'Quiz 4',
+      ],
+      'Topic 5: Setting Tab Stops': [
+        'Setting Tab Stops',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior Microsoft Word experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Human Resources Person',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job to streamline and improve their productivity.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '14',
-    courseCode: 'MSO501',
+    courseCode: 'MSO04',
     title: 'Essential Word for Office Worker',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Available',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Unlimited Time',
     moodleCourseId: '13',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of Word features as a worker. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Inserting Breaks, and Word Table. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Styles': [
+        'Styles',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Inserting Breaks': [
+        'Inserting Breaks',
+        'Quiz 4',
+      ],
+      'Topic 5: Word Table': [
+        'Word Table',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior Microsoft Word experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Office Worker',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their daily work, streamlining their work processes and boosting productivity.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '15',
-    courseCode: 'MSO501',
+    courseCode: 'MSO05',
     title: 'Word Essential for Students (Part 1)',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '11',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of Word features as a student. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Bibliography, and Bulleted and Numbered Lists (Multi-Level Lists). This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Styles': [
+        'Styles',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Bibliography': [
+        'Bibliography',
+        'Quiz 4',
+      ],
+      'Topic 5: Multilevel Lists': [
+        'Multilevel Lists',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior Microsoft Word experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Students',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental Word features into their daily activities, making their tasks more efficient and productive.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '16',
-    courseCode: 'MSO501',
+    courseCode: 'MSO06',
     title: 'Essential Word for Business Owner (Part 1)',
     category: 'Office Productivity',
     certType: 'Microsoft',
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '8',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'In this course, you will learn how to make the most of Word features as a business owner. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Add Watermark, and Document Protections. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Themes': [
+        'Themes',
+        'Quiz 1',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Styles': [
+        'Styles',
+        'Quiz 2',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Topic 3: Charts': [
+        'Charts',
+        'Quiz 3',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Adding Watermark': [
+        'Adding Watermark',
+        'Quiz 4',
+      ],
+      'Topic 5: Document Protection': [
+        'Document Protection',
+        'Quiz 5',
       ],
     },
     prerequisites: [
       'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'No prior Microsoft Word experience required',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Business Owner',
+    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their business to streamline and enhance their business operations.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '17',
-    courseCode: 'MSO501',
+    courseCode: 'SS01',
     title: 'Presentasi Memukau dengan Teknik Public Speaking',
-    category: 'Office Productivity',
+    category: 'Soft Skills',
     certType: null,
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '4',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'Modul ini memuat pembelajaraan tentang bagaimana melakukan presentasi yang memukau dengan berbagai macam penerapan praktis teknik-teknik public speaking. Pembelajaran diawali dengan bagaimana mengatasi kegugupan saat berbicara di depan umum, dan bagaimana menambah kepercayaan diri. Pembelajaran inti dari modul ini adalah mengenai struktur presentasi yang kuat dengan komposisi opening yang menarik, body content yang tertata, dan closing yang kuat sehingga yang mendukung pesan yang ingin disampaikan, Kekuatan verbal dalam pemilihan kata dan dibawakan dengan gaya story telling sangat mempengaruhi kekuatan presentasi. Pembelajaran akan diakhiri dengan beberapa tips bagaimana menggunakan vocal variety and body language yang mendukung upaya presentasi memukau.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Lesson 1: Presentation in Daily Life': [
+        'Manfaat Presentasi',
+        'Mengatasi Grogi',
+        'Langkah Membangun Kepercayaan',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Lesson 2: Attractive Opening': [
+        'Struktur Komunikasi',
+        'Cara Melakukan Opening',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Lesson 3: Body Content': [
+        'Pemetaan Ide',
+        'Mid Test',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Lesson 4: Strong Closing': [
+        'Rangkuman dan Konklusi',
+        'Inspirasi',
+      ],
+      'Lesson 5: Presentation Delivery': [
+        'Variasi Vokal',
+        'Bahasa Tubuh',
+        'Alat Bantu Visual',
+        'Perbaikan Penampilan',
+      ],
+      'Lesson 6: Closing': [
+        'Closing',
+        'Post Test',
       ],
     },
     prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'Courage to Learn',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Anyone who is seeking to improve their presentation skills',
+    importantNotes: 'Pembelajar mampu menjelaskan seluruh komponen Teknik public speaking yang dibutuhkan untuk melakukan presentasi yang memukau dan dapat menerapkannya dalam praktik presentasi sehari-hari .',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '18',
-    courseCode: 'MSO501',
+    courseCode: 'SS02',
     title: 'Public Speaking',
-    category: 'Office Productivity',
+    category: 'Soft Skills',
     certType: null,
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
+    nextAvailableDate: 'Available',
     moodleCourseId: '5',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    description: 'Modul ini memuat pembelajaraan tentang bagaimana melakukan presentasi yang memukau dengan berbagai macam penerapan praktis teknik-teknik public speaking. Pembelajaran diawali dengan mengenal lebih jauh apa itu public speaking, syarat menjadi seorang public speaker dan melakukan pemataan audiens. Materi juga membahas tentang bagaimana mengatasi kegugupan saat berbicara di depan umum, dan bagaimana mengatasi kendala saat tampil.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Lesson 1: The Public Speaking': [
+        'Introduction Public Speaking',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Lesson 2: The Audience Mapping 1': [
+        'Mapping Audience Part A',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Lesson 3: The Audience Mapping 2': [
+        'Mid-Test',
+        'Mapping Audience Part B',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Lesson 4: Bahasa Tubuh': [
+        'Bahasa Tubuh',
+      ],
+      'Lesson 5: Tipe Komunikator': [
+        'Tipe Komunikator',
+      ],
+      'Lesson 6: The Flow of Mind': [
+        'Alur Berpikir Pembicara',
+      ],
+      'Lesson 7: Kesalahan Umum Presentasi': [
+        'Kesalahan Umum Presentasi',
+      ],
+      'Lesson 8: Closing': [
+        'Closing Donnt',
+        'Post-Test',
+        'Feedback',
       ],
     },
     prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'Courage to Learn',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Anyone who is seeking to improve their Public speaking skills',
+    importantNotes: 'Pembelajar mampu menjelaskan seluruh komponen Teknik public speaking yang dibutuhkan untuk melakukan presentasi yang memukau dan dapat menerapkannya dalam praktik presentasi sehari-hari',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '19',
-    courseCode: 'MSO501',
-    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
-    category: 'Office Productivity',
+    courseCode: 'SS03',
+    title: 'Kunci Pemimpin Sejati',
+    category: 'Soft Skills',
     certType: null,
     rating: 4.8,
-    duration: '1 day',
+    duration: 'Unlimited Time',
     price: '\$0',
     funding: 'Complimentary',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
-    moodleCourseId: '38',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    nextAvailableDate: 'Available',
+    moodleCourseId: '5',
+    description: 'Modul ini untuk mempelajari hal-hal yang sangat dibutuhkan sebagai seorang pemimpin, terutama apabila baru pertama kali mendapatkan peran atau pun jabatan tersebut. Selain itu modul ini juga dilengkapi dengan tipe-tipe karakter anggota tim, hal ini agar dapat mengoptimalkan potensi para anggota tim dan membuat sistem kerjasama yang baik. Materi ini juga akan membahas mengatasi konflik dan kesalahpahaman yang dapat terjadi di dalam kerjasama. Hal ini dimulai dengan bagaimana membuat kejelasan pesan untuk tujuan tim atau pun organisasi pada umumnya. Serta akan mempelajari tips-tips untuk pengembangan anggota tim menjadi lebih baik lagi di kedepannya. ',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Lesson 1: Peran dan Pola Pikir Pemimpin': [
+        'Pola Pikir Pemimpin Sejati',
+        'Kesalahan Umum Seorang Pemimpin',
+        'Peran Sebagai Pemimpin',
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Lesson 2: Pengenalan dan Pemetaan Tim': [
+        'Mid Test',
+        'Tipe Karakter Tim',
+        'Karakter Pertama - The Initiator',
+        'Karakter Kedua - The Executor',
+        'Karakter Ketiga - The Supporter',
+        'Karakter Keempat - The Follower',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      'Lesson 3: Komunikasi Tim': [
+        'Tujuan Komunikasi',
+        'Kejelasan Pesan',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Lesson 4: Mengelola Tim': [
+        'Mengatasi Konflik',
+        'Mengembangkan Potensi Tim',
+      ],
+      'Lesson 5: Closing': [
+        'Closing',
+        'Post-Tets',
+        'Evaluation',
       ],
     },
     prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'Courage to Learn',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Anyone who is seeking to improve their Leadership skills',
+    importantNotes: 'Pembelajar mampu melakukan komunikasi dan peran kepemimpinan untuk mengarahkan tim melakukan pekerjaannya dan selaras dengan divisi lain. ',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '20',
-    courseCode: 'MSO501',
-    title: 'Effective Decision Making for Operations Level (Classroom and Asynchronous E- learning)',
-    category: 'Office Productivity',
+    courseCode: 'SCTP01',
+    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
+    category: 'SCTP',
     certType: null,
     rating: 4.8,
-    duration: '1 day',
+    duration: '19 days',
     price: '\$0',
-    funding: 'Complimentary',
+    funding: 'Eligible for funding',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
-    moodleCourseId: '37',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    nextAvailableDate: ', 2025',
+    moodleCourseId: '38',
+    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Brainstorming': [
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Affinity Diagram': [
+        'Quiz',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      "Topic 3: 5 Why's": [
+        'Quiz',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Fishbone Diagram': [
+        'Quiz',
       ],
     },
     prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'Minimum 21 years old.',
+      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+      'Workplace Literacy and Numeracy Level 4',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '21',
     courseCode: 'MSO501',
     title: 'Effective Decision Making for Operations Level (Classroom and Asynchronous E- learning)',
-    category: 'Office Productivity',
+    category: 'SCTP',
     certType: null,
     rating: 4.8,
-    duration: '1 day',
+    duration: '19 days',
     price: '\$0',
-    funding: 'Complimentary',
+    funding: 'Eligible for funding',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
-    moodleCourseId: '25',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    nextAvailableDate: ', 2025',
+    moodleCourseId: '38',
+    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Directive Decision Makin': [
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Analyctical Decision Makers': [
+        'Quiz',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      "Topic 3: Conceptual Decision Makers": [
+        'Quiz',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Behavioral Decision Makers': [
+        'Quiz',
       ],
     },
     prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'Minimum 21 years old.',
+      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+      'Workplace Literacy and Numeracy Level 4',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '22',
     courseCode: 'MSO501',
-    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
-    category: 'Office Productivity',
+    title: 'Effective Decision Making for Operations Level (Classroom and Asynchronous E- learning)',
+    category: 'SCTP',
     certType: null,
     rating: 4.8,
-    duration: '1 day',
+    duration: '19 days',
     price: '\$0',
-    funding: 'Complimentary',
+    funding: 'Eligible for funding',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
-    moodleCourseId: '24',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    nextAvailableDate: ', 2025',
+    moodleCourseId: '38',
+    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Directive Decision Makin': [
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Analyctical Decision Makers': [
+        'Quiz',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      "Topic 3: Conceptual Decision Makers": [
+        'Quiz',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Behavioral Decision Makers': [
+        'Quiz',
       ],
     },
     prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'Minimum 21 years old.',
+      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+      'Workplace Literacy and Numeracy Level 4',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
   Course(
     id: '23',
     courseCode: 'MSO501',
-    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous E-learning)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
+    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
+    category: 'SCTP',
+    certType: null,
     rating: 4.8,
-    duration: '1 day',
+    duration: '19 days',
     price: '\$0',
-    funding: 'Complimentary',
+    funding: 'Eligible for funding',
     deliveryMethods: ['OLL'],
-    nextAvailableDate: 'April 30, 2025',
-    moodleCourseId: '39',
-    description: 'Master Microsoft Teams to enhance remote and hybrid workplace collaboration. Learn to use chat, meetings, channels, and app integrations to improve team productivity and communication.',
+    nextAvailableDate: ', 2025',
+    moodleCourseId: '38',
+    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
     outline: {
-      'Module 1: Teams Fundamentals': [
-        'Teams interface and navigation',
-        'Chat and communication basics',
-        'Creating and managing teams and channels',
+      'Topic 1: Brainstorming': [
       ],
-      'Module 2: Effective Meetings': [
-        'Scheduling and joining meetings',
-        'Meeting features and controls',
-        'Recording and sharing meetings',
+      'Topic 2: Affinity Diagram': [
+        'Quiz',
       ],
-      'Module 3: File Collaboration': [
-        'File sharing and co-authoring',
-        'Integration with SharePoint and OneDrive',
-        'Managing file permissions',
+      "Topic 3: 5 Why's": [
+        'Quiz',
       ],
-      'Module 4: Productivity Enhancement': [
-        'App integrations and tabs',
-        'Using Teams on mobile devices',
-        'Teams governance and best practices',
+      'Topic 4: Fishbone Diagram': [
+        'Quiz',
       ],
     },
     prerequisites: [
-      'Basic computer skills',
-      'Microsoft 365 account with Teams access',
+      'Minimum 21 years old.',
+      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+      'Workplace Literacy and Numeracy Level 4',
     ],
-    whoShouldAttend: 'Remote workers, team leaders, project managers, and anyone working in collaborative environments.',
-    importantNotes: 'This complimentary course is provided to support effective remote and hybrid work practices. Participants should have access to Microsoft Teams.',
+    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
     feeStructure: {
-      'Full Course Fee': {'Price': '\$0'},
-      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
-      'SG Citizens age 40 years old and above': {'Individual': '\$0', 'Company Sponsored (Non-SME)': '\$0', 'Company Sponsored (SME)': '\$0'},
     },
   ),
-
+  Course(
+    id: '24',
+    courseCode: 'MSO501',
+    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous E-learning)',
+    category: 'SCTP',
+    certType: null,
+    rating: 4.8,
+    duration: '19 days',
+    price: '\$0',
+    funding: 'Eligible for funding',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: ', 2025',
+    moodleCourseId: '38',
+    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
+    outline: {
+      'Topic 1: Brainstorming': [
+      ],
+      'Topic 2: Affinity Diagram': [
+        'Quiz',
+      ],
+      "Topic 3: 5 Why's": [
+        'Quiz',
+      ],
+      'Topic 4: Fishbone Diagram': [
+        'Quiz',
+      ],
+    },
+    prerequisites: [
+      'Minimum 21 years old.',
+      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+      'Workplace Literacy and Numeracy Level 4',
+    ],
+    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
+    feeStructure: {
+    },
+  ),
+//    ^
 //FREEE -------------------------------------------------------------------------------------------------------------
 //BAYAR ------------------------------------------------------------------------------------------------------------------
+//   ||
+//   \/
     Course(
-      id: '6373',
-      courseCode: 'ESF373',
+      id: '25',
+      courseCode: '',
       title: 'EXIN SIAM Foundation',
-      category: 'IT Service Management',
+      category: 'IT Business Management & Strategy',
       certType: 'SIAM',
       rating: 4.7,
       duration: '2 Days',
       price: '\$995',
-      funding: 'Eligible for funding',
+      funding: '',
       deliveryMethods: ['ILT'],
       startDate: 'July 21, 2025',
       nextAvailableDate: 'July 21, 2025',
-      description: 'SIAM™ is a methodology used to manage multiple service providers and to integrate them seamlessly to provide a single business-facing IT organization. The EXIN SIAM™ Foundation certification tests a candidate\'s knowledge and understanding of the terminology and core principles. A candidate who successfully completes this certification knows how SIAM delivers business value and is able to contribute to the implementation and use of SIAM in an organization.',
+      description: '''SIAM™ is a methodology used to manage multiple service providers and to integrate them seamlessly to provide a single business-facing IT organization. The EXIN SIAM™ Foundation certification tests a candidate\'s knowledge and understanding of the terminology and core principles. A candidate who successfully completes this certification knows how SIAM delivers business value and is able to contribute to the implementation and use of SIAM in an organization.
+
+Examination Details:
+- Examination type: Multiple-choice questions
+- Number of questions: 40
+- Pass mark: 65% (26/40 questions)
+- Open book/notes: No
+- Electronic equipment/aides permitted: No
+- Time allotted for examination: 60 minutes
+- Exam Fee: \$450''',
       outline: {
         'Lesson 1: Introduction to SIAM': [
           'SIAM Fundamentals',
@@ -1318,12 +1235,8 @@ static List<Course> sampleCourses = [
           'SIAM Implementation Key Stages',
         ],
         'Lesson 3: SIAM Roles and Responsibilities': [
-          'Key SIAM roles across organizational layers',
-          'Responsibility assignment in SIAM structures',
         ],
         'Lesson 4: SIAM Practices': [
-          'Core practices for successful SIAM implementation',
-          'SIAM operational frameworks',
         ],
         'Lesson 5: Processes to Support SIAM': [
           'Processes in a SIAM Ecosystem',
@@ -1333,87 +1246,299 @@ static List<Course> sampleCourses = [
           'Challenges, Associated Risks and Potential Mitigations',
         ],
         'Lesson 7: SIAM and Other Practices': [
-          'Integration with ITIL and other frameworks',
-          'Measuring SIAM effectiveness',
         ],
       },
       prerequisites: [
         'Please refer to Who Should Attend below.'
       ],
       whoShouldAttend: 'Any professionals worldwide who have an interest in the practices of SIAM or want to implement this methodology in an organization and in particular professionals who are already working with service management processes. More specifically, the following roles could be interested: chief strategy officers (CSOs), chief information officers (CIOs), chief technical officers (CTOs), service managers, service provider portfolio strategists/leads, managers (including process managers, project managers, change managers, service level managers, business relationship managers, program managers and supplier managers), service architects, process architects, business change practitioners and organizational change practitioners. Knowledge of service management terminology, for instance through the EXIN IT Service Management based on ISO/IEC 20000 certification, is recommended.',
-      importantNotes: 'This course includes the official EXIN SIAM™ Foundation exam (40 multiple-choice questions, 60 minutes, 65% pass mark). No open book or electronic devices permitted during examination.',
-      feeStructure: {
-        'Full Course Fee': {'Price': '\$1,375.00'},
-        'Exam Fee': {'Price': '\$450.00'},
-        'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$700.00', 'Company Sponsored (Non-SME)': '\$700.00', 'Company Sponsored (SME)': '\$500.00'},
-        'SG Citizens age 40 years old and above': {'Individual': '\$500.00', 'Company Sponsored (Non-SME)': '\$500.00', 'Company Sponsored (SME)': '\$500.00'},
-      },
+      importantNotes: 'Attended at least 75% of the course and Declared as competent during the assessments',
     ),
     Course(
-      id: '6372',
-      courseCode: 'ESP372',
+      id: '26',
+      courseCode: '',
       title: 'EXIN SIAM Professional',
-      category: 'IT Service Management',
+      category: 'IT Business Management & Strategy',
       certType: 'SIAM',
       rating: 4.7,
       duration: '3 Days',
       price: '\$1,395',
-      funding: 'Eligible for funding',
+      funding: '',
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'To thrive in the digital era, organizations must focus on their customers and their experiences. The increasing reliance on technology requires effective management of supplier ecosystems. The Service Integration and Management (SIAM™) model addresses the complexities of managing multiple suppliers, integrating them seamlessly to provide a single business-facing IT-organization. As a result of this increased ...',
-      outline: null,
-      prerequisites: null,
-      whoShouldAttend: null,
-      importantNotes: null,
-      feeStructure: null,
+      description: '''To thrive in the digital era, organizations must focus on their customers and their experiences. The increasing reliance on technology requires effective management of supplier ecosystems. The Service Integration and Management (SIAM™) model addresses the complexities of managing multiple suppliers, integrating them seamlessly to provide a single business-facing IT-organization. As a result of this increased importance of SIAM, ISO/IEC published part 14 of ISO/IEC 20000: Guidance on the application of Service Integration and Management to ISO/IEC 20000-1. This is not exam literature.
+      The EXIN SIAM™ Professional certification tests a candidate’s knowledge and skills of the activities in the four stages of the SIAM roadmap. The certification covers themes such as: the process of assigning the different roles and responsibilities, onboarding organizations into the SIAM ecosystem, and offboarding incumbent providers. It also includes the operation of a SIAM ecosystem and its continuous improvement. A candidate who successfully completes the EXIN SIAM™ Professional certification can analyze, plan, build and inspect a multi-service provider environment.
+
+Examination Details:
+- Examination type: Multiple-choice questions
+- Number of questions: 40
+- Pass mark: 65% (26/40 questions)
+- Open book/notes: No
+- Electronic equipment/aides permitted: No
+- Exam duration: 90 minutes
+- Exam Fee: \$500 
+''',
+      outline: {
+        'Lesson 1: Discovery & Strategy': [
+          'Elements of a SIAM governance framework',
+          'Analysis of the current situation',
+          'Key elements of a SIAM strategy',
+        ],
+        'Lesson 2: Plan & Build': [
+          'Design a detailed SIAM model',
+          'Plan a SIAM implementation'
+        ],
+        'Lesson 3: Implement': [
+          'Different scenarios supporting a SIAM implementation',
+          'Different scenarios supporting a SIAM implementation',
+        ],
+        'Lesson 4: Run and Improve': [
+          'Operate, assure and improve a SIAM ecosystem'
+        ],
+        'Lesson 5: SIAM practices across the stages': [
+          'Application of SIAM practices',
+        ],
+      },
+      prerequisites: [
+        'Please refer to Who Should Attend below.'
+      ],
+      whoShouldAttend: 'Professionals who have an interest in the practices of Service Integration and Management (SIAM) or want to apply or improve this methodology in an organization. The content of this certification is appropriate for employees of customer organizations who will commission SIAM models, employees who provide retained capabilities in a customer organization, service integrators, and service providers working within a SIAM ecosystem. The target group includes, but is not limited to:organizational change managers, business relationship managers, contract managers, service architects, project managers, service managers and practitioners, SIAM consultants.',
+      importantNotes: 'Attended at least 75% of the course and Declared as competent during the assessments',
     ),
     Course(
-      id: '6311',
-      courseCode: 'VNT311',
+      id: '27',
+      courseCode: '',
       title: 'VMware NSX: Troubleshooting and Operations [V4.x]',
-      category: 'IT Training',
+      category: 'Cloud Computing & Virtualization',
       certType: 'VMWARE',
       rating: 4.7,
       duration: '5 Days',
       price: '\$4,905',
-      funding: 'Eligible for funding',
+      funding: '',
       deliveryMethods: ['OLL'],
-      startDate: 'May 05, 2025',
-      nextAvailableDate: 'May 05, 2025',
-      description: 'This hands-on training course provides the advanced knowledge, skills, and tools to competently operate and troubleshoot the VMware NSX® infrastructure. This course introduces you to workflows of various networking and security constructs along with several operational and troubleshooting tools that help you manage and troubleshoot your VMware NSX environment. In addition, various types of technical ...',
-      outline: null,
-      prerequisites: null,
-      whoShouldAttend: null,
-      importantNotes: null,
-      feeStructure: null,
+      startDate: 'May 5, 2025',
+      nextAvailableDate: 'May 5, 2025',
+      description: '''
+This hands-on training course provides the advanced knowledge, skills, and tools to competently operate and troubleshoot the VMware NSX® infrastructure. This course introduces you to workflows of various networking and security constructs along with several operational and troubleshooting tools that help you manage and troubleshoot your VMware NSX environment. In addition, various types of technical problems are presented for you to identify, analyze, and solve through a systematic process.
+
+VMware Exam is \$450 (before GST)
+
+Course Objectives:
+By the end of this course, you will be able to:
+- Use the native tools available in NSX to identify and troubleshoot problems
+- Use VMware Aria Operations for Logs and VMware Aria Operations for Networks to identify and troubleshoot problems related to the NSX environment
+- Explain NSX infrastructure components and communications between them
+- Identify, analyze, and troubleshoot problems related to management, control, and data planes in NSX
+- Identify, analyze, and troubleshoot problems related to infrastructure preparation and VMware NSX® Edge™ deployments
+- Identify, analyze, and troubleshoot problems related to logical switching and logical routing
+- Identify, analyze, and troubleshoot network security problems related to Distributed Firewalls, Gateway Firewalls, and Distributed IDS/IPS.
+- Identify, analyze, and troubleshoot problems related to VPN and VMware NSX Advanced Load Balancer
+- Identify the components and packet flows involved in the NSX datapath and troubleshoot related problems
+''',
+      outline: {
+        'Lesson 1: Course Introduction': [
+          'Introductions and course logistics',
+          'Course objectives',
+        ],
+        'Lesson 2: NSX Operations and Tools': [
+          'Explain and validate the native troubleshooting tools for NSX',
+          'Configure syslog, IPFIX, and log collections for the NSX environment',
+          'Integrate NSX with VMware Aria Operations for Logs and VMware Aria Operations for Networks',
+          'Validate and review the API methods available to configure the NSX environment',
+        ],
+        'Lesson 3: Troubleshooting the NSX Management Cluster': [
+          'Describe the NSX Management cluster architecture, components, and communication channels',
+          'Identify the workflows involved in configuring the NSX Management cluster',
+          'Validate and troubleshoot the NSX Management cluster formation',
+        ],
+        'Lesson 4: Troubleshooting Infrastructure Preparation': [
+          'Describe the data plane architecture, components, and communication channels'
+          'Explain and troubleshoot VMware ESXi™ transport node preparation issues'
+          'Explain and troubleshoot NSX Edge deployment issue'
+        ],
+        'Lesson 5: Troubleshooting Logical Switching': [
+          'Describe the architecture of logical switching',
+          'List the modules and processes involved in configuring logical switching',
+          'Explain the importance of VDS in transport nodes',
+          'Review the architecture and workflows involved in attaching workloads to segments',
+          'Identify and troubleshoot common logical switching issues',
+        ],
+        'Lesson 6: Troubleshooting Logical Routing': [
+          'Review the architecture of logical routing',
+          'Explain the workflows involved in the configuration of Tier-0 and Tier-1 gateways',
+          'Explain the high availability modes and validate logical router placements',
+          'Identify and troubleshoot common logical routing issues using both BGP and OSPF',
+        ],
+        'Lesson 7: Troubleshooting Security': [
+          'Review the architecture of the Distributed Firewall',
+          'Explain the workflows involved in configuring the Distributed Firewall',
+          'Review the architecture of the Gateway Firewall',
+          'Explain the workflows involved in configuring the Gateway Firewall',
+          'Identify and troubleshoot common Distributed Firewall and Gateway Firewall issues',
+          'Review the architecture and workflows involved in configuring Distributed IDS/IPS',
+          'Identify and troubleshoot common Distributed IDS/IPS problems',
+        ],
+        'Lesson 8: Troubleshooting the NSX Advanced Load Balancer and VPN Services': [
+          'Review NSX Advanced Load Balancer architecture and components',
+          'Identify and troubleshoot common NSX Advanced Load Balancer issues',
+          'Review the IPsec and L2 VPN architecture and components',
+          'Identify and troubleshoot common IPsec and L2 VPN issues',
+        ],
+        'Lesson 9: Datapath Walkthrough': [
+          'Verify and validate the path of the packet on the NSX datapath',
+          'Identify and perform packet captures at various points in the datapath',
+          'Use NSX CLI and native hypervisor commands to retrieve configurations involved in the NSX datapath',
+        ],
+      },
+      prerequisites: [
+'''Before taking this course, you must complete the following course:
+  • VMware NSX: Install, Configure, Manage [V4.0]
+You should also have the following technical knowledge:
+  • Good understanding of TCP/IP services and protocols
+  • Knowledge and working experience of computer networking and security, including:
+    - Switching and routing technologies(L2 andL3)
+    - Network and application delivery services (L4 through L7)
+    - Firewalling (L4 through L7)
+    - VMware vSphere® environments
+  • The VMware Certified Professional –Network Virtualization certification is recommended.
+'''
+      ],
+      whoShouldAttend: 'Experienced system administrators and network administrators, Network and security professionals who work with enterprise network',
+      importantNotes: 'Attended at least 75% of the course and Declared as competent during the assessments',
     ),
     Course(
-      id: '6216',
-      courseCode: 'VNI216',
+      id: '28',
+      courseCode: '',
       title: 'VMware NSX: Install, Configure, Manage [V4.0]',
-      category: 'IT Training',
+      category: 'Cloud Computing & Virtualization',
       certType: 'VMWARE',
       rating: 4.7,
       duration: '5 Days',
       price: '\$4,905',
-      funding: 'Eligible for funding',
+      funding: '',
       deliveryMethods: ['OLL'],
       startDate: 'April 21, 2025',
       nextAvailableDate: 'April 21, 2025',
-      description: 'This fast-paced course offers in-depth training on installing, configuring, and managing a VMware NSX® environment. It covers essential features and functionalities introduced in the NSX 4.0.0.1 and NSX 4.0.1 releases, including infrastructure, logical switching and routing, networking and security services, firewalls, advanced threat prevention, and more. VMware Exam Fee is \$495 (before GST) Course Objectives ...',
-      outline: null,
-      prerequisites: null,
-      whoShouldAttend: null,
-      importantNotes: null,
-      feeStructure: null,
+      description: '''
+This fast-paced course offers in-depth training on installing, configuring, and managing a VMware NSX® environment. It covers essential features and functionalities introduced in the NSX 4.0.0.1 and NSX 4.0.1 releases, including infrastructure, logical switching and routing, networking and security services, firewalls, advanced threat prevention, and more.
+
+VMware Exam Fee is \$495 (before GST)
+
+Course Objectives:
+By the end of the course, you should be able to meet the following objectives:
+- Describe the architecture and main components of NSX
+- Explain the features and benefits of NSX
+- Deploy the NSX Management cluster and VMware NSX® Edge™ nodes
+- Prepare VMware ESXi™ hosts to participate in NSX networking
+- Create and configure segments for layer 2 forwarding
+- Create and configure Tier-0 and Tier-1 gateways for logical routing
+- Use distributed and gateway firewall policies to filter east-west and north-south traffic in NSX
+- Configure Advanced Threat Prevention features
+- Configure network services on NSX Edge nodes
+- Use VMware Identity Manager™ and LDAP to manage users and access
+- Explain the use cases, importance, and architecture of Federation
+''',
+      outline: {
+  'Lesson 1: Course Introduction': [
+    'Introduction and course logistics',
+    'Course objectives',
+  ],
+  'Lesson 2: VMware Virtual Cloud Network and VMware NSX': [
+    'Introduce the VMware Virtual Cloud Network vision',
+    'Describe the NSX product portfolio',
+    'Discuss NSX features, use cases, and benefits',
+    'Explain NSX architecture and components',
+    'Explain the management, control, data, and consumption planes and their functions',
+  ],
+  'Lesson 3: Preparing the NSX Infrastructure': [
+    'Deploy VMware NSX® Manager™ nodes on ESXi hypervisors',
+    'Navigate through the NSX UI',
+    'Explain data plane components such as N-VDS/VDS, transport nodes, transport zones, profiles, and more',
+    'Perform transport node preparation, and configure the data plane infrastructure',
+    'Verify transport node status and connectivity',
+    'Explain DPU-based acceleration in NSX',
+    'Install NSX using DPUs',
+  ],
+  'Lesson 4: NSX Logical Switching': [
+    'Introduce key components and terminology in logical switching',
+    'Describe the function and types of L2 segments',
+    'Explain tunneling and the Geneve encapsulation',
+    'Configure logical segments and attach hosts using NSX UI',
+    'Describe the function and types of segment profiles',
+    'Create segment profiles and apply them to segments and ports',
+    'Explain the function of MAC, ARP, and TEP tables used in packet forwarding',
+    'Demonstrate L2 unicast packet flow',
+    'Explain ARP suppression and BUM traffic handling',
+  ],
+  'Lesson 5: NSX Bridging': [
+    'Describe the function of logical bridging',
+    'Discuss logical bridging use cases',
+    'Compare routing and bridging solutions',
+    'Explain the components of logical bridging',
+    'Create bridge clusters and bridge profiles',
+  ],
+  'Lesson 6: NSX Firewalls': [
+    'Describe NSX segmentation',
+    'Identify the steps to enforce zero trust with NSX segmentation',
+    'Describe Distributed Firewall architecture, components, and function',
+    'Configure Distributed Firewall sections and rules',
+    'Configure the Distributed Firewall on VDS',
+    'Describe Gateway Firewall architecture, components, and function',
+    'Configure Gateway Firewall sections and rules',
+  ],
+  'Lesson 7: NSX Advanced Threat Prevention': [
+    'Explain NSX IDS/IPS and its use cases',
+    'Configure NSX IDS/IPS',
+    'Deploy NSX Application Platform',
+    'Identify the components and architecture of NSX Malware Prevention',
+    'Configure NSX Malware Prevention for east-west and northsouth traffic',
+    'Describe the use cases and architecture of VMware NSX® Intelligence™',
+    'Identify the components and architecture of VMware NSX® Network Detection and Response™',
+    'Use NSX Network Detection and Response to analyze network traffic events',
+  ],
+  'Lesson 8: NSX Services': [
+    'Explain and configure Network Address Translation (NAT)',
+    'Explain and configure DNS and DHCP services',
+    'Describe VMware NSX® Advanced Load Balancer™ architecture, components, topologies, and use cases.',
+    'Configure NSX Advanced Load Balancer',
+    'Discuss the IPSec VPN and L2 VPN function and use cases',
+    'Configure IPSec VPN and L2 VPN using the NSX UI',
+  ],
+  'Lesson 9: NSX User and Role Management': [
+    'Describe the function and benefits of VMware Identity Manager™ in NSX',
+    'Integrate VMware Identity Manager with NSX',
+    'Integrate LDAP with NSX',
+    'Identify the various types of users, authentication policies, and permissions',
+    'Use role-based access control to restrict user access',
+    'Explain object-based access control in NSX',
+  ],
+  'Lesson 10: NSX Federation': [
+    'Introduce NSX Federation key concepts, terminology, and use cases.',
+    'Explain the onboarding process of NSX Federation',
+    'Describe NSX Federation switching and routing functions',
+    'Describe NSX Federation security concepts',
+  ],
+},
+      prerequisites: [
+'''Before taking this course, you must complete the following course:
+• Good understanding of TCP/IP services and protocols
+• Knowledge and working experience of computer networking, including switching and routing technologies, and L2-L3 and L2-L7 firewalls
+• Knowledge and working experience with VMware vSphere® environments
+• Knowledge and working experience with Kubernetes or vSphere with VMware Tanzu™ environments
+• Solid understanding of concepts presented in the following courses:
+  - VMware Virtual Cloud Network: Core Technical Skills
+  - VMware Data Center Virtualization: Core Technical Skills
+  - Kubernetes Fundamentals
+'''],
+      whoShouldAttend: 'Experienced security administrators or network administrators',
+      importantNotes: 'Attended at least 75% of the course and Declared as competent during the assessments',
     ),
     Course(
-      id: '5665',
-      courseCode: 'CCN665',
+      id: '29',
+      courseCode: 'TGS-2023035647',
       title: 'Cisco Certified Network Associate (CCNA) (SF) (Synchronous e-learning)',
-      category: 'Networking',
+      category: 'Cat A',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
@@ -1422,94 +1547,97 @@ static List<Course> sampleCourses = [
       deliveryMethods: ['OLL'],
       startDate: 'March 17, 2025',
       nextAvailableDate: 'March 17, 2025',
-      description: 'This 5-day course focuses on installing, operating, configuring, and verifying a basic IPv4 and IPv6 network. It includes configuring a LAN switch, an IP router, connecting to a WAN, and identifying basic security threats. The course also covers the skills and knowledge necessary to install, operate, and troubleshoot a small to medium-sized branch office Enterprise network. This accelerated format serves as an alternative to completing ICND1 and ICND2.',
+      description: '''
+This 5-day course focuses on installing, operating, configuring, and verifying a basic IPv4 and IPv6 network. It includes configuring a LAN switch, an IP router, connecting to a WAN, and identifying basic security threats. The course also covers the skills and knowledge necessary to install, operate, and troubleshoot a small to medium-sized branch office Enterprise network. This accelerated format serves as an alternative to completing ICND1 and ICND2.
+
+CCNA Exam Fee: \$550 (excl GST)''',
       outline: {
-        'Lesson 1: Network Fundamentals': [
-          'Explain the role and function of network components',
-          'Describe characteristics of network topology architectures',
-          'Compare physical interface and cabling types',
-          'Identify interface and cable issues',
-          'Compare TCP to UDP',
-          'Configure and verify IPv4 addressing and subnetting',
-          'Describe private IPv4 addressing',
-          'Configure and verify IPv6 addressing and prefix',
-          'Describe IPv6 address types',
-          'Verify IP parameters for Client OS',
-          'Describe wireless principles',
-          'Explain virtualization fundamentals',
-          'Describe switching concepts',
-        ],
-        'Lesson 2: Network Access': [
-          'Configure and verify VLANs spanning multiple switches',
-          'Configure and verify interswitch connectivity',
-          'Configure and verify Layer 2 discovery protocols',
-          'Configure and verify EtherChannel',
-          'Interpret basic operations of Rapid PVST+ Spanning Tree Protocol',
-          'Describe Cisco Wireless Architectures and AP modes',
-          'Describe physical infrastructure connections of WLAN components',
-          'Describe network device management access',
-          'Interpret the wireless LAN GUI configuration for client connectivity',
-        ],
-        'Lesson 3: IP Connectivity': [
-          'Interpret the components of routing table',
-          'Determine how a router makes a forwarding decision by default',
-          'Configure and verify IPv4 and IPv6 static routing',
-          'Configure and verify single area OSPFv2',
-          'Describe the purpose, functions, and concepts of first hop redundancy protocols',
-        ],
-        'Lesson 4: IP Services': [
-          'Configure and verify inside source NAT using static and pools',
-          'Configure and verify NTP operating in a client and server mode',
-          'Explain the role of DHCP and DNS within the network',
-          'Explain the function of SNMP in network operations',
-          'Describe the use of syslog features including facilities and levels',
-          'Configure and verify DHCP client and relay',
-          'Explain the forwarding per-hop behavior (PHB) for QoS',
-          'Configure network devices for remote access using SSH',
-          'Describe the capabilities and functions of TFTP/FTP in the network',
-        ],
-        'Lesson 5: Security Fundamentals': [
-          'Define key security concepts',
-          'Describe security program elements',
-          'Configure and verify device access control using local passwords',
-          'Describe security password policies elements',
-          'Describe IPsec remote access and site-to-site VPNs',
-          'Configure and verify access control lists',
-          'Configure and verify Layer 2 security features',
-          'Compare authentication, authorization, and accounting concepts',
-          'Describe wireless security protocols',
-          'Configure and verify WLAN within the GUI using WPA2 PSK',
-        ],
-        'Lesson 6: Introducing IPv6': [
-          'Explain how automation impacts network management',
-          'Compare traditional networks with controller-based networking',
-          'Describe controller-based, software defined architecture',
-          'Explain AI and machine learning in network operations',
-          'Describe characteristics of REST-based APIs',
-          'Recognize the capabilities of configuration management mechanisms',
-          'Recognize components of JSON-encoded data',
-        ],
-      },
+  'Lesson 1: Network Fundamentals': [
+    'Explain the role and function of network components',
+    'Describe characteristics of network topology architectures',
+    'Compare physical interface and cabling types',
+    'Identify interface and cable issues (collisions, errors, mismatch duplex, and/or speed)',
+    'Compare TCP to UDP',
+    'Configure and verify IPv4 addressing and subnetting',
+    'Describe private IPv4 addressing',
+    'Configure and verify IPv6 addressing and prefix',
+    'Describe IPv6 address types',
+    'Verify IP parameters for Client OS (Windows, Mac OS, Linux)',
+    'Describe wireless principles',
+    'Explain virtualization fundamentals (server virtualization, containers, and VRFs)',
+    'Describe switching concepts'
+  ],
+  'Lesson 2: Network Access': [
+    'Configure and verify VLANs (normal range) spanning multiple switches',
+    'Configure and verify interswitch connectivity',
+    'Configure and verify Layer 2 discovery protocols (Cisco Discovery Protocol and LLDP)',
+    'Configure and verify (Layer 2/Layer 3) EtherChannel (LACP)',
+    'Interpret basic operations of Rapid PVST+ Spanning Tree Protocol',
+    'Describe Cisco Wireless Architectures and AP modes',
+    'Describe physical infrastructure connections of WLAN components (AP, WLC, access/trunk ports, and LAG)',
+    'Describe network device management access (Telnet, SSH, HTTP, HTTPS, console, TACACS+/RADIUS, and cloud managed)',
+    'Interpret the wireless LAN GUI configuration for client connectivity, such as WLAN creation, security settings, QoS profiles, and advanced settings'
+  ],
+  'Lesson 3: IP Connectivity': [
+    'Interpret the components of routing table',
+    'Determine how a router makes a forwarding decision by default',
+    'Configure and verify IPv4 and IPv6 static routing',
+    'Configure and verify single area OSPFv2',
+    'Describe the purpose, functions, and concepts of first hop redundancy protocols'
+  ],
+  'Lesson 4: IP Services': [
+    'Configure and verify inside source NAT using static and pools',
+    'Configure and verify NTP operating in a client and server mode',
+    'Explain the role of DHCP and DNS within the network',
+    'Explain the function of SNMP in network operations',
+    'Describe the use of syslog features including facilities and levels',
+    'Configure and verify DHCP client and relay',
+    'Explain the forwarding per-hop behavior (PHB) for QoS, such as classification, marking, queuing, congestion, policing, and shaping',
+    'Configure network devices for remote access using SSH',
+    'Describe the capabilities and functions of TFTP/FTP in the network'
+  ],
+  'Lesson 5: Security Fundamentals': [
+    'Define key security concepts (threats, vulnerabilities, exploits, and mitigation techniques)',
+    'Describe security program elements (user awareness, training, and physical access control)',
+    'Configure and verify device access control using local passwords',
+    'Describe security password policies elements, such as management, complexity, and password alternatives (multifactor authentication, certificates, and biometrics)',
+    'Describe IPsec remote access and site-to-site VPNs',
+    'Configure and verify access control lists',
+    'Configure and verify Layer 2 security features (DHCP snooping, dynamic ARP inspection, and port security)',
+    'Compare authentication, authorization, and accounting concepts',
+    'Describe wireless security protocols (WPA, WPA2, and WPA3)',
+    'Configure and verify WLAN within the GUI using WPA2 PSK'
+  ],
+  'Lesson 6: Introducing IPv6': [
+    'Explain how automation impacts network management',
+    'Compare traditional networks with controller-based networking',
+    'Describe controller-based, software defined architecture (overlay, underlay, and fabric)',
+    'Explain AI (generative and predictive) and machine learning in network operations',
+    'Describe characteristics of REST-based APIs (authentication types, CRUD, HTTP verbs, and data encoding)',
+    'Recognize the capabilities of configuration management mechanisms, such as Ansible and Terraform',
+    'Recognize components of JSON-encoded data'
+  ]
+},
       prerequisites: [
         'Basic computer literacy',
         'Basic PC operating system navigation skills',
         'Basic Internet usage skills',
         'Basic IP address knowledge',
-        'Some existing networking experience recommended',
+        'Good understanding of network fundamentals',
       ],
-      whoShouldAttend: 'Network support engineers, network administrators, pre-sales and post-sales network engineers, entry-level network engineers, help desk technicians, and individuals whose positions require the CCNA certification.',
-      importantNotes: 'Must attend at least 75% of the course before being eligible to take the assessments. The course completion requirements include attendance of at least 75% and being declared as competent during the assessments: Written Assessment, Practical Performance. CCNA Exam Fee: \$550 (excl GST) is not included in the course fee.',
+      whoShouldAttend: 'This course will significantly benefit towards network specialists, network administrators, and network engineers. This course is also recommended for individuals whose their network support engineer positions would require the CCNA certification.',
+      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: {
-        'Full Course Fee': {'Price': '\$3,200.00'},
-        'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$1,600.00', 'Company Sponsored (Non-SME)': '\$1,600.00', 'Company Sponsored (SME)': '\$1,100.00'},
-        'SG Citizens age 40 years old and above': {'Individual': '\$1,100.00', 'Company Sponsored (Non-SME)': '\$1,100.00', 'Company Sponsored (SME)': '\$1,100.00'},
-      },
+      'Full Course Fee': {'Price': '\$2,561.50'},
+      'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$768.45', 'Company Sponsored (Non-SME)': '\$768.45', 'Company Sponsored (SME)': '\$298.45'},
+      'SG Citizens age 40 years old and above': {'Individual': '\$298.45', 'Company Sponsored (Non-SME)': '\$298.45', 'Company Sponsored (SME)': '\$298.45'},
+    },
     ),
     Course(
-      id: '5284',
-      courseCode: 'CNE284',
+      id: '30',
+      courseCode: 'TGS-2023036612',
       title: 'CompTIA Network+ (SF) (Synchronous e-learning)',
-      category: 'Networking',
+      category: 'Cat B',
       certType: 'COMPTIA',
       rating: 4.7,
       duration: '5 Days',
@@ -1518,18 +1646,113 @@ static List<Course> sampleCourses = [
       deliveryMethods: ['OLL'],
       startDate: 'July 07, 2025',
       nextAvailableDate: 'July 07, 2025',
-      description: 'In this 5-day course, participants will equip with knowledge and understanding of networking concepts and acquire skills to prepare for a career in network support or administration. Course Outline',
-      outline: null,
-      prerequisites: null,
-      whoShouldAttend: null,
-      importantNotes: null,
-      feeStructure: null,
+      description: 'In this 5-day course, participants will equip with knowledge and understanding of networking concepts and acquire skills to prepare for a career in network support or administration.',
+      outline: {
+  'Lesson 1: Introduction to Cloud Computing': [
+    'Network Types',
+    'Network Standards and the OSI Model',
+    'Data Transmission Methods'
+  ],
+  'Lesson 2: Bounded Network Media': [
+    'Copper Media',
+    'Fiber Optic Media',
+    'Bounded Network Media Installation'
+  ],
+  'Lesson 3: Unbounded Network Media': [
+    'Wireless Networking',
+    'Wireless Network Devices and Components',
+    'Implement Wireless Technology',
+    'Internet of Things'
+  ],
+  'Lesson 4: Network Implementations': [
+    'Physical Network Topologies',
+    'Logical Network Topologies',
+    'Ethernet Networks',
+    'Network Devices'
+  ],
+  'Lesson 5: TCP/IP Addressing and Data Delivery': [
+    'The TCP/IP Protocol Suite',
+    'IPv4 Addressing',
+    'Default IP Addressing Schemes',
+    'Create Custom IP Addressing Schemes',
+    'IPv6 Addressing'
+  ],
+  'Lesson 6: Routing and Switching': [
+    'Switching',
+    'Network Packet Routing',
+    'Static and Dynamic IP Routing',
+    'VLANs'
+  ],
+  'Lesson 7: TCP/IP Implementation': [
+    'Configure IP Addresses',
+    'Naming Services',
+    'TCP/IP Utilities',
+    'Common TCP/IP Protocols'
+  ],
+  'Lesson 8: Network Security Analysis': [
+    'Introduction to Network Security',
+    'Network Security Policies',
+    'Physical Security',
+    'Common Network Attacks'
+  ],
+  'Lesson 9: Network Security Implementation': [
+    'Authentication',
+    'Access Control',
+    'Port, Service, and Protocol Security',
+    'Wireless Network Security',
+    'Patches and Updates',
+    'Mitigation Techniques'
+  ],
+  'Lesson 10: WAN Infrastructure': [
+    'WAN Basics',
+    'WAN Connectivity Methods',
+    'WAN Transmission Technologies',
+    'VoIP'
+  ],
+  'Lesson 11: Cloud and Virtualization Techniques': [
+    'Virtualization Technologies',
+    'Network Storage Technologies',
+    'Cloud Computing'
+  ],
+  'Lesson 12: Remote Networking': [
+    'Remote Network Architectures',
+    'Remote Access Network Implementations',
+    'Virtual Private Networking'
+  ],
+  'Lesson 13: Network Management': [
+    'Monitor Networks',
+    'Document the Network',
+    'Establish Baselines',
+    'Optimize Network Performance',
+    'Ensure Business Continuity'
+  ],
+  'Lesson 14: Troubleshooting Network Issues': [
+    'Network Troubleshooting Methodology',
+    'Network Troubleshooting Tools',
+    'Troubleshoot Wired Connectivity and Performance Issues',
+    'Troubleshoot Wireless Connectivity and Performance Issues',
+    'Troubleshoot Network Service Issues'
+  ]
+},
+      prerequisites: [
+        'Age: Minimum 18 years old',
+        'Minimum: GCE ‘O’ Levels',
+        'Language: Workplace Literacy and Numeracy Level 5 (WPLN: Speaking, Writing, Listening, Reading, and Numeracy at ESS Level 5 or equivalent to Upper Secondary Level of English and Mathematics).',
+        'Some of prior experience and knowledge in: Microsoft Windows 10 or Windows 11',
+      ],
+      whoShouldAttend: 'This course is for those who want to pursue a career as Solution Architect, Tier II IT Support Technician, IT Support Manager, Network Administrator, Server Administrator, Business Analyst, Systems Engineer, and Network Engineer.',
+      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
+      feeStructure: {
+    'Full Course Fee': {'Price': '\$2,725.00'},
+    'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$1,475.00', 'Company Sponsored (Non-SME)': '\$1,475.00', 'Company Sponsored (SME)': '\$975.00'},
+    'SG Citizens age 40 years old and above': {'Individual': '\$975.00', 'Company Sponsored (Non-SME)': '\$975.00', 'Company Sponsored (SME)': '\$975.00'},
+  },
     ),
     Course(
-      id: '5278',
-      courseCode: 'CTS278',
+      id: '31',
+      courseCode: 'TGS-2023021370',
       title: 'Cloud Technology Solutions Architect Associate (SF) (Synchronous e-learning)',
-      category: 'Cloud Computing',
+      category: 'Cat A',
       certType: null,
       rating: 4.7,
       duration: '5 Days',
@@ -1538,18 +1761,136 @@ static List<Course> sampleCourses = [
       deliveryMethods: ['OLL'],
       startDate: 'May 19, 2025',
       nextAvailableDate: 'May 19, 2025',
-      description: 'This hands-on course on AWS focuses on advanced architecture and design patterns used in AWS infrastructure. AWS provides cloud computing services that enable businesses to build sophisticated and scalable applications. Therefore, knowledge of these services and learning how to work with them in the cloud is crucial for businesses and professionals who are or will ...',
-      outline: null,
-      prerequisites: null,
-      whoShouldAttend: null,
-      importantNotes: null,
-      feeStructure: null,
+      description: 
+''' This hands-on course on AWS focuses on advanced architecture and design patterns used in AWS infrastructure. AWS provides cloud computing services that enable businesses to build sophisticated and scalable applications. Therefore, knowledge of these services and learning how to work with them in the cloud is crucial for businesses and professionals who are or will be working in the cloud.
+
+Upon completion of the course, learners will be able to:
+
+  - Explain the fundamentals of Amazon Web Services
+  - Define storage components in cloud
+  - Deliver compute components in cloud
+  - Design database components in cloud
+  - Evaluate network components in cloud
+  - Secure cloud infrastructure
+  - Troubleshoot and monitor in cloud''',
+      outline: {
+  'Lesson 1: Fundamentals of Amazon Web Services': [
+    'Regions',
+    'Availability Zones and Data Centers',
+    'AWS Credentials',
+    'Review of All AWS Services'
+  ],
+  'Lesson 2: Amazon Simple Storage Service (S3)': [
+    'Fundamental APIs: PUT, GET, LIST, DELETE',
+    "Consistency Model o Types of Consistency Models for Distributed Storage o S3's Consistency Model o Understanding Eventual Consistency",
+    'S3 Namespace',
+    'Access Control List',
+    'Bucket Policy',
+    'Pre-signed URL',
+    'Multipart Upload',
+    'Understanding Pricing for S3',
+    'Data encryption with S3',
+    'Multipart upload',
+    'Understanding Pricing for S3',
+    'AWS Import/Export Service',
+    'Server-Side logging',
+    'Versioning of data in S3',
+    'Architecture Case Study of Common Use Cases for S3'
+  ],
+  'Lesson 3: Amazon Elastic Compute Cloud': [
+    'EC2 Architecture',
+    'EC2 Instance Types',
+    'Data Persistence Models',
+    'Amazon Elastic Block Store (EBS)',
+    'Amazon Machine Image (AMI)',
+    'EC2 Security Model',
+    'Instance Addressing',
+    'Generating Custom AMIs',
+    'Working with EC2 Console',
+    'Monitoring Instances with Amazon CloudWatch',
+    'Amazon Elastic IP'
+  ],
+  'Lesson 4: CloudWatch': [
+    'Architecture of CloudWatch',
+    'APIs and Use Cases',
+    'Canned Metrics',
+    'Custom Metrics'
+  ],
+  'Lesson 5: Amazon Relational Database Services (RDS)': [
+    'Core advantages of EBS',
+    'Starting an EBS database instance',
+    'Starting a read replica of the database',
+    'High fault tolerance with Multi-AZ deployment'
+  ],
+  'Lesson 6: Elastic Load Balancing (ELB)': [
+    'Fundamentals of a Load Balancer',
+    'Starting a Load Balancer Instance',
+    'Sticky Sessions',
+    'SSL Termination on ELB'
+  ],
+  'Lesson 7: Auto Scaling': [
+    'Understanding Auto-Scaling',
+    'Auto-Scaling Fundamentals',
+    'Setting Up Auto-Scaling Rules'
+  ],
+  'Lesson 8: Virtual Private Cloud (VPC)': [
+    'Deep Dive into AWS Networking Infrastructure',
+    'VPC Networking Fundamentals',
+    'Private and Public Subnets',
+    'Elastic Network Interface (ENI)',
+    'Routing Inside VPC',
+    'VPN Tunnels to VPC'
+  ],
+  'Lesson 9: Identity and Access Management (IAM)': [
+    'Understanding IAM',
+    'Groups and Users',
+    'Application Roles in IAM',
+    'Access Policies',
+    'Federated Authentication in IAM'
+  ],
+  'Lesson 10: Route 53': [
+    'Deep Dive into DNS Architecture',
+    'Using Route 53 for Your Domain Name',
+    'Creating Name Server Entries',
+    'Setting Up Health Checks',
+    'Configuring for Multi-Location Applications',
+    'Master-Slave Configuration o Master-Master Configuration o Weighted Round Robin o Geo-Location Aware Routing'
+  ],
+  'Lesson 11: AWS CloudFormation and Tools': [
+    'Understanding CloudFormation Template Subsections',
+    'Generating Templates for Our Infrastructure',
+    'Deploying Using CloudFormation'
+  ],
+  'Lesson 12: Amazon CloudFront': [
+    'CDN Fundamentals',
+    'Using CloudFront for Public Data',
+    'Using CloudFront for Access-Controlled Data'
+  ],
+  'Lesson 13: Amazon DynamoDB': [
+    'What is DynamoDB?',
+    'DynamoDB Supported Platforms',
+    'DynamoDB Concepts',
+    'Types of Indexing'
+  ]
+},
+      prerequisites: [
+        'Some IT Industry work experience or a degree in the IT field',
+        'Some experience with Linux system administration advisable but not required',
+        'Basic understanding of databases',
+      ],
+      whoShouldAttend: 'IT Professionals who want to learn to manage existing AWS infrastructure and to identify performance bottlenecks and IT Professionals who want to clear the AWS Certification exam.',
+      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
+      feeStructure: {
+  'Full Course Fee': {'Price': '\$3,542.50'},
+  'SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above': {'Individual': '\$1,062.75', 'Company Sponsored (Non-SME)': '\$1,062.75', 'Company Sponsored (SME)': '\$412.75'},
+  'SG Citizens age 40 years old and above': {'Individual': '\$412.75', 'Company Sponsored (Non-SME)': '\$412.75', 'Company Sponsored (SME)': '\$412.75'},
+},
     ),
     Course(
-      id: '5285',
-      courseCode: 'CSE285',
+      id: '32',
+      courseCode: 'TGS-2023036611',
       title: 'CompTIA Security+ (SF) (Synchronous e-learning)',
-      category: 'Cybersecurity',
+      category: 'Cat B',
       certType: 'COMPTIA',
       rating: 4.7,
       duration: '5 Days',
