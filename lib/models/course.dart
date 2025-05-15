@@ -5714,42 +5714,118 @@ This course is for Azure Administrators. The Azure Administrator implements, man
       id: '60',
       courseCode: 'AZ-040',
       title: 'AZ-040 Automating Administration with PowerShell',
-      category: 'IT Training',
+      category: 'Networking Infrastructure & Architecture',
       certType: null,
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,815.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['OLL'],
       startDate: 'April 07, 2025',
       nextAvailableDate: 'April 07, 2025',
-      description: 'This course provides students with the fundamental knowledge and skills to use PowerShell for administering and automating administration of Windows servers. This course provides students the skills to identify and build the command they require to perform a specific task. In addition, students learn how to build scripts to accomplish advanced tasks such as automating ...',
-      outline: null,
+      description: 'This course provides students with the fundamental knowledge and skills to use PowerShell for administering and automating administration of Windows servers. This course provides students the skills to identify and build the command they require to perform a specific task. In addition, students learn how to build scripts to accomplish advanced tasks such as automating repetitive tasks and generating reports. This course provides prerequisite skills supporting a broad range of Microsoft products, including Windows Server, Windows Client, Microsoft Azure, and Microsoft 365. In keeping with that goal, this course will not focus on any one of those products, although Windows Server, which is the common platform for all of those products, will serve as the example for the techniques this course teaches.',
+      outline: {
+  'Lesson 1: Getting started with Windows PowerShell': [
+    'Windows PowerShell overview',
+    'Understand Windows PowerShell command syntax',
+    'Find commands and get help in Windows PowerShell',
+    'Lab: Configuring Windows PowerShell, and finding and running commands'
+  ],
+  'Lesson 2: Windows PowerShell for local systems administration': [
+    'Active Directory Domain Services administration cmdlets',
+    'Network configuration cmdlets',
+    'Server administration cmdlets',
+    'Windows PowerShell in Windows 10',
+    'Lab: Performing local system administration with PowerShell'
+  ],
+  'Lesson 3: Working with the Windows PowerShell pipeline': [
+    'Understand the pipeline',
+    'Select, sort, and measure objects',
+    'Filter objects out of the pipeline',
+    'Enumerate objects in the pipeline',
+    'Send and pass pipeline data as output',
+    'Lab: Using PowerShell pipeline'
+  ],
+  'Lesson 4: Using PSProviders and PSDrives': [
+    'Using PSProviders',
+    'Using PSDrives',
+    'Lab: Using PSProviders and PSDrives with PowerShell'
+  ],
+  'Lesson 5: Querying management information by using CIM and WMI': [
+    'Understand CIM and WMI',
+    'Query data by using CIM and WMI',
+    'Make changes by using CIM and WMI',
+    'Lab: Querying information by using WMI and CIM'
+  ],
+  'Lesson 6: Working with variables, arrays, and hash tables': [
+    'Use variables',
+    'Manipulate variables',
+    'Manipulate arrays and hash tables',
+    'Lab: Using variables, arrays, and hash tables in PowerShell'
+  ],
+  'Lesson 7: Windows PowerShell scripting': [
+    'Introduction to scripting with Windows PowerShell',
+    'Script constructs',
+    'Import data from files',
+    'Accept user input',
+    'Troubleshooting and error handling',
+    'Functions and modules',
+    'Lab: Using scripts with PowerShell'
+  ],
+  'Lesson 8: Administering remote computers with Windows PowerShell': [
+    'Use basic Windows PowerShell remoting',
+    'Use advanced Windows PowerShell remoting techniques',
+    'Use PSSessions',
+    'Lab: Performing remote administration with PowerShell'
+  ],
+  'Lesson 9: Managing Azure resources with PowerShell': [
+    'Azure PowerShell',
+    'Introduce Azure Cloud Shell',
+    'Manage Azure VMs with PowerShell',
+    'Manage storage and subscriptions',
+    'Lab: Azure resource management with PowerShell'
+  ],
+  'Lesson 10: Managing Microsoft 365 services with PowerShell': [
+    'Manage Microsoft 365 user accounts, licenses, and groups with PowerShell',
+    'Manage Exchanges Online with PowerShell',
+    'Manage SharePoint Online with PowerShell',
+    'Manage Microsoft Teams with PowerShell',
+    'Lab: Managing Microsoft 365 with PowerShell'
+  ],
+  'Lesson 11: Using background jobs and scheduled jobs': [
+    'Use background jobs',
+    'Use scheduled jobs',
+    'Lab: Jobs management with PowerShell'
+  ],
+},
       prerequisites: [
-        'Learners should be familiar working in Microsoft 365 apps like Word, Excel, and PowerPoint. This course is intended for all types of users working with Microsoft 365 Copilot.',
+        'Experience with Windows networking technologies and implementation.',
+        'Experience with Windows Server administration, maintenance, and troubleshooting.',
       ],
-      whoShouldAttend: 'Learners should be familiar working in Microsoft 365 apps like Word, Excel, and PowerPoint. This course is intended for all types of users working with Microsoft 365 Copilot.',
+      whoShouldAttend: 'Someone who experience with Windows networking technologies and implementation and experience with Windows Server administration, maintenance, and troubleshooting.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '61',
-      courseCode: 'MMC395',
+      courseCode: 'MS-4007',
       title: 'MS-4007 Microsoft 365 Copilot User Enablement Specialist',
-      category: 'Office Productivity',
+      category: 'Business Operations',
       certType: 'Microsoft',
       rating: 4.7,
       duration: '1 Day',
       price: '\$Contact Us',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'Learn the knowledge and skills to drive enablement of Microsoft 365 Copilot across your organization. Explore effective strategies, including the Microsoft 365 Copilot user enablement framework to help you create and implement a robust adoption plan. Course Outline',
+      description: 'Learn the knowledge and skills to drive enablement of Microsoft 365 Copilot across your organization. Explore effective strategies, including the Microsoft 365 Copilot user enablement framework to help you create and implement a robust adoption plan.',
       outline: null,
-      prerequisites: null,
-      whoShouldAttend: null,
-      importantNotes: null,
+      prerequisites: [
+        'This course is designed for user enablement specialists, business leaders, managers, IT professionals, consultants, or anyone involved in the adoption of Microsoft Copilot 365 within their organization.',
+      ],
+      whoShouldAttend: 'This course is designed for user enablement specialists, business leaders, managers, IT professionals, consultants, or anyone involved in the adoption of Microsoft Copilot 365 within their organization.',
+      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
