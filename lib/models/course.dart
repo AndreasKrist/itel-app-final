@@ -8455,193 +8455,786 @@ This course covers MOS Program exam objectives to help you prepare for the Excel
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
       description: 'This course teaches learners how to set up, use, and support the features of Dynamics 365 Commerce. It also prepares them to assist with the application’s functionality. Microsoft Dynamics 365 Commerce is a cloud-based platform for retailers to better connect with customers and enhance their experience. This test covers various aspects of Dynamics 365 Commerce, including setting up headquarters, managing call centres, POS systems, and e-commerce operations.',
-      outline: null,
+      outline: {
+  'Lesson 1: Configure prerequisites and commerce parameters': [
+    'Create employee and customer address books',
+    'Configure and manage retail workers',
+    'Assign address books to customers, channels, and workers',
+    'Create email templates and email notification profiles',
+    'Configure organizational hierarchies and hierarchy purposes',
+    'Configure Commerce shared parameters',
+    'Configure company-specific Commerce parameters',
+    'Describe and configure additional functionality',
+    'Create and configure channel and sales order attributes',
+    'Configure commissions and sales representatives',
+    'Configure payment methods and card types',
+    'Configure and manage gift cards',
+    'Describe Omni-channel capabilities including payments, orders, and returns',
+    'Configure data distribution',
+    'Create info codes, sub-codes, and info code groups',
+    'Describe Dynamics 365 Fraud Protection purchase protection, loss prevention, and account protection',
+    'Manage statements',
+    'Describe advantages of using trickle feed-based posting',
+    'Validate retail transactions by using the transaction consistency checker',
+    'Configure and manage retail statement calculations and posting',
+    'Troubleshoot statement posting issues',
+    'Configure Distributed Order Management (DOM)',
+    'Configure fulfillment profiles',
+    'Configure cost components including shipping, handling, and packaging costs',
+    'Configure management rules and parameters',
+    'Monitor fulfillment plans and order exceptions',
+    'Configure order fulfillment',
+    'Configure modes of delivery including shipments, pick up, and carry out',
+    'Configure curbside customer order pickup',
+    'Configure charge codes, charge groups, and automatic charges',
+    'Configure and assign order fulfillment groups',
+  ],
+  'Lesson 2: Configure products, prices, discounts, loyalty, and affiliations': [
+    'Configure products and merchandising',
+    'Configure product category hierarchies',
+    'Configure product attributes and attribute groups',
+    'Configure assortments and product catalogs',
+    'Manage product labels and shelf labels',
+    'Describe uses cases for recommendation types including product, personalized, Shop Similar looks, and Shop similar descriptions recommendations',
+    'Configure recommendations',
+    'Configure warranty settings',
+    'Configure inventory buffers and inventory levels',
+    'Configure products and variants including configuring barcodes',
+    'Manage pricing',
+    'Design and create price groups',
+    'Configure pricing priorities',
+    'Configure product pricing including smart rounding',
+    'Configure catalog pricing',
+    'Configure affiliation pricing',
+    'Configure category pricing rules',
+    'Manage discounts and promotions',
+    'Configure discount parameters',
+    'Configure channel or customer-specific discounts',
+    'Configure quantity, shipping, tender-based, and threshold-based discounts',
+    'Configure discount concurrency rules',
+    'Manage coupons',
+    'Manage customers, loyalty, and affiliations',
+    'Configure client books',
+    'Configure customer attributes',
+    'Configure customer affiliations',
+    'Configure loyalty programs, loyalty schemes, and reward points',
+    'Manage loyalty tier calculations and processing',
+  ],
+  'Lesson 3: Manage Point of Sale (POS) in Dynamics 365 Commerce': [
+    'Configure retail stores',
+    'Create a retail store',
+    'Configure POS registers and devices',
+    'Configure retail profiles',
+    'Configure sales tax overrides',
+    'Configure Task Management lists and parameters',
+    'Define cash management processes',
+    'Define shifts and shift management processes',
+    'Configure channel return policies',
+    'Describe offline capabilities and limitations',
+    'Manage store inventory',
+    'Configure availability calculations for products',
+    'Manage inbound and outbound inventory operations',
+    'Process customer pick-up and shipment orders',
+    'Manage inventory processes including stock counts',
+    'Look up product inventory',
+    'Process serialized items',
+    'Perform POS operations',
+    'Perform sales and order processes',
+    'Perform end of day processes',
+    'Reconcile store cash',
+    'Monitor store productivity by using task management and reporting features',
+  ],
+  'Lesson 4: Configure and Manage Dynamics 365 Commerce call centers': [
+    'Configure call centers',
+    'Create a call center',
+    'Configure and publish product catalogs',
+    'Create product catalog scripts',
+    'Configure fraud conditions, rules, and variables to trigger order holds',
+    'Configure fraud alerts',
+    'Configure continuity orders and installment billing',
+    'Set up continuity programs and parameters',
+    'Configure continuity order batch jobs',
+    'Manage continuity child orders',
+    'Manage call centers',
+    'Create, modify, and process sales orders',
+    'Process call center payments',
+    'Manage order holds',
+    'Create return merchandise authorizations (RMAs)',
+    'Process returns, exchanges, and replacements',
+  ],
+  'Lesson 5: Manage e-commerce': [
+    'Configure an e-commerce channel',
+    'Create an online store',
+    'Configure an e-commerce site',
+    'Configure channel assignments for an e-commerce site',
+    'Configure ratings and reviews',
+    'Manage e-commerce content',
+    'Configure URLs and aliases',
+    'Configure product detail pages and category pages',
+    'Manage site themes, page fragments, templates, layouts, and pages',
+    'Upload and manage digital assets including videos and images',
+    'Set focal points and attribute values for media assets',
+    'Configure publish groups',
+    'Operate an e-commerce channel',
+    'Create e-commerce orders',
+    'Synchronize e-commerce orders',
+    'Moderate ratings and reviews',
+    'Configure business-to-business (B2B) e-commerce',
+    'Describe differences between B2B and business-to-consumer (B2C) solutions',
+    'Describe use cases for organizational modeling hierarchies',
+    'Manage business partners and business partner users',
+    'Configure product quantity limits',
+  ],
+},
       prerequisites: [
-        '',
+        'To be Updated',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+- Functional consultants for Dynamics 365 Commerce
+- Developers of Dynamics 365 who want to learn more about Commerce
+- IT professionals looking to deepen their understanding of Dynamics 365 Commerce
+- Technical consultants working with Dynamics 365 Commerce features
+- Anyone interested in improving their skills in configuring, managing, and handling e-commerce operations with Dynamics 365 Commerce
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '88',
-      courseCode: 'MSH553',
+      courseCode: 'MS-050',
       title: 'MS-050 SharePoint Hybrid Deployment and Migration',
       category: 'Business Operations',
       certType: 'Microsoft',
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,815.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'In this course, you will learn how to set up and configure SharePoint Server 2019 to meet modern work requirements. You will also learn how to manage various SharePoint services for a hybrid setup, plan and implement hybrid scenarios for a smooth user experience, and design the process for migrating content to SharePoint and OneDrive ...',
-      outline: null,
+      description: 'In this course, you will learn how to set up and configure SharePoint Server 2019 to meet modern work requirements. You will also learn how to manage various SharePoint services for a hybrid setup, plan and implement hybrid scenarios for a smooth user experience, and design the process for migrating content to SharePoint and OneDrive in Microsoft 365.',
+      outline: {
+ 'Lesson 1: SharePoint Infrastructure': [
+   'Plan a SharePoint Farm',
+   'SharePoint 2019',
+   'Install and Manage SharePoint Farm',
+ ],
+ 'Lesson 2: SharePoint Authentication and Security': [
+   'Plan Authentication',
+   'Configure Federated Authentication',
+ ],
+ 'Lesson 3: SharePoint Content Management': [
+   'SharePoint Content Structure Overview',
+   'Manage Access to Content',
+   'Manage Site Collections',
+ ],
+ 'Lesson 4: SharePoint Service Applications': [
+   'SharePoint Service Applications and workflow',
+   'Plan and Configure Business Connectivity Services (BCS) and Secure Store',
+   'Plan and Configure User Profiles',
+ ],
+ 'Lesson 5: Plan and configure Managed Metadata': [
+   'Manage Content Types',
+   'Managed Metadata',
+   'Configure the Managed Metadata Service',
+ ],
+ 'Lesson 6: Plan and Configure Search': [
+   'Plan enterprise search',
+   'Configure enterprise search',
+   'Manage enterprise search',
+ ],
+ 'Lesson 7: Overview of SharePoint Hybrid Scenarios': [
+   'Overview of SharePoint Hybrid Scenarios',
+   'Plan SharePoint Server hybrid',
+ ],
+ 'Lesson 8: Implement SharePoint Hybrid Scenarios': [
+   'Implement SharePoint Hybrid Scenarios',
+   'Configure on-premises data gateway',
+ ],
+ 'Lesson 9: Implement SharePoint Hybrid search': [
+   'Overview of SharePoint hybrid search',
+   'Configure SharePoint Hybrid search',
+ ],
+ 'Lesson 10: Introduction of Migration': [
+   'Migration Overview',
+   'Leveraging FastTrack and Partner Services',
+ ],
+ 'Lesson 11: Migrating to SharePoint Online': [
+   'Prepare for migration',
+   'Migrate content to the cloud',
+   'Manage and monitor migration process',
+ ],
+},
       prerequisites: [
-        '',
+        'Experience using Windows PowerShell',
+        'Basic knowledge of SQL Server management',
+        'Basic understanding of networking, including DNS',
+        'Familiarity with Windows Server administration',
+        'Basic understanding of Active Directory and Azure AD',
+        'Basic knowledge of mobile device management and other operating systems like Android and macOS',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'This course is for IT professionals who manage SharePoint on-premises and want to learn about hybrid setups and migrating content to Microsoft 365.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '89',
-      courseCode: 'MTM552',
+      courseCode: 'MS-740',
       title: 'MS-740 Troubleshooting Microsoft Teams',
       category: 'Business Operations',
       certType: 'Microsoft',
       rating: 4.7,
       duration: '3 Days',
       price: '\$1,962.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'This course will teach you how to fix problems with Microsoft Teams, including issues with voice, live events, and messaging. You will learn how to set up and solve problems with both the client and services. Course Outline',
-      outline: null,
+      description: 'This course will teach you how to fix problems with Microsoft Teams, including issues with voice, live events, and messaging. You will learn how to set up and solve problems with both the client and services.',
+      outline: {
+ 'Lesson 1: Introduce Troubleshooting Microsoft Teams': [
+   'Describe Teams',
+   'Describe Teams administration',
+   'Diagnose common Teams problems',
+   'Use a troubleshooting methodology',
+   'Perform initial data collection',
+   'Develop and implement a plan of action',
+ ],
+ 'Lesson 2: Troubleshoot Microsoft Teams Voice Issues': [
+   'Explore audio and video quality issues',
+   'Understand emergency calling issues',
+   'Troubleshoot direct routing issues',
+ ],
+ 'Lesson 3: Troubleshoot Microsoft Teams Meetings Live Events and Messaging': [
+   'Troubleshoot meeting creation',
+   'Troubleshoot recording issues',
+   'Investigate sharing issues',
+   'Troubleshoot meeting attendee access',
+   'Optimize live events',
+   'Troubleshoot messaging issues',
+   'Troubleshoot reporting',
+ ],
+ 'Lesson 4: Configure and Troubleshoot Microsoft Teams Clients and Services': [
+   'Install and update Teams client software',
+   'Troubleshoot Teams client startup and configuration',
+   'Troubleshoot audio and video devices',
+   'Troubleshoot Teams desktop client performance issues',
+   'Configure and troubleshoot audio conferencing',
+   'Troubleshoot voice',
+   'Troubleshoot phone system issues',
+ ],
+ 'Lesson 5: Troubleshoot Federation Issues': [
+   'Troubleshoot issues interoperating with Skype for Business',
+   'Troubleshoot Teams federation issues',
+ ],
+ 'Lesson 6: Troubleshoot Issues Signing into Microsoft Teams': [
+   'Validate network configuration',
+   'Review and configure Conditional Access policies',
+   'Troubleshoot account issues',
+   'Review sign-in logs',
+   'Troubleshoot external and guess access',
+   'Manage inactive guest users',
+ ],
+ 'Lesson 7: Troubleshoot Apps and Channels': [
+   'Troubleshoot issues with apps',
+   'Troubleshoot issues with public and private channels',
+ ],
+ 'Lesson 8: Troubleshoot File Sharing': [
+   'Troubleshoot file sharing in person-to-person private chat',
+   'Troubleshoot file issues for private channels',
+   'Troubleshoot file uses for public channels',
+ ],
+},
       prerequisites: [
-        '',
+        'Experience in setting up and managing Microsoft Teams',
+        'Familiarty with using Windows PowerShell',
+        'Practical experience with performance tuning and service monitoring',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'This course is designed for current or aspiring support engineers who work with customers and other stakeholders to understand Microsoft Teams issues. It is also for those who interact with administrators and peers working with related technologies to troubleshoot and resolve problems.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '90',
-      courseCode: 'MTM550',
+      courseCode: 'MS-220',
       title: 'MS-220 Troubleshoot Microsoft Exchange Online',
       category: 'Business Operations',
       certType: 'Microsoft',
       rating: 4.7,
       duration: '3 Days',
       price: '\$1,962.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'This course will teach you how to solve various issues that can happen in organizations when using Microsoft Exchange Online. You will learn to fix problems related to mail flow, compliance, recipient management, and cloud/on-premises hybrid configurations. Course Outline',
-      outline: null,
+      description: 'This course will teach you how to solve various issues that can happen in organizations when using Microsoft Exchange Online. You will learn to fix problems related to mail flow, compliance, recipient management, and cloud/on-premises hybrid configurations.',
+      outline: {
+ 'Lesson 1: Troubleshoot problems with mail flow': [
+   'Identify and troubleshoot message delivery issues.',
+   'Determine why Exchange Online is routing messages incorrectly.',
+   'Identify wrongly configured mail records in DNS.',
+   'Troubleshoot issues with SMTP mail transfer.',
+ ],
+ 'Lesson 2: Troubleshoot message filtering in inboxes and Microsoft Defender for Office 365': [
+   'Diagnose problems caused by misconfigured or corrupted inbox rules.',
+   'Decide why message attachments are preventing message delivery.',
+   'Analyze why Exchange Online Protection has taken action on a message.',
+   'Identify poorly configured spam filter policies.',
+ ],
+ 'Lesson 3: Troubleshoot compliance and retention issues': [
+   "Determine why eDiscovery doesn't return the items you intended.",
+   'Diagnose which in-place and eDiscovery holds apply to a specific item.',
+   'Delete and purge items throughout an Exchange Online organization.',
+   'Determine why items are not retained as intended.',
+   'Troubleshoot Messaging Records management.',
+ ],
+ 'Lesson 4: Troubleshoot encryption, auditing, and journaling': [
+   "Find out why Exchange Online can't encrypt or decrypt messages as intended.",
+   "Ensure that sensitive actions on items and mailboxes create a secure audit log.",
+   'Discover why items are not reaching the Exchange Online journal.',
+ ],
+ 'Lesson 5: Troubleshoot desktop Outlook clients': [
+   'Ensure Outlook clients can connect to Exchange Online.',
+   'Diagnose Outlook client authentication issues.',
+   'Resolve problems with calendaring, resource booking, and delegation.',
+ ],
+ 'Lesson 6: Troubleshoot issues with mobile devices': [
+   'Resolve any issues that mobile devices have when connecting to Exchange Online.',
+   'Diagnose problems with ActiveSync devices.',
+ ],
+ 'Lesson 7: Troubleshoot Exchange Online configuration issues': [
+   'Diagnose problems that arise when provisioning recipients and other objects.',
+   'Resolve issues that affect mailboxes, distribution lists, and other recipients.',
+   'Ensure that address lists include all the intended recipients and only the intended recipients.',
+   'Fix common problems that affect your entire organization.',
+   'Ensure that users can access public folders without problems.',
+ ],
+ 'Lesson 8: Troubleshoot hybrid and migration issues': [
+   'Enable mail to flow between Exchange Online and Exchange Server recipients correctly.',
+   'Fix issues with free/busy information, public folders, and recipient synchronization in hybrid deployments.',
+   'Troubleshoot issues that arise during a migration.',
+ ],
+},
       prerequisites: [
-        '',
+        'Experience using PowerShell and the Exchange PowerShell module.',
+        'Extensive experience in deploying, managing, and troubleshooting Exchange environments.',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'This course is designed for current or future support engineers who assist customers and other key individuals in addressing Microsoft Exchange Online issues. Participants will also collaborate with administrators and colleagues working with related technologies to identify and fix problems.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '91',
-      courseCode: 'CCI608',
+      courseCode: '',
       title: 'CISM: Certified Information Security Manager',
       category: 'Cybersecurity',
       certType: 'CISM',
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,815.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The Certified Information Security Manager® (CISM®) confirms that you have the skills to evaluate risks, apply strong governance practices, and take action in response to security incidents. It focuses on new technologies like AI and blockchain, making sure your expertise is up-to-date with growing security threats and industry standards. By tackling key issues such as ...',
-      outline: null,
+      description: 'The Certified Information Security Manager® (CISM®) confirms that you have the skills to evaluate risks, apply strong governance practices, and take action in response to security incidents. It focuses on new technologies like AI and blockchain, making sure your expertise is up-to-date with growing security threats and industry standards. By tackling key issues such as data breaches and ransomware, which are important for IT professionals, this certification helps you stay ahead in a rapidly changing environment.',
+      outline: {
+ 'Lesson 1: Information Security Governance': [
+   'Information Security Governance',
+   'Enterprise Governance',
+   'Organizational Culture',
+   'Legal, Regulatory and Contractual Requirements',
+   'Organizational Structures, Roles and Responsibilities',
+   'Information Security Strategy',
+   'Information Security Strategy Development',
+   'Information Governance Frameworks and Standards',
+   'Strategic Planning (e.g., Budgets, Resources, Business Case)',
+ ],
+ 'Lesson 2: Information Security Risk Management': [
+   'Information Security Risk Assessment',
+   'Information Security Risk Assessment',
+   'Emerging Risk and Threat Landscape',
+   'Vulnerability and Control Deficiency Analysis',
+   'Risk Assessment and Analysis',
+   'Information Security Risk Response',
+   'Risk Treatment / Risk Response Options',
+   'Risk and Control Ownership',
+   'Risk Monitoring and Reporting',
+ ],
+ 'Lesson 3: Information Security Program': [
+   'Information Security Program Development',
+   'Information Security Program Resources (e.g., People, Tools, Technologies)',
+   'Information Asset Identification and Classification',
+   'Industry Standards and Frameworks for Information Security',
+   'Information Security Policies, Procedures and Guidelines',
+   'Information Security Program Metrics',
+   'Information Security Program Management',
+   'Information Security Control Design and Selection',
+   'Information Security Control Implementation and Integrations',
+   'Information Security Control Testing and Evaluation',
+   'Information Security Awareness and Training',
+   'Management of External Services (e.g., Providers, Suppliers, Third Parties, Fourth Parties)',
+   'Information Security Program Communications and Reporting',
+ ],
+ 'Lesson 4: Incident Management': [
+   'Incident Management Readiness',
+   'Incident Response Plan',
+   'Business Impact Analysis (BIA)',
+   'Business Continuity Plan (BCP)',
+   'Disaster Recovery Plan (DRP)',
+   'Incident Classification/Categorization',
+   'Incident Management Training, Testing and Evaluation',
+   'Incident Management Operations',
+   'Incident Management Tools and Techniques',
+   'Incident Investigation and Evaluation',
+   'Incident Containment Methods',
+   'Incident Response Communications (e.g., Reporting, Notification, Escalation)',
+   'Incident Eradication and Recovery',
+   'Post-Incident Review Practices',
+ ],
+},
       prerequisites: [
-        '',
+        'To be Updated',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'To be Updated',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '92',
-      courseCode: 'CCK549',
+      courseCode: '',
       title: 'CKAD: Certified Kubernetes Application Developer',
-      category: 'Software Development',
+      category: 'Networking Infrastructure & Architecture',
       certType: null,
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,106.50',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The Certified Kubernetes Application Developer (CKAD) exam proves that candidates have the skills to design, build, and launch cloud-based applications using Kubernetes. The CKAD was developed by the Linux Foundation and the Cloud Native Computing Foundation (CNCF) to support the growth of the Kubernetes community. The exam is taken online, supervised, and performance-based, meaning candidates ...',
-      outline: null,
+      description: 'The Certified Kubernetes Application Developer (CKAD) exam proves that candidates have the skills to design, build, and launch cloud-based applications using Kubernetes. The CKAD was developed by the Linux Foundation and the Cloud Native Computing Foundation (CNCF) to support the growth of the Kubernetes community. The exam is taken online, supervised, and performance-based, meaning candidates complete several tasks using the Kubernetes command line.',
+      outline: {
+ 'Lesson 1: Application Design and Build': [
+   'Define, build and modify container images',
+   'Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)',
+   'Understand multi-container Pod design patterns (e.g. sidecar, init and others)',
+   'Utilize persistent and ephemeral volumes',
+ ],
+ 'Lesson 2: Application Deployment': [
+   'Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)',
+   'Understand Deployments and how to perform rolling updates',
+   'Use the Helm package manager to deploy existing packages',
+   'Kustomize',
+ ],
+ 'Lesson 3: Application Observability and Maintenance': [
+   'Understand API deprecations',
+   'Implement probes and health checks',
+   'Use built-in CLI tools to monitor Kubernetes applications',
+   'Utilize container logs',
+   'Debugging in Kubernetes',
+ ],
+ 'Lesson 4: Application Environment, Configuration and Security': [
+   'Discover and use resources that extend Kubernetes (CRD, Operators)',
+   'Understand authentication, authorization and admission control',
+   'Understand requests, limits, quotas',
+   'Understand ConfigMaps',
+   'Define resource requirements',
+   'Create & consume Secrets',
+   'Understand ServiceAccounts',
+   'Understand Application Security (SecurityContexts, Capabilities, etc.)',
+ ],
+ 'Lesson 5: Services and Networking': [
+   'Demonstrate basic understanding of NetworkPolicies',
+   'Provide and troubleshoot access to applications via services',
+   'Use Ingress rules to expose applications',
+ ],
+},
       prerequisites: [
-        '',
+        'There are no pre-requisites for this exam.',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'To be updated',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '93',
-      courseCode: 'CCK548',
+      courseCode: '',
       title: 'CKA: Certified Kubernetes Administrator',
-      category: 'IT Training',
+      category: 'Networking Infrastructure & Architecture',
       certType: null,
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,106.50',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The CKA was developed by the Linux Foundation and the Cloud Native Computing Foundation (CNCF) to support the growth of the Kubernetes ecosystem. It is an online exam, supervised by a proctor, where you must complete several tasks using the Kubernetes command line. Course Outline',
-      outline: null,
+      description: 'The CKA was developed by the Linux Foundation and the Cloud Native Computing Foundation (CNCF) to support the growth of the Kubernetes ecosystem. It is an online exam, supervised by a proctor, where you must complete several tasks using the Kubernetes command line.',
+      outline: {
+ 'Lesson 1: Storage': [
+   'Understand storage classes, persistent volumes',
+   'Understand volume mode, access modes and reclaim policies for volumes',
+   'Understand persistent volume claims primitive',
+   'Know how to configure applications with persistent storage',
+ ],
+ 'Lesson 2: Troubleshooting': [
+   'Evaluate cluster and node logging',
+   'Understand how to monitor applications',
+   'Manage container stdout & stderr logs',
+   'Troubleshoot application failure',
+   'Troubleshoot cluster component failure',
+   'Troubleshoot networking',
+ ],
+ 'Lesson 3: Workloads & Scheduling': [
+   'Understand deployments and how to perform rolling update and rollbacks',
+   'Use ConfigMaps and Secrets to configure applications',
+   'Know how to scale applications',
+   'Understand the primitives used to create robust, self-healing, application deployments',
+   'Understand how resource limits can affect Pod scheduling',
+   'Awareness of manifest management and common templating tools',
+ ],
+ 'Lesson 4: Cluster Architecture, Installation & Configuration': [
+   'Manage role based access control (RBAC)',
+   'Use Kubeadm to install a basic cluster',
+   'Manage a highly-available Kubernetes cluster',
+   'Provision underlying infrastructure to deploy a Kubernetes cluster',
+   'Perform a version upgrade on a Kubernetes cluster using Kubeadm',
+   'Implement etcd backup and restore',
+ ],
+ 'Lesson 5: Services & Networking': [
+   'Understand host networking configuration on the cluster nodes',
+   'Understand connectivity between Pods',
+   'Understand ClusterIP, NodePort, LoadBalancer service types and endpoints',
+   'Know how to use Ingress controllers and Ingress resources',
+   'Know how to configure and use CoreDNS',
+   'Choose an appropriate container network interface plugin',
+ ],
+},
       prerequisites: [
-        '',
+        'There are no pre-requisites for this exam.',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'To be updated',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '94',
-      courseCode: 'DIC261',
+      courseCode: '',
       title: 'DCNX: Implementing Cisco NX-OS Switches and Fabrics in the Data Centre',
-      category: 'IT Training',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
       price: '\$5,665.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The DCNX v1.0 course teaches you how to install, set up, and manage Cisco Nexus® switches in a scalable, reliable environment. Through lectures and hands-on labs, you will learn about Cisco Nexus products, including their management, security, programmability, and storage features. You will also cover device aliases, zoning, Fibre Channel over Ethernet (FCoE), and N-Port Virtualization (NPV) ...',
-      outline: null,
+      description: '''
+The DCNX v1.0 course teaches you how to install, set up, and manage Cisco Nexus® switches in a scalable, reliable environment. Through lectures and hands-on labs, you’ll learn about Cisco Nexus products, including their management, security, programmability, and storage features. You’ll also cover device aliases, zoning, Fibre Channel over Ethernet (FCoE), and N-Port Virtualization (NPV) modes.
+
+This course will help you:
+- Build specialized knowledge of the Cisco Nexus products and platforms.
+- Explain, set up, configure, and manage Cisco Nexus products and systems, including backup protocols and security features, in a flexible and scalable environment.
+- Get practical experience using Cisco Nexus products in a lab setting.
+''',
+      outline: {
+ 'Lesson 1: Describing Cisco Nexus Series Switches': [],
+ 'Lesson 2: Describing Cisco Nexus Platforms Implementation': [],
+ 'Lesson 3: Describing Cisco Nexus Platforms Management': [],
+ 'Lesson 4: Describing Port Channels and Virtual Port Channels': [],
+ 'Lesson 5: Configuring First Hop Redundancy Protocols': [],
+ 'Lesson 6: Configuring Cisco Nexus Security Features': [],
+ 'Lesson 7: Describing Cisco NX-OS Routing and Forwarding': [],
+ 'Lesson 8: Describing Virtual Extensible LAN': [],
+ 'Lesson 9: Describing QoS on Cisco Nexus Devices': [],
+ 'Lesson 10: Configuring System Management and Monitoring': [],
+ 'Lesson 11: Describing Cisco NX-OS Programmability': [],
+ 'Lesson 12: Describing Cisco Nexus Storage Services': [],
+ 'Lesson 13: Configuring Fibre Channel Over Ethernet': [],
+ 'Lesson 14: Describing Device Aliases and Zoning': [],
+ 'Lesson 15: Configuring NPIV and NPV Modes': [],
+ 'Lab Outline': [
+   'Test Cisco Nexus Platforms',
+   'Configure User Management',
+   'Configure vPC',
+   'Configure First Hop Redundancy Protocol (FHRP) Protocols',
+   'Configure Cisco Nexus Security Features',
+   'Configure Open Shortest Path First (OSPF)',
+   'Configure VXLAN',
+   'Configure QoS',
+   'Configure System Management',
+   'Configure Cisco NX-OS On-Box Programmability',
+   'Configure Containers on Cisco NX-OS',
+   'Configure Cisco NX-OS Using Ansible',
+   'Configure Basic Fibre Channel Features',
+   'Configure FCoE',
+   'Configure Fiber Channel Device Aliases and Zoning',
+   'Configure NPV',
+ ],
+},
       prerequisites: [
-        '',
+        'Have knowledge of Cisco data center technologies',
+        'Understand networking protocols, as well as routing and switching',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+- Data center systems engineers
+- Field engineers
+- Architects
+- Anyone working with Cisco Nexus Series switch platforms
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '95',
-      courseCode: 'SOF939',
+      courseCode: '55238',
       title: '55238 SharePoint Online for Administrators',
-      category: 'IT Training',
+      category: 'Business Operations',
       certType: null,
       rating: 4.7,
       duration: '3 Days',
       price: '\$Contact Us',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'This 3-day course will introduce the audience to SharePoint Online Administrators in Office 365 and explain and demonstrate the configuration options for SharePoint Online. This course will also help SharePoint on-premise administrators understand the difference between SharePoint on-premises and SharePoint Online. Course Outline',
-      outline: null,
+      description: 'This 3-day course will introduce the audience to SharePoint Online Administrators in Office 365 and explain and demonstrate the configuration options for SharePoint Online. This course will also help SharePoint on-premise administrators understand the difference between SharePoint on-premises and SharePoint Online.',
+      outline: {
+ 'Lesson 1: Introduction to Office 365 and SharePoint Online': [
+   'Introduction to the Office 365',
+   'Administration Center',
+   'Configure Reporting',
+   'Accessing SharePoint management tools',
+   'Accessing security and compliancy',
+   'Managing Office 365 and SharePoint Online with PowerShell',
+   'Comparing On-Premises SharePoint with SharePoint Online',
+   'Managing user domains',
+   'Building Hybrid scenarios',
+   'OneDrive and Sites redirection',
+   'Understand hybrid search',
+   'Hybrid business data connectivity',
+   'Hybrid taxonomy',
+   'Lab: Configuring the Office 365 environment',
+ ],
+ 'Lesson 2: Working with Site Collections': [
+   'Understand the topology of site collections',
+   'Creating Site Collections',
+   'Defining ownership and security for site collections',
+   'Configuring Storage',
+   'Configure External Access to site collections',
+   'Recovering site collections',
+   'Configure external sharing',
+   'Managing site collections with PowerShell',
+   'Lab: Managing Site Collections',
+ ],
+ 'Lesson 3: Managing User Profiles': [
+   'Overview of the profile service',
+   'Defining profile properties',
+   'Map profile properties to a term store',
+   'Creating custom profile properties',
+   'Managing audiences',
+   'Creating audiences',
+   'Managing user profile policies',
+   'Configure trusted my site host locations',
+   'Configure preferred search center locations',
+   'Defining read access permission levels',
+   'Configuring newsfeed options',
+   'Setup email notifications',
+   'Configure my site cleanup',
+   'Lab: Managing the User Profile service',
+ ],
+ 'Lesson 4: Managing Business Connectivity Services': [
+   'Overview of the business connectivity service',
+   'Introduction to BDC definition files',
+   'Creating BDC definition files',
+   'Introduction to the secure store service',
+   'Configuring the securing store service',
+   'Creating secure store target application settings',
+   'Configure connections to cloud services',
+   'Configure connections to on premises services',
+   'Tools to build data connections',
+   'Creating external content types',
+   'Building external lists using external data',
+   'Lab: Managing the business data connectivity service',
+ ],
+ 'Lesson 5: Managing the Term Store': [
+   'Overview of the term store',
+   'Understanding terms and life cycle management',
+   'Creating term groups',
+   'Creating the term store',
+   'Creating Term Sets in the UI',
+   'Creating Term Sets via importing via a CSV',
+   'Creating terms in the UI',
+   'Creating terms via PowerShell and CSOM',
+   'Manage terms with synonyms and pinning',
+   'Configure delegated administration',
+   'Lab: Creating and Managing the Term Store',
+ ],
+ 'Lesson 6: Configuring Search': [
+   'An Introduction to the search service',
+   'Understanding Managing Properties',
+   'Create Managed Properties',
+   'Manage Authoritative pages',
+   'Understand Result sources',
+   'Create and configure result sources',
+   'Understand Query rules',
+   'Promoting results through query rules',
+   'Remove search results from the index',
+   'Exporting search configurations',
+   'Importing search configurations',
+   'Lab: Managing and configuring the Search Service',
+ ],
+ 'Lesson 7: Configuring Apps': [
+   'An Introduction to Apps',
+   'Understanding the App Catalog',
+   'Building the App catalog',
+   'Adding Apps to the catalog',
+   'Add Apps to your SharePoint sites',
+   'Adding Apps via the marketplace store',
+   'Manage App licensing',
+   'Configure store access settings',
+   'Monitoring app usage',
+   'Lab: Configuring Apps',
+ ],
+ 'Lesson 8: Enterprise Content Management in SharePoint Online': [
+   'An Introduction to ECM in SharePoint Online',
+   'Components of ECM',
+   'Understanding In-Place records management',
+   'Understand the records center',
+   'Build and configure a records center',
+   'Understanding the compliancy policy center',
+   'Build a compliancy policy center and configure policies',
+   'Discover the security and compliancy center',
+   'Configure an eDiscovery center',
+   'Build an eDiscovery case',
+   'Understand data loss prevention',
+   'Build a data loss prevention policy and query',
+   'Lab: Configuring ECM in SharePoint Online',
+ ],
+ 'Lesson 9: Manage options for SharePoint Online': [
+   'Configure OneDrive features',
+   'Understand list and library experience',
+   'Configure classic versus new experience',
+   'Configure use of Yammer or Newsfeeds',
+   'Understand Information Rights Management',
+   'Configure Information Rights Management',
+   'Define site classification options',
+   'Understand early release options for Office 365',
+   'Configure Early release options for your Office 365 tenant',
+   'Lab: Configure options in SharePoint Online',
+ ],
+},
       prerequisites: [
-        '',
+        'No prerequisite knowledge is required to attend this course.',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'This course is designed for Administrators who need to setup, configure and manage SharePoint Online as part of their Office 365 Administration.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '96',
-      courseCode: 'CCS281',
+      courseCode: 'CCSE',
       title: 'Certified Cloud Security Engineer (CCSE)',
       category: 'Cybersecurity',
       certType: 'EC-Council',
@@ -8652,100 +9245,776 @@ This course covers MOS Program exam objectives to help you prepare for the Excel
       deliveryMethods: ['ILT'],
       startDate: 'November 25, 2024',
       nextAvailableDate: 'November 25, 2024',
-      description: 'Master Cloud Security Skills Across AWS, Azure and Google Cloud The Certified Cloud Security Engineer (C|CSE) by EC-Council is a multi-cloud security certification program crafted by industry experts. It offers a holistic understanding of cloud security and empowers cybersecurity professionals to apply practical skills to build, operate, and defend their environments regardless of the selected ...',
-      outline: null,
+      description: '''
+Master Cloud Security Skills Across AWS, Azure and Google Cloud
+
+The Certified Cloud Security Engineer (C|CSE) by EC-Council is a multi-cloud security certification program crafted by industry experts. It offers a holistic understanding of cloud security and empowers cybersecurity professionals to apply practical skills to build, operate, and defend their environments regardless of the selected infrastructure.
+
+Our unique approach to designing curriculum allows C|CSE content to match the latest security tools and techniques for the AWS, Azure, and GCP platforms, as well as private and hybrid architectures.
+
+This design makes the C|CSE program a perfect blend of vendor-neutral training topics with vendor specific instruction and performance labs, offering cybersecurity professionals an unbiased learning experience.
+
+C|CSE offers a hands-on practical approach, featuring over 85 labs to ensure candidates gain hands on experience that can be immediately applied at the workplace to anticipate and overcome cloud security challenges.
+
+
+What students Learn in C|CSE
+Generic Cloud Security Concepts
+
+• Fundamentals of cloud computing and its architecture
+
+• Key concepts and components of cloud security
+
+• Cloud deployment models (public, private, hybrid) and their associated security considerations
+
+• Cloud service models (Infrastructure as a Service, Platform as a Service, Software as a Service) and their respective security challenges
+
+• Common vulnerabilities and threats specific to cloud environments and strategies for their prevention and mitigation
+
+• Cloud security challenges and threats
+
+• Identity and access management (IAM) in cloud environments
+
+• Authentication and authorization mechanisms for cloud services
+
+• Principles of secure data storage and encryption in the cloud
+
+• Network security in cloud environments, including virtual private networks (VPNs) and firewalls
+
+• Security monitoring and logging in to the cloud
+
+• Incident response and disaster recovery strategies for cloud-based systems
+
+• Best practices for securing cloud-based infrastructure and services
+
+• Encryption techniques to safeguard sensitive information in the cloud
+
+• Access control and IAM in the context of cloud environments
+
+• Utilizing security monitoring and incident response mechanisms in the cloud
+
+• Evaluate appropriate cloud service providers based on their security offerings
+
+• Regulatory and compliance requirements related to cloud security
+
+• Cloud security policies and procedures
+
+• Penetration tests, security audits, and assessments to ensure compliance with cloud security standards
+
+• Shared responsibility model and the division of security responsibilities between cloud providers and customers
+
+• Knowledge of cloud security frameworks, such as CSA (Cloud Security Alliance)
+
+
+AWS Specific Security Concepts:
+
+• AWS’s shared responsibility model and the security responsibilities division between AWS and the customer
+
+• AWS Cloud Adoption Framework and its security perspective capabilities
+
+• Fundamental cloud security concepts and best practices in AWS
+
+• Secure AWS identities and access management, including user accounts, groups, and roles
+
+• Access control mechanisms, including IAM roles, policies, and permissions
+
+• Configure and secure AWS networking components such as Virtual Private Cloud (VPC), subnets, and security groups
+
+• Encryption mechanisms available in AWS, including data-at-rest and data-in-transit encryption
+
+• AWS Key Management Service (KMS) and cryptographic keys
+
+• AWS compute resources, such as EC2 instances and serverless functions
+
+• AWS monitoring and logging services, including AWS CloudTrail and Amazon CloudWatch, for security analysis and incident response
+
+• AWS security services and features such as AWS WAF (Web Application Firewall), AWS Shield, and AWS Inspector, as well as how to implement them to enhance security
+
+• Best practices for securing AWS storage services, such as Amazon S3 (Simple Storage Service) and Amazon EBS (Elastic Block Store)
+
+• AWS security compliance programs and frameworks, such as the AWS Well-Architected Framework, to implement security controls to meet compliance requirements
+
+• AWS security automation and orchestration tools, such as AWS CloudFormation and AWS Config,
+
+to automate security deployments and enforce security standards
+
+• Incident response and disaster recovery in the AWS environment, including best practices for incident handling and data backup and recovery
+
+Azure Specific Security Concepts:
+
+• Principles, concepts, and components of cloud security
+
+• Shared responsibility model and its application
+
+• Microsoft Cloud Adoption Framework for Azure to achieve cloud adoption goals
+
+• Security measures to protect Azure resources such as virtual machines, databases, storage accounts, and networking components
+
+• User identities, roles, and access controls management in Azure, including implementing Azure Active Directory (AAD), role-based access control (RBAC), and multi-factor authentication (MFA)
+
+• Azure Virtual Network (VNet) and implementation of network security groups (NSGs), virtual network service endpoints, and private endpoints to secure network traffic within Azure using Azure Firewall and Azure DDoS Protection
+
+• Protect data at rest and in transit using Azure features like Azure Disk Encryption, Azure Storage Service Encryption, Azure Key Vault, and Azure Information Protection
+
+• Implement Azure Key Vault to manage and safeguard cryptographic keys, secrets, and certificates
+
+• Azure AD security enhancement through the implementation of features like multi-factor authentication (MFA), conditional access, Privileged Identity Management (PIM), and Azure AD Identity Protection
+
+• Microsoft Defender for the cloud to monitor, assess, and improve the security posture of Azure resources, including virtual machines, containers, and Azure services, and implement security recommendations and best practices
+
+• Azure Monitor, Azure Sentinel, and Microsoft Defender for the cloud’s threat intelligence capabilities to detect and respond to security incidents effectively
+
+• Azure governance frameworks and best practices for maintaining compliance and meeting regulatory requirements, including Azure Policy, Azure Blueprints, and Azure Audit and Security Logs
+
+• Secure Azure virtual machines, including implementing Azure Bastion for secure remote access and using Microsoft Defender for cloud for VM monitoring and threat detection
+
+• Best practices for securing Azure resources and implementing security controls
+
+• Incident response procedures, disaster recovery planning, and utilizing Azure services such as Azure Site Recovery and Azure Backup
+
+• Additional security services and solutions in Azure, including Azure DDoS Protection and Azure Advanced Threat Protection
+
+• Best practices for securing Azure Storage accounts, Azure App Service, and Azure SQL Database
+
+• Azure Backup and Azure Site Recovery for data protection and disaster recovery scenarios
+
+Google Cloud Specific Security Concepts:
+
+• Key concepts, principles, and best practices for securing applications and data
+
+• Fundamentals of cloud security and shared responsibility
+
+• Google Cloud Adoption Framework
+
+• GCP security concepts, tools, and services for protecting cloud-based resources
+
+• Implement and configure IAM roles, policies, and permissions to control access to GCP resources, services, and data
+
+• Design and configure secure virtual networks (VPCs) in GCP, including network segmentation, firewall rules, subnetworks, and VPC peering
+
+• GCP’s network security features and tools, such as Cloud Armor, Cloud Load Balancing, Cloud VPN, and Cloud DNS to protect network traffic and prevent unauthorized access
+
+• Protect sensitive data in GCP using encryption techniques, including encryption at rest and in transit, key management, and Google Cloud Key Management Service (KMS)
+
+• Set up and configure logging and monitoring mechanisms to detect and respond to security incidents using tools like the Google Cloud Security Command Center and Operations Suite Logging
+
+• Best practices for secure application development on GCP, including secure coding techniques, vulnerability management, and integration with security services like Cloud Security Scanner and Cloud Security Command Center
+
+• GCP’s compliance frameworks, certifications, and regulatory requirements to implement security controls and practices to meet industry standards and compliance obligations
+
+• Incident response planning, security incident management, and disaster recovery techniquesspecific to GCP, including incident detection, containment, and remediation procedures
+
+• Recommended security practices and configurations for different GCP services and resources, including Compute Engine, Cloud Storage, Cloud SQL, and Google Kubernetes Engine (GKE)
+
+• Additional GCP services like Cloud Identity-Aware Proxy (IAP), Security Key Enforcement, and Identity Platform to enhance authentication and access control
+
+Top tools Covered in the Certified Cloud Security Engineer (C|CSE) 
+
+• AWS IAM 
+
+• AWS KMS 
+
+• AWS VPC 
+
+• Web Application Firewall Cloud Front 
+
+• Amazon RDS 
+
+• Amazon Backup 
+
+• Amazon Inspector 
+
+• AWS Cloud Trial 
+
+• CloudWatch 
+
+• Amazon Macie 
+
+• AWS Security Hub 
+
+• AWS Trusted Advisor 
+
+• Microsoft Defender for Cloud 
+
+• Azure Active Directory 
+
+• Azure Monitor 
+
+• Network Watcher 
+
+• Azure Storage Analytics 
+
+• Azure Policy 
+
+• ScoutSuite 
+
+• Azure Blueprints 
+
+• Cloud Security Suite 
+
+• PowerZure 
+
+• App Engine Firewall 
+
+• Cloud Identity 
+
+• Cloud Monitoring 
+
+• Security Command Center 
+
+• Web Application and API protection 
+
+• Google Cloud Armor 
+
+• Cloud Security Scanner 
+
+• GCP-IAM-Privilege-Escalation 
+
+• Secrets Manager 
+
+• Chronicle Detect 
+
+• Cloud Key Management 
+ 
+
+Vendor-Specific Labs: 
+AWS  – 38 labs 
+Azure -19 Labs 
+Google Clouds – 31 Labs
+''',
+      outline: {
+ 'Lesson 1: Introduction to Cloud Security': [
+   'This module provides a basic understanding of cloud computing and its service models, including the various threats and vulnerabilities found in the cloud. It highlights various factors for evaluating service providers and understanding the shared security responsibility model of service providers. Understanding the shared responsibility model provided by the cloud service provider is essential to configuring the cloud environment securely and protecting organizational resources.',
+ ],
+ 'Lesson 2: Platform and Infrastructure Security in the Cloud': [
+   'This module explains the key components and technology that make the architecture of the cloud and the various techniques involved in securing the multi-tenancy, virtualized, physical, and logical cloud components. It demonstrates the configurations to secure the physical data center. Users can learn the best practices to secure the workload, computing resources, and networks in the cloud. This module demonstrates the use of various services and tools provided for network and computing security in Azure, AWS, and Google cloud.',
+ ],
+ 'Lesson 3: Application Security in the Cloud': [
+   'This module focuses on securing cloud applications, from designing to deployment of an application in the cloud. It explains the changes in the Secure Software Development Life Cycle (SSDLC) in the cloud. It shows how service providers\' identity and access management features help implement authentication and authorization and restrict unauthorized users from accessing cloud resources.',
+ ],
+ 'Lesson 4: Data Security in the Cloud': [
+   'Data security is the major concern while migrating to the cloud. This module covers the basics of cloud data storage, its life cycle, and various controls to protect data-in-rest and data-in-transit in the cloud. This module includes data storage features and various services and tools for securing the data stored in Azure, AWS, and Google Cloud.',
+ ],
+ 'Lesson 5: Operation Security in the Cloud': [
+   'This module includes the security controls for building, implementing, operating, managing, and maintaining physical and logical infrastructure for cloud environments. It covers the services, features, and tools AWS, Azure, and Google Cloud provide for operational security.',
+ ],
+ 'Lesson 6: Penetration Testing in the Cloud': [
+   'This module demonstrates how to implement a comprehensive penetration testing methodology for assessing the security of an organization\'s cloud infrastructure. It demonstrates the various services and tools used to perform penetration testing in AWS, Azure, and Google Cloud.',
+ ],
+ 'Lesson 7: Incident Detection and Response in the Cloud': [
+   'An incident response (IR) plan is crucial to prevent security breaches in the cloud. This module describes the incident response life cycle and highlights the considerations for responders in each phase of the IR plan in a cloud environment. It highlights the use of SOAR in automating incident response in the cloud. This module explores the incident response capabilities provided by AWS, Azure, and Google Cloud. It demonstrates various tools and services for incident detection and response.',
+ ],
+ 'Lesson 8: Forensics Investigation in the Cloud': [
+   'Access to forensic data and the forensic investigation process in a cloud computing environment differ from the network forensic investigation process. This module highlights various cloud forensic challenges and data collection methodologies. It demonstrates how to investigate security incidents in the cloud using various tools provided by AWS, Azure, and Google Cloud.',
+ ],
+ 'Lesson 9: Business Continuity and Disaster Recovery in the Cloud': [
+   'Business Continuity and Disaster Recovery (BC/DR) is important in the cloud because a third party manages the resources. This module teaches the role of the business continuity and disaster recovery plan in the cloud. It explains backup and recovery tools and the services and features provided by service providers such as AWS, Azure, and Google Cloud to prepare and manage outages to ensure business continuity.',
+ ],
+ 'Lesson 10: Governance, Risk Management, and Compliance in the Cloud': [
+   'This module highlights the standards, policies, and legal issues related to the cloud. It highlights various legal and compliance issues found in a cloud environment. It discusses various cloud security standards and audit planning in the cloud. It demonstrates the features, services, and tools for compliance and auditing in Azure, AWS, and Google Cloud.',
+ ],
+ 'Lesson 11: Standards, Policies, and Legal Issues in the Cloud': [
+   'This module highlights the standards, policies, and legal issues related to the cloud. It highlights various legal and compliance issues found in a cloud environment. It discusses various cloud security standards and audit planning in the cloud. It demonstrates the features, services, and tools for compliance and auditing in Azure, AWS, and Google Cloud.',
+ ],
+},
       prerequisites: [
-        '',
+        'Should have a working knowledge of network security management.',
+        'Basic understanding of cloud computing concepts.',
       ],
-      whoShouldAttend: '',
-      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
+      whoShouldAttend: '''
+Professionals with experience in any of the below domains can apply:
+- Network Security: Administrator/Engineer/Analyst:
+- Cybersecurity: Engineer/Analyst
+- Cloud: Administrator/Analyst/Engineer
+- InfoSec professionals
+- C|ND professionals
+OR
+-Any other role that involves network/cloud administration, management, and operations
+''',
+      importantNotes: '''
+Attend at least 75% of the course and declared as competent during the assessments
+
+Launch Price: \$1950 (before GST) Original Price: \$2950 (before GST) This special pricing includes:
+- eCourseware
+- Labs (valid for 6 months from initial date of login)
+- One Exam
+Examination: The candidate needs to score 70% to pass the CCSE exam.  
+- Number of Questions: 125
+- Exam Prefix: 312-40 (ECC Exam)
+- Test Duration: 4 hours
+- Test Format: Multiple Choice
+- Test Delivery: EC-Council Exam Portal
+- Exam Title: Certified Cloud Security Engineer
+''',
       feeStructure: null,
     ),
     Course(
       id: '97',
-      courseCode: 'CCI166',
+      courseCode: '',
       title: 'Certified Chief Information Security Officer (CCISO) Program',
       category: 'Cybersecurity',
       certType: 'EC-Council',
       rating: 4.7,
       duration: '5 Days',
       price: '\$4,500',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'EC-Council’s Certified Chief Information Security Officer Program has empowered information security professionals to achieve their professional goals across the globe. It is a program developed and delivered by seasonal security executives. It equips future executives with business and technical knowledge so they can succeed at the highest levels of the security industry. The Program is ...',
-      outline: null,
+      description: '''
+Become a Certified Chief Information Security Officer (CCISO) and Lead with Strategic Vision
+The CCISO Certified Chief Information Security Officer Program by EC-Council is a globally respected certification built for current and aspiring chief information security officers who want to lead with authority and business acumen. Developed by top-tier security chief officers, the CCISO program delivers the executive-level training needed to navigate the complex intersection of cybersecurity and business leadership.
+
+This CISO certification is designed by seasoned professionals who understand the real-world challenges faced by today’s security executives. The CCISO program equips participants with the essential skills to align information security strategies with organizational goals—positioning them for success as influential security chief officers.
+
+Through a comprehensive curriculum covering five core domains, the CCISO certified chief information security officer gains mastery in:
+
+  1. Governance and Risk Management
+  2. Information Security Controls, Compliance, and Audit Management
+  3. Security Program Management and Operations
+  4. Information Security Core Competencies
+  5. Strategic Planning and Finance
+Join the global elite of CISO-certified professionals and transform your leadership with the CCISO Certified Chief Information Security Officer Program by EC-Council.
+
+Offer Course Fee:  \$3,542.50 (including Exam Fee which is worth \$300)
+Original Course Fee : \$4,305.50
+''',
+      outline: {
+ 'Lesson 1: Governance, Risk, Compliance': [
+   'Domain 1: Governance, Risk, Compliance\nGovernance\n\nDefine, implement, manage and maintain an information security governance program that includes leadership, organizational structures, and processes.\nAlign information security governance framework with organizational goals and governance, i.e, leadership style, philosophy, values, standards, and policies.\nEstablish information security management structure.\nEstablish a framework for information security governance monitoring (considering cost/benefits analyses of controls and ROI).\nUnderstand standards, procedures, directives, policies, regulations, and legal issues that affect the information security program.\nUnderstand the enterprise information security compliance prog\nRisk Management\n\nCreate a risk management program policy and charter\nCreate a risk assessment methodology and framework\nCreate and manage risk register\nCreate risk assessment schedule and checklists\nCreate risk reporting metrics and processes\nCompliance\n\nFollow organizational ethics\nAnalyse and understand common external laws, regulations, standards, best practices applicable to the organization, and organizational ethics.\nBe familiar with international security and risk standards such as ISO 27000 and 31000 series.\nImplement and manage information security strategies, plans, policies, and procedures to reduce regulatory risk\nUnderstand the importance of regulatory information security organizations and appropriate industry groups and stakeholders\nUnderstand information security changes, trends, and best practices\nUnderstand and manage enterprise compliance program controls, information security compliance process and procedures, compliance auditing, and certification programs.\nUnderstand the information security compliance process and procedures\nCompile, analyse, and report compliance programs.\nUnderstand the compliance auditing and cortication programs',
+ ],
+ 'Lesson 2: Information Security Controls and Audit Management': [
+   'Domain 2: Information Security Controls and Audit Management\nInformation Security Management Controls\n\nIdentify the organization\'s operational process and objectives\nDesign information systems controls in alignment with the operational needs and goals and conduct testing prior to implementation to ensure effectiveness\nIdentify and select the resources required to effectively implement and maintain information systems controls. Such resources can include human capital, information, infrastructure, and architecture (eg. Platforms, operating systems, networks, databases, applications)\nDesign and implement information systems controls to mitigate risk. Monitor and document the information systems control performance in meeting organizational objectives by identifying and measuring metrics and key performance indicators\nDesign and conduct testing of information security controls to ensure effectiveness, discover deficiencies, and ensure alignment with the organisation\'s risk management program\nDesign and implement processes to appropriately remediate deficiencies and evaluate problem management practices to ensure that errors are recorded, analysed, and resolved in a timely manner\nAssess and implement tools and techniques to automate information systems control processes.\nMeasure, manage, and report on security control implementation and effectiveness\nAudit Management\n\nEnsure that the necessary changes based on the audit findings are effectively implemented in a timely manner\nUnderstand the IT audit process and be familiar with IT audit standards\nApply information systems audit principles, skills and techniques in reviewing and testing information systems technology and applications to design and implement a thorough risk-based IT audit strategy\nExecute the audit process in accordance with established standards and interpret results against defined criteria to ensure that the information systems are protected, controlled and effective in supporting organization\'s objectives\nEvaluate audit results, weighing the relevancy, accuracy, and perspective of conclusions against the accumulated audit evidence\nAssess the exposures resulting from ineffective or missing control practices and formulate a practical and cost-effective plan to improve those area\nDevelop an IT audit documentation process and share reports with relevant stakeholders as the basis for decision making',
+ ],
+ 'Lesson 3: Security Program Management & Operations': [
+   'Domain 3: Security Program Management & Operations\nSecurity Program Management\n\nFor each information systems project develop a clear project scope statement in alignment with organizational objectives\nDefine activities needed to successfully execute the information systems program, estimate activity duration, and develop a schedule and staffing plan\nDevelop, manage and monitor the information systems program budget, estimate and control costs of individual projects\nIdentify, negotiate, acquire and manage the resources needed for successful design and implementation of the information systems program (eg., people, infrastructure, and architecture)\nAcquire, develop and manage information security project team\nAssign clear information security personnel job functions and provide continuous training to ensure effective performance and accountability\nDirect information security personnel and establish communications, and team activities, between the information systems team and other security-related personnel (eg., technical support, incident management, security engineering)\nSecurity Program Operations\n\nEnsure that necessary changes and improvements to the information systems processes are implemented as required\nResolve personnel and teamwork issues within time, cost, and quality constraints\nIdentify, negotiate and manage vendor agreement and community\nParticipate with vendors and stakeholders to review/assess recommended solutions; identify incompatibilities, challenges, or issues with proposed solutions\nEvaluate the project management practices and controls to determine whether business requirements are achieved in a cost-effective manner while managing risks to the organization\nDevelop a plan to continuously measure the effectiveness of the information systems projects to ensure optimal system performance\nIdentify stakeholders, manage stakeholders\' expectations, and communicate effectively to report progress and performance',
+ ],
+ 'Lesson 4: Information Security Core Competencies': [
+   'Domain 4: Information Security Core Competencies\nAccess Control\n\nIdentify the criteria for mandatory and discretionary access control, understand the different factors that help in implementation of access controls and design an access control plan\nImplement and manage an access control plan in alignment with the basic principles that govern the access control systems such as need-to-know\nIdentify different access control systems such as ID cards and biometrics\nUnderstand the importance of warning banners for implementation access rules\nDevelop procedures to ensure system users are aware of their IA responsibilities before granting access to the information systems\nSocial Engineering, Phishing Attacks, Identity Theft\n\nUnderstand various social engineering concepts and their role in insider attacks and develop best practices to counter social engineering attacks\nDesign a response plan to identity theft incidences\nIdentify and design a plan to overcome phishing attacks\nPhysical Security\n\nIdentify standards, procedures, directives, policies, regulations, and laws for physical security\nDetermine the value of physical assets and the impact if unavailable\nDesign, implement and manage a comprehensive, coordinated, and holistic physical security plan to ensure overall organizational security including an audit schedule and performance metrics\nDisaster Recovery and Business Continuity Planning\n\nDevelop, implement, and monitor business continuity, business recovery, contingency planning, and disaster recovery plans in case of disruptive events, and ensure alignment with organizational goals and objectives\nDirect contingency planning, operations, and programs to manage risk\nDesign documentation process as part of the continuity of operations program\nDesign and execute a testing and updating plan for the continuity of operations program\nUnderstand the importance of integration of IA requirements into the Continuity of Operations Plan (COOP)\nFirewall, IDS/IPS and Network Defense Systems\n\nUnderstand and manage network cloud security\nIdentify the appropriate intrusion detection and prevention systems for organizational information security\nDesign and develop a program to monitor firewall configuration issues\nUnderstand perimeter defense systems such as grid sensors and access control lists on routers, firewalls, and other network devices\nIdentify the basic network architecture, models, protocols and components such as routers and hubs that play a role in network security\nUnderstand the concept of network segmentation\nManage DMZs, VPN and telecommunication technologies such as PBX and VoIP\nIdentify network vulnerabilities and explore network security controls such as use of SSL and TLS for transmission security\nSupport, monitor, test, and troubleshoot issues with hardware and software\nManage accounts, network rights, and access to systems and equipment\nWireless Security\n\nIdentify vulnerability and attacks associated with wireless networks and manage different wireless network security tools\nVirus, Trojans and Malware, and other Malicious Code Threats\n\nAssess the threat of virus, Trojan and malware to organizational security and identify sources and mediums of malware infection\nDeploy and manage anti-virus systems\nDevelop process to counter virus, Trojan, and malware threats including training both security teams and non-security teams on secure development processes\n\nSecure Coding Best Practices and Securing Web Applications\n\nDevelop and maintain software assurance programs in alignment with the secure coding principles and each phase of System Development Life Cycle (SDLC)\nUnderstand various system-engineering practices\nConfigure and run tools that help in developing secure programs\nUnderstand software vulnerability analysis techniques including static code, dynamic code, and software composition analysis\nInstall and operate the IT systems in a test cofirguration manner that does not alter the program code or compromise security safeguards\nIdentify web application vulnerabilities and attacks and web application security tools to counter attacks\nOS Hardening\n\nIdentify various OS vulnerabilities and attacks and develop a plan for hardening OS systems\nUnderstand system logs, patch management process and configuration management for information system security\nEncryption Technologies\n\nUnderstand the concept of encryption and decryption, digital certificates, public key infrastructure and the key differences between cryptography and steganography\nIdentify the different components of a cryptosystem\nDevelop a plan for information security encryption techniques\n\nVulnerability Assessment and Penetration Testing\n\nDesign, develop and implement a penetration testing program based on penetration testing methodology to ensure organizational security\nIdentify different vulnerabilities associated with information systems and legal issues involved in penetration testing\nDevelop pre and post testing procedures\nDevelop a plan for pen test reporting and implementation of technical vulnerability corrections\nDevelop vulnerability management systems\nThreat Management\n\nCreate and manage a threat management program including threat intelligence, thirdparty threats, and security bulletins regarding hardware and software, particularly open-source software\nIncident Response and Computer Forensics\n\nDevelop a plan to identify a potential security violation and take appropriate action to report the incident\nComply with system termination procedures and incident reporting requirements related to potential security incidents or actual breaches\nAssess potential security violations to determine if the network security policies have been breached, assess the impact, and preserve evidence\nDiagnose and resolve IA problems in response to reported incidents\nDesign incident response procedures including testing, table top exercises, and playbooks\nDevelop guidelines to determine whether a security incident is indicative of a violation of law that requires special legal action\nIdentify the volatile and persistent system information\nSet up and manage forensic labs and programs\nUnderstand various digital media devices, e-discovery principles and practices and different file systems\nDevelop and manage an organizational digital forensic program\nEstablish, develop and manage forensic investigation teams\nDesign investigation processes such as evidence collection, imaging, data acquisition, and analysis\nIdentify the best practices to acquire, store and process digital evidence\nConfigure and use various forensic investigation tools\nDesign anti-forensic techniques\nApplication Security\n\n6.1 Secure SDLC Model\n6.2 Separation of Development, Test, and Production Environments\n6.3 Application Security Testing Approaches\n6.4 DevSecOps\n6.5 Waterfall Methodology and Security\n6.6 Agile Methodology and Security\n6.7 Other Application Development Approaches\n6.8 Application Hardening\n6.9 Application Security Technologies\n6.10 Version Control and Patch Management\n6.11 Database Security\n6.12 Database Hardening\n6.13 Secure Coding Practices\n\nVirtualization Security\n\n8.1 Virtualization Overview\n8.2 Virtualization Risks\n8.3 Virtualization Security Concerns\n8.4 Virtualization Security Controls\n8.5 Virtualization Security Reference Model\n\nCloud Computing Security\n\n9.1 Overview of Cloud Computing\n9.2 Security and Resiliency Cloud Services\n9.3 Cloud Security Concerns\n9.4 Cloud Security Controls\n9.5 Cloud Computing Protection Considerations\nTransformative Technologies\n\n10.5 Software-Defined Cybersecurity\n10.1 Artificial Intelligence\n10.2 Augmented Reality\n10.3 Autonomous SOC\n10.4 Dynamic Deception',
+ ],
+ 'Lesson 5: Strategic Planning, Finance, Procurement, and Third-Party Management': [
+   'Domain 5: Strategic Planning, Finance, Procurement, and Third-Party Management\n\nStrategic Planning\n\nDesign, develop and maintain enterprise information security architecture (EISA) by aligning business processes, IT software and hardware, local and wide area networks, people, operations, and projects with the organization\'s overall security strategy\nPerform external analysis of the organization (eg., analysis of customers, competitors, markets and industry environment) and internal analysis (risk management, organizational capabilities, performance measurement etc.) and utilise them to align information security program with organisation\'s objectives\nIdentify and consult with key stakeholders to ensure understanding of organisation\'s objectives\nDefine a forward-looking, visionary and innovative strategic plan for the role of the information security program with clear goals, objectives and targets that support the operational needs of the organization\nDefine key performance indicators and measure effectiveness on continuous basis\nAssess and adjust security resources to ensure they support the organization\'s strategic objectives\nMonitor and update activities to ensure accountability and progress\nFinance\n\nAnalyse, forecast and develop the operational budget of the security department\nAcquire and manage the necessary resources for implementation and management of information security plan\nAllocate financial resources to projects, processes and units within information security program\nMonitor and oversee cost management of information security projects, return on investment (ROI) of key purchases related to IT infrastructure and security and ensure alignment with the strategic plan\nIdentify and report financial metrics to stakeholders\nBalance the IT Security investment portfolio based on EISA considerations and enterprise security priorities\nUnderstand the acquisition life cycle and determine the importance of procurement by performing Business Impact Analysis\nIdentify different procurement strategies and understand the importance of costbenefit analysis during procurement of an information system\nUnderstand the basic procurement concepts such as Statement of Objectives (SOO), Statement of Work (SOW), and Total Cost of Ownership (TCO)\nCollaborate with various stakeholders (which may include internal client, lawyers, IT security professionals, privacy professionals, security engineers, suppliers, and others) on the procurement of IT security products and services\nInclude risk-based security requirements in acquisition plans, cost estimates, statements of work, contracts, and evaluation factors for award, service level agreements, and other pertinent procurement documents\nDesign vendor selection process and management policy\nDevelop contract administration policies that direct the evaluation and acceptance of delivered IT security products and services under a contract, as well as the security evaluation of IT and software being procured\nDevelop measures and reporting standards to measure and report on key objectives in procurements aligned with IT security policies and procedures\nUnderstand the IA security requirements to be included in statements of work and other appropriate procurement documents\nThird Party Management\n\nDesign third party selection process\nDesign third party management policy, metrics, and processes\nDesign and manage the third party assessment process including ongoing compliance management\nDevelop measures and reporting standards to measure and report on key objectives in procurements aligned with IT security policies and procedures\nInclude risk-based security requirements in acquisition plans, cost estimates, statements of work contracts, and evaluation factors for award, service level agreements, and other pertinent procurement documents\nUnderstand the security, privacy, and compliance requirements to be included in Statements of Word (SOW), Master Service Agreements (MSA), and toher procurement documents\nWaivers of Domain\n\nExperience waivers for CCISO are available for some industry-accepted credentials and higher education in information security (for details, please refer to the waiver chart below). Applicants may only waive up to 2 years of experience for each domain.\n\nDomain\tExperience Waivers\nGovernance and risk management\tPhD in information security (3 years)Master of Science in information security management or information security engineering (2 years)Bachelor of Science in information security (2 years)\nInformation Security Controls, Compliance, and Audit Management\tPhD in information security (3 years)Master of Science in information security management or information security engineering (2 years)Bachelor of Science in information security (2 years)\nSecurity Program Management and Operations\tPhD in information security (3 years)Master of Science in information security or project management (2 years)Bachelor of Science in information security (2 years)\nInformation Security Core Competencies\tPhD in information security (3 years)Master of Science in information security (2 years)Bachelor of Science in information security (2 years)\nStrategic Planning, Finance, Procurement, and Vendor Management\tCertified Public Accountant (CPA) license, Master of Business Administration, or Master of Science in finance (3 years)',
+ ],
+},
       prerequisites: [
-        '',
+        'Bachelor Degree in Computer Science or at least 5 years of working experience in any three of the C|CISO domains.',
       ],
-      whoShouldAttend: '',
-      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
+      whoShouldAttend: '''
+- Chief Executive Officer
+- Managing director
+- Chief Information Security Officer
+- Chief Information Officer
+- Chief Technical Officer
+- Chief of Information Security
+- Vice President of Information Security
+- Associate vice president
+- Information Security Officer
+- Chief Compliance Officer
+- Regional Chief Information Officer
+- Director of Security
+- IT Director/Head or equivalent
+- IT Manager Data Security
+- Director Cloud Security
+- Head Project Manager
+- Delivery Manager
+- Security Systems Engineer
+- Security Manager
+- Security Auditor
+- Head of Security Architect
+- Head of Network Architect
+- Infosec consultant and advisory
+- Senior Cyber Security CIO SME
+''',
+      importantNotes: '''
+Attend at least 75% of the course and declared as competent during the assessments
+Training Fee is inclusive of:
+- 5 days training 
+- C|CISO printed textbook and soft copy with 12 months access
+- C|CISO exam voucher valid for 12 months
+-   Bonus content on Cloud Security essential for cyber leaders!
+''',
       feeStructure: null,
     ),
     Course(
       id: '98',
-      courseCode: 'PMP190',
+      courseCode: 'PL-500',
       title: 'PL-500 Microsoft Power Automate RPA Developer',
-      category: 'Software Development',
+      category: 'Mobile & App Technology',
       certType: 'Microsoft',
       rating: 4.7,
       duration: '4 Days',
       price: '\$3,052.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'Candidates for this course automate time-consuming and repetitive tasks by using Microsoft Power Automate. They review solution requirements, create process documentation, and design, develop, troubleshoot, and evaluate solutions. Candidates work with business stakeholders to improve and automate business workflows. They collaborate with administrators to deploy solutions to production environments, and they support solutions. Course Outline',
-      outline: null,
+      description: 'Candidates for this course automate time-consuming and repetitive tasks by using Microsoft Power Automate. They review solution requirements, create process documentation, and design, develop, troubleshoot, and evaluate solutions. Candidates work with business stakeholders to improve and automate business workflows. They collaborate with administrators to deploy solutions to production environments, and they support solutions.',
+      outline: {
+  'Lesson 1: Take your first steps with Power Automate for desktop': [
+    'Introduction to Power Automate for desktop',
+    'Console overview',
+    'Flow designer overview',
+    'Create a simple flow',
+    'Exercise – Create and run a simple flow',
+  ],
+  'Lesson 2: Power Automate for desktop development essentials': [
+    'Introducing to Power Automate for desktop development',
+    'Create a flow in the flow designer',
+    'Create conditionals and loops',
+    'Using subflows',
+    'Test and debug flows',
+    'Manage UI elements and images',
+    'Deploy exception handling',
+  ],
+  'Lesson 3: Build your first Power Automate for desktop flow': [
+    'Set up the environment',
+    'Explore Power Automate for desktop',
+    'Create your first Power Automate for desktop flow',
+    'Record Power Automate for desktop actions',
+    'Edit and test recorded actions',
+  ],
+  'Lesson 4: Define input and output parameters in Power Automate': [
+    'Set up in Power Automate',
+    'Define an input variable',
+    'Set input variables',
+    'Define output variables',
+    'Add UI elements and test',
+  ],
+  'Lesson 5: Integrate desktop flows with Outlook connector in Power Automate for desktop': [
+    'Setup process in Power Automate',
+    'Build a cloud flow that\'s triggered in Outlook',
+    'Test your new flow',
+  ],
+  'Lesson 6: Connect a cloud flow to desktop flows in Power Automate for desktop': [
+    'Setup in Power Automate for desktop',
+    'Create a new cloud flow',
+    'Connect your cloud and desktop flows',
+    'Test your new connection',
+  ],
+  'Lesson 7: Use AI Builder to process invoice forms in Power Automate': [
+    'Solution setup in Power Automate',
+    'Create a form processing flow',
+    'Add fields and collections of documents',
+    'Analyze and train a model',
+    'Integrate the model into a cloud flow',
+  ],
+  'Lesson 8: Use the Teams connector in Power Automate': [
+    'Work from an existing solution in Power Automate',
+    'Create an approval solution',
+    'Integrate with an existing desktop flow',
+    'Build communication with Outlook',
+    'Test and run a flow',
+  ],
+  'Lesson 9: Run a Power Automate for desktop flow in unattended mode': [
+    'Set up an unattended desktop flow',
+    'Create a new cloud flow that calls an existing flow in unattended mode',
+    'Perform a test run',
+    'Best practices',
+  ],
+  'Lesson 10: Optimize your business process with process advisor': [
+    'Get familiar with process advisor',
+    'Create your first recording',
+    'Edit recordings and group actions',
+    'Analyze recordings an interpret results',
+    'Automation recommendations',
+  ],
+  'Lesson 11: Handle variables in Power Automate for desktop': [
+    'Introducing variables',
+    'Create, edit, and use variables',
+    'Variable data types',
+    'Advanced data types',
+    'Input and output variables',
+    'Variable manipulation',
+    'Sensitive variables',
+    'Exercise – Create, access and manipulate variables',
+  ],
+  'Lesson 12: Automate repetitive tasks using loops in Power Automate for desktop': [
+    'Introduction to loops',
+    'Loop actions',
+    'Simple loop actions',
+    'For each loop actions',
+    'Loop condition actions',
+    'Exercise – Loops',
+  ],
+  'Lesson 13: Adjust process behavior using conditional actions with Power Automate for desktop': [
+    'Introduction to conditional actions',
+    'Conditional actions',
+    'The If group of actions',
+    'The Switch group of actions',
+  ],
+  'Lesson 14: Configure flow control in Power Automate for desktop': [
+    'Introduction',
+    'Flow control actions',
+  ],
+  'Lesson 15: Generate Power Automate for desktop flows by recording': [
+    'Introduction to the Power Automate for desktop recorder',
+    'Create desktop flows using the recorder',
+    'Exercise – Use the recorder to automate web applications',
+    'Exercise – Use the recorder to automate desktop applications',
+  ],
+  'Lesson 16: Configure exception and error handling in Power Automate for desktop': [
+    'Introduction',
+    'About exceptions',
+    'Exception handling',
+    'Exercise – Exception handling',
+  ],
+  'Lesson 17: Control file and folder handling in Power Automate for desktop': [
+    'Introduction',
+    'Folder actions',
+    'File actions',
+    'Exercise – Create a backup copy of the desktop folder',
+  ],
+  'Lesson 18: Web automation in Power Automate for desktop': [
+    'Introducing web automation',
+    'Launch, close, and handle browsers',
+    'Handle web pages and forms',
+    'Extract data from web pages',
+    'Direct web access and scripting',
+    'Exercise – Extract stocks from MSN',
+  ],
+  'Lesson 19: Use Power Automate for desktop to interact with windows and applications': [
+    'Introduction',
+    'UI elements',
+    'Window handling and element interaction',
+  ],
+  'Lesson 20: Excel automation in Power Automate for desktop': [
+    'Introduction',
+    'Launch, save, and close an Excel file',
+    'Read from an Excel document',
+    'Write to an Excel worksheet',
+    'Additional actions and features',
+    'Manage worksheets',
+    'Exercise – Organize data in a spreadsheet',
+  ],
+  'Lesson 21: Automating email handling in Power Automate for desktop': [
+    'Introducing email automation',
+    'Automate webmail services',
+    'Automate Outlook',
+    'Automate Exchange servers',
+    'Exercise – Confirm the submission of support tickets',
+  ],
+  'Lesson 22: Automate system, workstation and services actions in Power Automate for desktop': [
+    'Introduction',
+    'System and workstation actions',
+    'Services actions',
+  ],
+  'Lesson 23: Communicate using message boxes in Power Automate for desktop flows': [
+    'Introduction to message boxes',
+    'Message box actions',
+    'Exercise – Use message boxes to communicate',
+  ],
+  'Lesson 24: Text manipulation in Power Automate for desktop': [
+    'Introduction',
+    'Text handling actions',
+    'Date time actions',
+    'Exercise – Text actions',
+  ],
+  'Lesson 25: Simulate mouse and keyboard actions by using Power Automate for desktop': [
+    'Introduction',
+    'Mouse and keyboard actions',
+    'Exercise – Simulate mouse and keyboard actions',
+  ],
+  'Lesson 26: Combine Power Automate desktop and cloud flows': [
+    'Introduction to running Power Automate desktop flows from cloud flows',
+    'Run a Power Automate desktop flow from a cloud flow',
+    'Exercise – Create a cloud flow that calls a Power Automate desktop flow',
+  ],
+  'Lesson 27: Database handling in Power Automate for desktop': [
+    'Introduction',
+    'Database actions',
+  ],
+  'Lesson 28: Active Directory handling in Power Automate for desktop': [
+    'Introduction',
+    'Active Directory actions',
+    'Exercise – Create a new Active Directory user',
+  ],
+  'Lesson 29: Scripting in Power Automate for desktop': [
+    'Introduction',
+    'Scripting actions',
+    'Exercise – Calculate modulo with VBScript',
+    'Exercise – Use Java Script to find the last day of the current month',
+  ],
+  'Lesson 30: OCR technologies in Power Automate for desktop': [
+    'Introducing OCR technologies',
+    'OCR actions',
+    'Exercise – Extract data from images',
+  ],
+  'Lesson 31: Get started with custom connectors in Power Automate': [
+    'Introduction',
+    'Demo of the maker portal experience',
+    'Explore custom connector configuration options',
+    'Exercise – Create a new connector in a solution',
+    'Use a custom connector',
+    'Exercise – Use a connector from Power Automate',
+  ],
+  'Lesson 32: Configure custom connectors with authenticated APIs in Power Automate': [
+    'Introduction',
+    'Authentication options',
+    'Use APIs with Azure AD',
+    'Configure Azure Active Directory authentication',
+    'Use graph API from custom connector',
+    'Share and move between environments',
+  ],
+  'Lesson 33: Introduction to Microsoft Power Platform security and governance': [
+    'Introduction',
+    'Identify Microsoft Power Platform environments',
+    'Data Loss Prevention policies',
+    'Microsoft Power Platform Center of Excellence Starter Kit',
+    'Exercise – Create a Power Platform environment',
+  ],
+},
       prerequisites: [
-        '',
+        'Candidates should have experience with JSON, cloud flows and Azure services, integrating solutions with REST and SOAP services, analyzing data by using Microsoft Excel, VBScript, Visual Basic for Applications (VBA), HTML, JavaScript, one or more programming languages, and the Microsoft Power Platform suite of tools (AI Builder, Power Apps, Dataverse, and Power Virtual Agents).',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'Same as Course Prerequisite.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '99',
-      courseCode: 'AIC189',
+      courseCode: '',
       title: 'Adobe InDesign Complete Level 2',
-      category: 'IT Training',
+      category: 'Business Operations',
       certType: 'Adobe',
       rating: 4.7,
       duration: '1 Day',
       price: '\$381.50',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'Adobe InDesign CS6 is a professional desktop publishing application that lets youcreate professional layouts for print and digital publishing. Master all aspects of desktop publishing using Adobe InDesign CS6 with New HorizonsSingapore’s instructor-led classes which will teach from introductory to advanced topicsand help you create professional documents and publications using hands-onexamples. In this course, participants ...',
-      outline: null,
+      description: '''
+Adobe InDesign CS6 is a professional desktop publishing application that lets you create professional layouts for print and digital publishing.
+
+Master all aspects of desktop publishing using Adobe InDesign CS6 with New Horizons Singapore’s instructor-led classes which will teach from introductory to advanced topics and help you create professional documents and publications using hands-on examples.
+
+In this course, participants will learn advanced InDesign techniques to enhance the look and functionality of the documents.
+''',
+      outline: {
+  'Lesson 1: Creating Documents for Multiple Formats': [
+    'Build Layout Variations',
+    'Link Content',
+  ],
+  'Lesson 2: Managing Advanced Page Elements': [
+    'Create Repeating Content',
+    'Work with Text Layouts',
+    'Create Transparency',
+    'Use Anchored Objects',
+    'Manage a Library',
+  ],
+  'Lesson 3: Managing Styles': [
+    'Import Styles from Microsoft Word Documents',
+    'Create Nested and GREP Styles',
+    'Apply Styles in a Sequence and Manage Overrides',
+    'Redefine Styles and Break Style Links',
+  ],
+  'Lesson 4: Building Complex Paths': [
+    'Create Bezier Paths',
+    'Create Clipping Paths',
+    'Create Compound Paths',
+  ],
+  'Lesson 5: Managing External Files': [
+    'Import Layered Files',
+    'Merge Data',
+  ],
+  'Lesson 6: Creating Dynamic Documents': [
+    'Create Document Sections',
+    'Insert Text Variables',
+    'Create Interactive Documents',
+  ],
+  'Lesson 7: Managing Long Documents': [
+    'Create a Book',
+    'Create a Table of Contents',
+    'Create Hyperlinks and Cross-References',
+    'Generate an Index',
+    'Insert Footnotes',
+  ],
+  'Lesson 8: Publishing InDesign Files for Other Formats': [
+    'Export PDF Files for Print',
+    'Export Interactive PDF Files',
+    'Export Files for Animation',
+    'Export Files for the Web',
+  ],
+  'Lesson 9: Customizing Print Settings': [
+    'Manage Colors',
+    'Preview the Print Output',
+    'Create Print Presets',
+  ],
+},
       prerequisites: [
-        '',
+        'InDesign CS6 – Level 1',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'Adobe InDesign CS6 is significantly beneficial towards designers, publishers, advertisers, copywriters, communication professionals, prepress and production professionals, and print service providers. This course is also tailored to individuals who have used the previous versions of Adobe InDesign so that they will learn the new features from Adobe InDesign CS6 that can help them get the most from the software.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '100',
-      courseCode: 'AIC186',
+      courseCode: '',
       title: 'Adobe InDesign Complete Level 1',
-      category: 'IT Training',
+      category: 'Business Operations',
       certType: 'Adobe',
       rating: 4.7,
       duration: '1 Day',
       price: '\$381.50',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'Adobe InDesign CS6 is a professional desktop publishing application that lets youcreate professional layouts for print and digital publishing. Master all aspects of desktop publishing using Adobe InDesign CS6 with New HorizonsSingapore’s instructor-led classes which will teach from introductory to advanced topicsand help you create professional documents and publications using hands-onexamples. Adobe InDesign CS6 course ...',
-      outline: null,
+      description: '''
+Adobe InDesign CS6 is a professional desktop publishing application that lets you create professional layouts for print and digital publishing.
+
+Master all aspects of desktop publishing using Adobe InDesign CS6 with New Horizons Singapore’s instructor-led classes which will teach from introductory to advanced topics and help you create professional documents and publications using hands-on examples.
+
+Adobe InDesign CS6 course gives you all the tools you need to give your documents a well-designed, professional look, including Paragraph and character styles, layout features, and customized text and graphics.
+''',
+      outline: {
+  'Lesson 1: Getting Started with InDesign': [
+    'Identify Components of the InDesign Interface',
+    'Customize the InDesign Interface',
+    'Use the Navigation Controls',
+    'Set Preferences',
+  ],
+  'Lesson 2: Designing Documents': [
+    'Create a Document',
+    'Add Text to a Document',
+    'Add Graphics to a Document',
+  ],
+  'Lesson 3: Customizing Documents': [
+    'Format Characters and Paragraphs',
+    'Apply Colors, Swatches, and Gradients',
+    'Create and Apply Styles',
+  ],
+  'Lesson 4: Working with Page Elements': [
+    'Arrange and Align Objects',
+    'Use Layers',
+    'Transform and Manipulate Objects',
+    'Thread Text Frames',
+    'Edit Text',
+  ],
+  'Lesson 5: Managing Objects': [
+    'Transform Objects',
+    'Manipulate Objects',
+    'Thread Text Frames',
+    'Search and Replace Content',
+  ],
+  'Lesson 6: Building Tables': [
+    'Create a New Table',
+    'Modify a Table Structure',
+    'Format a Table',
+  ],
+  'Lesson 7: Preparing a Document for Delivery': [
+    'Resolve Errors in a Document',
+    'Print a Document',
+    'Package a Document',
+    'Export Files for Printing',
+    'Export Files for the Web',
+  ],
+},
       prerequisites: [
-        '',
+        'Familiarity with the functions of the computer’s operating systems such as creating folders, launching programs, copying and pasting objects, formatting text, retrieving and saving files.',
+        'Familiarity with other Adobe software applications is helpful but not required.',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'Adobe InDesign CS6 is significantly beneficial towards designers, publishers, advertisers, copywriters, communication professionals, prepress and production professionals, and print service providers. This course is also tailored to individuals who have used the previous versions of Adobe InDesign so that they will learn the new features from Adobe InDesign CS6 that can help them get the most from the software.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
