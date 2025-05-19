@@ -12898,7 +12898,7 @@ After completing this course, the learners will be able to:
       rating: 4.7,
       duration: '4 Days',
       price: '\$3,052.00',
-      funding: null,
+      funding: null, 
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
