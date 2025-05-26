@@ -19601,7 +19601,7 @@ This course also earns you 64 Continuing Education (CE) credits towards recertif
         '',
       ],
       whoShouldAttend: '',
-      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
+      importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments ',
       feeStructure: null,
     ),
     Course(
