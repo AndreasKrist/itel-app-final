@@ -17936,276 +17936,1649 @@ operation of an SAP solution on Azure. Your will receive guidance on subscriptio
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'This course teaches Network Engineers how to design, implement, and maintain Azure networking solutions. This course covers the process of designing, implementing, and managing core Azure networking infrastructure, Hybrid Networking connections, load balancing traffic, network routing, private access to Azure services, network security and monitoring. Learn how to design and implement a secure, reliable, network ...',
-      outline: null,
+      description: 'This course teaches Network Engineers how to design, implement, and maintain Azure networking solutions. This course covers the process of designing, implementing, and managing core Azure networking infrastructure, Hybrid Networking connections, load balancing traffic, network routing, private access to Azure services, network security and monitoring. Learn how to design and implement a secure, reliable, network infrastructure in Azure and how to establish hybrid connectivity, routing, private access to Azure services, and monitoring in Azure.',
+      outline: {
+  'Lesson 1: Introduction to Azure Virtual Networks': [
+    'Explore Azure Virtual Networks',
+    'Configure public IP services',
+    'Exercise: Design and implement a virtual network in Azure',
+    'Design name resolution for your virtual network',
+    'Exercise: Configure domain name servers settings in Azure',
+    'Enable cross-virtual network connectivity with peering',
+    'Exercise: Connect two Azure virtual networks using global virtual network peering',
+    'Implement virtual network traffic routing',
+    'Configure internet access with Azure Virtual NAT',
+  ],
+  'Lesson 2: Design and Implement Hybrid Networking': [
+    'Design and implement Azure VPN Gateway',
+    'Exercise: Create and configure a virtual network gateway',
+    'Connect networks with Site-to-site VPN connections',
+    'Connect devices to networks with Point-to-site VPN connections',
+    'Connect remote resources by using Azure Virtual WANs',
+    'Exercise: Create a Virtual WAN by using the Azure portal',
+    'Create a network virtual appliance (NVA) in a virtual hub',
+  ],
+  'Lesson 3: Design and implement Azure ExpressRoute': [
+    'Explore Azure ExpressRoute',
+    'Design an ExpressRoute deployment',
+    'Exercise: Configure an ExpressRoute gateway',
+    'Exercise: Provision an ExpressRoute circuit',
+    'Configure peering for an ExpressRoute deployment',
+    'Connect an ExpressRoute circuit to a virtual network',
+    'Connect geographically dispersed networks with ExpressRoute global reach',
+    'Improve data path performance between networks with ExpressRoute FastPath',
+    'Troubleshoot ExpressRoute connection issues',
+  ],
+  'Lesson 4: Load balancing non-HTTP(S) traffic in Azure': [
+    'Explore load balancing',
+    'Design and implement Azure load balancer using the Azure portal',
+    'Exercise: create and configure and Azure load',
+    'Explore Azure Traffic Manage',
+    'Exercise: create a Traffic Manager profile using the Azure portal',
+  ],
+  'Lesson 5: Load balancing HTTP(S) traffic in Azure': [
+    'Design Azure application gateway',
+    'Configure Azure application gateway',
+    'Exercise: deploy Azure application gateway',
+    'Design and configure Azure front door',
+    'Exercise: create a front door for a highly available web application',
+  ],
+  'Lesson 6: Design and implement network security': [
+    'Get network security recommendations with Microsoft Defender for Cloud',
+    'Deploy Azure DDoS Protection by using the Azure portal',
+    'Exercise: Configure DDoS Protection on a virtual network using the Azure portal',
+    'Deploy Network Security Groups by using the Azure portal',
+    'Design and implement Azure Firewall',
+    'Exercise: Deploy and configure Azure Firewall using the Azure portal',
+    'Secure your networks with Azure Firewall Manager',
+    'Exercise: secure your virtual hub using Azure Firewall Manager',
+    'Implement a Web Application Firewall on Azure Front Door',
+  ],
+  'Lesson 7: Design and implement private access to Azure Services': [
+    'Explain virtual network service endpoints',
+    'Define Private Link Service and private endpoint',
+    'Integrate Private Link with DNS',
+    'Exercise: restrict network access to PaaS resources with virtual network service endpoints',
+    'Exercise: create an Azure private endpoint using Azure PowerShell',
+    'Integrate your App Service with Azure virtual networks',
+  ],
+  'Lesson 8: Design and implement network monitoring': [
+    'Monitor your networks with Azure Monitor',
+    'Exercise: Monitor a load balancer resource by using Azure Monitor',
+    'Monitor your networks with Azure Network Watcher',
+  ],
+},
       prerequisites: [
-        '',
+        'Understanding of on-premises virtualization technologies, including: VMs, virtual networking, and virtual hard disks.',
+        'Understanding of network configurations, including TCP/IP, Domain Name System (DNS), virtual private networks (VPNs), firewalls, and encryption technologies.',
+        'Understanding of software defined networking.',
+        'Understanding hybrid network connectivity methods, such as VPN.',
+        'Understanding resilience and disaster recovery, including high availability and restore operations.',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'To be updated',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '153',
-      courseCode: 'ADS629',
+      courseCode: 'AZ-204',
       title: 'AZ-204 Developing Solutions for Microsoft Azure',
-      category: 'Cloud Computing',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'Microsoft',
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,815.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'This course teaches developers how to create end-to-end solutions in Microsoft Azure. Students will learn how to implement Azure compute solutions, create Azure Functions, implement and manage web apps, develop solutions utilizing Azure storage, implement authentication and authorization, and secure their solutions by using KeyVault and Managed Identities. Students will also learn how to connect ...',
-      outline: null,
+      description: 'This course teaches developers how to create end-to-end solutions in Microsoft Azure. Students will learn how to implement Azure compute solutions, create Azure Functions, implement and manage web apps, develop solutions utilizing Azure storage, implement authentication and authorization, and secure their solutions by using KeyVault and Managed Identities. Students will also learn how to connect to and consume Azure services and third-party services, and include event- and message-based models in their solutions. The course also covers monitoring, troubleshooting, and optimizing Azure solutions.',
+      outline: {
+  'Lesson 1: Explore Azure App Service': [
+    'Examine Azure App Service',
+    'Examine Azure App Service plans',
+    'Deploy to App Service',
+    'Explore authentication and authorization in App Service',
+    'Discover App Service networking features',
+    'Exercise: Create a static HTML web app by using Azure Cloud Shell',
+  ],
+  'Lesson 2: Configure web app settings': [
+    'Configure application settings',
+    'Configure general settings',
+    'Configure path mappings',
+    'Enable diagnostic logging',
+    'Configure security certificates',
+    'Manage app features',
+  ],
+  'Lesson 3: Scale apps in Azure App Service': [
+    'Examine autoscale factors',
+    'Identify autoscale factors',
+    'Enable autoscale in App Service',
+    'Explore autoscale best practices',
+  ],
+  'Lesson 4: Explore Azure App Service deployment slots': [
+    'Explore staging environments',
+    'Examine slot swapping',
+    'Swap deployment slots',
+    'Route traffic in App Service',
+  ],
+  'Lesson 5: Explore Azure Functions': [
+    'Discover Azure Functions',
+    'Compare Azure Functions hosting options',
+    'Scale Azure Functions',
+  ],
+  'Lesson 6: Develop Azure Functions': [
+    'Explore Azure Functions development',
+    'Create triggers and bindings',
+    'Connect functions to Azure services',
+    'Exercise: Create an Azure Function by using Visual Studio Code',
+  ],
+  'Lesson 7: Implement Durable Functions': [
+    'Explore Durable Functions app patterns',
+    'Discover the four function types',
+    'Explore task hubs',
+    'Explore durable orchestrations',
+    'Control timing in Durable Functions',
+    'Send and wait for events',
+  ],
+  'Lesson 8: Explore Azure Blob storage': [
+    'Explore Azure Blob storage',
+    'Discover Azure Blob storage resource types',
+    'Explore Azure Storage security features',
+    'Evaluate Azure Storage redundancy options',
+    'Exercise: Create a block blob storage account',
+  ],
+  'Lesson 9: Manage the Azure Blob storage lifecycle': [
+    'Explore the Azure Blob storage lifecycle',
+    'Discover Blob storage lifecycle policies',
+    'Implement Blob storage lifecycle policies',
+    'Rehydrate blob data from the archive tier',
+  ],
+  'Lesson 10: Work with Azure Blob storage': [
+    'Explore Azure Blob storage client library',
+    'Exercise: Create Blob storage resources by using the .NET client library',
+    'Manage container properties and metadata by using .NET',
+    'Set and retrieve properties and metadata for blob resources by using REST',
+  ],
+  'Lesson 11: Explore Azure Cosmos DB': [
+    'Identify key benefits of Azure Cosmos DB',
+    'Explore the resource hierarchy',
+    'Explore consistency levels',
+    'Choose the right consistency level',
+    'Explore supported APIs',
+    'Discover request units',
+    'Exercise: Create Azure Cosmos DB resources by using the Azure portal',
+  ],
+  'Lesson 12: Implement partitioning in Azure Cosmos DB': [
+    'Explore partitions',
+    'Choose a partitions key',
+    'Create a synthetic partition key',
+  ],
+  'Lesson 13: Work with Azure Cosmos DB': [
+    'Explore Microsoft .NET SDK v3 for Azure Cosmos DB',
+    'Exercise: Create resources by using the Microsoft .NET SDK v3',
+    'Create stored procedures',
+    'Create triggers and user-defined functions',
+  ],
+  'Lesson 14: Provision virtual machines in Azure': [
+    'Explore Azure virtual machines',
+    'Compare virtual machine availability options',
+    'Determine appropriate virtual machine size',
+    'Exercise: Create a virtual machine by using the Azure CLI',
+  ],
+  'Lesson 15: Create and deploy Azure Resource Manager templates': [
+    'Explore Azure Resource Manager',
+    'Deploy multi-tiered solutions',
+    'Explore conditional deployment',
+    'Set the correct deployment mode',
+    'Exercise: Create and deploy Azure Resource Manager templates by using Visual Studio',
+  ],
+  'Lesson 16: Manage container images in Azure Container Registry': [
+    'Discover the Azure Container Registry',
+    'Explore storage capabilities',
+    'Build and manage containers with tasks',
+    'Explore elements of a Dockerfile',
+    'Exercise: Build and run a container image by using Azure Container Registry Tasks',
+  ],
+  'Lesson 17: Run container images in Azure Container Instances': [
+    'Explore Azure Container Instances',
+    'Exercise: Deploy a container instance by using the Azure CLI',
+    'Run containerized tasks with restart policies',
+    'Set environment variables in container instances',
+    'Mount an Azure file share in Azure Container Instances',
+  ],
+  'Lesson 18: Explore the Microsoft identity platform': [
+    'Explore the Microsoft identity platform',
+    'Explore service principals',
+    'Discover permissions and consent',
+    'Discover conditional access',
+  ],
+  'Lesson 19: Implement authentication by using the Microsoft Authentication Library': [
+    'Explore the Microsoft Authentication Library',
+    'Initialize client applications',
+    'Exercise: Implement interactive authentication by using MSAL.NET',
+  ],
+  'Lesson 20: Implement shared access signatures': [
+    'Discover shared access signatures',
+    'Explore stored access policies',
+  ],
+  'Lesson 21: Explore Microsoft Graph': [
+    'Discover Microsoft Graph',
+    'Query Microsoft Graph by using REST',
+    'Query Microsoft Graph by using SDKs',
+    'Apply best practices to Microsoft Graph',
+  ],
+  'Lesson 22: Implement Azure Key Vault': [
+    'Explore Azure Key Vault',
+    'Discover Azure Key Vault best practices',
+    'Authenticate to Azure Key Vault',
+    'Exercise: Set and retrieve a secret from Azure Key Vault by using Azure CLI',
+  ],
+  'Lesson 23: Implement managed identities': [
+    'Explore managed identities',
+    'Discover the managed identities authentication flow',
+    'Configure managed identities',
+    'Acquire an access token',
+  ],
+  'Lesson 24: Implement Azure App Configuration': [
+    'Explore the Azure App Configuration service',
+    'Create paired keys and values',
+    'Manage application features',
+    'Secure app configuration data',
+  ],
+  'Lesson 25: Explore API Management': [
+    'Discover the API Management service',
+    'Explore API gateways',
+    'Explore API Management policies',
+    'Create advanced policies',
+    'Secure APIs by using subscriptions',
+    'Secure APIs by using certificates',
+    'Exercise: Create a backend API',
+  ],
+  'Lesson 26: Explore Azure Event Grid': [
+    'Explore Azure Event Grid',
+    'Discover event schemas',
+    'Explore event delivery durability',
+    'Control access to events',
+    'Receive events by using webhooks',
+    'Filter events',
+    'Exercsie: Route custom events to web endpoint by using Azure CLI',
+  ],
+  'Lesson 27: Explore Azure Event Hubs': [
+    'Discover Azure Event Hubs',
+    'Explore Event Hubs Capture',
+    'Scale your processing application',
+    'Control access to events',
+    'Perform common operations with the Event Hubs client library',
+  ],
+  'Lesson 28: Discover Azure message queues': [
+    'Choose a message queue solution',
+    'Explore Azure Service Bus',
+    'Discover Service Bus queues, topics, and subscriptions',
+    'Explore Service Bus message payloads and serialization',
+    'Exercise: Send and receive message from a Service Bus queue by using .NET',
+    'Explore Azure Queue Storage',
+    'Create and manage Azure Queue Storage and messages by using .NET',
+  ],
+  'Lesson 29: Monitor app performance': [
+    'Explore Azure Monitor',
+    'Explore Application Insights',
+    'Discover log-based metrics',
+    'Instrument an app for monitoring',
+    'Select and availability test',
+    'Troubleshoot app performance by using Application Map',
+  ],
+  'Lesson 30: Develop for Azure Cache for Redis': [
+    'Explore Azure Cache for Redis',
+    'Configure Azure Cache for Redis',
+    'Interact with Azure Cache for Redis by using .NET',
+    'Exercise: Connect an app to Azure Cache for Redis by using .NET Core',
+  ],
+  'Lesson 31: Develop for storage on CDNs': [
+    'Explore Azure Content Delivery Networks',
+    'Control cache behaviour on Azure Content Delivery Networks',
+    'Interact with Azure Content Delivery Networks by using .NET',
+  ],
+},
       prerequisites: [
-        '',
+        'Hands-on experience with Azure IaaS and PaaS solutions, and the Azure Portal.',
+        'Experience writing in an Azure supported language at the intermediate level. (C#, JavaScript, Python, or Java)',
+        'Ability to write code to connect and perform operations on, a SQL or NoSQL database product. (SQL Server, Oracle, MongoDB, Cassandra or similar)',
+        'Experience writing code to handle authentication, authorization, and other security principles at the intermediate level.',
+        'A general understanding of HTML, the HTTP protocol and REST API interfaces.',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'Students in this course are interested in Azure development or in passing the Microsoft Azure Developer Associate certification exam.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '154',
-      courseCode: 'EIA628',
+      courseCode: '',
       title: 'ENAUI: Implementing Automation for Cisco Enterprise Solutions',
-      category: 'IT Training',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '3 Days',
       price: '\$4,360.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'Implementing Automation for Cisco Enterprise Solutions (ENAUI) v.1.2 teaches you how to implement Cisco Enterprise automated solutions, including programming concepts, orchestration, telemetry, and automation tools. This course highlights the tools and the benefits of leveraging programmability and automation in the Cisco-powered Enterprise Campus and WAN. You will also examine platforms including IOS XE software for ...',
-      outline: null,
+      description: '''
+Implementing Automation for Cisco Enterprise Solutions (ENAUI) v.1.2 teaches you how to implement Cisco Enterprise automated solutions, including programming concepts, orchestration, telemetry, and automation tools.
+
+This course highlights the tools and the benefits of leveraging programmability and automation in the Cisco-powered Enterprise Campus and WAN. You will also examine platforms including IOS XE software for device-centric automation, Cisco DNA Center for the intent-based enterprise network, Cisco Software-Defined WAN, and Cisco Meraki. Their current ecosystem of APIs, software development toolkits, and relevant workflows are studied in detail together with open industry standards, tools, and APIs, such as Python, Ansible, Git, JSON/YAML, NETCONF/RESTCONF, and YANG.
+
+This course will help you:
+- Gain high-demand skills using modern programming languages, APIs, and systems such as Python, Ansible, and Git to automate, streamline, and enhance business operations
+- Acquire the skills and knowledge to customize tools, methods, and processes that improve network performance and agility
+- Earn 24 Continuing Education credits toward recertification
+- Prepare for the 300-435 ENAUTO exam and join the DevNet class of 2020
+''',
+      outline: {
+  'Lesson 1: Network Programmability Foundation': [
+  ],
+  'Lesson 2: Automating APIs and Protocols': [
+  ],
+  'Lesson 3: Managing Configuration with Python and Ansible': [
+  ],
+  'Lesson 4: Implementing On-Box Programmability and Automation with Cisco IOS XE Software': [
+  ],
+  'Lesson 5: Implementing Model-Driven Telemetry': [
+  ],
+  'Lesson 6: Day 0 Provisioning with Cisco IOS-XE Software': [
+  ],
+  'Lesson 7: Implementing Automation in Enterprise Networks': [
+  ],
+  'Lesson 8: Building Cisco DNA Center Automation with Python': [
+  ],
+  'Lesson 9: Automating Operations using Cisco DNA Center': [
+  ],
+  'Lesson 10: Introducing Cisco SD-WAN Programmability': [
+  ],
+  'Lesson 11: Building Cisco SD-WAN Automation with Python': [
+  ],
+  'Lesson 12: Building Cisco SD-WAN Automation with Ansible': [
+  ],
+  'Lesson 13: Automating Cisco Meraki': [
+  ],
+  'Lesson 14: Implementing Meraki Integration APIs': [
+  ],
+  'Lab Outline': [
+    'Automate Networks with Netmiko',
+    'Use Postman for REST API Consumption',
+    'Use Ansible to Configure and Verify Device Configuration',
+    'Implement On-Box Programmability and Automation with Cisco IOS XE Software',
+    'Use Python on Cisco IOS XE Software',
+    'Implement Streaming Telemetry with Cisco IOS XE',
+    'Explore Cisco DNA Center APIs',
+    'Build Python Scripts to Interact with Cisco DNA Center Intent APIs',
+    'Build Python Scripts with Cisco DNA Center Assurance APIs',
+    'Troubleshoot End-to-End Connectivity and Health-Check the Network via the Cisco DNA Center API',
+    'Perform Administrative Tasks Using the Cisco SD-WAN API',
+    'Build, Manage, and Operate Cisco SD-WAN Programmatically',
+    'Consume SD-WAN APIs Using the Uniform Resource Identifier (URI) Module',
+    'Manage Policies with Ansible',
+    'Build Reports Using Ansible-Cisco SD_WAN Role',
+    'Implement Cisco Meraki API Automation',
+    'Explore Cisco Meraki Integration APIs',
+    'Explore Cisco Meraki Webhook Alerts',
+  ],
+},
       prerequisites: [
-        '',
+        'Basic programming language concepts',
+        'Basic understanding of virtualization',
+        'Ability to use Linux and CLI tools, such as Secure Shell (SSH) and bash',
+        'CCNP level core networking knowledge',
+        'Foundational understanding of Cisco DNA, Meraki, and Cisco SD-WAN',
+        'The following Cisco courses can help you gain the knowledge you need to prepare for this course:',
+        'Introducing Automation for Cisco Solutions (CSAU)',
+        'Implementing and Administering Cisco Solutions (CCNA®)',
+        'Implementing Cisco Enterprise Network Core Technologies (ENCOR)',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+This course is designed primarily for network and software engineers who are interested in learning about automation and programmability and hold the following job roles:
+- Network engineer
+- Systems engineer
+- Wireless engineer
+- Consulting systems engineer
+- Technical solutions architect
+- Network administrator
+- Wireless design engineer
+- Network manager
+- Sales engineer
+- Account manager
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '155',
-      courseCode: 'EIC624',
+      courseCode: '',
       title: 'ENWLSI: Implementing Cisco Enterprise Wireless Networks',
-      category: 'Networking',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
       price: '\$5,665.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The Implementing Cisco Enterprise Wireless Networks (ENWLSI) v1.1 course gives you the knowledge and skills needed to create a secure wireless network infrastructure and troubleshoot any related issues. You’ll learn how to implement and fortify a wireless network infrastructure using Cisco Identity Service Engine (ISE), Cisco Prime Infrastructure (PI), and Cisco Connect Mobile Experience to ...',
-      outline: null,
+      description: '''
+The Implementing Cisco Enterprise Wireless Networks (ENWLSI) v1.1 course gives you the knowledge and skills needed to create a secure wireless network infrastructure and troubleshoot any related issues. You’ll learn how to implement and fortify a wireless network infrastructure using Cisco Identity Service Engine (ISE), Cisco Prime Infrastructure (PI), and Cisco Connect Mobile Experience to monitor and troubleshoot network issues.
+
+This course provides hands-on labs to reinforce concepts including deploying Cisco Prime Infrastructure Release 3.5, Cisco Catalyst® 9800 Wireless Controller Release, Cisco IOS XE Gibraltar 16.10, Cisco Digital Network Architecture (Cisco DNA) Center Release 1.2.8, Cisco Connected Mobile Experiences (CMX) Release 10.5, Cisco Mobility Services Engine (MSE) Release 8.0 features, and Cisco ISE Release 2.4.
+
+This course also helps you prepare to take the 300-430 Implementing Cisco Enterprise Wireless Networks (ENWLSI) exam, which is part of the new CCNP® Enterprise certification and the Cisco Certified Specialist – Enterprise Wireless Implementation certification.
+
+This course will help you:
+- Use Cisco Identity Services Engine, Cisco Prime Infrastructure, and Cisco Connect Mobile Experience to streamline network management, improve operations efficiency, and enhance consistency of network services
+- Implement, secure and configure a tailored Cisco wireless network infrastructure
+- Earn 40 CE credits toward recertification
+''',
+      outline: {
+  'Lesson 1: Securing and Troubleshooting the Wireless Network Infrastructure': [
+  ],
+  'Lesson 2: Implementing and Troubleshooting Secure Client Connectivity': [
+  ],
+  'Lesson 3: Implementing and Troubleshooting Quality of Service (QoS) in Wireless Networks': [
+  ],
+  'Lesson 4: Implementing and Troubleshooting Advanced Wireless Network Services': [
+  ],
+  'Lab Outline': [
+    'Lab Familiarization (Base Learning Lab)',
+    'Configure Secure Management Access for Cisco Wireless LAN Controllers (WLCs) and Access Points (APs)',
+    'Add Network Devices and External Resources to Cisco Prime Infrastructure',
+    'Customize Cisco Prime Infrastructure for Network Monitoring',
+    'Capture a Successful AP Authentication',
+    'Implement Authentication, Authorization, and Accounting (AAA) Services for Central Mode WLANs',
+    'Implement AAA Services for FlexConnect Mode Wireless LANs (WLANs',
+    'Configure Guest Services in the Wireless Network',
+    'Configure Bring Your Own Device (BYOD) in the Wireless Network',
+    'Capture Successful Client Authentications',
+    'Configure QoS in the Wireless Network for Voice and Video Services',
+    'Configure Cisco Application Visibility and Control (AVC) in the Wireless Network',
+    'Configure multicast DNS (mDNS) in the Wireless Network',
+    'Configure, Detect, and Locate Services on the Cisco CMX',
+  ],
+},
       prerequisites: [
-        '',
+        'General knowledge of networks and wireless networks',
+        'Routing and switching knowledge',
+        'The following Cisco courses can help you gain the knowledge you need to prepare for this course:',
+        'Implementing and Administering Cisco Solutions (CCNA)',
+        'Implementing and Operating Cisco Enterprise Network Core Technologies (ENCOR)',
+        'Understanding Cisco Wireless Foundations (WLFNDU)',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+-Network designers
+-Sales engineers
+-Wireless network engineers
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '156',
-      courseCode: 'EDC615',
+      courseCode: '',
       title: 'ENSLD: Designing Cisco Enterprise Networks',
-      category: 'Networking',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
       price: '\$5,665.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The Designing Cisco Enterprise Networks (ENSLD) v1.0 course gives you the knowledge and skills you need to design an enterprise network. This course serves as a deep dive into enterprise network design and expands on the topics covered in the Implementing and Operating Cisco® Enterprise Network Core Technologies (ENCOR) v1.0 course. This course also helps ...',
-      outline: null,
+      description: '''
+The Designing Cisco Enterprise Networks (ENSLD) v1.0 course gives you the knowledge and skills you need to design an enterprise network. This course serves as a deep dive into enterprise network design and expands on the topics covered in the Implementing and Operating Cisco® Enterprise Network Core Technologies (ENCOR) v1.0 course.
+
+This course also helps you prepare to take the exam, Designing Cisco Enterprise Networks (ENSLD), which is part of the CCNP® Enterprise and Cisco Certified Specialist– Enterprise Design certifications.
+
+This course will help you:
+- Learn the skills, technologies, and best practices needed to design an enterprise network.
+- Deepen your understanding of enterprise design including advanced addressing and routing solutions, advanced enterprise campus networks, WAN, security services, network services, and software-defined access SDA.
+- Validate your knowledge and prepare to take the Designing Cisco Enterprise Networks (ENSLD) exam.
+- Earn 40 CE credits toward recertification
+''',
+      outline: {
+  'Lesson 1: Designing EIGRP Routing': [
+  ],
+  'Lesson 2: Designing OSPF Routing': [
+  ],
+  'Lesson 3: Designing IS-IS Routing': [
+  ],
+  'Lesson 4: Designing BGP Routing and Redundancy': [
+  ],
+  'Lesson 5: Understanding BGP Address Families': [
+  ],
+  'Lesson 6: Designing the Enterprise Campus LAN': [
+  ],
+  'Lesson 7: Designing the Layer 2 Campus': [
+  ],
+  'Lesson 8: Designing the Layer 3 Campus': [
+  ],
+  'Lesson 9: Discovering the Cisco SD-Access Architecture': [
+  ],
+  'Lesson 10: Exploring Cisco SD-Access Fabric Design': [
+  ],
+  'Lesson 11: Designing Service Provider-Managed VPNs': [
+  ],
+  'Lesson 12: Designing Enterprise-Managed VPNs': [
+  ],
+  'Lesson 13: Designing WAN Resiliency': [
+  ],
+  'Lesson 14: Examining Cisco SD-WAN Architectures': [
+  ],
+  'Lesson 15: Cisco SD-WAN Deployment Design Considerations': [
+  ],
+  'Lesson 16: Designing Cisco SD-WAN Routing and High Availability': [
+  ],
+  'Lesson 17: Understanding QoS': [
+  ],
+  'Lesson 18: Designing LAN and WAN QoS': [
+  ],
+  'Lesson 19: Exploring Multicast with Protocol-Independent Multicast-Sparse Mode': [
+  ],
+  'Lesson 20: Designing Rendezvous Point Distribution Solutions': [
+  ],
+  'Lesson 21: Designing an IPv4 Address Plan': [
+  ],
+  'Lesson 22: Exploring IPv6': [
+  ],
+  'Lesson 23: Deploying IPv6': [
+  ],
+  'Lesson 24: Introducing Network APIs and Protocols': [
+  ],
+  'Lesson 25: Exploring YANG, NETCONF, RESTCONF, and Model-Driven Telemetry': [
+  ],
+  'Lab Outline': [
+    'Designing Enterprise Connectivity',
+    'Designing an Enterprise Network with BGP Internet Connectivity',
+    'Designing an Enterprise Campus LAN',
+    'Designing Resilient Enterprise WAN',
+    'Designing QoS in an Enterprise Network',
+    'Designing an Enterprise IPv6 Network',
+  ],
+},
       prerequisites: [
-        '',
+        'Basic network fundamentals and building simple LANs',
+        'Basic IP addressing and subnets',
+        'Routing and switching fundamentals',
+        'Basic wireless networking concepts and terminology',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+- Network design engineers
+- Network engineers
+- System administrators
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '157',
-      courseCode: 'EIC608',
+      courseCode: '',
       title: 'ENSDWI: Implementing Cisco SD-WAN Solutions',
-      category: 'IT Training',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
       price: '\$5,665.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The Implementing Cisco SD-WAN Solutions (SDWAN300) v1.0 course gives you deep dive training about how to design, deploy, configure, and manage your Cisco® Software-Defined WAN (SD-WAN) solution in a large-scale live network, including how to migrate from legacy WAN to SD-WAN. You will learn best practices for configuring routing protocols in the data center and ...',
-      outline: null,
+      description: '''
+The Implementing Cisco SD-WAN Solutions (SDWAN300) v1.0 course gives you deep dive training about how to design, deploy, configure, and manage your Cisco® Software-Defined WAN (SD-WAN) solution in a large-scale live network, including how to migrate from legacy WAN to SD-WAN. You will learn best practices for configuring routing protocols in the data center and the branch, as well as how to implement advanced control, data, and application-aware policies. The course also covers SD WAN deployment and migration options, placement of controllers, how to deploy and replace edge devices, and how to configure Direct Internet Access (DIA) breakout.
+
+This course helps you prepare to take the Implementing Cisco SD-WAN Solutions (300415 ENSDWI) exam, which is part of the new CCNP Enterprise certification and the Cisco Certified Specialist – Enterprise SD-WAN Implementation certification.
+
+This course will help you learn to use Cisco SD-WAN to:
+- Establish a transport-independent WAN for lower cost and higher diversity
+- Meet Service-Level Agreements (SLAs) for business-critical and real-time applications
+- Provide end-to-end segmentation for protecting critical enterprise compute resources
+- Extend seamlessly into the public cloud
+- Optimize the user experience for Software-as-a-Service (SaaS) applications
+- Earn 32 CE credits toward recertification
+''',
+      outline: {
+  'Lesson 1: Cisco SD-WAN Overlay Network': [
+    'Examining Cisco SD-WAN Architecture',
+  ],
+  'Lesson 2: Cisco SD-WAN Deployment': [
+    'Examining Cisco SD-WAN Deployment Options',
+    'Deploying Edge Devices',
+    'Deploying Edge Devices with Zero-Touch Provisioning',
+    'Using Device Configuration Templates',
+    'Redundancy, High Availability, and Scalability',
+  ],
+  'Lesson 3: Cisco SD-WAN Routing Options': [
+    'Using Dynamic Routing',
+    'Providing Site Redundancy and High Availability',
+    'Configuring Transport-Side Connectivity',
+  ],
+  'Lesson 4: Cisco SD-WAN Policy Configuration': [
+    'Reviewing Cisco SD-WAN Policy',
+    'Defining Advanced Control Policies',
+    'Defining Advanced Data Policies',
+    'Implementing Application-Aware Routing',
+    'Implementing Internet Breakouts and Network Address Translation (NAT)',
+  ],
+  'Lesson 5: Cisco SD-WAN Migration and Interoperability': [
+    'Examining Cisco SD-WAN Hybrid Scenarios',
+    'Performing a Migration',
+  ],
+  'Lesson 6: Cisco SD-WAN Management and Operations': [
+    'Performing Day-2 Operations',
+    'Performing Upgrades',
+  ],
+  'Lab Outline': [
+    'Deploying Cisco SD-WAN Controllers',
+    'Adding a Branch Using Zero Touch Provisioning (ZTP)',
+    'Deploying Devices Using Configuration Templates',
+    'Configuring Controller Affinity',
+    'Implementing Dynamic Routing Protocols on Service Side',
+    'Implementing Transport Location (TLOC) Extensions',
+    'Implementing Control Policies',
+    'Implementing Data Policies',
+    'Implementing Application-Aware Routing',
+    'Implementing Internet Breakouts',
+    'Migrating Branch Sites',
+    'Performing an Upgrade',
+  ],
+},
       prerequisites: [
-        '',
+        'Completion of the Cisco SD-WAN Operation and Deployment (ENSDW) course or equivalent experience',
+        'Knowledge of Software-Defined Networking (SDN) concepts as applied to large scale live network deployments',
+        'Strong understanding of enterprise wide area network design',
+        'Strong understanding of routing protocol operation, including both interior and exterior routing protocol operation',
+        'Familiarity with Transport Layer Security (TLS) and IP Security (IPSec)',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+- System installers
+- System integrators
+- System administrators
+- Network administrators
+- Solutions designers
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '158',
-      courseCode: 'CAS794',
+      courseCode: '',
       title: 'CompTIA Advanced Security Practitioner (CASP)',
       category: 'Cybersecurity',
       certType: 'COMPTIA',
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,815.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The current landscape of cybersecurity requires specialized skills to troubleshoot via customized hacks and build solid solutions. Each hack is unique and must be combated with master-level security skills and experience. As a CASP-certified IT professional, you will demonstrate that you can provide the best cybersecurity solutions and protection for organizations worldwide. In this 5-day ...',
-      outline: null,
+      description: 'The current landscape of cybersecurity requires specialized skills to troubleshoot via customized hacks and build solid solutions. Each hack is unique and must be combated with master-level security skills and experience. As a CASP-certified IT professional, you will demonstrate that you can provide the best cybersecurity solutions and protection for organizations worldwide. In this 5-day course, participants will examine advanced security concepts, principles, and implementations that pertain to enterprise level security.',
+      outline: {
+  'Lesson 1: Enterprise Security Architecture': [
+    'The Basics of Enterprise Security',
+    'The Enterprise Structure',
+    'Enterprise Security Requirements',
+  ],
+  'Lesson 2: Enterprise Security Technology': [
+    'Common Network Security Components and Technologies',
+    'Communications and Collaboration Security',
+    'Cryptographic Tools and Techniques',
+    'Advanced Authentication',
+  ],
+  'Lesson 3: Enterprise Resource Technology': [
+    'Enterprise Storage Security Issues',
+    'Distributed, Shared, and Virtualized Computing',
+    'Cloud Computing and Security',
+  ],
+  'Lesson 4: Security Design and Solutions': [
+    'Network Security Design',
+    'Conduct a Security Assessment',
+    'Host Security',
+  ],
+  'Lesson 5: Application Security Design': [
+    'Application Security Basics',
+    'Web Application Security',
+  ],
+  'Lesson 6: Managing Risk, Security Policies, and Security Procedures': [
+    'Analyze Security Risk',
+    'Implement Risk Mitigation Strategies and Controls',
+    'Implement Enterprise-Level Security Policies and Procedures',
+    'Prepare for Incident Response and Recovery',
+  ],
+  'Lesson 7: Enterprise Security Integration': [
+    'The Technology Life Cycle',
+    'Inter-Organizational Change',
+    'Integrate Enterprise Disciplines to Achieve Secure Solutions',
+  ],
+  'Lesson 8: Security Research and Analysis': [
+    'Perform an Industry Trends and Impact Analysis',
+    'Perform an Enterprise Security Analysis',
+  ],
+},
       prerequisites: [
-        '',
+        'CompTIA A+, Network+ and Security+ certifications are strongly recommended',
+        '10 years of experience including at least 5 years of hands-on, technical security experience',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'This course is targeted toward an IT Professional that has the technical knowledge and skills required to conceptualize, design, and engineer secure solutions across complex enterprise environments. Participants should have a minimum of 10 years experience including at least 5 years of hands-on technical security experience.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '159',
-      courseCode: 'EDC607',
+      courseCode: '',
       title: 'ENWLSD: Designing Cisco Enterprise Wireless Networks',
-      category: 'Networking',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
       price: '\$5,665.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The Designing Cisco Enterprise Wireless Networks (ENWLSD) v1.0 course gives you the knowledge you need to design Cisco® wireless networks. The course covers design specifics from scenario design concepts through the installation phase and into post deployment validation. This course, including the self-paced material, helps prepare you to take the exam, Designing Cisco Enterprise Wireless ...',
-      outline: null,
+      description: '''
+The Designing Cisco Enterprise Wireless Networks (ENWLSD) v1.0 course gives you the knowledge you need to design Cisco® wireless networks. The course covers design specifics from scenario design concepts through the installation phase and into post deployment validation.
+
+This course, including the self-paced material, helps prepare you to take the exam, Designing Cisco Enterprise Wireless Networks (300-425 ENWLSD), which leads to the new CCNP® Enterprise and Cisco Certified Specialist – Enterprise Wireless Design certifications.
+
+This course will help you:
+- Gain the knowledge you need to plan advanced designs of Cisco wireless products
+- Qualify for professional-level job roles in wireless networking
+- Prepare for the Designing Cisco Enterprise Wireless Networks (300-425 ENWLSD) exam
+- Earn 40 CE credits toward recertification
+''',
+      outline: {
+  'Lesson 1: Describing and Implementing a Structured Wireless Design Methodology': [
+    'Importance of Planning Wireless Design with a Structured Methodology',
+    'Cisco Structured Design Model',
+    'Cisco Design Guides and Cisco Validated Designs for Wireless Networks',
+    'Role of the Project Manager When Designing Wireless Networks',
+  ],
+  'Lesson 2: Describing and Implementing Industry Protocols and Standards': [
+    'Wireless Standards Bodies',
+    'Institute of Electrical and Electronics Engineers (IEEE) 802.11 Standard and Amendments',
+    'Wi-Fi Alliance (WFA) Certifications',
+    'Relevant Internet Engineering Task Force (IETF) Wireless RFCs',
+    'Practice Activity',
+  ],
+  'Lesson 3: Describing and Implementing Cisco Enhanced Wireless Features': [
+    'Hardware and Software Choices for a Wireless Network Design',
+    'Cisco Infrastructure Settings for Wireless Network Design',
+    'Cisco Enhanced Wireless Features',
+  ],
+  'Lesson 4: Examining Cisco Mobility and Roaming': [
+    'Mobility and Intercontroller Mobility in a Wireless Network',
+    'Optimize Client Roaming in a Wireless Network',
+    'Cisco Workgroup Bridge (WGB) and WGB Roaming in a Wireless Network',
+  ],
+  'Lesson 5: Describing and Implementing the Wireless Design Process': [
+    'Overview of Wireless Design Process',
+    'Meet with the Customer to Discuss the Wireless Network Design',
+    'Customer Information Gathering for a Wireless Network Design',
+    'Design the Wireless Network',
+    'Deployment of the Wireless Network',
+    'Validation and Final Adjustments of the Wireless Network',
+    'Wireless Network Design Project Documents and Deliverables',
+  ],
+  'Lesson 6: Describing and Implementing Specific Vertical Designs': [
+    'Designs for Wireless Applications',
+    'Wireless Network Design Within the Campus',
+    'Extend Wireless Networks to the Branch Sites',
+  ],
+  'Lesson 7: Examining Special Considerations in Advanced Wireless Designs': [
+    'High-Density Designs in Wireless Networks',
+    'Introducing Location and Cisco Connected Mobile Experiences (CMX) Concepts',
+    'Design for Location',
+    'FastLocate and HyperLocation',
+    'Bridges and Mesh in a Wireless Network Design',
+    'Redundancy and High Availability in a Wireless Network',
+  ],
+  'Lesson 8: Describing and Implementing the Site Survey Processes': [
+    'Site Survey Types',
+    'Special Arrangements Needed for Site Surveys',
+    'Safety Aspects to be Considered During Site Surveys',
+    'Site Survey Tools in Cisco Prime Infrastructure',
+    'Third-Party Site Survey Software and Hardware Tools',
+  ],
+  'Lesson 9: Describing and Implementing Wireless Network Validation Processes': [
+    'Post-installation Wireless Network Validation',
+    'Making Post-installation Changes to a Wireless Network',
+    'Wireless Network Handoff to the Customer',
+    'Installation Report',
+  ],
+  'Lab Outline': [
+    'Review Cisco Enhanced Wireless Features',
+    'Design a Wireless Network',
+    'Design a Wireless Network for a Specific Vertical',
+    'Design a Wireless Network that Extends Beyond the Campus (ILT output)',
+    'Use Cisco Prime Infrastructure as a Design Tool',
+    'Create a Predictive Site Survey with Ekahau Pro',
+    'Review a Live Site Survey Using Access Point on a Stick (APoS)',
+    'Simulate a Post-installation Network Validation Survey',
+  ],
+},
       prerequisites: [
-        '',
+        'General knowledge of networks',
+        'General knowledge of wireless networks',
+        'Routing and switching knowledge',
+        'Either of the following combinations of Cisco courses can help you meet these prerequisites:',
+        'Implementing Cisco Wireless Network Fundamentals (WIFUND) and Interconnecting Cisco Networking Devices, Part 1 (ICND1)',
+        'Coming soon: Implementing and Operating Cisco Enterprise Network Core Technologies (ENCOR) and Understanding Cisco Wireless Foundations (WLFNDU)',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+This course is for wireless engineers who work in the following roles:
+- Consulting systems engineer
+- Network administrator
+- Network engineer
+- Network manager
+- Sales engineer
+- Systems engineer
+- Technical solutions architect
+- Wireless design engineer
+- Wireless engineer
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '160',
-      courseCode: 'CCA791',
+      courseCode: '',
       title: 'CompTIA CyberSecurity Analyst (CySA+)',
       category: 'Cybersecurity',
       certType: 'COMPTIA',
       rating: 4.7,
       duration: '5 Days',
       price: '\$3,815.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'July 21, 2025',
       nextAvailableDate: 'July 21, 2025',
-      description: 'As attackers have learned to evade traditional signature-based solutions such as firewalls, an analytics based approach within the IT security industry is increasingly important for most organizations. The behavioral analytics skills covered by CySA+ identify and combat malware, and advanced persistent threats (APTs), resulting in enhanced threat visibility across a broad attack surface. CompTIA CySA+ ...',
-      outline: null,
+      description: '''
+As attackers have learned to evade traditional signature-based solutions such as firewalls, an analytics based approach within the IT security industry is increasingly important for most organizations. The behavioral analytics skills covered by CySA+ identify and combat malware, and advanced persistent threats (APTs), resulting in enhanced threat visibility across a broad attack surface. CompTIA CySA+ is for IT professionals looking to gain the following analyst skills:
+
+- Configure and use threat detection tools
+- Perform data analysis
+- Interpret the results to identify vulnerabilities, threats and risks to an organization
+
+In this 5-day course, participants use their knowledge and skills required to configure and use threat detection tools, perform data analysis and interpret the results to identify vulnerabilities, threats and risks to an organization, with the end goal of securing and protecting applications and systems within an organization.
+''',
+      outline: {
+  'Lesson 1: Explaining the Importance of Security Controls and Security Intelligence': [
+    'Identify Security Control Types',
+    'Explain the Importance of Threat Data and Intelligence',
+  ],
+  'Lesson 2: Utilizing Threat Data and Intelligence': [
+    'Classify Threats and Threat Actor Types',
+    'Utilize Attack Frameworks and Indicator Management',
+    'Utilize Threat Modeling and Hunting Methodologies',
+  ],
+  'Lesson 3: Analyzing Security Monitoring Data': [
+    'Analyze Network Monitoring Output',
+    'Analyze Appliance Monitoring Output',
+    'Analyze Endpoint Monitoring Output',
+    'Analyze Email Monitoring Output',
+  ],
+  'Lesson 4: Collecting and Querying Security Monitoring Data': [
+    'Configure Log Review and SIEM Tools',
+    'Analyze and Query Logs and SIEM Data',
+  ],
+  'Lesson 5: Utilizing Digital Forensics and Indicator Analysis Techniques': [
+    'Identify Digital Forensics Techniques',
+    'Analyze Network-related IoCs',
+    'Analyze Host-related IoCs',
+    'Analyze Application-Related IoCs',
+    'Analyze Lateral Movement and Pivot IoCs',
+  ],
+  'Lesson 6: Applying Incident Response Procedures': [
+    'Explain Incident Response Processes',
+    'Apply Detection and Containment Processes',
+    'Apply Eradication, Recovery, and Post-Incident Processes',
+  ],
+  'Lesson 7: Applying Risk Mitigation and Security Frameworks': [
+    'Apply Risk Identification, Calculation, and Prioritization Processes',
+    'Explain Frameworks, Policies, and Procedures',
+  ],
+  'Lesson 8: Performing Vulnerability Management': [
+    'Analyze Output from Enumeration Tools',
+    'Configure Infrastructure Vulnerability Scanners',
+    'Mitigate Vulnerability Issues',
+  ],
+  'Lesson 9: Applying Security Solutions for Infrastructure Management': [
+    'Apply identity and Access Management Security Solutions',
+    'Apply Network Architecture and Segmentation Security Solutions',
+    'Apply Network Architecture and Segmentation Security Solutions',
+    'Explain Hardware Assurance Best Practices',
+    'Explain Vulnerabilities Associated with Specialized Technologies',
+  ],
+  'Lesson 10: Understanding Data Privacy and Protection': [
+    'Identify Non-Technical Data and Privacy Controls',
+    'Identify Technical Data and Privacy Controls',
+  ],
+  'Lesson 11: Applying Security Solutions for Software Assurance': [
+    'Mitigate Software Vulnerabilities and Attacks',
+    'Mitigate Web Application Vulnerabilities and Attacks',
+    'Analyze Output from Application Assessments',
+  ],
+  'Lesson 12: Applying Security Solutions for Cloud and Automation': [
+    'Identify Cloud Service and Deployment Model Vulnerabilities',
+    'Explain Service-Oriented Architecture',
+    'Analyze Output from Cloud Infrastructure Assessment Tools',
+    'Compare Automation Concepts and Technologies',
+  ],
+},
       prerequisites: [
-        '',
+        'Network+, Security+ or equivalent knowledge',
+        'Minimum of 3-4 years of hands-on information security or related experience. While there is no required prerequisite, CySA+ is intended to follow CompTIA Security+ or equivalent experience and had a technical, hands-on focus.'
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'Same as Course Prerequisite.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '161',
-      courseCode: 'EIC606',
+      courseCode: '',
       title: 'ENARSI: Implementing Cisco Enterprise Advanced Routing and Services',
-      category: 'Networking',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
       price: '\$5,665.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT'],
       startDate: 'May 19, 2025',
       nextAvailableDate: 'May 19, 2025',
-      description: 'The Implementing Cisco Enterprise Advanced Routing and Services (ENARSI) v1.0 gives you the knowledge you need to install, configure, operate, and troubleshoot an enterprise network. This course covers advanced routing and infrastructure technologies, expanding on the topics covered in the Implementing and Operating Cisco Enterprise Network Core Technologies (ENCOR) v1.0 course. This course helps prepare ...',
-      outline: null,
+      description: '''
+The Implementing Cisco Enterprise Advanced Routing and Services (ENARSI) v1.0 gives you the knowledge you need to install, configure, operate, and troubleshoot an enterprise network. This course covers advanced routing and infrastructure technologies, expanding on the topics covered in the Implementing and Operating Cisco Enterprise Network Core Technologies (ENCOR) v1.0 course.
+
+This course helps prepare you to take the exam, 300-410 Implementing Cisco® Enterprise Advanced Routing and Services (ENARSI), which leads to the new CCNP®Enterprise and Cisco Certified Specialist – Enterprise Advanced Infrastructure Implementation certifications.
+
+This course will help you:
+- Gain the knowledge you need to install, configure, operate, and troubleshoot an
+- enterprise network
+- Qualify for professional-level job roles in advance routing and services
+- Earn 40 CE credits toward recertification
+''',
+      outline: {
+  'Lesson 1: Implementing EIGRP': [
+  ],
+  'Lesson 2: Optimizing EIGRP': [
+  ],
+  'Lesson 3: Troubleshooting EIGRP': [
+  ],
+  'Lesson 4: Implementing OSPF': [
+  ],
+  'Lesson 5: Optimizing OSPF': [
+  ],
+  'Lesson 6: Troubleshooting OSPF': [
+  ],
+  'Lesson 7: Configuring Redistribution': [
+  ],
+  'Lesson 8: Troubleshooting Redistribution': [
+  ],
+  'Lesson 9: Implementing Path Control': [
+  ],
+  'Lesson 10: Implementing Internal Border Gateway Protocol (IBGP)': [
+  ],
+  'Lesson 11: Optimizing BGP': [
+  ],
+  'Lesson 12: Implementing MP-BGP': [
+  ],
+  'Lesson 13: Troubleshooting BGP': [
+  ],
+  'Lesson 14: Exploring MPLS': [
+  ],
+  'Lesson 15: Introducing MPLS L3 VPN Architecture': [
+  ],
+  'Lesson 16: Introducing MPLS L3 VPN Routing': [
+  ],
+  'Lesson 17: Configuring Virtual Routing and Forwarding (VRF)-Lite': [
+  ],
+  'Lesson 18: Implementing DMVPN': [
+  ],
+  'Lesson 19: Implementing DHCP': [
+  ],
+  'Lesson 20: Introducing IPv6 First Hop Security': [
+  ],
+  'Lesson 21: Securing Cisco Routers': [
+  ],
+  'Lesson 22: Troubleshooting Infrastructure Security and Services': [
+  ],
+  'Lesson 23: Troubleshooting with DNA Center Assurance': [
+  ],
+  'Lab Outline': [
+    'Configure EIGRP Using Classic Mode and Named Mode for IPv4 and IPv6',
+    'Verify the EIGRP Topology Table',
+    'Configure EIGRP Stub Routing, Summarization, and Default Routing',
+    'Configure EIGRP Load Balancing and Authentication',
+    'Troubleshoot EIGRP Issues',
+    'Configure OSPFv3 for IPv4 and IPv6',
+    'Verify the Link-State Database',
+    'Configure OSPF Stub Areas and Summarization',
+    'Configure OSPF Authentication',
+    'Troubleshoot OSPF Issues',
+    'Implement Routing Protocol Redistribution',
+    'Manipulate Redistribution',
+    'Manipulate Redistribution Using Route Maps',
+    'Troubleshoot Redistribution Issues',
+    'Implement PBR',
+    'Configure IBGP and External Border Gateway Protocol (EBGP)',
+    'Implement BGP Path Selection',
+    'Configure BGP Advanced Features',
+    'Configure BGP Route Reflectors',
+    'Configure MP-BGP for IPv4 and IPv6',
+    'Troubleshoot BGP Issues',
+    'Configure Routing with VRF-Lite',
+    'Implement Cisco IOS DMVPN',
+    'Obtain IPv6 Addresses Dynamically',
+    'Troubleshoot DHCPv4 and DHCPv6 Issues',
+    'Troubleshoot IPv4 and IPv6 Access Control List (ACL) Issues',
+    'Configure and Verify Unicast Reverse Path Forwarding (uRPF)',
+    'Troubleshoot Network Management Protocol Issues: Lab 1',
+    'Troubleshoot Network Management Protocol Issues: Lab 2',
+  ],
+},
       prerequisites: [
-        '',
+        'General understanding of network fundamentals',
+        'Basic knowledge of how to implement LANs',
+        'General understanding of how to manage network devices',
+        'General understanding of how to secure network devices',
+        'Basic knowledge of network automation',
+        'These Cisco courses are recommended to help you meet these prerequisites:',
+        'Implementing and Operating Cisco Enterprise Network Core Technologies (ENCOR) v1.0',
+        'Interconnecting Cisco Networking Devices, Part 1 (ICND1) v3.0',
+        'Interconnecting Cisco Networking Devices, Part 2 (ICND2) v3.0',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+- Enterprise network engineers
+- System engineers
+- System administrators
+- Network administrators
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '162',
-      courseCode: 'ADM678',
+      courseCode: 'AZ-305',
       title: 'AZ-305 Designing Microsoft Azure Infrastructure Solutions',
-      category: 'Cloud Computing',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'Microsoft',
       rating: 4.7,
       duration: '4 Days',
       price: '\$3,052.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'This course teaches Azure Solution Architects how to design infrastructure solutions. Course topics cover governance, compute, application architecture, storage, data integration, authentication, networks, business continuity, and migrations. The course combines lecture with case studies to demonstrate basic architect design principles. Course Outline',
-      outline: null,
+      description: 'This course teaches Azure Solution Architects how to design infrastructure solutions. Course topics cover governance, compute, application architecture, storage, data integration, authentication, networks, business continuity, and migrations. The course combines lecture with case studies to demonstrate basic architect design principles.',
+      outline: {
+  'Lesson 1: Design governance': [
+    'Design for governance',
+    'Design for management groups',
+    'Design for subscriptions',
+    'Design for resource groups',
+    'Design for resource tags',
+    'Design for Azure Policy',
+    'Design for role-based access control (RBAC)',
+    'Design for Azure Blueprints',
+  ],
+  'Lesson 2: Design an Azure compute solution': [
+    'Choose an Azure compute service',
+    'Design for Azure Virtual Machines solutions',
+    'Design for Azure Batch solutions',
+    'Design for Azure App Service solutions',
+    'Design for Azure Container Instances solutions',
+    'Design for Azure Kubernetes Service solutions',
+    'Design for Azure Functions solutions',
+    'Design for Azure Logic Apps solutions',
+  ],
+  'Lesson 3: Design app architecture, access, and monitoring solutions': [
+    'Design for data storage',
+    'Design for Azure storage accounts',
+    'Design for data redundancy',
+    'Design for Azure Blob Storage',
+    'Design for Azure Files',
+    'Design for Azure managed disks',
+    'Design for storage security',
+  ],
+  'Lesson 4: Design a data storage solution for relational data': [
+    'Design for Azure SQL Database',
+    'Design for Azure SQL Managed Instance',
+    'Design for SQL Server on Azure Virtual Machines',
+    'Recommend a solution for database scalability',
+    'Recommend a solution for database availability',
+    'Design security for data at rest, data in motion, and data in use',
+    'Design for Azure SQL Edge',
+    'Design for Azure Cosmos DB and Table Storage',
+  ],
+  'Lesson 5: Design data integration': [
+    'Design a data integration solution with Azure Data Factory',
+    'Design a data integration solution with Azure Data Lake',
+    'Design a data integration and analytic solution with Azure Databricks',
+    'Design a data integration and analytic solution with Azure Synapse Analytics',
+    'Design strategies for hot, warm, and cold data paths',
+  ],
+  'Lesson 6: Design an application architecture': [
+    'Describe message and event scenarios',
+    'Design a messaging solution',
+    'Design an Azure Event Hubs messaging solution',
+    'Design an event-driven solution',
+    'Design a caching solution',
+    'Design API integration',
+    'Design an automated app deployment solution',
+    'Design an app configuration management solution',
+  ],
+  'Lesson 7: Design authentication and authorization solutions': [
+    'Design for identity and access management (IAM)',
+    'Design for Azure Active Directory',
+    'Design for Azure Active Directory business-to-business (B2B)',
+    'Design for Azure Active Directory B2C (business-to-customer)',
+    'Design for conditional access',
+    'Design for identity protection',
+    'Design for access reviews',
+    'Design managed identities',
+    'Design service principals for applications',
+    'Design for Azure Key Vault',
+  ],
+  'Lesson 8: Design a solution to log and monitor Azure resources': [
+    'Design for Azure Monitor data sources',
+    'Design for Azure Monitor Logs (Log Analytics) workspaces',
+    'Design for Azure Workbooks and Azure insights',
+    'Design for Azure Data Explorer',
+  ],
+  'Lesson 9: Design network solutions': [
+    'Recommend a network architecture solution based on workload requirements',
+    'Design for on-premises connectivity to Azure Virtual Network',
+    'Design patterns for Azure network connectivity services',
+    'Design outbound connectivity and routing',
+    'Choose an application delivery service',
+    'Design for application delivery services',
+    'Design for application protection services',
+  ],
+  'Lesson 10: Design a solution for backup and disaster recovery': [
+    'Design for backup and recovery',
+    'Design for Azure Backup',
+    'Design for Azure blobs backup and recovery',
+    'Design for Azure file shares backup and recovery',
+    'Design for Azure virtual machine backup and recovery',
+    'Design for Azure SQL backup and recovery',
+    'Design for Azure Site Recovery',
+  ],
+  'Lesson 11: Design migrations': [
+    'Evaluate migration with the Cloud Adoption Framework',
+    'Describe the Azure migration framework',
+    'Assess your on-premises workloads',
+    'Select a migration tool',
+    'Migrate your structured data in databases',
+    'Select an online storage migration tool for unstructured data',
+    'Migrate offline data',
+  ],
+  'Lesson 12: Build great solutions with the Microsoft Azure Well-Architected Framework': [
+    'Azure Well-Architected Framework pillars',
+    'Cost optimization',
+    'Operational excellence',
+    'Performance efficiency',
+    'Reliability',
+    'Security',
+  ],
+  'Lesson 13: Accelerate cloud adoption with the Microsoft Cloud Adoption Framework for Azure': [
+    'Customer narrative',
+    'Common blockers',
+  ],
+},
       prerequisites: [
-        '',
+        'Azure Active Directory',
+        'Azure compute technologies such as VMs, containers and serverless solutions',
+        'Azure virtual networking to include load balancers',
+        'Azure Storage technologies (unstructured and databases)',
+        'General application design concepts such as messaging and high availability',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+Before attending this course, students must have previous experience deploying or administering Azure resources and conceptual knowledge of:
+- Azure Active Directory
+- Azure compute technologies such as VMs, containers and serverless solutions
+- Azure virtual networking to include load balancers
+- Azure Storage technologies (unstructured and databases)
+- General application design concepts such as messaging and high availability
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '163',
-      courseCode: 'EIA605',
+      courseCode: '',
       title: 'ENCOR: Implementing and Operating Cisco Enterprise Network Core Technologies',
-      category: 'Networking',
+      category: 'Networking Infrastructure & Architecture',
       certType: 'CISCO',
       rating: 4.7,
       duration: '5 Days',
       price: '\$5,665.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'The Implementing and Operating Cisco Enterprise Network Core Technologies (ENCOR) v1.1 course gives you the knowledge and skills needed to configure, troubleshoot, and manage enterprise wired and wireless networks. You’ll also learn to implement security principles, implement automation and programmability within an enterprise network, and how to overlay network design by using SD-Access and SD ...',
-      outline: null,
+      description: '''
+The Implementing and Operating Cisco Enterprise Network Core Technologies (ENCOR) v1.1 course gives you the knowledge and skills needed to configure, troubleshoot, and manage enterprise wired and wireless networks. You’ll also learn to implement security principles, implement automation and programmability within an enterprise network, and how to overlay network design by using SD-Access and SD WAN solutions.
+This course helps you prepare to take the 350-401 Implementing Cisco® Enterprise Network Core Technologies (ENCOR) exam, which is part of four new certifications:
+- CCNP® Enterprise
+- CCIE® Enterprise Infrastructure
+- CCIE Enterprise Wireless
+- Cisco Certified Specialist – Enterprise Core
+This course also earns you 64 Continuing Education (CE) credits towards recertification.
+''',
+      outline: {
+  'Lesson 1: Examining Cisco Enterprise Network Architecture': [
+  ],
+  'Lesson 2: Understanding Cisco Switching Paths': [
+  ],
+  'Lesson 3: Implementing Campus LAN Connectivity': [
+  ],
+  'Lesson 4: Building Redundant Switched Topology': [
+  ],
+  'Lesson 5: Implementing Layer 2 Port Aggregation': [
+  ],
+  'Lesson 6: Understanding EIGRP': [
+  ],
+  'Lesson 7: Implementing OSPF': [
+  ],
+  'Lesson 8: Optimizing OSPF': [
+  ],
+  'Lesson 9: Exploring EBGP': [
+  ],
+  'Lesson 10: Implementing Network Redundancy': [
+  ],
+  'Lesson 11: Implementing NAT': [
+  ],
+  'Lesson 12: Introducing Virtualization Protocols and Techniques': [
+  ],
+  'Lesson 13: Understanding Virtual Private Networks and Interfaces': [
+  ],
+  'Lesson 14: Understanding Wireless Principles': [
+  ],
+  'Lesson 15: Examining Wireless Deployment Options': [
+  ],
+  'Lesson 16: Understanding Wireless Roaming and Location Services': [
+  ],
+  'Lesson 17: Examining Wireless AP Operation': [
+  ],
+  'Lesson 18: Understanding Wireless Client Authentication': [
+  ],
+  'Lesson 19: Troubleshooting Wireless Client Connectivity': [
+  ],
+  'Lesson 20: Introducing Multicast Protocols': [
+  ],
+  'Lesson 21: Introducing QoS': [
+  ],
+  'Lesson 22: Implementing Network Services': [
+  ],
+  'Lesson 23: Using Network Analysis Tools': [
+  ],
+  'Lesson 24: Implementing Infrastructure Security': [
+  ],
+  'Lesson 25: Implementing Secure Access Control': [
+  ],
+  'Lesson 26: Understanding Enterprise Network Security Architecture': [
+  ],
+  'Lesson 27: Exploring Automation and Assurance Using Cisco DNA Center': [
+  ],
+  'Lesson 28: Examining the Cisco SD-Access Solution': [
+  ],
+  'Lesson 29: Understanding the Working Principles of the Cisco SD-WAN Solution': [
+  ],
+  'Lesson 30: Understanding the Basics of Python Programming': [
+  ],
+  'Lesson 31: Introducing Network Programmability Protocols': [
+  ],
+  'Lesson 32: Introducing APIs in Cisco DNA Center and vManage': [
+  ],
+  'Lab Outline': [
+    'Investigate the CAM',
+    'Analyze Cisco Express Forwarding',
+    'Troubleshoot VLAN and Trunk Issues',
+    'Tuning Spanning Tree Protocol (STP) and Configuring Rapid Spanning Tree Protocol (RSTP)',
+    'Configure Multiple Spanning Tree Protocol',
+    'Troubleshoot EtherChannel',
+    'Implement Multi-area OSPF',
+    'Implement OSPF Tuning',
+    'Apply OSPF Optimization',
+    'Implement OSPFv3',
+    'Configure and Verify Single-Homed EBGP',
+    'Implementing Hot Standby Routing Protocol (HSRP)',
+    'Configure Virtual Router Redundancy Protocol (VRRP)',
+    'Implement NAT',
+    'Configure and Verify Virtual Routing and Forwarding (VRF)',
+    'Configure and Verify a Generic Routing Encapsulation (GRE) Tunnel',
+    'Configure Static Virtual Tunnel Interface (VTI) Point-to-Point Tunnels',
+    'Configure Wireless Client Authentication in a Centralized Deployment',
+    'Troubleshoot Wireless Client Connectivity Issues',
+    'Configure Syslog',
+    'Configure and Verify Flexible NetFlow',
+    'Configuring Cisco IOS Embedded Event Manager (EEM)',
+    'Troubleshoot Connectivity and Analyze Traffic with Ping, Traceroute, and Debug',
+    'Configure and Verify Cisco IP SLAs',
+    'Configure Standard and Extended ACLs',
+    'Configure Control Plane Policing',
+    'Implement Local and Server-Based AAA',
+    'Writing and Troubleshooting Python Scripts',
+    'Explore JavaScript Object Notation (JSON) Objects and Scripts in Python',
+    'Use NETCONF Via SSH',
+    'Use RESTCONF with Cisco IOS XE Software',
+  ],
+},
       prerequisites: [
-        '',
+        'Implementation of Enterprise LAN networks',
+        'Basic understanding of Enterprise routing and wireless connectivity',
+        'Basic understanding of Python scripting',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: '''
+- Mid-level network engineers
+- Network administrators
+- Network support technicians
+- Help desk technicians
+''',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
     Course(
       id: '164',
-      courseCode: 'AAW680',
+      courseCode: 'AZ-800',
       title: 'AZ-800 Administering Windows Server Hybrid Core Infrastructure',
-      category: 'IT Training',
+      category: 'Networking Infrastructure & Architecture',
       certType: null,
       rating: 4.7,
       duration: '4 Days',
       price: '\$3,052.00',
-      funding: 'Eligible for funding',
+      funding: null,
       deliveryMethods: ['ILT', 'OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
-      description: 'This course teaches IT Professionals how to manage core Windows Server workloads and services using on-premises, hybrid, and cloud technologies. The course teaches IT Professionals how to implement and manage on-premises and hybrid solutions such as identity, management, compute, networking, and storage in a Windows Server hybrid environment. Course Outline',
-      outline: null,
+      description: 'This course teaches IT Professionals how to manage core Windows Server workloads and services using on-premises, hybrid, and cloud technologies. The course teaches IT Professionals how to implement and manage on-premises and hybrid solutions such as identity, management, compute, networking, and storage in a Windows Server hybrid environment.',
+      outline: {
+  'Lesson 1: Introduction to AD DS': [
+    'Define AD DS',
+    'Define users, groups, and computers',
+    'Define AD DS forests and domains',
+    'Define OUs',
+    'Manage objects and their properties in AD DS',
+  ],
+  'Lesson 2: Manage AD DS domain controllers and FSMO roles': [
+    'Deploy AD DS domain controller',
+    'Maintain AD DS domain controllers',
+    'Manage the AD DS Global Catalog role',
+    'Manage AD DS operations masters',
+    'Manage AD DS schema',
+  ],
+  'Lesson 3: Implement Group Policy Objects': [
+    'Define GPOs',
+    'Implement GPO scope and inheritance',
+    'Define domain-based GPOs',
+    'Create and configure a domain-based GPO',
+    'Define GPO storage',
+    'Define administrative templates',
+  ],
+  'Lesson 4: Manage advanced features of AD DS': [
+    'Create trust relationships',
+    'Implement ESAE forests',
+    'Monitor and troubleshoot AD DS',
+  ],
+  'Lesson 5: Implement hybrid identity with Windows Server': [
+    'Select an Azure Active Directory integration model',
+    'Plan for Azure Active Directory integration',
+    'Prepare on-premises Active Directory for directory synchronization',
+    'Install and configure directory synchronization with Azure Active Directory Connect',
+    'Implement Seamless Single Sign-On',
+    'Enable Azure Active Directory login in for Windows VM in Azure',
+    'Knowledge check 1',
+    'Describe Azure Active Directory Domain Services',
+    'Implement and configure Azure Active Directory Domain Services',
+    'Manage Windows Server 2019 in an Azure Active Directory Domain Services environment',
+    'Create and configure an Azure Active Directory Domain Services instance',
+    'Join a Windows Server VM to a managed domain',
+    'Knowledge check 2',
+  ],
+  'Lesson 6: Deploy and manage Azure IaaS Active Directory domain controllers in Azure': [
+    'Select an option to implement directory and identity services using Active Directory Domain Services in Azure',
+    'Deploy and configure Active Directory Domain Services domain controllers in Azure VMs',
+    'Install a replica Active Directory domain controller in an Azure VM',
+    'Install a new Active Directory forest on an Azure VNet',
+  ],
+  'Lesson 7: Perform Windows Server secure administration': [
+    'Define least privilege administration',
+    'Implement delegated privileges',
+    'Use privileged access workstations',
+    'Use jump servers',
+  ],
+  'Lesson 8: Describe Windows Server administration tools': [
+    'Explore Windows Admin Center',
+    'Use Server Manager',
+    'List Remote Server Administration Tools',
+    'Use Windows PowerShell',
+    'Use Windows PowerShell to remotely administer a server',
+  ],
+  'Lesson 9: Perform post-installation configuration of Windows Server': [
+    'List the available post-installation configuration tools',
+    'Configure Server Core using Sconfig',
+    'Use DSC to configure Windows Server',
+    'Perform post-installation configuration with Windows Admin Center',
+    'Configure a server with answer files',
+  ],
+  'Lesson 10: Just Enough Administration in Windows': [
+    'Explain the concept of Just Enough Administration (JEA)',
+    'Define role capabilities for a JEA endpoint',
+    'Create a session configuration file to register a JEA endpoint',
+    'Describe how JEA endpoints work to limit access to a PowerShell session',
+    'Create and connect to a JEA endpoint',
+    'Demonstration: Connect to a JEA endpoint',
+  ],
+  'Lesson 11: Administer and manage Windows Server IaaS Virtual Machine remotely': [
+    'Select the appropriate remote administration tool',
+    'Manage Windows Virtual Machines with Azure Bastion',
+    'Create an Azure Bastion host',
+    'Configure just-in-time administration',
+  ],
+  'Lesson 12: Manage hybrid workloads with Azure Arc': [
+    'Describe Azure Arc',
+    'Onboard Windows Server instances',
+    'Connect hybrid machines to Azure from the Azure portal',
+    'Usee Azure Arc to manage Windows Server instances',
+    'Restrict access with RBAC',
+  ],
+  'Lesson 13: Configure and manage Hyper-V': [
+    'Define Hyper-V',
+    'Define Hyper-V Manager',
+    'Configure Hyper-V hosts using best practices',
+    'Configure Hyper-V networking',
+    'Assess advanced Hyper-V networking features',
+    'Define nested virtualization',
+  ],
+  'Lesson 14: Configure and manage Hyper-V virtual machines': [
+    'List the virtual machine configuration versions',
+    'List the virtual machine generation versions',
+    'List available VHD formats and types',
+    'Create and configure VMs',
+    'Determine storage options for VMs',
+    'Define shared VHDs and VHD Sets',
+    'Implement guest clusters using shared VHDX',
+  ],
+  'Lesson 15: Secure Hyper-V workloads': [
+    'Define guarded fabric',
+    'Define the Host Guardian Service',
+    'Explore TPM-trusted attestation',
+    'Define KPS',
+    'Determine key features of shielded VMs',
+    'Compare encryption-supported and shielded VMs in a guarded fabric',
+  ],
+  'Lesson 16: Run containers on Windows Server': [
+    'Define containers',
+    'List the differences between containers and VMs',
+    'Define Windows Server and Hyper-V containers and isolation modes',
+    'Explore Docker',
+    'Prepare a Windows Server 2019 host for container deployment',
+    'Security, Storage, and Networking with Windows containers',
+  ],
+  'Lesson 17: Orchestrate containers on Windows Serer using Kubernetes': [
+    'Define orchestration',
+    'Define Kubernetes',
+    'Deploy Kubernetes resources',
+    'Create a Kubernetes cluster on Windows',
+    'Define Azure Arc',
+    'Connect an Azure Arc-enabled Kubernetes cluster to Azure Arc',
+  ],
+  'Lesson 18: Plan and deploy Windows Server IaaS Virtual Machines': [
+    'Describe Azure compute',
+    'Describe Virtual Machine storage',
+    'Deploy Azure Virtual Machines',
+    'Create a windows Virtual Machine using the portal',
+    'Create a windows Virtual Machine using Azure CLI',
+    'Deploy Azure Virtual Machines using templates',
+  ],
+  'Lesson 19: Customize Windows Server IaaS Virtual Machine images': [
+    'Create a generalized image',
+    'Create a new Virtual Machine from a managed image',
+    'Create a managed image of a generalized virtual machine in Azure',
+    'Create a Virtual Machine from a manage image',
+    'Implement Azure Image Builder',
+    'Create a windows Virtual Machine using Azure Image Builder template',
+    'Create a Windows Virtual Machine with Azure Image Builder using PowerShell',
+    'Running Azure in your datacenter',
+    'Capacity planning considerations',
+    'Choose an identity provider',
+    'Connection models',
+    'Licensing model',
+    'Naming decisions',
+    'Certificate requirements',
+    'Connect Azure Stack Hub to Azure',
+    'Hybrid connectivity options',
+    'Using ExpressRoute',
+    'External monitoring',
+    'Back up and disaster recovery',
+  ],
+  'Lesson 20: Automate the configuration of Windows Server IaaS Virtual Machines': [
+    'Describe Azure Automation',
+    'Implement Azure Automation with DSC',
+    'Remediate noncompliant servers',
+    'Describe Custom Script Extensions',
+    'Configure a Virtual Machine by using DSC',
+  ],
+  'Lesson 21: Deploy and manage DHCP': [
+    'Use DHCP to simplify IP configuration',
+    'Install and configure DHCP role',
+    'Configure DHCP options',
+    'Configure DHCP scopes',
+    'Select DHCP high availability options',
+    'Implement DHCP Failover',
+  ],
+  'Lesson 22: Implement Windows Server DNS': [
+    'Explore the DNS architecture',
+    'Work with DNS zones and records',
+    'Install and configure the DNS role',
+    'Implement DNS forwarding',
+  ],
+  'Lesson 23: Implement IP Address Management': [
+    'Define IP Address Management',
+    'Deploy IP Address Management',
+    'Administer IP Address Management',
+    'Configure IP Address Management options',
+    'Manage DNS zones with IP Address Management',
+    'Manage DHCP servers with IP Address Management',
+    'Use IP Address Management to manage IP addressing',
+  ],
+  'Lesson 24: Implement remote access': [
+    'Examine the remote access options in Windows Server',
+    'Select and set up VPNs',
+    'Use NPS to create and enforce network access policies',
+    'Plan and implement NPS',
+    'Deploy a PKI for remote access',
+    'Use WAP as a reverse web proxy',
+  ],
+  'Lesson 25: Implement hybrid network infrastructure': [
+    'Describe Azure network topologies',
+    'Implement Azure VPN options',
+    'Create a route-based VPN gateway using the Azure portal',
+    'Implement Azure ExpressRoute',
+    'Configure Azure Virtual WAN',
+    'Implement DNS in hybrid environments',
+  ],
+  'Lesson 26: Implement DNS for Windows Server IaaS VMs': [
+    'Understand Azure DNS',
+    'Implement Azure DNS',
+    'Create an Azure DNS zone and record using the Azure portal',
+    'Implement DNS with Azure IaaS virtual machines',
+    'Implement split-horizon DNS in Azure',
+    'Troubleshoot DNS',
+  ],
+  'Lesson 27: Implement Windows Server IaaS VM IP addressing and routing': [
+    'Implement a virtual network',
+    'Implement IaaS VM IP addressing',
+    'Assign and manage IP addresses',
+    'Configure a private IP address for a virtual machine using the Azure portal',
+    'Create a virtual machine with a static public IP address using the Azure portal',
+    'Implement IaaS virtual machine IP routing',
+    'Implement IPv6 for Windows Server IaaS virtual machines',
+  ],
+  'Lesson 28: Manage Windows Server file servers': [
+    'Define the Windows Server file system',
+    'List the benefits and uses of File Server Resource Manager',
+    'Define SMB and its security considerations',
+    'Configure SMB protocol',
+    'Define Volume Shadow Copy Service',
+  ],
+  'Lesson 29: Implement Storage Spaces and Storage Spaces Direct': [
+    'Define the Storage Spaces architecture and its components',
+    'List the functionalities, benefits, and use cases of Storage Spaces',
+    'Implement Storage Spaces',
+    'List the functionalities, components, benefits, and use cases of Storage Spaces Direct',
+    'Implement Storage Space Direct',
+  ],
+  'Lesson 30: Implement Windows Server Data Deduplication': [
+    'Define the architecture, components, and functionality of Data Deduplication',
+    'Define the use cases and interoperability of Data Deduplication',
+    'Implement Data Deduplication',
+    'Manage and maintain Data Deduplication',
+  ],
+  'Lesson 31: Implement Windows Server iSCSI': [
+    'List the functionalities, components, and use cases of iSCSI',
+    'List the considerations for implement iSCSI',
+    'Implement iSCSI',
+    'Configure high availability for iSCSI',
+  ],
+  'Lesson 32: Implement Windows Server Storage Replica': [
+    'List the functionalities and components of Storage Replica',
+    'Examine the prerequisites for implementing Storage Replice',
+    'Implement Storage Replica by using Windows Admin Center',
+    'Implement Storage Replica by using Windows PowerShell',
+  ],
+  'Lesson 33: Implement a hybrid file server infrastructure': [
+    'Describe Azure File services',
+    'Configure Azure Files',
+    'Configure connectivity to Azure Files',
+    'Describe Azure File Sync',
+    'Implement Azure File Sync',
+    'Deploy Azure File Sync',
+    'Deploy Azure File Sync 2',
+    'Manage cloud tiering',
+    'Migrate from DFSR to Azure File Sync',
+  ],
+},
       prerequisites: [
-        '',
+        'Experience with managing Windows Server operating system and Windows Server workloads in on-premises scenarios, including AD DS, DNS, DFS, Hyper-V, and File and Storage Services',
+        'Experience with common Windows Server management tools (implied in the first prerequisite).',
+        'Basic knowledge of core Microsoft compute, storage, networking, and virtualization technologies (implied in the first prerequisite).',
+        'Experience and an understanding of core networking technologies such as IP addressing, name resolution, and Dynamic Host Configuration Protocol (DHCP)',
+        'Experience working with and an understanding of Microsoft Hyper-V and basic server virtualization concepts',
+        'Basic experience with implementing and managing IaaS services in Microsoft Azure',
+        'Basic knowledge of Azure Active Directory',
+        'Experience working hands-on with Windows client operating systems such as Windows 10 or Windows 11',
+        'Basic experience with Windows PowerShell',
       ],
-      whoShouldAttend: '',
+      whoShouldAttend: 'Same as Course Prerequisite.',
       importantNotes: 'Attend at least 75% of the course and declared as competent during the assessments',
       feeStructure: null,
     ),
