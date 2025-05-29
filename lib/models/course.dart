@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'user.dart'; // 
 class Course {
   final String id;
@@ -22640,7 +22638,7 @@ The CompTIA Cloud Essentials Certification will significantly be beneficial towa
       rating: 4.7,
       duration: '3 Days',
       price: '\$3,106.50',
-      funding: NullRejectionException,
+      funding: null,
       deliveryMethods: ['OLL'],
       startDate: 'Contact Us',
       nextAvailableDate: 'Contact Us',
