@@ -26415,7 +26415,7 @@ The C|EH v13 not only provides extensive hands-on coverage but also integrates A
     Course(
       id: '1',
       courseCode: 'SEC101',
-      title: 'Essential Excel for Sales & Marketing         (Part 1)',
+      title: 'Essential Excel for Sales & Marketing (Part 1)',
       category: 'Excel',
       certType: 'CEH',
       rating: 4.8,
