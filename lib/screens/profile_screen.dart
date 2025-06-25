@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/course_card.dart';//import 'course_outline_screen.dart';
 import '../widgets/edit_profile_dialog.dart';
+import '../services/membership_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -539,40 +540,38 @@ void _toggleFavorite(Course course) async {
                               ),
                             ),
                             const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text(
-                                  currentUser.tier == MembershipTier.pro
-                                      ? 'Private Member'
-                                      : 'Standard Member',
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.9),
-                                    fontSize: 16,
+                            // In the profile header section, update the tier display:
+                              Row(
+                                children: [
+                                  Text(
+                                    currentUser.tier.displayName,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white.withOpacity(0.9),
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                if (currentUser.tier == MembershipTier.pro) ...[
                                   const SizedBox(width: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
+                                      horizontal: 6,
                                       vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color.fromARGB(255, 218, 218, 218),
-                                      borderRadius: BorderRadius.circular(10),
+                                      color: _getTierColor(currentUser.tier),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      'Silver',
-                                      style: TextStyle(
-                                        color: Colors.blue[700],
+                                      '${(currentUser.tier.discountPercentage * 100).toInt()}% OFF',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 14,
                                       ),
                                     ),
                                   ),
                                 ],
-                              ],
-                            ),
+                              ),
                           ],
                         ),
                       ),
@@ -1574,22 +1573,189 @@ Widget _buildCoursesTab() {
 }
   
   Widget _buildMembershipTab() {
-    // Get current user data from Firebase Auth
-    final firebaseUser = _authService.currentUser;
-    
-    // Use Firebase user data or fall back to static data if not available
-    final currentUser = firebaseUser ?? User.currentUser;
-    
-    return Column(
+  final firebaseUser = _authService.currentUser;
+  final currentUser = firebaseUser ?? User.currentUser;
+  
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 16),
+      
+      // Current Membership Status
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.blue[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.blue[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  currentUser.tier.displayName,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[800],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _getTierColor(currentUser.tier),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    'ACTIVE',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Valid until: ${currentUser.membershipExpiryDate}',
+              style: TextStyle(color: Colors.blue[800]),
+            ),
+            if (currentUser.tier != MembershipTier.standard) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Discount: ${(currentUser.tier.discountPercentage * 100).toInt()}% off all courses',
+                style: TextStyle(
+                  color: Colors.green[700],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+      
+      const SizedBox(height: 24),
+      
+      // Membership Tiers
+      Text(
+        'Available Membership Plans',
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[800],
+        ),
+      ),
+      const SizedBox(height: 16),
+      
+      // Tier Cards
+      _buildTierCard(
+        tier: MembershipTier.tier1,
+        title: 'Tier 1 Premium',
+        price: 'FREE for 1 Year',
+        originalPrice: '',
+        discount: '15%',
+        features: [
+          '15% discount on all courses',
+          'Priority support',
+          'Extended resource access',
+          '1 year completely free',
+        ],
+        isPopular: true,
+        currentUserTier: currentUser.tier,
+      ),
+      
+      const SizedBox(height: 12),
+      
+      _buildTierCard(
+        tier: MembershipTier.tier2,
+        title: 'Tier 2 Professional',
+        price: '\$299.99/year',
+        originalPrice: '',
+        discount: '25%',
+        features: [
+          '25% discount on all courses',
+          'Priority access to new courses',
+          'Exclusive webinars',
+          'Advanced certifications',
+        ],
+        isPopular: false,
+        currentUserTier: currentUser.tier,
+      ),
+      
+      const SizedBox(height: 12),
+      
+      _buildTierCard(
+        tier: MembershipTier.tier3,
+        title: 'Tier 3 Enterprise',
+        price: '\$599.99/year',
+        originalPrice: '',
+        discount: '35%',
+        features: [
+          '35% discount on all courses',
+          'One-on-one mentoring',
+          'Early beta access',
+          'Custom learning paths',
+          'Dedicated account manager',
+        ],
+        isPopular: false,
+        currentUserTier: currentUser.tier,
+      ),
+      
+      const SizedBox(height: 24),
+    ],
+  );
+}
+
+Widget _buildTierCard({
+  required MembershipTier tier,
+  required String title,
+  required String price,
+  required String originalPrice,
+  required String discount,
+  required List<String> features,
+  required bool isPopular,
+  required MembershipTier currentUserTier,
+}) {
+  final isCurrentTier = currentUserTier == tier;
+  final canUpgrade = currentUserTier.index < tier.index;
+  
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: isPopular ? Colors.orange : Colors.grey[300]!,
+        width: isPopular ? 2 : 1,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
+        // Header
         Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.blue[50],
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blue[200]!),
+            color: isPopular ? Colors.orange[50] : Colors.grey[50],
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1598,197 +1764,215 @@ Widget _buildCoursesTab() {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    currentUser.tier == MembershipTier.pro
-                        ? 'Private Membership'
-                        : 'Standard Membership',
-                    style: TextStyle(
+                    title,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[600],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Text(
-                      'ACTIVE',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                  if (isPopular)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'POPULAR',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 8),
               Text(
-                'Valid until: ${currentUser.membershipExpiryDate}',
+                price,
                 style: TextStyle(
-                  color: Colors.blue[800],
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Benefits:',
-                style: TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  color: Colors.blue[700],
                 ),
               ),
-              const SizedBox(height: 8),
-              if (currentUser.tier == MembershipTier.pro) ...[
-                _buildBenefitItem('Priority access to new courses'),
-                _buildBenefitItem('25% discount on all certifications'),
-                _buildBenefitItem('Exclusive webinars and events'),
-                _buildBenefitItem('Career counseling sessions'),
-              ] else ...[
-                _buildBenefitItem('Access to standard courses'),
-                _buildBenefitItem('Community forum access'),
-                _buildBenefitItem('Monthly newsletter'),
-              ],
+              Text(
+                '$discount discount on all courses',
+                style: TextStyle(
+                  color: Colors.green[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        if (User.currentUser.tier == MembershipTier.standard)
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[600],
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text('Upgrade to PRO'),
-            ),
-          )
-        else
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[600],
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text('Renew Membership'),
-            ),
-          ),
-        const SizedBox(height: 16),
-        Container(
+        
+        // Features
+        Padding(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(12),
-          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Upgrade to Private GOLD',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Get even more benefits than a Silver membership by upgrading to a Gold membership with our latest offers!',
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Learn More',
-                      style: TextStyle(
-                        color: Colors.blue[700],
+              ...features.map((feature) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.green[600],
+                      size: 16,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        feature,
+                        style: const TextStyle(fontSize: 14),
                       ),
                     ),
+                  ],
+                ),
+              )),
+              
+              const SizedBox(height: 16),
+              
+              // Action Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: isCurrentTier ? null : canUpgrade ? () => _purchaseMembership(tier) : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isCurrentTier 
+                        ? Colors.grey[400]
+                        : canUpgrade 
+                            ? (isPopular ? Colors.orange : Colors.blue[600])
+                            : Colors.grey[400],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ],
+                  child: Text(
+                    isCurrentTier 
+                        ? 'Current Plan'
+                        : canUpgrade 
+                            ? 'Upgrade Now'
+                            : 'Downgrade Not Available',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        // PRIVACY SETTING
-                // Container(
-                //   padding: const EdgeInsets.all(16),
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(12),
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: Colors.black.withOpacity(0.05),
-                //         blurRadius: 10,
-                //         offset: const Offset(0, 2),
-                //       ),
-                //     ],
-                //   ),
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       const Text(
-                //         'Privacy Settings',
-                //         style: TextStyle(
-                //           fontSize: 16,
-                //           fontWeight: FontWeight.bold,
-                //         ),
-                //       ),
-                //       const SizedBox(height: 16),
-                //       Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           Text(
-                //             'Show personal information',
-                //             style: TextStyle(
-                //               color: Colors.grey[800],
-                //             ),
-                //           ),
-                //           Switch(
-                //             value: _showPersonalInfo,
-                //             onChanged: (value) {
-                //               setState(() {
-                //                 _showPersonalInfo = value;
-                //               });
-                //             },
-                //             activeColor: Colors.blue[600],
-                //           ),
-                //         ],
-                //       ),
-                //       const SizedBox(height: 8),
-                //       Text(
-                //         'When turned off, your personal information will be masked for privacy.',
-                //         style: TextStyle(
-                //           color: Colors.grey[600],
-                //           fontSize: 12,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-
-        const SizedBox(height: 24),
       ],
-    );
+    ),
+  );
+}
+
+Color _getTierColor(MembershipTier tier) {
+  switch (tier) {
+    case MembershipTier.standard:
+      return Colors.grey[600]!;
+    case MembershipTier.tier1:
+      return Colors.blue[600]!;
+    case MembershipTier.tier2:
+      return Colors.orange[600]!;
+    case MembershipTier.tier3:
+      return Colors.purple[600]!;
   }
+}
+
+// Add this method to handle membership purchase
+Future<void> _purchaseMembership(MembershipTier tier) async {
+  final membershipService = MembershipService();
+  final currentUser = _authService.currentUser ?? User.currentUser;
+  
+  if (currentUser.id.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please log in to purchase membership')),
+    );
+    return;
+  }
+  
+  // Show confirmation dialog
+  final confirm = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Upgrade to ${tier.displayName}'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('You are about to upgrade to ${tier.displayName}'),
+          const SizedBox(height: 8),
+          Text('Benefits: ${tier.benefits}'),
+          const SizedBox(height: 8),
+          Text('Price: \$${tier.yearlyPrice.toStringAsFixed(2)}/year'),
+          if (tier == MembershipTier.tier1)
+            const Text(
+              'Special Offer: First year completely FREE!',
+              style: TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('Confirm Purchase'),
+        ),
+      ],
+    ),
+  );
+  
+  if (confirm == true) {
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    
+    // Simulate purchase process
+    final success = await membershipService.purchaseMembership(
+      userId: currentUser.id,
+      tier: tier,
+      currentUser: currentUser,
+    );
+    
+    Navigator.pop(context); // Close loading dialog
+    
+    if (success) {
+      setState(() {}); // Refresh UI
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Successfully upgraded to ${tier.displayName}!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to purchase membership. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+}
   
   Widget _buildInfoRow(String label, String value) {
     return Padding(

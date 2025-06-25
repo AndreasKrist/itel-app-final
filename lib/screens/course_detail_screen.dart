@@ -1070,7 +1070,7 @@ void _toggleFavorite() async {
     if (feeStructure == null) return Container();
     
     final userTier = User.currentUser.tier;
-    final isProMember = userTier == MembershipTier.pro;
+    final isProMember = userTier == MembershipTier.tier1;
     final isDiscountEligible = widget.course.isDiscountEligible();
     
     return Column(
@@ -1185,9 +1185,14 @@ void _toggleFavorite() async {
     );
   }
 
-  // Helper method to calculate discounted price for the fee table
+  // Update the _getDiscountedValue method to use new tier system
   String _getDiscountedValue(String? priceString) {
     if (priceString == null || priceString.isEmpty) return '';
+    
+    final userTier = User.currentUser.tier;
+    final discountPercentage = userTier.discountPercentage;
+    
+    if (discountPercentage == 0) return priceString;
     
     // Extract numeric value
     final valueString = priceString.replaceAll(RegExp(r'[^\d.]'), '');
@@ -1195,7 +1200,7 @@ void _toggleFavorite() async {
     
     try {
       double value = double.parse(valueString);
-      double discountedValue = value * 0.75; // 25% discount
+      double discountedValue = value * (1 - discountPercentage);
       
       // Format with same currency symbol
       if (priceString.contains('\$')) {

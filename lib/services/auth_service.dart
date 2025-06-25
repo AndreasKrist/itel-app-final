@@ -30,7 +30,7 @@ class AuthService {
         // Use empty strings/defaults for other required fields
         phone: '+62 821xxxxxxxx', // Default phone
         company: 'Lilo Store LTD', // Default company
-        tier: MembershipTier.pro, // Default tier for all signed-up users
+        tier: MembershipTier.tier1, // Default tier for all signed-up users
         membershipExpiryDate: 'March 7, 2027', // Default expiry
       );
     } catch (e) {
@@ -109,7 +109,7 @@ Future<void> loadUserData() async {
         email: firebaseUser.email ?? '',
         phone: '', // Empty phone instead of hardcoded number
         company: '', // Empty company instead of hardcoded company
-        tier: MembershipTier.pro,
+        tier: MembershipTier.tier1,
         membershipExpiryDate: 'March 7, 2027',
         favoriteCoursesIds: [], // Pass the loaded favorites
         enrolledCourses: [], // Empty enrolled courses for new users
@@ -154,12 +154,19 @@ EnrollmentStatus _getEnrollmentStatusFromString(String statusString) {
 }
 
   // Helper method to convert string to MembershipTier
-  MembershipTier _getTierFromString(String? tierString) {
-    if (tierString == 'pro') {
-      return MembershipTier.pro;
-    }
-    return MembershipTier.standard;
+MembershipTier _getTierFromString(String? tierString) {
+  switch (tierString) {
+    case 'tier1':
+      return MembershipTier.tier1;
+    case 'tier2':
+      return MembershipTier.tier2;
+    case 'tier3':
+      return MembershipTier.tier3;
+    case 'standard':
+    default:
+      return MembershipTier.standard;
   }
+}
 
   // Sign in with Google
   Future<User?> signInWithGoogle() async {
@@ -197,7 +204,7 @@ EnrollmentStatus _getEnrollmentStatusFromString(String statusString) {
             email: userCredential.user!.email ?? '',
             phone: '', // Empty phone instead of hardcoded number
             company: '', // Empty company instead of hardcoded company
-            tier: MembershipTier.pro,
+            tier: MembershipTier.tier1,
             membershipExpiryDate: 'March 7, 2027',
             favoriteCoursesIds: [],
           );
@@ -258,7 +265,7 @@ EnrollmentStatus _getEnrollmentStatusFromString(String statusString) {
           email: email,
           phone: '', // Empty phone instead of hardcoded number
           company: '', // Empty company instead of hardcoded company
-          tier: MembershipTier.pro,
+          tier: MembershipTier.tier1,
           membershipExpiryDate: 'March 7, 2027',
           favoriteCoursesIds: [],
         );

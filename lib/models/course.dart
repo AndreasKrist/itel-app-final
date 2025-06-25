@@ -98,9 +98,11 @@ class Course {
     );
   }
 
-// Get discounted price for PRO members
+// Replace the getDiscountedPrice method in Course class
   String getDiscountedPrice(MembershipTier userTier) {
-    if (userTier != MembershipTier.pro) {
+    final discountPercentage = userTier.discountPercentage;
+    
+    if (discountPercentage == 0) {
       return price;
     }
     
@@ -112,7 +114,7 @@ class Course {
     
     try {
       double originalPrice = double.parse(priceString);
-      double discountedPrice = originalPrice * 0.75; // 25% discount
+      double discountedPrice = originalPrice * (1 - discountPercentage);
       
       // Format price with same currency symbol
       if (price.contains('\$')) {

@@ -21,7 +21,7 @@ class CourseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isFavorite = User.currentUser.favoriteCoursesIds.contains(course.id);
     final userTier = User.currentUser.tier;
-    final isDiscountEligible = course.isDiscountEligible() && userTier == MembershipTier.pro;
+    final isDiscountEligible = course.isDiscountEligible() && userTier == MembershipTier.tier1;
 
     return GestureDetector(
       onTap: () {

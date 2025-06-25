@@ -100,7 +100,7 @@ class Course {
 
 // Get discounted price for PRO members
   String getDiscountedPrice(MembershipTier userTier) {
-    if (userTier != MembershipTier.pro) {
+    if (userTier != MembershipTier.tier1) {
       return price;
     }
     

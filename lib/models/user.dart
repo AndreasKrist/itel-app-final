@@ -3,8 +3,65 @@ import 'enrolled_course.dart';
 
 enum MembershipTier {
   standard,
-  pro,
+  tier1,    // 15% discount, 1 year free
+  tier2,    // 25% discount
+  tier3,    // 35% discount
 }
+
+extension MembershipTierExtension on MembershipTier {
+  String get displayName {
+    switch (this) {
+      case MembershipTier.standard:
+        return 'Standard';
+      case MembershipTier.tier1:
+        return 'Tier 1 Premium';
+      case MembershipTier.tier2:
+        return 'Tier 2 Professional'; 
+      case MembershipTier.tier3:
+        return 'Tier 3 Enterprise';
+    }
+  }
+  
+  double get discountPercentage {
+    switch (this) {
+      case MembershipTier.standard:
+        return 0.0;
+      case MembershipTier.tier1:
+        return 0.15;  // 15%
+      case MembershipTier.tier2:
+        return 0.25;  // 25%
+      case MembershipTier.tier3:
+        return 0.35;  // 35%
+    }
+  }
+  
+  String get benefits {
+    switch (this) {
+      case MembershipTier.standard:
+        return 'Access to standard courses, Community forum access, Monthly newsletter';
+      case MembershipTier.tier1:
+        return '15% discount on all courses, Priority support, Extended access to resources, 1 year free membership';
+      case MembershipTier.tier2:
+        return '25% discount on all courses, Priority access to new courses, Exclusive webinars and events, Advanced certifications';
+      case MembershipTier.tier3:
+        return '35% discount on all courses, One-on-one mentoring sessions, Early access to beta features, Custom learning paths, Dedicated account manager';
+    }
+  }
+  
+  double get yearlyPrice {
+    switch (this) {
+      case MembershipTier.standard:
+        return 0.0;
+      case MembershipTier.tier1:
+        return 0.0;  // Free for 1 year
+      case MembershipTier.tier2:
+        return 299.99;
+      case MembershipTier.tier3:
+        return 599.99;
+    }
+  }
+}
+
 
 class User {
   final String id;
@@ -91,7 +148,7 @@ class User {
     email: 'user@example.com', // Generic email
     phone: '+XX XXXXXXXXXX', // Generic phone
     company: 'Company Name', // Generic company
-    tier: MembershipTier.pro,
+    tier: MembershipTier.tier1,
     membershipExpiryDate: 'March 7, 2027',
     favoriteCoursesIds: ['1', '3'],
     enrolledCourses: [
