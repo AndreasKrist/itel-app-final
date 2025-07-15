@@ -12,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/course_card.dart';//import 'course_outline_screen.dart';
 import '../widgets/edit_profile_dialog.dart';
 import '../services/membership_service.dart';
+import 'payment_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -480,11 +481,9 @@ void _toggleFavorite(Course course) async {
 
   @override
   Widget build(BuildContext context) {
-    // Get current user data from Firebase Auth
-    final firebaseUser = _authService.currentUser;
-    
-    // Use Firebase user data or fall back to static data if not available
-    final currentUser = firebaseUser ?? User.currentUser;
+    // Always use User.currentUser for membership tier info as it gets updated during purchases
+    // Firebase user is only used for auth state, not for membership data
+    final currentUser = User.currentUser;
     
     // Generate initials for avatar
     final initials = currentUser.name.split(' ')
@@ -1441,11 +1440,8 @@ Widget _buildProfileTab() {
 }
   
 Widget _buildCoursesTab() {
-  // Get current user data from Firebase Auth
-  final firebaseUser = _authService.currentUser;
-  
-  // Use Firebase user data or fall back to static data if not available
-  final currentUser = firebaseUser ?? User.currentUser;
+  // Always use User.currentUser for consistent user data
+  final currentUser = User.currentUser;
   
   // Get all favorited courses
   final favoriteIds = User.currentUser.favoriteCoursesIds;
@@ -1573,8 +1569,8 @@ Widget _buildCoursesTab() {
 }
   
   Widget _buildMembershipTab() {
-  final firebaseUser = _authService.currentUser;
-  final currentUser = firebaseUser ?? User.currentUser;
+  // Always use User.currentUser for membership tier info as it gets updated during purchases
+  final currentUser = User.currentUser;
   
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1667,8 +1663,9 @@ Widget _buildCoursesTab() {
           'Priority support',
           'Extended resource access',
           '1 year completely free',
+          'Click to activate (not automatic)',
         ],
-        isPopular: true,
+        isPopular: false,
         currentUserTier: currentUser.tier,
       ),
       
@@ -1677,7 +1674,7 @@ Widget _buildCoursesTab() {
       _buildTierCard(
         tier: MembershipTier.tier2,
         title: 'Tier 2 Professional',
-        price: '\$299.99/year',
+        price: '\$299.99 (One-time)',
         originalPrice: '',
         discount: '25%',
         features: [
@@ -1685,6 +1682,7 @@ Widget _buildCoursesTab() {
           'Priority access to new courses',
           'Exclusive webinars',
           'Advanced certifications',
+          'Lifetime access',
         ],
         isPopular: false,
         currentUserTier: currentUser.tier,
@@ -1695,7 +1693,7 @@ Widget _buildCoursesTab() {
       _buildTierCard(
         tier: MembershipTier.tier3,
         title: 'Tier 3 Enterprise',
-        price: '\$599.99/year',
+        price: '\$599.99 (One-time)',
         originalPrice: '',
         discount: '35%',
         features: [
@@ -1704,8 +1702,9 @@ Widget _buildCoursesTab() {
           'Early beta access',
           'Custom learning paths',
           'Dedicated account manager',
+          'Lifetime access',
         ],
-        isPopular: false,
+        isPopular: true,
         currentUserTier: currentUser.tier,
       ),
       
@@ -1725,7 +1724,7 @@ Widget _buildTierCard({
   required MembershipTier currentUserTier,
 }) {
   final isCurrentTier = currentUserTier == tier;
-  final canUpgrade = currentUserTier.index < tier.index;
+  final canChange = currentUserTier != tier; // Allow both upgrade and downgrade for testing
   
   return Container(
     decoration: BoxDecoration(
@@ -1843,11 +1842,11 @@ Widget _buildTierCard({
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isCurrentTier ? null : canUpgrade ? () => _purchaseMembership(tier) : null,
+                  onPressed: isCurrentTier ? null : canChange ? () => _purchaseMembership(tier) : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isCurrentTier 
                         ? Colors.grey[400]
-                        : canUpgrade 
+                        : canChange 
                             ? (isPopular ? Colors.orange : Colors.blue[600])
                             : Colors.grey[400],
                     foregroundColor: Colors.white,
@@ -1859,9 +1858,9 @@ Widget _buildTierCard({
                   child: Text(
                     isCurrentTier 
                         ? 'Current Plan'
-                        : canUpgrade 
-                            ? 'Upgrade Now'
-                            : 'Downgrade Not Available',
+                        : canChange 
+                            ? (currentUserTier.index < tier.index ? 'Upgrade Now' : 'Change to This Plan')
+                            : 'Not Available',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -1887,7 +1886,20 @@ Color _getTierColor(MembershipTier tier) {
   }
 }
 
-// Add this method to handle membership purchase
+// Clean up any previous payment state
+Future<void> _cleanupPreviousPaymentState() async {
+  // Small delay to ensure any previous payment screens are fully closed
+  await Future.delayed(const Duration(milliseconds: 500));
+  
+  // Force garbage collection of any lingering payment states
+  if (mounted) {
+    setState(() {
+      // This will trigger a rebuild and clear any cached states
+    });
+  }
+}
+
+// Add this method to handle membership purchase with Xendit
 Future<void> _purchaseMembership(MembershipTier tier) async {
   final membershipService = MembershipService();
   final currentUser = _authService.currentUser ?? User.currentUser;
@@ -1903,22 +1915,40 @@ Future<void> _purchaseMembership(MembershipTier tier) async {
   final confirm = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text('Upgrade to ${tier.displayName}'),
+      title: Text('${currentUser.tier.index < tier.index ? "Upgrade" : "Change"} to ${tier.displayName}'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('You are about to upgrade to ${tier.displayName}'),
+          Text('You are about to ${currentUser.tier.index < tier.index ? "upgrade" : "change"} to ${tier.displayName}'),
           const SizedBox(height: 8),
           Text('Benefits: ${tier.benefits}'),
           const SizedBox(height: 8),
-          Text('Price: \$${tier.yearlyPrice.toStringAsFixed(2)}/year'),
+          Text('Price: ${tier == MembershipTier.tier1 ? "FREE for 1 year" : tier == MembershipTier.tier2 ? "IDR 10,000 (Test)" : "IDR 20,000 (Test)"}'),
           if (tier == MembershipTier.tier1)
             const Text(
               'Special Offer: First year completely FREE!',
               style: TextStyle(
                 color: Colors.green,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+          if (tier != MembershipTier.tier1)
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue[200]!),
+              ),
+              child: const Text(
+                '🧪 Test Mode: Use test payment methods only',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
         ],
@@ -1930,7 +1960,7 @@ Future<void> _purchaseMembership(MembershipTier tier) async {
         ),
         ElevatedButton(
           onPressed: () => Navigator.pop(context, true),
-          child: const Text('Confirm Purchase'),
+          child: Text('Confirm ${currentUser.tier.index < tier.index ? "Upgrade" : "Change"}'),
         ),
       ],
     ),
@@ -1946,31 +1976,119 @@ Future<void> _purchaseMembership(MembershipTier tier) async {
       ),
     );
     
-    // Simulate purchase process
-    final success = await membershipService.purchaseMembership(
-      userId: currentUser.id,
-      tier: tier,
-      currentUser: currentUser,
-    );
-    
-    Navigator.pop(context); // Close loading dialog
-    
-    if (success) {
-      setState(() {}); // Refresh UI
+    try {
+      // Clean up any previous payment state
+      await _cleanupPreviousPaymentState();
+      
+      // Create payment invoice
+      final paymentResult = await membershipService.createPaymentInvoice(
+        userId: currentUser.id,
+        tier: tier,
+        currentUser: currentUser,
+      );
+      
+      Navigator.pop(context); // Close loading dialog
+      
+      if (paymentResult.success) {
+        if (tier == MembershipTier.tier1) {
+          // Free tier, process immediately
+          final success = await membershipService.processMembershipPurchase(
+            userId: currentUser.id,
+            tier: tier,
+            currentUser: currentUser,
+            invoiceId: paymentResult.invoiceId,
+          );
+          
+          _handlePaymentResult(success, tier, paymentResult.invoiceId);
+        } else {
+          // Paid tier, show payment screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PaymentScreen(
+                tier: tier,
+                invoiceUrl: paymentResult.invoiceUrl!,
+                invoiceId: paymentResult.invoiceId!,
+                onPaymentComplete: (success, invoiceId) {
+                  _handlePaymentComplete(success, tier, invoiceId);
+                },
+              ),
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to create payment: ${paymentResult.errorMessage}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      Navigator.pop(context); // Close loading dialog
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Successfully upgraded to ${tier.displayName}!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to purchase membership. Please try again.'),
+          content: Text('Error: ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
     }
+  }
+}
+
+// Handle payment completion
+Future<void> _handlePaymentComplete(bool success, MembershipTier tier, String? invoiceId) async {
+  if (success && invoiceId != null) {
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    
+    // Process membership purchase
+    final membershipService = MembershipService();
+    final currentUser = User.currentUser;
+    
+    final purchaseSuccess = await membershipService.processMembershipPurchase(
+      userId: currentUser.id,
+      tier: tier,
+      currentUser: currentUser,
+      invoiceId: invoiceId,
+    );
+    
+    Navigator.pop(context); // Close loading dialog
+    
+    _handlePaymentResult(purchaseSuccess, tier, invoiceId);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Payment was cancelled or failed'),
+        backgroundColor: Colors.orange,
+      ),
+    );
+  }
+}
+
+// Handle payment result
+void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) {
+  if (success) {
+    setState(() {}); // Refresh UI
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Successfully changed to ${tier.displayName}!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Failed to process membership. Please try again.'),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 }
   

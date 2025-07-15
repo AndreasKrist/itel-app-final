@@ -129,10 +129,11 @@ class Course {
   
   // Check if course is eligible for discount
   bool isDiscountEligible() {
-    // Free courses and courses not eligible for funding don't get additional discounts
+    // Free courses, complimentary courses, and government funding eligible courses cannot have additional discounts
     return !(price == '\$0' || 
             price.contains('Free') || 
-            funding == 'Complimentary');
+            funding == 'Complimentary' ||
+            (funding != null && funding!.contains('Eligible for funding')));
   }
   
 static List<Course> sampleCourses = [

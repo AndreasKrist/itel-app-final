@@ -21,7 +21,7 @@ class CourseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isFavorite = User.currentUser.favoriteCoursesIds.contains(course.id);
     final userTier = User.currentUser.tier;
-    final isDiscountEligible = course.isDiscountEligible() && userTier == MembershipTier.tier1;
+    final isDiscountEligible = course.isDiscountEligible() && userTier != MembershipTier.standard;
 
     return GestureDetector(
       onTap: () {
@@ -138,7 +138,7 @@ class CourseCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          'PRO SAVE 25%',
+                          '${(userTier.discountPercentage * 100).toInt()}% OFF',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 10,
