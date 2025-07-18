@@ -6,9 +6,12 @@ import '../widgets/course_card.dart';
 import '../widgets/trending_card.dart';
 import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
+import 'courses_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(String)? onCategorySelected;
+  
+  const HomeScreen({super.key, this.onCategorySelected});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -538,13 +541,8 @@ void _toggleFavorite(Course course) async {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
-            // Navigate to courses filtered by this discipline
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Navigating to ${discipline['name']} courses...'),
-                duration: const Duration(seconds: 1),
-              ),
-            );
+            // Switch to courses tab with category filter
+            widget.onCategorySelected?.call(discipline['name']!);
           },
           child: Padding(
             padding: const EdgeInsets.all(16),

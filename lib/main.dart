@@ -160,13 +160,21 @@ class AppMockup extends StatefulWidget {
 
 class _AppMockupState extends State<AppMockup> {
   int _currentIndex = 0;
+  String? _selectedCategory;
+
+  void switchToCoursesWithCategory(String category) {
+    setState(() {
+      _currentIndex = 1; // Switch to courses tab (index 1)
+      _selectedCategory = category;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // Recreate screens list on each build to ensure fresh instances
     final List<Widget> screens = [
-      const HomeScreen(),
-      const CoursesScreen(),
+      HomeScreen(onCategorySelected: switchToCoursesWithCategory),
+      CoursesScreen(initialCategory: _selectedCategory),
       const TrendingScreen(),
       const AboutScreen(),
       // Pass the sign out callback to the profile screen
@@ -242,6 +250,12 @@ class _AppMockupState extends State<AppMockup> {
                       // We need to trigger the ProfileScreen to reload data
                       print("Switching to profile tab - data will be refreshed");
                     }
+                    
+                    // Clear selected category if manually switching to courses tab
+                    if (index == 1 && _currentIndex != 1) {
+                      _selectedCategory = null;
+                    }
+                    
                     _currentIndex = index;
                   });
                 },

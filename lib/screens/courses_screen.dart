@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/course.dart';
+import '../models/course_category.dart';
 import '../models/user.dart';
 import '../widgets/course_card.dart';
 import '../widgets/filter_modal.dart';
@@ -8,7 +9,9 @@ import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
 
 class CoursesScreen extends StatefulWidget {
-  const CoursesScreen({super.key});
+  final String? initialCategory;
+  
+  const CoursesScreen({super.key, this.initialCategory});
 
   @override
   State<CoursesScreen> createState() => _CoursesScreenState();
@@ -20,6 +23,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     'funding': 'all',
     'duration': 'all',
     'certType': 'all',
+    'category': 'all',
   };
   String activeSort = 'none';
   bool showFilters = false;
@@ -38,6 +42,11 @@ void initState() {
   super.initState();
   // Add listener to search controller
   _searchController.addListener(_onSearchChanged);
+  
+  // Set initial category if provided
+  if (widget.initialCategory != null) {
+    activeFilters['category'] = widget.initialCategory!;
+  }
 }
 
 @override
@@ -175,6 +184,11 @@ void _toggleFavorite(Course course) async {
     // Apply cert type filter
     if (activeFilters['certType'] != 'all') {
       result = result.where((course) => course.certType == activeFilters['certType']).toList();
+    }
+    
+    // Apply category filter
+    if (activeFilters['category'] != 'all') {
+      result = result.where((course) => course.category == activeFilters['category']).toList();
     }
     
     // Apply sorting
@@ -401,6 +415,41 @@ Container(
   ),
 ),
               
+              // Category chips
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 40,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: CourseCategory.values.length + 1, // +1 for "All" chip
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      // "All" chip
+                      return _buildCategoryChip(
+                        'All',
+                        activeFilters['category'] == 'all',
+                        () {
+                          setState(() {
+                            activeFilters['category'] = 'all';
+                          });
+                        },
+                      );
+                    }
+                    
+                    final category = CourseCategory.values[index - 1];
+                    return _buildCategoryChip(
+                      category.displayName,
+                      activeFilters['category'] == category.displayName,
+                      () {
+                        setState(() {
+                          activeFilters['category'] = category.displayName;
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+              
               // Active filters display
               if (activeFilters.values.any((value) => value != 'all') || activeSort != 'none' || _isSearching) ...[
                 const SizedBox(height: 16),
@@ -441,6 +490,17 @@ Container(
                           Colors.blue,
                         ),
                         
+                      if (activeFilters['category'] != 'all')
+                        _buildFilterChip(
+                          'Category: ${_getDisplayText('category', activeFilters['category']!)}',
+                          () {
+                            setState(() {
+                              activeFilters['category'] = 'all';
+                            });
+                          },
+                          Colors.blue,
+                        ),
+                        
                       if (activeSort != 'none')
                         _buildFilterChip(
                           'Sort: ${_getDisplayText('sort', activeSort)}',
@@ -460,6 +520,7 @@ Container(
                                 'funding': 'all',
                                 'duration': 'all',
                                 'certType': 'all',
+                                'category': 'all',
                               };
                               activeSort = 'none';
                             });
@@ -654,6 +715,28 @@ Container(
     );
   }
   
+  Widget _buildCategoryChip(String label, bool isActive, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(right: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.blue[600] : Colors.grey[200],
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isActive ? Colors.white : Colors.grey[700],
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+  
   String _getDisplayText(String category, String value) {
     if (category == 'funding') {
       switch (value) {
@@ -668,6 +751,8 @@ Container(
         case 'long': return 'Long (2+ days)';
         default: return 'All';
       }
+    } else if (category == 'category') {
+      return value == 'all' ? 'All Categories' : value;
     } else if (category == 'sort') {
       switch (value) {
         case 'priceLow': return 'Price: Low to High';
