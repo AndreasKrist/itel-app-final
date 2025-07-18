@@ -25,7 +25,7 @@ class GuestBanner extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'You\'re browsing as a guest. Sign in to access all features.',
+              'You are currently browsing as a Guest.',
               style: TextStyle(
                 color: Colors.blue[800],
                 fontSize: 12,
@@ -33,28 +33,44 @@ class GuestBanner extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: Text(
-              'Sign In',
-              style: TextStyle(
-                color: Colors.blue[700],
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(
-                    onLoginStatusChanged: (bool isLoggedIn) {
-                      // Handle login success
-                    },
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CupertinoButton(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                minSize: 0,
+                child: Text(
+                  'Sign In',
+                  style: TextStyle(
+                    color: Colors.blue[700],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
                   ),
                 ),
-              );
-            },
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(
+                        onLoginStatusChanged: (bool isLoggedIn) {
+                          // Handle login success
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Sign-in for Full Access',
+                style: TextStyle(
+                  color: Colors.blue[600],
+                  fontSize: 10,
+                  height: 1.0,
+                ),
+              ),
+            ],
           ),
         ],
       ),

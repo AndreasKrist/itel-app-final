@@ -147,6 +147,40 @@ void _toggleFavorite(Course course) async {
     return baseList.where((course) => popularCourseIds.contains(course.id)).toList();
   }
 
+  // Get funded courses
+  List<Course> get fundedCourses {
+    // Define specific course IDs for funded courses
+    final fundedCourseIds = ['1', '2', '3']; // You can assign specific course IDs here
+    
+    List<Course> baseList = _isSearching ? filteredCourses : courses;
+    return baseList.where((course) => fundedCourseIds.contains(course.id)).toList();
+  }
+
+  // Get SCTP courses
+  List<Course> get sctpCourses {
+    // Define specific course IDs for SCTP courses
+    final sctpCourseIds = ['4', '5', '6']; // You can assign specific course IDs here
+    
+    List<Course> baseList = _isSearching ? filteredCourses : courses;
+    return baseList.where((course) => sctpCourseIds.contains(course.id)).toList();
+  }
+
+  // Get course disciplines/categories
+  List<Map<String, String>> get courseDisciplines {
+    return [
+      {'name': 'AI & IoT', 'icon': 'smart_toy'},
+      {'name': 'Big Data | Analytics | Database', 'icon': 'analytics'},
+      {'name': 'Business Operations', 'icon': 'business'},
+      {'name': 'Cloud Computing & Virtualization', 'icon': 'cloud'},
+      {'name': 'Cybersecurity', 'icon': 'security'},
+      {'name': 'DevOps', 'icon': 'developer_mode'},
+      {'name': 'IT Business Management & Strategy', 'icon': 'business_center'},
+      {'name': 'Mobile & App Technology', 'icon': 'phone_android'},
+      {'name': 'Networking Infrastructure & Architecture', 'icon': 'network_wifi'},
+      {'name': 'Programming', 'icon': 'code'},
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -157,36 +191,36 @@ void _toggleFavorite(Course course) async {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome to ITEL',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  Text(
-                    'Discover your next course',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                ],
-              ),
               Container(
-                width: 40,
-                height: 40,
+                width: 60,
+                height: 60,
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.blue[50],
+                  color: Colors.white,
                   shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    'PRO',
-                    style: TextStyle(
-                      color: Colors.blue[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
+                  ],
+                ),
+                child: Image.asset(
+                  'assets/images/itel.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    'Technology Service Training Provider',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[800],
+                        ),
+                    textAlign: TextAlign.right,
                   ),
                 ),
               ),
@@ -334,6 +368,88 @@ void _toggleFavorite(Course course) async {
               const SizedBox(height: 24),
             ],
             
+            // Funded Courses
+            if (fundedCourses.isNotEmpty) ...[
+              Text(
+                'Funded Courses',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              
+              SizedBox(
+                height: 230,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: fundedCourses.length,
+                  separatorBuilder: (context, index) => const SizedBox(width: 12),
+                  itemBuilder: (context, index) => SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.85,
+                    child: CourseCard(
+                      course: fundedCourses[index],
+                      onFavoriteToggle: _toggleFavorite,
+                    ),
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+            ],
+            
+            // SCTP Courses
+            if (sctpCourses.isNotEmpty) ...[
+              Text(
+                'SCTP Courses',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              
+              SizedBox(
+                height: 230,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: sctpCourses.length,
+                  separatorBuilder: (context, index) => const SizedBox(width: 12),
+                  itemBuilder: (context, index) => SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.85,
+                    child: CourseCard(
+                      course: sctpCourses[index],
+                      onFavoriteToggle: _toggleFavorite,
+                    ),
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+            ],
+            
+            // Course Discipline
+            Text(
+              'Course Discipline',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            
+            SizedBox(
+              height: 180,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: courseDisciplines.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 12),
+                itemBuilder: (context, index) => SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  child: _buildDisciplineCard(courseDisciplines[index]),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 24),
+            
             // What's Trending
             Text(
               "What's Trending",
@@ -401,5 +517,96 @@ void _toggleFavorite(Course course) async {
         ],
       ),
     );
+  }
+  
+  Widget _buildDisciplineCard(Map<String, String> discipline) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            // Navigate to courses filtered by this discipline
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Navigating to ${discipline['name']} courses...'),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    _getIconData(discipline['icon']!),
+                    size: 32,
+                    color: Colors.blue[700],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  discipline['name']!,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey[800],
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'smart_toy':
+        return Icons.smart_toy;
+      case 'analytics':
+        return Icons.analytics;
+      case 'business':
+        return Icons.business;
+      case 'cloud':
+        return Icons.cloud;
+      case 'security':
+        return Icons.security;
+      case 'developer_mode':
+        return Icons.developer_mode;
+      case 'business_center':
+        return Icons.business_center;
+      case 'phone_android':
+        return Icons.phone_android;
+      case 'network_wifi':
+        return Icons.network_wifi;
+      case 'code':
+        return Icons.code;
+      default:
+        return Icons.category;
+    }
   }
 }

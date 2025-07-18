@@ -1,5 +1,5 @@
-name: itel_app
-description: "A new Flutter project."
+name: ITEL
+description: "Technology Service Training Provider."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -60,10 +60,10 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"  # Icon name for Android
   ios: true  # Creates icons for iOS
-  image_path: "assets/images/itel2.png"  # Path to your existing icon
+  image_path: "assets/images/splash.png"  # Path to your existing icon
   min_sdk_android: 21  # Minimum Android SDK version
   adaptive_icon_background: "#FFFFFF"  # Background color for adaptive icons (Android 8.0+)
-  adaptive_icon_foreground: "assets/images/itel2.png"  # Foreground image for adaptive icons
+  adaptive_icon_foreground: "assets/images/splash.png"  # Foreground image for adaptive icons
   remove_alpha_ios: true  # Removes transparency from iOS icons (recommended)
 
 
@@ -88,7 +88,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/images/itel-logo.png
     - assets/data/flutter_courses.json
   #   - images/a_dot_ham.jpeg
 
