@@ -333,7 +333,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       body: Stack(
         children: [
           // WebView with better mobile handling
-          Container(
+          SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: WebViewWidget(controller: _controller),
