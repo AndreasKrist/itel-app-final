@@ -101,7 +101,7 @@ class CourseCard extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 8),
                       child: Icon(
                         isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.pink : Colors.grey,
+                        color: isFavorite ? Colors.orange : Colors.grey,
                         size: 24,
                       ),
                     ),
@@ -155,7 +155,7 @@ class CourseCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    Icon(Icons.star, color: Colors.orange, size: 16),
                     const SizedBox(width: 4),
                     Text(course.rating.toString()),
                   ],
@@ -226,7 +226,7 @@ class CourseCard extends StatelessWidget {
                   child: Text(
                     'View Details',
                     style: TextStyle(
-                      color: Colors.blue[600],
+                      color: Colors.orange,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

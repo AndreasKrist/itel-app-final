@@ -319,6 +319,7 @@ void _toggleFavorite(Course course) async {
               'Popular Courses',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.blue[800],
                   ),
             ),
             const SizedBox(height: 16),
@@ -347,6 +348,7 @@ void _toggleFavorite(Course course) async {
                 'Complimentary Courses',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
                     ),
               ),
               const SizedBox(height: 16),
@@ -376,6 +378,7 @@ void _toggleFavorite(Course course) async {
                 'Funded Courses',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
                     ),
               ),
               const SizedBox(height: 16),
@@ -405,6 +408,7 @@ void _toggleFavorite(Course course) async {
                 'SCTP Courses',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
                     ),
               ),
               const SizedBox(height: 16),

@@ -8,7 +8,7 @@ class GuestBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.blue[50],
         border: Border(
@@ -37,17 +37,7 @@ class GuestBanner extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              CupertinoButton(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                minSize: 0,
-                child: Text(
-                  'Sign In',
-                  style: TextStyle(
-                    color: Colors.blue[700],
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
+              ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -60,8 +50,24 @@ class GuestBanner extends StatelessWidget {
                     ),
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[700],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                  minimumSize: const Size(0, 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Sign In',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 2),
               Text(
                 'Sign-in for Full Access',
                 style: TextStyle(
