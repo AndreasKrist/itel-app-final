@@ -186,14 +186,15 @@ void _toggleFavorite(Course course) async {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
                 width: 60,
                 height: 60,
                 padding: const EdgeInsets.all(8),
@@ -226,12 +227,15 @@ void _toggleFavorite(Course course) async {
                   ),
                 ),
               ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 24),
           
           // Search bar
-          Container(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
@@ -271,14 +275,19 @@ void _toggleFavorite(Course course) async {
                 });
               },
             ),
+            ),
           ),
           
           const SizedBox(height: 24),
           
           // Search results or regular content
           if (_isSearching) ...[
-            // Search results header
-            Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  // Search results header
+                  Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -312,165 +321,198 @@ void _toggleFavorite(Course course) async {
                   onFavoriteToggle: _toggleFavorite,
                 ),
               ),
+                ],
+              ),
+            ),
           ] else ...[
             // Regular content when not searching
-            // Popular Courses
-            Text(
-              'Popular Courses',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Popular Courses
+                  Text(
+                    'Popular Courses',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue[800],
+                        ),
                   ),
+                  const SizedBox(height: 16),
+                  
+                  SizedBox(
+                    height: 230, // Fixed height for the horizontal scroll view
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: popularCourses.length,
+                      separatorBuilder: (context, index) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) => SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.85, // Control the width of each card
+                        child: CourseCard(
+                          course: popularCourses[index],
+                          onFavoriteToggle: _toggleFavorite,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Complimentary Courses
+                  if (complimentaryCourses.isNotEmpty) ...[
+                    Text(
+                      'Complimentary Courses',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[800],
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    SizedBox(
+                      height: 230, // Fixed height for the horizontal scroll view
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: complimentaryCourses.length,
+                        separatorBuilder: (context, index) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) => SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.85, // Control the width of each card
+                          child: CourseCard(
+                            course: complimentaryCourses[index],
+                            onFavoriteToggle: _toggleFavorite,
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 24),
+                  ],
+                  
+                  // Funded Courses
+                  if (fundedCourses.isNotEmpty) ...[
+                    Text(
+                      'Funded Courses',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[800],
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    SizedBox(
+                      height: 230,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: fundedCourses.length,
+                        separatorBuilder: (context, index) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) => SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          child: CourseCard(
+                            course: fundedCourses[index],
+                            onFavoriteToggle: _toggleFavorite,
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 24),
+                  ],
+                  
+                  // SCTP Courses
+                  if (sctpCourses.isNotEmpty) ...[
+                    Text(
+                      'SCTP Courses',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[800],
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    SizedBox(
+                      height: 230,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: sctpCourses.length,
+                        separatorBuilder: (context, index) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) => SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          child: CourseCard(
+                            course: sctpCourses[index],
+                            onFavoriteToggle: _toggleFavorite,
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 24),
+                  ],
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
             
-            SizedBox(
-              height: 230, // Fixed height for the horizontal scroll view
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: popularCourses.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 12),
-                itemBuilder: (context, index) => SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.85, // Control the width of each card
-                  child: CourseCard(
-                    course: popularCourses[index],
-                    onFavoriteToggle: _toggleFavorite,
+            // Course Discipline Section with background
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Course Discipline',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  
+                  SizedBox(
+                    height: 180,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: courseDisciplines.length,
+                      separatorBuilder: (context, index) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) => SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.45,
+                        child: _buildDisciplineCard(courseDisciplines[index]),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             
             const SizedBox(height: 24),
             
-            // Complimentary Courses
-            if (complimentaryCourses.isNotEmpty) ...[
-              Text(
-                'Complimentary Courses',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
-                    ),
+            // What's Trending Section with darker background
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
               ),
-              const SizedBox(height: 16),
-              
-              SizedBox(
-                height: 230, // Fixed height for the horizontal scroll view
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: complimentaryCourses.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 12),
-                  itemBuilder: (context, index) => SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.85, // Control the width of each card
-                    child: CourseCard(
-                      course: complimentaryCourses[index],
-                      onFavoriteToggle: _toggleFavorite,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "What's Trending",
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: trendingItems.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) => TrendingCard(
+                      item: trendingItems[index],
                     ),
                   ),
-                ),
-              ),
-              
-              const SizedBox(height: 24),
-            ],
-            
-            // Funded Courses
-            if (fundedCourses.isNotEmpty) ...[
-              Text(
-                'Funded Courses',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
-                    ),
-              ),
-              const SizedBox(height: 16),
-              
-              SizedBox(
-                height: 230,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: fundedCourses.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 12),
-                  itemBuilder: (context, index) => SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    child: CourseCard(
-                      course: fundedCourses[index],
-                      onFavoriteToggle: _toggleFavorite,
-                    ),
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 24),
-            ],
-            
-            // SCTP Courses
-            if (sctpCourses.isNotEmpty) ...[
-              Text(
-                'SCTP Courses',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
-                    ),
-              ),
-              const SizedBox(height: 16),
-              
-              SizedBox(
-                height: 230,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: sctpCourses.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 12),
-                  itemBuilder: (context, index) => SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    child: CourseCard(
-                      course: sctpCourses[index],
-                      onFavoriteToggle: _toggleFavorite,
-                    ),
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 24),
-            ],
-            
-            // Course Discipline
-            Text(
-              'Course Discipline',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            
-            SizedBox(
-              height: 180,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: courseDisciplines.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 12),
-                itemBuilder: (context, index) => SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: _buildDisciplineCard(courseDisciplines[index]),
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // What's Trending
-            Text(
-              "What's Trending",
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: trendingItems.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => TrendingCard(
-                item: trendingItems[index],
+                ],
               ),
             ),
           ],
