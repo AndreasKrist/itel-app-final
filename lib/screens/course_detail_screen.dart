@@ -776,9 +776,21 @@ void _toggleFavorite() async {
                         ),
                         const SizedBox(height: 24),
                       ],
-                      
-                      // Related Courses
-                      if (relatedCourses.isNotEmpty) ...[
+                    ],
+                  ),
+                ),
+                
+                // Related Courses Section with full-width background
+                if (relatedCourses.isNotEmpty) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         _buildSectionTitle('Related Courses'),
                         const SizedBox(height: 12),
                         SizedBox(
@@ -789,7 +801,7 @@ void _toggleFavorite() async {
                             separatorBuilder: (context, index) => const SizedBox(width: 12),
                             itemBuilder: (context, index) {
                               final course = relatedCourses[index];
-                              return InkWell(
+                                return InkWell(
                                 onTap: () {
                                   Navigator.pushReplacement(
                                     context, 
@@ -882,13 +894,12 @@ void _toggleFavorite() async {
                             },
                           ),
                         ),
-                        const SizedBox(height: 24),
                       ],
-                      
-                      const SizedBox(height: 60), // Space for the bottom button
-                    ],
+                    ),
                   ),
-                ),
+                ],
+                
+                const SizedBox(height: 60), // Space for the bottom button
               ],
             ),
           ),
