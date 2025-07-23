@@ -485,8 +485,6 @@ void _toggleFavorite(Course course) async {
               ),
             ),
             
-            const SizedBox(height: 24),
-            
             // What's Trending Section with darker background
             Container(
               padding: const EdgeInsets.all(16),
