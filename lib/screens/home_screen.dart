@@ -6,7 +6,6 @@ import '../widgets/course_card.dart';
 import '../widgets/trending_card.dart';
 import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
-import 'courses_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(String)? onCategorySelected;

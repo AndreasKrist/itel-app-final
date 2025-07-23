@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'category_chip.dart';
-import '../models/course_category.dart';
 
 class FilterModal extends StatefulWidget {
   final Map<String, String> activeFilters;

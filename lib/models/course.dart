@@ -1,5 +1,4 @@
 import 'user.dart'; // 
-import 'course_category.dart'; 
 class Course {
   final String id;
   final String courseCode; // Added course code
