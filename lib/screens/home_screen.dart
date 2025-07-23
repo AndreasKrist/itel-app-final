@@ -143,7 +143,7 @@ void _toggleFavorite(Course course) async {
   // Get popular courses (excluding complimentary courses)
   List<Course> get popularCourses {
     // Define specific course IDs that you want to show as popular
-    final popularCourseIds = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26']; // Replace with your selected course IDs
+    final popularCourseIds = ['29', '30', '32', '33', '34', '35', '37', '41', '42', '43', '45', '54', '56', '57', '59', '120', '121', '127', '139', '141', '174', '175', '179', '194', '198', '199', '200', '202', '203', '206', '208', '209', '211', '212']; // Replace with your selected course IDs
     
     List<Course> baseList = _isSearching ? filteredCourses : courses;
     return baseList.where((course) => popularCourseIds.contains(course.id)).toList();
@@ -152,7 +152,7 @@ void _toggleFavorite(Course course) async {
   // Get funded courses
   List<Course> get fundedCourses {
     // Define specific course IDs for funded courses
-    final fundedCourseIds = ['1', '2', '3']; // You can assign specific course IDs here
+    final fundedCourseIds = ['29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '62', '64', '65', '66', '108', '113', '139', '181', '193', '194', '195', '196', '197', '198', '199', '200', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210', '211', '212']; // You can assign specific course IDs here
     
     List<Course> baseList = _isSearching ? filteredCourses : courses;
     return baseList.where((course) => fundedCourseIds.contains(course.id)).toList();
@@ -161,7 +161,7 @@ void _toggleFavorite(Course course) async {
   // Get SCTP courses
   List<Course> get sctpCourses {
     // Define specific course IDs for SCTP courses
-    final sctpCourseIds = ['4', '5', '6']; // You can assign specific course IDs here
+    final sctpCourseIds = ['113', '193']; // You can assign specific course IDs here
     
     List<Course> baseList = _isSearching ? filteredCourses : courses;
     return baseList.where((course) => sctpCourseIds.contains(course.id)).toList();
