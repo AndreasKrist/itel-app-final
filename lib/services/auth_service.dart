@@ -62,16 +62,9 @@ Future<void> loadUserData() async {
     final userProfile = await _preferencesService.getUserProfile(firebaseUser.uid);
     print('User profile loaded: ${userProfile != null}');
     
-    // Extract favorites directly from the user profile
-    List<String> favorites = [];
-    if (userProfile != null && userProfile.containsKey('favoriteCoursesIds')) {
-      favorites = List<String>.from(userProfile['favoriteCoursesIds'] ?? []);
-      print('Favorites extracted from profile: $favorites');
-    } else {
-      // Try the dedicated loadFavorites method as fallback
-      favorites = await _preferencesService.loadFavorites(firebaseUser.uid);
-      print('Favorites loaded from dedicated method: $favorites');
-    }
+    // Always use the dedicated loadFavorites method which handles both Firestore and local storage
+    final favorites = await _preferencesService.loadFavorites(firebaseUser.uid);
+    print('Favorites loaded: $favorites');
     
     // Load enrolled courses data from profile
     List<EnrolledCourse> enrolledCourses = [];
@@ -313,6 +306,12 @@ MembershipTier _getTierFromString(String? tierString) {
   // Sign out
   Future<void> signOut() async {
     try {
+      // Clear local storage for the current user before signing out
+      final currentUserId = _firebaseAuth.currentUser?.uid;
+      if (currentUserId != null) {
+        await _preferencesService.clearLocalStorage(currentUserId);
+      }
+      
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
     } catch (e) {

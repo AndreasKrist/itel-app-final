@@ -1,5 +1,6 @@
 // lib/services/user_preferences_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import '../models/enrolled_course.dart';
 
@@ -8,6 +9,44 @@ class UserPreferencesService {
 
   // Collection references
   CollectionReference get _usersCollection => _firestore.collection('users');
+  
+  // Local storage keys
+  static const String _favoritesKey = 'user_favorites_';
+
+  // Save favorites to local storage (as backup)
+  Future<void> _saveFavoritesToLocal(String userId, List<String> favoriteIds) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList('$_favoritesKey$userId', favoriteIds);
+      print('Saved ${favoriteIds.length} favorites to local storage for user $userId');
+    } catch (e) {
+      print('Error saving favorites to local storage: $e');
+    }
+  }
+
+  // Load favorites from local storage (as backup)
+  Future<List<String>> _loadFavoritesFromLocal(String userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final favorites = prefs.getStringList('$_favoritesKey$userId') ?? [];
+      print('Loaded ${favorites.length} favorites from local storage for user $userId');
+      return favorites;
+    } catch (e) {
+      print('Error loading favorites from local storage: $e');
+      return [];
+    }
+  }
+
+  // Clear local storage for a user (call on sign out)
+  Future<void> clearLocalStorage(String userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('$_favoritesKey$userId');
+      print('Cleared local favorites storage for user $userId');
+    } catch (e) {
+      print('Error clearing local storage: $e');
+    }
+  }
 
   // Create or update user profile
   Future<void> saveUserProfile({
@@ -115,22 +154,37 @@ class UserPreferencesService {
     try {
       print('Loading favorites for user: $userId');
       
+      // Try to load from Firestore first
       final doc = await _usersCollection.doc(userId).get();
       
       if (doc.exists && doc.data() != null) {
         final data = doc.data() as Map<String, dynamic>;
         if (data.containsKey('favoriteCoursesIds')) {
           final favorites = List<String>.from(data['favoriteCoursesIds'] ?? []);
-          print('Loaded ${favorites.length} favorites for user $userId');
+          print('Loaded ${favorites.length} favorites from Firestore for user $userId');
+          
+          // Save to local storage as backup
+          await _saveFavoritesToLocal(userId, favorites);
           return favorites;
         }
+      }
+      
+      // Fallback to local storage if Firestore fails or has no data
+      print('No favorites found in Firestore for user $userId, checking local storage');
+      final localFavorites = await _loadFavoritesFromLocal(userId);
+      if (localFavorites.isNotEmpty) {
+        print('Found ${localFavorites.length} favorites in local storage for user $userId');
+        return localFavorites;
       }
       
       print('No favorites found for user $userId');
       return [];
     } catch (e) {
-      print('Error loading favorites: $e');
-      return [];
+      print('Error loading favorites from Firestore: $e, trying local storage');
+      // If Firestore fails, try local storage
+      final localFavorites = await _loadFavoritesFromLocal(userId);
+      print('Loaded ${localFavorites.length} favorites from local storage as fallback');
+      return localFavorites;
     }
   }
 
@@ -139,14 +193,25 @@ class UserPreferencesService {
     try {
       print('Saving ${favoriteIds.length} favorites for user $userId');
       
+      // Save to local storage immediately (as backup and for immediate availability)
+      await _saveFavoritesToLocal(userId, favoriteIds);
+      
+      // Then save to Firestore
       await _usersCollection.doc(userId).update({
         'favoriteCoursesIds': favoriteIds,
         'lastUpdated': FieldValue.serverTimestamp(),
       });
       
-      print('Successfully saved favorites for user $userId');
+      print('Successfully saved favorites to both local and Firestore for user $userId');
     } catch (e) {
-      print('Error saving favorites: $e');
+      print('Error saving favorites to Firestore: $e');
+      // Even if Firestore fails, local storage should still work
+      try {
+        await _saveFavoritesToLocal(userId, favoriteIds);
+        print('Saved favorites to local storage as fallback');
+      } catch (localError) {
+        print('Error saving to local storage as fallback: $localError');
+      }
       rethrow;
     }
   }
