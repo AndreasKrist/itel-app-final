@@ -205,17 +205,30 @@ void _submitForm() async {
           SnackBar(
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Enquiry submitted successfully!'),
                 Text(
-                  'A confirmation email will be sent to ${_emailController.text}',
-                  style: TextStyle(fontSize: 12),
+                  'Thank you, enquiry submitted successfully',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Confirmation email will be sent to',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  _emailController.text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white),
                 ),
               ],
             ),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 5),
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           ),
         );
       }
