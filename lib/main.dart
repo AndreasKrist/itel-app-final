@@ -187,43 +187,6 @@ class _AppMockupState extends State<AppMockup> {
       body: SafeArea(
         child: Column(
           children: [
-            // Status Bar
-            Container(
-              height: 24,
-              color: Colors.grey[900],
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '9:41',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 16,
-                        height: 16,
-                        margin: const EdgeInsets.only(right: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.75),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.75),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
             // Guest banner (only visible for guest users)
             if (widget.isGuest)
               const GuestBanner(),

@@ -150,33 +150,16 @@ class CourseCard extends StatelessWidget {
               ],
             ),
             const Spacer(), // This pushes everything below to the bottom
-            Row(
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.orange, size: 16),
-                    const SizedBox(width: 4),
-                    Text(course.rating.toString()),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Row(
-                  children: [
-                    Icon(Icons.access_time, color: Colors.grey[400], size: 16),
-                    const SizedBox(width: 4),
-                    Text(course.duration),
-                  ],
-                ),
-              ],
-            ),
+            // Optional status text (funding/progress/completion) - made bigger
             if (course.funding != null)
               Padding(
-                padding: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
                   course.funding!,
                   style: TextStyle(
                     color: course.funding!.contains('Eligible') ? Colors.green[600] : Colors.grey[600],
-                    fontSize: 12,
+                    fontSize: 14, // Increased from 12 to 14
+                    fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -184,13 +167,13 @@ class CourseCard extends StatelessWidget {
               ),
             if (course.progress != null)
               Padding(
-                padding: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
                   course.progress!,
                   style: TextStyle(
                     color: Colors.orange[700],
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 14, // Increased from 12 to 14
+                    fontWeight: FontWeight.w600, // Made bolder
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -198,22 +181,55 @@ class CourseCard extends StatelessWidget {
               ),
             if (course.completionDate != null)
               Padding(
-                padding: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(bottom: 6),
                 child: Text(
                   'Completed ${course.completionDate}',
                   style: TextStyle(
                     color: Colors.green[700],
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 14, // Increased from 12 to 14
+                    fontWeight: FontWeight.w600, // Made bolder
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-            // Consultant is only shown for enrolled courses in the profile screen, not here
+            // Bottom row with rating/duration on left and View Details on right
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Left side: Rating and Duration - made bigger
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.orange, size: 18), // Increased from 16 to 18
+                        const SizedBox(width: 4),
+                        Text(
+                          course.rating.toString(),
+                          style: const TextStyle(
+                            fontSize: 14, // Increased from 12 to 14
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 16),
+                    Row(
+                      children: [
+                        Icon(Icons.access_time, color: Colors.grey[400], size: 18), // Increased from 16 to 18
+                        const SizedBox(width: 4),
+                        Text(
+                          course.duration,
+                          style: const TextStyle(
+                            fontSize: 14, // Increased from 12 to 14
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                // Right side: View Details button
                 TextButton(
                   onPressed: () {
                     Navigator.push(
