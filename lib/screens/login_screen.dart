@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       // Sign in with Firebase
-      await _authService.signInWithEmailPassword(
+      final user = await _authService.signInWithEmailPassword(
         _emailController.text.trim(),
         _passwordController.text,
       );
@@ -80,7 +80,11 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
       
       // If we get here without an exception, login was successful
-      widget.onLoginStatusChanged(true);
+      if (user != null) {
+        print('Email login successful for user: ${user.email}');
+        // Don't reset loading state here - let the parent handle navigation
+        widget.onLoginStatusChanged(true);
+      }
       
     } on firebase_auth.FirebaseAuthException catch (e) {
       setState(() {
@@ -115,33 +119,45 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginWithGoogle() async {
+    print('=== _loginWithGoogle started ===');
     setState(() {
       _isGoogleLoading = true;
       _errorMessage = null;
     });
     
     try {
+      print('Calling _authService.signInWithGoogle()');
       // Sign in with Google
       final user = await _authService.signInWithGoogle();
+      print('_authService.signInWithGoogle() completed. User: ${user?.email}');
       
-      if (!mounted) return;
+      if (!mounted) {
+        print('Widget not mounted, returning');
+        return;
+      }
       
       if (user != null) {
-        // If we have a user, sign-in was successful
+        // Sign-in was successful - call the callback to trigger navigation
+        print('Google sign-in successful for user: ${user.email}');
+        // Don't reset loading state here - let the parent handle navigation
         widget.onLoginStatusChanged(true);
       } else {
         // User cancelled Google sign-in
-        setState(() {
-          _isGoogleLoading = false;
-        });
+        print('User cancelled Google sign-in');
+        if (mounted) {
+          setState(() {
+            _isGoogleLoading = false;
+          });
+        }
       }
     } catch (e) {
+      print('Google sign-in error: ${e.toString()}');
       setState(() {
         _errorMessage = "Google sign-in failed. Please try again.";
         _isGoogleLoading = false;
-        print("Google sign-in error: ${e.toString()}");
       });
     }
+    print('=== _loginWithGoogle completed ===');
   }
 
   Future<void> _loginAsGuest() async {
@@ -152,12 +168,16 @@ class _LoginScreenState extends State<LoginScreen> {
     
     try {
       // Sign in anonymously with Firebase
-      await _authService.signInAnonymously();
+      final user = await _authService.signInAnonymously();
       
       if (!mounted) return;
       
-      // Update state
-      widget.onLoginStatusChanged(true);
+      // Guest login successful
+      if (user != null) {
+        print('Guest login successful');
+        // Don't reset loading state here - let the parent handle navigation
+        widget.onLoginStatusChanged(true);
+      }
       
     } catch (e) {
       setState(() {

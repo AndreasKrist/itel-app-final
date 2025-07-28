@@ -164,6 +164,10 @@ MembershipTier _getTierFromString(String? tierString) {
   // Sign in with Google
   Future<User?> signInWithGoogle() async {
     try {
+      // Check if user is currently signed in anonymously
+      final currentUser = _firebaseAuth.currentUser;
+      final isAnonymous = currentUser?.isAnonymous ?? false;
+      
       // Begin interactive sign-in process
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       
@@ -181,9 +185,25 @@ MembershipTier _getTierFromString(String? tierString) {
         idToken: googleAuth.idToken,
       );
       
-      // Sign in with credential
-      final firebase_auth.UserCredential userCredential = 
-          await _firebaseAuth.signInWithCredential(credential);
+      firebase_auth.UserCredential userCredential;
+      
+      // Handle anonymous user linking or direct sign-in
+      if (isAnonymous && currentUser != null) {
+        try {
+          // Try to link the anonymous account with Google credentials
+          userCredential = await currentUser.linkWithCredential(credential);
+          print('Successfully linked anonymous account with Google');
+        } catch (e) {
+          print('Failed to link anonymous account: $e');
+          // If linking fails, sign out anonymous user and sign in with Google
+          await _firebaseAuth.signOut();
+          userCredential = await _firebaseAuth.signInWithCredential(credential);
+          print('Signed out anonymous user and signed in with Google');
+        }
+      } else {
+        // Direct sign-in with Google (no anonymous user)
+        userCredential = await _firebaseAuth.signInWithCredential(credential);
+      }
           
       if (userCredential.user != null) {
         // Check if user profile exists
