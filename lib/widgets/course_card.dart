@@ -33,6 +33,7 @@ class CourseCard extends StatelessWidget {
         );
       },
       child: Container(
+        height: 200, // Fixed height for uniform card sizes
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -50,28 +51,26 @@ class CourseCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Title with limited width to make room for favorite icon
-                          Expanded(
-                            child: Text(
-                              course.title,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+                      // Title with limited width to make room for favorite icon
+                      Text(
+                        course.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 4),
                       Text(
                         course.category,
                         style: TextStyle(
                           color: Colors.grey[500],
                           fontSize: 14,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      if (course.certType != null)
+                      if (course.certType != null) ...[
+                        const SizedBox(height: 4),
                         Container(
-                          margin: const EdgeInsets.only(top: 4),
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.blue[50],
@@ -86,26 +85,10 @@ class CourseCard extends StatelessWidget {
                             ),
                           ),
                         ),
+                      ],
                     ],
                   ),
                 ),
-                // Properly aligned favorite button
-                if (onFavoriteToggle != null)
-                  GestureDetector(
-                    onTap: () {
-                      if (onFavoriteToggle != null) {
-                        onFavoriteToggle!(course);
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.orange : Colors.grey,
-                        size: 24,
-                      ),
-                    ),
-                  ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -146,11 +129,27 @@ class CourseCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                    // Favorite button under the price
+                    if (onFavoriteToggle != null) ...[
+                      const SizedBox(height: 8),
+                      GestureDetector(
+                        onTap: () {
+                          if (onFavoriteToggle != null) {
+                            onFavoriteToggle!(course);
+                          }
+                        },
+                        child: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorite ? Colors.orange : Colors.grey,
+                          size: 24,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const Spacer(), // This pushes everything below to the bottom
             Row(
               children: [
                 Row(
@@ -172,18 +171,20 @@ class CourseCard extends StatelessWidget {
             ),
             if (course.funding != null)
               Padding(
-                padding: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.only(top: 2),
                 child: Text(
                   course.funding!,
                   style: TextStyle(
                     color: course.funding!.contains('Eligible') ? Colors.green[600] : Colors.grey[600],
                     fontSize: 12,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             if (course.progress != null)
               Padding(
-                padding: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.only(top: 2),
                 child: Text(
                   course.progress!,
                   style: TextStyle(
@@ -191,11 +192,13 @@ class CourseCard extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             if (course.completionDate != null)
               Padding(
-                padding: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.only(top: 2),
                 child: Text(
                   'Completed ${course.completionDate}',
                   style: TextStyle(
@@ -203,6 +206,8 @@ class CourseCard extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             // Consultant is only shown for enrolled courses in the profile screen, not here
