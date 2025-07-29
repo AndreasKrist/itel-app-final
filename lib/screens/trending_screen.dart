@@ -12,14 +12,20 @@ class TrendingScreen extends StatelessWidget {
     final List<TrendingItem> allItems = TrendingItem.sampleItems;
     
     // Group items by type
-    final List<TrendingItem> events = allItems
-        .where((item) => item.type == TrendingItemType.event)
+    final List<TrendingItem> upcomingEvents = allItems
+        .where((item) => item.type == TrendingItemType.upcomingEvents)
         .toList();
-    final List<TrendingItem> news = allItems
-        .where((item) => item.type == TrendingItemType.news)
+    final List<TrendingItem> coursePromotion = allItems
+        .where((item) => item.type == TrendingItemType.coursePromotion)
         .toList();
-    final List<TrendingItem> articles = allItems
-        .where((item) => item.type == TrendingItemType.article)
+    final List<TrendingItem> featuredArticles = allItems
+        .where((item) => item.type == TrendingItemType.featuredArticles)
+        .toList();
+    final List<TrendingItem> techTipsOfTheWeek = allItems
+        .where((item) => item.type == TrendingItemType.techTipsOfTheWeek)
+        .toList();
+    final List<TrendingItem> courseAssessor = allItems
+        .where((item) => item.type == TrendingItemType.courseAssessor)
         .toList();
 
     return SingleChildScrollView(
@@ -60,45 +66,80 @@ class TrendingScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           
-          // Events section
-          if (events.isNotEmpty) ...[
+          // Upcoming Events section
+          if (upcomingEvents.isNotEmpty) ...[
             _buildSectionHeader(context, 'Upcoming Events'),
             const SizedBox(height: 12),
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: events.length,
+              itemCount: upcomingEvents.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => TrendingCard(item: events[index]),
+              itemBuilder: (context, index) => TrendingCard(item: upcomingEvents[index]),
             ),
             const SizedBox(height: 24),
           ],
           
-          // News section
-          if (news.isNotEmpty) ...[
-            _buildSectionHeader(context, 'Latest News'),
+          // Course Promotion section
+          if (coursePromotion.isNotEmpty) ...[
+            _buildSectionHeader(context, 'Course Promotion'),
             const SizedBox(height: 12),
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: news.length,
+              itemCount: coursePromotion.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => TrendingCard(item: news[index]),
+              itemBuilder: (context, index) => TrendingCard(item: coursePromotion[index]),
             ),
             const SizedBox(height: 24),
           ],
           
-          // Articles section
-          if (articles.isNotEmpty) ...[
+          // Featured Articles section (Carousel style)
+          if (featuredArticles.isNotEmpty) ...[
             _buildSectionHeader(context, 'Featured Articles'),
             const SizedBox(height: 12),
+            SizedBox(
+              height: 160,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                itemCount: featuredArticles.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 12),
+                itemBuilder: (context, index) => SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: TrendingCard(item: featuredArticles[index]),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+          
+          // TechTips of the Week section
+          if (techTipsOfTheWeek.isNotEmpty) ...[
+            _buildSectionHeader(context, 'TechTips of the Week'),
+            const SizedBox(height: 12),
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: articles.length,
+              itemCount: techTipsOfTheWeek.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => TrendingCard(item: articles[index]),
+              itemBuilder: (context, index) => TrendingCard(item: techTipsOfTheWeek[index]),
             ),
+            const SizedBox(height: 24),
+          ],
+          
+          // Course Assessor section
+          if (courseAssessor.isNotEmpty) ...[
+            _buildSectionHeader(context, 'Course Assessor'),
+            const SizedBox(height: 12),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: courseAssessor.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) => TrendingCard(item: courseAssessor[index]),
+            ),
+            const SizedBox(height: 24),
           ],
           
           // Subscribe section

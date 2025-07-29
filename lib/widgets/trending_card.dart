@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/trending_item.dart';
 import '../screens/trending_detail_screen.dart';
+import '../screens/course_detail_screen.dart';
+import '../models/course.dart';
+import '../utils/link_handler.dart';
 
 class TrendingCard extends StatelessWidget {
   final TrendingItem item;
@@ -14,12 +17,40 @@ class TrendingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TrendingDetailScreen(item: item),
-          ),
-        );
+        if (item.type == TrendingItemType.courseAssessor && item.customLink != null) {
+          LinkHandler.openLink(
+            context, 
+            item.customLink!,
+            fallbackMessage: 'Opening PTSA assessment...'
+          );
+        } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
+          // Extract course ID from customLink (format: course://ID)
+          String courseId = item.customLink!.replaceFirst('course://', '');
+          // Find the course by ID
+          Course? course = Course.sampleCourses.firstWhere(
+            (c) => c.id == courseId,
+            orElse: () => Course(id: '', title: '', category: '', rating: 0.0, duration: '', price: ''),
+          );
+          if (course.id.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseDetailScreen(course: course),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Course not found')),
+            );
+          }
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TrendingDetailScreen(item: item),
+            ),
+          );
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(16),
@@ -100,7 +131,7 @@ class TrendingCard extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      item.type == TrendingItemType.event || item.date != null
+                      item.type == TrendingItemType.upcomingEvents || item.date != null
                           ? Icons.calendar_today
                           : Icons.access_time,
                       color: Colors.grey[400],
@@ -122,12 +153,40 @@ class TrendingCard extends StatelessWidget {
                 // View details button
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TrendingDetailScreen(item: item),
-                      ),
-                    );
+                    if (item.type == TrendingItemType.courseAssessor && item.customLink != null) {
+                      LinkHandler.openLink(
+                        context, 
+                        item.customLink!,
+                        fallbackMessage: 'Opening PTSA assessment...'
+                      );
+                    } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
+                      // Extract course ID from customLink (format: course://ID)
+                      String courseId = item.customLink!.replaceFirst('course://', '');
+                      // Find the course by ID
+                      Course? course = Course.sampleCourses.firstWhere(
+                        (c) => c.id == courseId,
+                        orElse: () => Course(id: '', title: '', category: '', rating: 0.0, duration: '', price: ''),
+                      );
+                      if (course.id.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CourseDetailScreen(course: course),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Course not found')),
+                        );
+                      }
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TrendingDetailScreen(item: item),
+                        ),
+                      );
+                    }
                   },
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -137,7 +196,7 @@ class TrendingCard extends StatelessWidget {
                   child: Text(
                     'View Details',
                     style: TextStyle(
-                      color: _getColorForType(item.type),
+                      color: Colors.orange[700]!,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
                     ),
@@ -152,46 +211,40 @@ class TrendingCard extends StatelessWidget {
   }
   
   Color _getColorForType(TrendingItemType type) {
-    switch (type) {
-      case TrendingItemType.event:
-        return Colors.green[700]!;
-      case TrendingItemType.news:
-        return Colors.orange[700]!;
-      case TrendingItemType.article:
-        return Colors.blue[700]!;
-    }
+    return Colors.blue[700]!;
   }
   
   Color _getLightColorForType(TrendingItemType type) {
-    switch (type) {
-      case TrendingItemType.event:
-        return Colors.green[50]!;
-      case TrendingItemType.news:
-        return Colors.orange[50]!;
-      case TrendingItemType.article:
-        return Colors.blue[50]!;
-    }
+    return Colors.blue[50]!;
   }
   
   IconData _getIconForType(TrendingItemType type) {
     switch (type) {
-      case TrendingItemType.event:
+      case TrendingItemType.upcomingEvents:
         return Icons.event;
-      case TrendingItemType.news:
-        return Icons.newspaper;
-      case TrendingItemType.article:
+      case TrendingItemType.coursePromotion:
+        return Icons.school;
+      case TrendingItemType.featuredArticles:
         return Icons.article;
+      case TrendingItemType.techTipsOfTheWeek:
+        return Icons.lightbulb;
+      case TrendingItemType.courseAssessor:
+        return Icons.assessment;
     }
   }
   
   String _getTypeText(TrendingItemType type) {
     switch (type) {
-      case TrendingItemType.event:
+      case TrendingItemType.upcomingEvents:
         return 'Event';
-      case TrendingItemType.news:
-        return 'News';
-      case TrendingItemType.article:
+      case TrendingItemType.coursePromotion:
+        return 'Course';
+      case TrendingItemType.featuredArticles:
         return 'Article';
+      case TrendingItemType.techTipsOfTheWeek:
+        return 'Tech Tip';
+      case TrendingItemType.courseAssessor:
+        return 'Assessment';
     }
   }
 }

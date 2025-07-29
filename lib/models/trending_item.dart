@@ -1,7 +1,9 @@
 enum TrendingItemType {
-  event,
-  article,
-  news,
+  upcomingEvents,
+  coursePromotion,
+  featuredArticles,
+  techTipsOfTheWeek,
+  courseAssessor,
 }
 
 class TrendingItem {
@@ -46,8 +48,8 @@ class TrendingItem {
     TrendingItem(
       id: '1',
       title: 'The Development of Linux and Its Power Today',
-      category: 'Article',
-      type: TrendingItemType.article,
+      category: 'Featured Articles',
+      type: TrendingItemType.featuredArticles,
       date: 'April 5, 2025',
       imageUrl: '',
       description: 'Originally developed as a hobby project by Linus Torvalds in 1991, Linux has grown into one of the world’s most powerful and widely used operating systems. Its open-source nature, adaptability, and security have driven its expansion, making it the backbone of modern digital infrastructure, from cloud computing and supercomputers to enterprise servers.In Singapore, Linux plays a pivotal role across various sectors, including government, education, startups, and corporate enterprises. Looking ahead, Linux’s influence remains strong as it continues to drive advancements in artificial intelligence (AI), the Internet of Things (IoT), and cloud computing—cementing its role in shaping the future of technology.Why Linux Engineers Are in DemandThe widespread adoption of Linux has created a high demand for skilled professionals across multiple industries:',
@@ -77,8 +79,8 @@ These figures and educational opportunities illustrate the consistent need for L
     TrendingItem(
       id: '2',
       title: 'The Widespread Impact of VoIP Technology',
-      category: 'Article',
-      type: TrendingItemType.article,
+      category: 'Featured Articles',
+      type: TrendingItemType.featuredArticles,
       date: 'March 7, 2025',
       imageUrl: '',
       description: 'Join industry leaders for a day of insights, networking, and hands-on workshops focused on the latest cybersecurity trends and challenges.',
@@ -106,8 +108,8 @@ In summary, VoIP has had a profound impact on the way we communicate, and the ro
     TrendingItem(
       id: '3',
       title: 'Tech Trends for Singapore Enterprises 2025',
-      category: 'Aticle',
-      type: TrendingItemType.article,
+      category: 'Featured Articles',
+      type: TrendingItemType.featuredArticles,
       date: 'January 15, 2025',
       imageUrl: '',
       description: 'Join industry leaders for a day of insights, networking, and hands-on workshops focused on the latest cybersecurity trends and challenges.',
@@ -139,53 +141,56 @@ The Straits Times. (2025, January 6) “5 tech trends for Singapore enterprises 
     ),
     TrendingItem(
       id: '4',
-      title: 'Tech Trends in 2025',
-      category: 'Aticle',
-      type: TrendingItemType.article,
-      date: 'December 27, 2024',
+      title: '10 Essential Windows Shortcuts Every User Should Know',
+      category: 'TechTips of the Week',
+      type: TrendingItemType.techTipsOfTheWeek,
+      date: 'January 29, 2025',
       imageUrl: '',
-      description: 'Join industry leaders for a day of insights, networking, and hands-on workshops focused on the latest cybersecurity trends and challenges.',
-      tags: ['Cybersecurity', 'Networking', 'Workshop'],
+      description: 'Boost your productivity with these 10 powerful Windows shortcuts that will save you time and make your computing experience more efficient.',
+      tags: ['Windows', 'Shortcuts', 'Productivity'],
       fullContent: '''
-As we look toward 2025, the landscape of information technology is set to evolve in ways that will redefine the very fabric of business, society, and everyday life. In this rapidly shifting environment, organizations will not only need to adapt but also embrace new paradigms to stay competitive, all while navigating the complex challenges of cybersecurity, data privacy, and ethical AI use. These will reshape how we live, work, and interact with the world.
+Master these 10 essential Windows shortcuts to dramatically improve your productivity and streamline your daily computing tasks:
 
-By 2025, AI will have transitioned from a futuristic idea to an integral part of our everyday lives. Despite this progress, we are still in the early stages of the intelligence revolution. With innovations ranging from generative video to autonomous AI agents and potentially even quantum-powered AI, groundbreaking advancements are expected to push the limits of what we thought possible—sometimes in awe-inspiring, other times in unsettling ways. The most transformative AI applications in 2025 will focus on the evolving collaboration between humans and machines, with AI tools designed to support our daily activities while enhancing our capabilities. For instance, generative video may become mainstream as technologies like OpenAI’s Sora become more accessible.
+1. Windows Key + L - Lock Your Computer
+Instantly lock your screen when stepping away from your desk. This is crucial for maintaining security in shared workspaces.
 
-It is predicted that by 2025, the threat of cyberattacks to businesses will be overshadowed by the growing risks to society, national security, and public safety. Attacks targeting critical infrastructure—such as energy grids, healthcare systems, and electoral processes—are on the rise. These attacks have the potential to disrupt essential services, destabilize economies, and undermine public trust in institutions. Addressing these threats will require significant investment in cybersecurity, national cooperation, and the use of AI for enhanced detection and prevention. However, the challenge is compounded by the fact that cyber attackers will also exploit AI for political motives, making cybersecurity a pressing issue not just for businesses, but for global security.
+2. Alt + Tab - Switch Between Applications
+Quickly cycle through open applications without using your mouse. Hold Alt and press Tab repeatedly to navigate between programs.
 
-According to a Gartner report, by 2028, enterprises utilizing AI governance platforms will achieve 30% higher customer trust ratings and 25% better regulatory compliance scores than their competitors. Additionally, 50% of enterprises will adopt products, services, or features to address disinformation security, a dramatic increase from less than 5% in 2024. Disinformation, which encompasses phishing, hacktivism, fake news, and social engineering, has become a digital arms race. Companies like NewsGuard and Jigsaw (a Google subsidiary) are developing AI-powered platforms to detect and combat disinformation across social media, ensuring users are exposed to accurate and verified content.
+3. Windows Key + D - Show/Hide Desktop
+Instantly minimize all windows to access your desktop, or restore them with the same shortcut.
 
-Energy-efficient computing refers to designing and operating computers, data centers, and other digital systems in ways that minimize energy consumption and reduce carbon footprints. They will continue to grow in importance. Hybrid computing, which combines diverse technologies such as CPUs, GPUs, edge devices, and quantum systems, will address complex computational challenges by tapping into the strengths of each technology. Cloud-based quantum computing, in particular, could become more accessible in 2025, making its transformative potential more tangible for businesses and organizations. Experts predict that quantum computing will revolutionize fields like climate modeling, material discovery, genomics, clean energy, and encryption.
+4. Ctrl + Shift + Esc - Open Task Manager
+Direct access to Task Manager without going through Ctrl+Alt+Del. Perfect for managing unresponsive applications.
 
-Meanwhile, CRISPR and other gene-editing technologies are reshaping healthcare and agriculture. These advances enable the correction of genetic disorders and the development of crops that can thrive in extreme conditions, exemplified by promising treatments for sickle cell anemia and genetically modified crops designed to withstand climate change.
+5. Windows Key + I - Open Settings
+Quickly access Windows Settings instead of navigating through menus.
 
-In conclusion, the landscape of technology in 2025 promises a future where AI, hybrid computing, and gene-editing technologies will play pivotal roles in shaping industries, society, and the environment. However, with these advancements come significant challenges, particularly in the realms of cybersecurity, data privacy, and the ethical implications of AI use. As we navigate these profound changes, the key to success will lie in how we balance technological progress with responsible and thoughtful governance.
+6. Windows Key + S - Open Search
+Instantly open the Windows search function to find files, applications, or settings.
 
-The above article includes the findings from the Forbes and Gartner reports on top emerging tech trends for 2025. (Forbes, September 2024; Gartner, October 2024)
-              ''',
-    ),
-    TrendingItem(
-      id: '5',
-      title: 'Embracing the Digital Future: How Technology is Transforming our',
-      category: 'Aticle',
-      type: TrendingItemType.article,
-      date: 'November 15, 2024',
-      imageUrl: '',
-      description: 'Join industry leaders for a day of insights, networking, and hands-on workshops focused on the latest cybersecurity trends and challenges.',
-      tags: ['Cybersecurity', 'Networking', 'Workshop'],
-      fullContent: '''
-In Singapore, digitalization has brought numerous benefits to families, enhancing both daily life and long-term opportunities. Families can now seamlessly access a wide range of services and resources online, from digital healthcare platforms that allow for remote consultations to government services like digital banking, bill payments, and even education portals for children. The convenience of digital tools has made managing household tasks easier, enabling parents to work from home, shop online, and communicate effortlessly with extended family members, both locally and abroad. Moreover, digital platforms have also opened doors to lifelong learning, with parents and children alike able to access educational content, courses, and tutorials on various subjects. For families with young children, interactive and educational apps have become valuable tools for learning and development.
+7. Ctrl + C, Ctrl + V, Ctrl + X - Copy, Paste, Cut
+The holy trinity of productivity shortcuts. Essential for moving text, files, and data efficiently.
 
-To further build on the digitalization trend, the Digital for Life Festival by the Infocomm Media Development Authority (IMDA) was one of the most exciting digital innovation events in Singapore in the month of October and November 2024. Focused on celebrating the intersection of technology, creativity, and live experiences, the festival showcased the transformative potential of digital tools in the live entertainment industry. The event brought together tech innovators, creative professionals, and industry leaders to explore how digital solutions could elevate live performances, from immersive experiences and augmented reality (AR) to virtual reality (VR) and advanced live-streaming technologies. Additionally, there were discussions, workshops, and panels led by industry experts, exploring topics such as the future of digital storytelling, the role of AI in live performances, and the evolving nature of audience engagement in the digital age.
+8. Windows Key + Arrow Keys - Snap Windows
+Use left/right arrows to snap windows to half the screen, or up/down to maximize/minimize windows.
 
-As digital tools continue to reshape every aspect of our daily life, they inspire both individuals and organizations to embrace the potential of digitalization in their everyday lives and creative pursuits.
+9. Alt + F4 - Close Current Window
+Quickly close the active window or application without clicking the X button.
+
+10. Windows Key + V - Clipboard History
+Access your clipboard history to paste from multiple copied items (requires Windows 10 version 1809 or later).
+
+Pro Tip: Practice these shortcuts daily for a week, and they'll become second nature. Your mouse will thank you for the reduced workload!
+
+Bonus: Windows Key + Period (.) opens the emoji panel for adding expressions to your messages! 😊
               ''',
     ),
     TrendingItem(
       id: '6',
       title: 'Public Consultation on Suggested Guidelines for AI Security',
-      category: 'Aticle',
-      type: TrendingItemType.article,
+      category: 'Featured Articles',
+      type: TrendingItemType.featuredArticles,
       date: 'October 9, 2024',
       imageUrl: '',
       description: 'Join industry leaders for a day of insights, networking, and hands-on workshops focused on the latest cybersecurity trends and challenges.',
@@ -246,49 +251,36 @@ Source from news from Cyber Security Agency of Singapore (CSA).
     ),
     TrendingItem(
       id: '12',
-      title: "ITEL's Small Steps Towards Sustainability",
-      category: 'Certification News',
-      type: TrendingItemType.news,
-      date: 'Just announced',
-      imageUrl: 'assets/images/green.png',
-      description: 'ITEL is advancing its commitment to green sustainability by integrating eco-friendly practices into its operations',
-      tags: ['Certification', 'SCTP', 'Career Development'],
+      title: 'Adobe Photoshop Complete Level 1',
+      category: 'Course Promotion',
+      type: TrendingItemType.coursePromotion,
+      customLink: 'course://102',
+      description: 'Master the fundamentals of Adobe Photoshop with our comprehensive Level 1 course. Perfect for beginners looking to develop professional design skills.',
+      tags: ['Adobe', 'Photoshop', 'Design'],
     ),
     TrendingItem(
       id: '13',
-      title: 'Top Tech Skills for 2025',
-      category: 'Career Development',
-      type: TrendingItemType.article,
-      readTime: '5 min read',
-      imageUrl: '',
-      description: 'Discover the most in-demand technology skills that employers are looking for in 2025 and beyond.',
-      tags: ['Skills', 'Career', 'Technology Trends'],
+      title: 'PTSA - Prelim Tech Skills Assessor',
+      category: 'Course Assessor',
+      type: TrendingItemType.courseAssessor,
+      customLink: 'https://itel-ptsa.vercel.app/',
+      description: 'Assess your preliminary technology skills and get personalized learning recommendations.',
+      tags: ['Assessment', 'Skills', 'PTSA'],
     ),
     TrendingItem(
       id: '14',
-      title: 'Future of Online Learning',
-      category: 'Education',
-      type: TrendingItemType.article,
-      readTime: '8 min read',
-      imageUrl: '',
-      description: 'How technology is transforming education and what it means for learners and educators in the digital age.',
-      tags: ['E-learning', 'EdTech', 'Digital Transformation'],
-    ),
-    TrendingItem(
-      id: '15',
-      title: 'Cloud Security Best Practices',
-      category: 'Cybersecurity',
-      type: TrendingItemType.article,
-      readTime: '10 min read',
-      imageUrl: '',
-      description: 'Essential security practices every organization should implement to protect their cloud infrastructure and data.',
-      tags: ['Cloud Computing', 'Security', 'Best Practices'],
+      title: 'Microsoft Excel Visual Basic Applications (VBA)',
+      category: 'Course Promotion',
+      type: TrendingItemType.coursePromotion,
+      customLink: 'course://79',
+      description: 'Automate your Excel workflows and boost productivity with VBA programming. Learn to create powerful macros and custom applications.',
+      tags: ['Microsoft', 'Excel', 'VBA'],
     ),
     TrendingItem(
     id: '16',
     title: 'Tech Skill-Up Festival 2025',
-    category: 'Event',
-    type: TrendingItemType.event,
+    category: 'Upcoming Events',
+    type: TrendingItemType.upcomingEvents,
     date: 'March 12, 2025',
     imageUrl: 'assets/images/techskill.png',
     customLink: 'https://itel.com.sg/itel-tech-skill-up-festival-2025/',

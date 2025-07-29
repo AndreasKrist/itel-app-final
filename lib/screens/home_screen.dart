@@ -18,7 +18,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Course> courses = Course.sampleCourses;
-  List<TrendingItem> trendingItems = TrendingItem.sampleItems.take(2).toList();
+  // Get one item from each category for home screen trending section
+  List<TrendingItem> trendingItems = _getHomeTrendingItems();
   final bool _isLoading = false;
   
   // Service instances
@@ -165,6 +166,27 @@ void _toggleFavorite(Course course) async {
     
     List<Course> baseList = _isSearching ? filteredCourses : courses;
     return baseList.where((course) => sctpCourseIds.contains(course.id)).toList();
+  }
+
+  // Get trending items for home screen - one from each category
+  static List<TrendingItem> _getHomeTrendingItems() {
+    final allItems = TrendingItem.sampleItems;
+    List<TrendingItem> homeItems = [];
+    
+    // Get one item from each category
+    final upcomingEvents = allItems.where((item) => item.type == TrendingItemType.upcomingEvents).take(1);
+    final coursePromotion = allItems.where((item) => item.type == TrendingItemType.coursePromotion).take(1);
+    final featuredArticles = allItems.where((item) => item.type == TrendingItemType.featuredArticles).take(1);
+    final techTips = allItems.where((item) => item.type == TrendingItemType.techTipsOfTheWeek).take(1);
+    final courseAssessor = allItems.where((item) => item.type == TrendingItemType.courseAssessor).take(1);
+    
+    homeItems.addAll(upcomingEvents);
+    homeItems.addAll(coursePromotion);
+    homeItems.addAll(featuredArticles);
+    homeItems.addAll(techTips);
+    homeItems.addAll(courseAssessor);
+    
+    return homeItems;
   }
 
   // Get course disciplines/categories

@@ -15,9 +15,9 @@ class TrendingDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          item.type == TrendingItemType.event 
+          item.type == TrendingItemType.upcomingEvents 
               ? 'Event Details' 
-              : (item.type == TrendingItemType.news ? 'News Details' : 'Article Details'),
+              : (item.type == TrendingItemType.coursePromotion ? 'Course Details' : 'Article Details'),
         ),
         actions: [
           IconButton(
@@ -97,7 +97,7 @@ class TrendingDetailScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(
-                                item.type == TrendingItemType.event || item.date != null
+                                item.type == TrendingItemType.upcomingEvents || item.date != null
                                   ? Icons.calendar_today
                                   : Icons.access_time,
                                 color: Colors.grey[600],
@@ -132,9 +132,9 @@ class TrendingDetailScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   
                   // Type-specific content
-                  if (item.type == TrendingItemType.event)
+                  if (item.type == TrendingItemType.upcomingEvents)
                     _buildEventContent(context)
-                  else if (item.type == TrendingItemType.news)
+                  else if (item.type == TrendingItemType.coursePromotion)
                     _buildNewsContent()
                   else
                     _buildArticleContent(),
@@ -437,7 +437,7 @@ List<Widget> _formatContent(String content) {
 }
   
   Widget _buildBottomAction(BuildContext context, String? customLink) {
-    if (item.type == TrendingItemType.event) {
+    if (item.type == TrendingItemType.upcomingEvents) {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -471,7 +471,7 @@ List<Widget> _formatContent(String content) {
           ),
         ),
       );
-    } else if (item.type == TrendingItemType.news) {
+    } else if (item.type == TrendingItemType.coursePromotion) {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -650,46 +650,40 @@ List<Widget> _formatContent(String content) {
   }
   
   Color _getColorForType(TrendingItemType type) {
-    switch (type) {
-      case TrendingItemType.event:
-        return Colors.green[700]!;
-      case TrendingItemType.news:
-        return Colors.orange[700]!;
-      case TrendingItemType.article:
-        return Colors.blue[700]!;
-    }
+    return Colors.blue[700]!;
   }
   
   Color _getLightColorForType(TrendingItemType type) {
-    switch (type) {
-      case TrendingItemType.event:
-        return Colors.green[50]!;
-      case TrendingItemType.news:
-        return Colors.orange[50]!;
-      case TrendingItemType.article:
-        return Colors.blue[50]!;
-    }
+    return Colors.blue[50]!;
   }
   
   IconData _getIconForType(TrendingItemType type) {
     switch (type) {
-      case TrendingItemType.event:
+      case TrendingItemType.upcomingEvents:
         return Icons.event;
-      case TrendingItemType.news:
-        return Icons.newspaper;
-      case TrendingItemType.article:
+      case TrendingItemType.coursePromotion:
+        return Icons.school;
+      case TrendingItemType.featuredArticles:
         return Icons.article;
+      case TrendingItemType.techTipsOfTheWeek:
+        return Icons.lightbulb;
+      case TrendingItemType.courseAssessor:
+        return Icons.assessment;
     }
   }
   
   String _getTypeText(TrendingItemType type) {
     switch (type) {
-      case TrendingItemType.event:
+      case TrendingItemType.upcomingEvents:
         return 'Event';
-      case TrendingItemType.news:
-        return 'News';
-      case TrendingItemType.article:
+      case TrendingItemType.coursePromotion:
+        return 'Course';
+      case TrendingItemType.featuredArticles:
         return 'Article';
+      case TrendingItemType.techTipsOfTheWeek:
+        return 'Tech Tip';
+      case TrendingItemType.courseAssessor:
+        return 'Assessment';
     }
   }
 }
