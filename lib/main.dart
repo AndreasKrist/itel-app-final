@@ -20,8 +20,14 @@ void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Firebase
-  await Firebase.initializeApp();
+  try {
+    // Initialize Firebase
+    await Firebase.initializeApp();
+    print('Firebase initialized successfully');
+  } catch (e) {
+    print('Firebase initialization error: $e');
+    // Continue running the app even if Firebase fails
+  }
   
   runApp(const MyApp());
 }
@@ -67,16 +73,24 @@ class _AuthWrapperState extends State<AuthWrapper> {
   Future<void> _checkAuthState() async {
     setState(() => _isLoading = true);
     
-    // Check if user is already authenticated
-    _isLoggedIn = _authService.isAuthenticated;
-    
-    // If logged in, load user data including favorites
-    if (_isLoggedIn) {
-      try {
-        await _authService.loadUserData();
-      } catch (e) {
-        print('Error loading user data: $e');
+    try {
+      // Check if user is already authenticated
+      _isLoggedIn = _authService.isAuthenticated;
+      
+      // If logged in, load user data including favorites
+      if (_isLoggedIn) {
+        try {
+          await _authService.loadUserData();
+        } catch (e) {
+          print('Error loading user data: $e');
+          // If loading user data fails, continue as guest
+          _isLoggedIn = false;
+        }
       }
+    } catch (e) {
+      print('Error checking auth state: $e');
+      // If auth check fails, default to not logged in
+      _isLoggedIn = false;
     }
     
     setState(() => _isLoading = false);
