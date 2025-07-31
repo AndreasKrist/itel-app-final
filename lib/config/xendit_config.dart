@@ -3,8 +3,8 @@ class XenditConfig {
   // Get these from: https://dashboard.xendit.co/settings/developers
   
   // Test/Development Environment
-  static const String testSecretKey = 'test';
-  static const String testPublicKey = 'test';
+  static const String testSecretKey = 'xnd_development_NvtCllBnsT4IGXXFVukN8LgASsvqw8VOCNVsVm9oCM3il2RuCXpAILD6nGOSdt';
+  static const String testPublicKey = 'xnd_public_development_1hgMq9RxAGvTXRxKDd73zu1U8Mh2GRb3Ft1rW4UiS7QNkKsO8K2cCXRv8SrGUx';
   
   // Production Environment (use when going live)
   static const String prodSecretKey = 'xnd_production_YOUR_SECRET_KEY_HERE';
