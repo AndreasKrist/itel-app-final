@@ -212,6 +212,7 @@ Future<void> _loadEnrollmentsFromFirebase() async {
     // Create a set to track unique course IDs
     Set<String> processedCourseIds = {};
     List<EnrolledCourse> enrollments = [];
+    List<EnrolledCourse> courseHistoryList = [];
     
     // First try to fetch from subcollection (more reliable)
     try {
@@ -358,6 +359,69 @@ Future<void> _loadEnrollmentsFromFirebase() async {
             }
           }
         }
+        
+        // Load course history from the same document
+        if (userData != null && userData.containsKey('courseHistory')) {
+          final List<dynamic> historyData = userData['courseHistory'] ?? [];
+          print('Found ${historyData.length} course history items in main user document');
+          
+          for (var data in historyData) {
+            if (data['courseId'] != null) {
+              // Parse dates properly with null safety
+              DateTime? enrollmentDate;
+              if (data['enrollmentDate'] != null) {
+                try {
+                  enrollmentDate = DateTime.parse(data['enrollmentDate']);
+                } catch (e) {
+                  print('Error parsing enrollment date: $e');
+                  enrollmentDate = DateTime.now();
+                }
+              }
+              
+              DateTime? nextSessionDate;
+              if (data['nextSessionDate'] != null) {
+                try {
+                  nextSessionDate = DateTime.parse(data['nextSessionDate']);
+                } catch (e) {
+                  print('Error parsing next session date: $e');
+                  nextSessionDate = null;
+                }
+              }
+              
+              // Parse status with more robust handling
+              EnrollmentStatus status = EnrollmentStatus.cancelled; // Default for history
+              if (data['status'] != null) {
+                String statusStr = data['status'].toString().toLowerCase();
+                if (statusStr.contains('confirm')) {
+                  status = EnrollmentStatus.confirmed;
+                } else if (statusStr.contains('active')) {
+                  status = EnrollmentStatus.active;
+                } else if (statusStr.contains('complet')) {
+                  status = EnrollmentStatus.completed;
+                } else if (statusStr.contains('cancel')) {
+                  status = EnrollmentStatus.cancelled;
+                } else if (statusStr.contains('pending')) {
+                  status = EnrollmentStatus.pending;
+                }
+              }
+              
+              final historyItem = EnrolledCourse(
+                courseId: data['courseId'],
+                enrollmentDate: enrollmentDate ?? DateTime.now(),
+                status: status,
+                isOnline: data['isOnline'] ?? false,
+                nextSessionDate: nextSessionDate,
+                nextSessionTime: data['nextSessionTime'],
+                location: data['location'],
+                instructorName: data['instructorName'],
+                progress: data['progress'],
+                gradeOrCertificate: data['gradeOrCertificate'],
+              );
+              
+              courseHistoryList.add(historyItem);
+            }
+          }
+        }
       }
     } catch (e) {
       print('Error fetching main document enrollments: $e');
@@ -366,9 +430,10 @@ Future<void> _loadEnrollmentsFromFirebase() async {
     // Make sure the component is still mounted before updating state
     if (mounted) {
       setState(() {
-        print('Updating User.currentUser with ${enrollments.length} enrollments');
+        print('Updating User.currentUser with ${enrollments.length} enrollments and ${courseHistoryList.length} history items');
         User.currentUser = User.currentUser.copyWith(
           enrolledCourses: enrollments,
+          courseHistory: courseHistoryList,
         );
         _isProfileLoading = false;
       });
@@ -423,6 +488,15 @@ String _maskPhone(String phone) {
   return '****${phone.substring(phone.length - 4)}';
 }
 
+// Helper function to format date
+String _formatDate(DateTime date) {
+  List<String> months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  return '${date.day} ${months[date.month - 1]} ${date.year}';
+}
+
 
 // Replace the _toggleFavorite method in profile_screen.dart
 void _toggleFavorite(Course course) async {
@@ -474,6 +548,130 @@ void _toggleFavorite(Course course) async {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update favorite: ${e.toString()}')),
+      );
+    }
+  }
+}
+
+// Add method to clean up all old subcollection data (for debugging/cleanup)
+Future<void> _cleanupAllSubcollectionData() async {
+  try {
+    final currentUser = _authService.currentUser;
+    if (currentUser != null) {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.id)
+          .collection('enrolledCourses')
+          .get();
+          
+      print('Found ${snapshot.docs.length} old enrollment documents to clean up');
+      
+      // Delete all documents in the subcollection
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+        print('Deleted old enrollment: ${doc.data()['courseId']}');
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cleaned up ${snapshot.docs.length} old enrollment records'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    }
+  } catch (e) {
+    print('Error cleaning up subcollection: $e');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error during cleanup: ${e.toString()}')),
+      );
+    }
+  }
+}
+
+// Add method to mark course as finished
+void _removeCourseFromEnrolled(String courseId) async {
+  try {
+    // Show confirmation dialog
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Mark Course as Finished'),
+        content: const Text('Are you sure you want to mark this course as finished? It will be moved to your course history as completed.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Mark Finished'),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.green,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      // Update local state immediately
+      setState(() {
+        User.currentUser = User.currentUser.markCourseAsCompleted(courseId);
+      });
+
+      // Update in Firestore
+      final currentUser = _authService.currentUser;
+      if (currentUser != null) {
+        // Delete from subcollection first
+        try {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUser.id)
+              .collection('enrolledCourses')
+              .where('courseId', isEqualTo: courseId)
+              .get()
+              .then((snapshot) {
+            for (var doc in snapshot.docs) {
+              doc.reference.delete();
+            }
+          });
+          print('Deleted course $courseId from subcollection');
+        } catch (e) {
+          print('Error deleting from subcollection: $e');
+        }
+
+        // Update main user document
+        await _preferencesService.saveUserProfile(
+          userId: currentUser.id,
+          name: currentUser.name,
+          email: currentUser.email,
+          phone: currentUser.phone,
+          company: currentUser.company,
+          tier: currentUser.tier,
+          membershipExpiryDate: currentUser.membershipExpiryDate,
+          favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
+          enrolledCourses: User.currentUser.enrolledCourses,
+          courseHistory: User.currentUser.courseHistory,
+        );
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Course marked as finished! Check your course history.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    }
+  } catch (e) {
+    print('Error marking course as finished: $e');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to mark course as finished: ${e.toString()}')),
       );
     }
   }
@@ -1165,6 +1363,7 @@ Widget _buildProfileTab() {
                       child: EnrolledCourseCard(
                         enrollment: enrollment,
                         course: courseData,
+                        onRemove: () => _removeCourseFromEnrolled(enrollment.courseId),
                       ),
                     );
                   }).toList(),
@@ -1188,6 +1387,18 @@ Widget _buildProfileTab() {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    // Debug button hidden - uncomment if needed for troubleshooting
+                    // TextButton(
+                    //   onPressed: _cleanupAllSubcollectionData,
+                    //   style: TextButton.styleFrom(
+                    //     foregroundColor: Colors.red,
+                    //     padding: const EdgeInsets.symmetric(horizontal: 8),
+                    //   ),
+                    //   child: const Text(
+                    //     'Clean DB',
+                    //     style: TextStyle(fontSize: 12),
+                    //   ),
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -1207,6 +1418,7 @@ Widget _buildProfileTab() {
                       child: EnrolledCourseCard(
                         enrollment: enrollment,
                         course: courseData,
+                        onRemove: () => _removeCourseFromEnrolled(enrollment.courseId),
                       ),
                     );
                   }),
@@ -1235,6 +1447,7 @@ Widget _buildProfileTab() {
                     child: EnrolledCourseCard(
                       enrollment: item['enrollment'] as EnrolledCourse,
                       course: item['course'] as Course,
+                      onRemove: () => _removeCourseFromEnrolled((item['enrollment'] as EnrolledCourse).courseId),
                     ),
                   )),
                 ],
@@ -1329,7 +1542,7 @@ Widget _buildProfileTab() {
       
       const SizedBox(height: 24),
       
-      // Course History - Show only completed courses
+      // Course History - Show completed courses from history + static completed courses
       Text(
         'Course History',
         style: TextStyle(
@@ -1339,100 +1552,209 @@ Widget _buildProfileTab() {
       ),
       const SizedBox(height: 12),
       
-      if (completedCourses.isEmpty)
+      // Show completed courses
+      if (User.currentUser.courseHistory
+          .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
+          .isEmpty && completedCourses.isEmpty)
         _buildEmptyState(
           'No completed courses',
-          'Your completed courses will appear here',
-          Icons.school,
+          'Courses you mark as finished will appear here',
+          Icons.history,
         )
       else
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: completedCourses.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final course = completedCourses[index];
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
+        Column(
+          children: [
+            // Show user-completed courses (marked as finished)
+            ...User.currentUser.courseHistory
+                .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
+                .map((enrollment) {
+                // Find the corresponding course data
+                final courseData = Course.sampleCourses.firstWhere(
+                  (c) => c.id == enrollment.courseId,
+                  orElse: () => Course.sampleCourses.first, // Fallback
+                );
+                
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.green[50],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                'COMPLETED',
+                                style: TextStyle(
+                                  color: Colors.green[700],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                courseData.title,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Completed ${_formatDate(DateTime.now())}',
+                          style: TextStyle(
+                            color: Colors.green[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Progress: ${enrollment.progress ?? "100% complete"}',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.book,
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Course Code: ${courseData.courseCode}',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      if (course.certType != null) ...[
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.blue[50],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            course.certType!,
+                );
+              }),
+            
+            // Show pre-existing completed courses (from sample data)
+            if (completedCourses.isNotEmpty) ...[
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: completedCourses.length,
+                separatorBuilder: (context, index) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final course = completedCourses[index];
+                  return Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            if (course.certType != null) ...[
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  course.certType!,
+                                  style: TextStyle(
+                                    color: Colors.blue[700],
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            Expanded(
+                              child: Text(
+                                course.title,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        if (course.completionDate != null)
+                          Text(
+                            'Completed ${course.completionDate}',
                             style: TextStyle(
-                              color: Colors.blue[700],
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                              color: Colors.green[700],
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.book,
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Course Code: ${course.courseCode}',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
                       ],
-                      Expanded(
-                        child: Text(
-                          course.title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  if (course.completionDate != null)
-                    Text(
-                      'Completed ${course.completionDate}',
-                      style: TextStyle(
-                        color: Colors.green[700],
-                        fontWeight: FontWeight.w500,
-                      ),
                     ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.book,
-                        size: 16,
-                        color: Colors.grey[600],
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Course Code: ${course.courseCode}',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  );
+                },
               ),
-            );
-          },
+            ],
+          ],
         ),
       const SizedBox(height: 24),
     ],

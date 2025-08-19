@@ -8,11 +8,13 @@ import '../screens/course_outline_screen.dart';
 class EnrolledCourseCard extends StatelessWidget {
   final EnrolledCourse enrollment;
   final Course course;
+  final VoidCallback? onRemove;
 
   const EnrolledCourseCard({
     super.key,
     required this.enrollment,
     required this.course,
+    this.onRemove,
   });
 
   // Helper function to format date
@@ -190,7 +192,9 @@ Future<void> _launchCourseURL(BuildContext context) async {
           const SizedBox(height: 12),
           
           // Progress indicator (if active)
-          if (enrollment.progress != null) ...[
+          // Show progress only for paid courses, not for complementary courses
+          if (enrollment.progress != null && 
+              !(course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary')) ...[
             Row(
               children: [
                 Text(
@@ -223,8 +227,63 @@ Future<void> _launchCourseURL(BuildContext context) async {
             const SizedBox(height: 12),
           ],
           
-          // Next session details
-          if (enrollment.nextSessionDate != null) ...[
+          // Simplified session info for free courses
+          if (course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary') ...[
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.green[50],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.green[100]!),
+                    ),
+                    child: Icon(
+                      Icons.computer,
+                      size: 24,
+                      color: Colors.green[700],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Course Access',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green[800],
+                          ),
+                        ),
+                        Text(
+                          'Online Session',
+                          style: TextStyle(
+                            color: Colors.green[700],
+                            fontSize: 13,
+                          ),
+                        ),
+                        Text(
+                          'Access course materials anytime',
+                          style: TextStyle(
+                            color: Colors.green[600],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ] else if (enrollment.nextSessionDate != null) ...[
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -309,27 +368,77 @@ Future<void> _launchCourseURL(BuildContext context) async {
               ),
               const SizedBox(width: 8),
               
-              // Access course button (or location details)
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => _launchCourseURL(context),
-                  icon: Icon(
-                    enrollment.isOnline ? Icons.login : Icons.place,
-                    size: 16,
+              // Access course button for free courses, no button for paid courses (pending)
+              if (course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary')
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () => _launchCourseURL(context),
+                    icon: const Icon(Icons.login, size: 16),
+                    label: const Text('Access Course'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[600],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
-                  label: Text(enrollment.isOnline ? 'Access Course' : 'View Location'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[600],
-                    foregroundColor: Colors.white,
+                )
+              else
+                // For paid courses (pending enrollments), show status instead
+                Expanded(
+                  child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    shape: RoundedRectangleBorder(
+                    decoration: BoxDecoration(
+                      color: Colors.orange[50],
                       borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.orange[300]!),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.hourglass_empty,
+                          size: 16,
+                          color: Colors.orange[700],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Enquiry Pending',
+                          style: TextStyle(
+                            color: Colors.orange[700],
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
             ],
           ),
+          
+          const SizedBox(height: 8),
+          
+          // Mark as finished button
+          if (onRemove != null)
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: onRemove,
+                icon: const Icon(Icons.check_circle, size: 16),
+                label: const Text('Mark as Finished'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  side: BorderSide(color: Colors.green[300]!),
+                  foregroundColor: Colors.green[700],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

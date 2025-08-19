@@ -74,6 +74,7 @@ class User {
   final String membershipExpiryDate;
   final List<String> favoriteCoursesIds;
   final List<EnrolledCourse> enrolledCourses;
+  final List<EnrolledCourse> courseHistory;
 
   // Updated constructor with safer defaults
   User({
@@ -87,6 +88,7 @@ class User {
     this.membershipExpiryDate = 'Not applicable',  // Default expiry
     this.favoriteCoursesIds = const [],  // Default to empty list
     this.enrolledCourses = const [],  // Default to empty list
+    this.courseHistory = const [],  // Default to empty list
   });
 
   User copyWith({
@@ -100,6 +102,7 @@ class User {
     String? membershipExpiryDate,
     List<String>? favoriteCoursesIds,
     List<EnrolledCourse>? enrolledCourses,
+    List<EnrolledCourse>? courseHistory,
   }) {
     return User(
       id: id ?? this.id,
@@ -112,6 +115,7 @@ class User {
       membershipExpiryDate: membershipExpiryDate ?? this.membershipExpiryDate,
       favoriteCoursesIds: favoriteCoursesIds ?? this.favoriteCoursesIds,
       enrolledCourses: enrolledCourses ?? this.enrolledCourses,
+      courseHistory: courseHistory ?? this.courseHistory,
     );
   }
 
@@ -132,6 +136,49 @@ class User {
     return copyWith(enrolledCourses: updatedCourses);
   }
 
+  // Add a method to move course from enrolled to history
+  User moveCourseToHistory(String courseId) {
+    List<EnrolledCourse> updatedEnrolled = List.from(enrolledCourses);
+    List<EnrolledCourse> updatedHistory = List.from(courseHistory);
+    
+    // Find the course in enrolled list
+    final courseIndex = updatedEnrolled.indexWhere((c) => c.courseId == courseId);
+    if (courseIndex >= 0) {
+      final course = updatedEnrolled.removeAt(courseIndex);
+      // Add to history with current timestamp
+      updatedHistory.add(course.copyWith(
+        status: EnrollmentStatus.cancelled,
+      ));
+    }
+    
+    return copyWith(
+      enrolledCourses: updatedEnrolled,
+      courseHistory: updatedHistory,
+    );
+  }
+
+  // Add a method to mark course as completed
+  User markCourseAsCompleted(String courseId) {
+    List<EnrolledCourse> updatedEnrolled = List.from(enrolledCourses);
+    List<EnrolledCourse> updatedHistory = List.from(courseHistory);
+    
+    // Find the course in enrolled list
+    final courseIndex = updatedEnrolled.indexWhere((c) => c.courseId == courseId);
+    if (courseIndex >= 0) {
+      final course = updatedEnrolled.removeAt(courseIndex);
+      // Add to history as completed
+      updatedHistory.add(course.copyWith(
+        status: EnrollmentStatus.completed,
+        progress: '100% complete',
+      ));
+    }
+    
+    return copyWith(
+      enrolledCourses: updatedEnrolled,
+      courseHistory: updatedHistory,
+    );
+  }
+
   // Default user for anonymous/guest sessions
   static User get guestUser => User(
     id: '',
@@ -150,18 +197,8 @@ class User {
     company: 'Company Name', // Generic company
     tier: MembershipTier.tier1,
     membershipExpiryDate: 'March 7, 2027',
-    favoriteCoursesIds: ['1', '3'],
-    enrolledCourses: [
-      EnrolledCourse(
-        courseId: '7',
-        enrollmentDate: DateTime.now().subtract(const Duration(days: 7)),
-        status: EnrollmentStatus.pending,
-        isOnline: false,
-        nextSessionDate: DateTime.now().add(const Duration(days: 5)),
-        nextSessionTime: '2:00 PM - 5:00 PM',
-        location: 'Room 302, ITEL Training Center',
-        progress: null, // Not started yet
-      ),
-    ],
+    favoriteCoursesIds: [], // Start with empty favorites - will be loaded from Firebase
+    enrolledCourses: [], // Start with empty enrollments - will be loaded from Firebase
+    courseHistory: [], // Start with empty history - will be loaded from Firebase
   );
 }

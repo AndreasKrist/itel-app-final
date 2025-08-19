@@ -59,6 +59,7 @@ class UserPreferencesService {
     String membershipExpiryDate = 'Not applicable',
     List<String> favoriteCoursesIds = const [],
     List<EnrolledCourse> enrolledCourses = const [],
+    List<EnrolledCourse> courseHistory = const [],
   }) async {
     try {
       print('Saving user profile for $userId with ${enrolledCourses.length} enrolled courses');
@@ -101,6 +102,43 @@ class UserPreferencesService {
         };
       }).toList();
       
+      // Convert courseHistory to Firestore format
+      final List<Map<String, dynamic>> courseHistoryData = courseHistory.map((course) {
+        String statusString;
+        switch (course.status) {
+          case EnrollmentStatus.pending:
+            statusString = 'pending';
+            break;
+          case EnrollmentStatus.confirmed:
+            statusString = 'confirmed';
+            break;
+          case EnrollmentStatus.active:
+            statusString = 'active';
+            break;
+          case EnrollmentStatus.completed:
+            statusString = 'completed';
+            break;
+          case EnrollmentStatus.cancelled:
+            statusString = 'cancelled';
+            break;
+          default:
+            statusString = 'cancelled'; // Default for history items
+        }
+        
+        return {
+          'courseId': course.courseId,
+          'enrollmentDate': course.enrollmentDate.toIso8601String(),
+          'status': statusString,
+          'isOnline': course.isOnline,
+          'nextSessionDate': course.nextSessionDate?.toIso8601String(),
+          'nextSessionTime': course.nextSessionTime,
+          'location': course.location,
+          'instructorName': course.instructorName,
+          'progress': course.progress,
+          'gradeOrCertificate': course.gradeOrCertificate,
+        };
+      }).toList();
+      
       // Update in batches to avoid timeouts on large data
       final batch = _firestore.batch();
       
@@ -115,6 +153,7 @@ class UserPreferencesService {
         'membershipExpiryDate': membershipExpiryDate,
         'favoriteCoursesIds': favoriteCoursesIds,
         'enrolledCourses': enrolledCoursesData,
+        'courseHistory': courseHistoryData,
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
       

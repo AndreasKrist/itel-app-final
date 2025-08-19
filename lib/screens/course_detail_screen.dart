@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/course.dart';
 import '../models/user.dart';
 import '../widgets/enquiry_form.dart';
@@ -352,6 +353,135 @@ void _toggleFavorite() async {
     }
   }
 }
+
+  // Launch course directly to Moodle for complementary courses
+  Future<void> _launchCourseDirectly(BuildContext context) async {
+    try {
+      // First, track the course access (lightweight enrollment for complementary courses)
+      await _trackCourseAccess();
+      
+      // Base Moodle URL
+      final moodleSiteUrl = 'https://online.itel.com.sg';
+      
+      // Get course ID if available
+      final courseId = widget.course.moodleCourseId;
+      
+      // For mobile app, we need to include the course ID in the deep link if available
+      String moodleAppUrl;
+      if (courseId != null) {
+        // Format: moodlemobile://link=https://moodle.site/course/view.php?id=123
+        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/course/view.php?id=$courseId';
+      } else {
+        // Default to site homepage if no course ID
+        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl';
+      }
+      
+      // Try to launch Moodle mobile app first
+      final canLaunchMoodleApp = await canLaunchUrl(Uri.parse(moodleAppUrl));
+      
+      if (canLaunchMoodleApp) {
+        // Show message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Opening Moodle app...'))
+        );
+        
+        // Launch the Moodle mobile app with deep link to course
+        await launchUrl(Uri.parse(moodleAppUrl));
+        return;
+      }
+      
+      // For browser, create a URL that will redirect to the course after login
+      String webUrl;
+      if (courseId != null) {
+        // Direct to the course page
+        webUrl = '$moodleSiteUrl/course/view.php?id=$courseId';
+      } else {
+        // Default to login page
+        webUrl = '$moodleSiteUrl/login/index.php';
+      }
+      
+      // Show message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Opening Moodle website...'))
+      );
+      
+      // Launch in browser
+      await launchUrl(
+        Uri.parse(webUrl),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      print('Error opening course: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open Moodle. Please try again later.'))
+        );
+      }
+    }
+  }
+
+  // Track access to complementary courses (lightweight enrollment)
+  Future<void> _trackCourseAccess() async {
+    try {
+      // Get current user ID using Firebase Auth
+      final firebaseUser = firebase_auth.FirebaseAuth.instance.currentUser;
+      if (firebaseUser == null) {
+        print("No Firebase user found, cannot track course access");
+        return;
+      }
+
+      print("Tracking access for complementary course: ${widget.course.id}");
+      
+      // Check if already tracked
+      final existingIndex = User.currentUser.enrolledCourses.indexWhere(
+        (c) => c.courseId == widget.course.id
+      );
+      
+      if (existingIndex >= 0) {
+        print("Course already tracked, not adding duplicate");
+        return;
+      }
+      
+      // Create a lightweight enrollment record for tracking
+      final accessRecord = EnrolledCourse(
+        courseId: widget.course.id,
+        enrollmentDate: DateTime.now(),
+        status: EnrollmentStatus.active, // Mark as active since it's accessible
+        isOnline: true, // Complementary courses are online via Moodle
+        nextSessionDate: null, // No specific session date for self-paced courses
+        nextSessionTime: null,
+        location: 'https://online.itel.com.sg', // Moodle URL
+        instructorName: null,
+        progress: null, // No progress tracking for complementary courses
+        gradeOrCertificate: null,
+      );
+      
+      // Update local state
+      User.currentUser = User.currentUser.enrollInCourse(accessRecord);
+      
+      // Save to Firebase (main document only, no subcollection for complementary courses)
+      final currentUser = _authService.currentUser;
+      if (currentUser != null) {
+        await _preferencesService.saveUserProfile(
+          userId: firebaseUser.uid,
+          name: currentUser.name,
+          email: currentUser.email,
+          phone: currentUser.phone,
+          company: currentUser.company,
+          tier: currentUser.tier,
+          membershipExpiryDate: currentUser.membershipExpiryDate,
+          favoriteCoursesIds: currentUser.favoriteCoursesIds,
+          enrolledCourses: User.currentUser.enrolledCourses,
+          courseHistory: User.currentUser.courseHistory,
+        );
+        print("Successfully tracked course access in main user document");
+      }
+      
+    } catch (e) {
+      print('Error tracking course access: $e');
+      // Don't show error to user, just log it - course still launches
+    }
+  }
 
   void _toggleSection(String sectionKey) {
     setState(() {
@@ -975,22 +1105,8 @@ void _toggleFavorite() async {
                   if (widget.course.price == '\$0' || 
                       widget.course.price.contains('Free') || 
                       widget.course.funding == 'Complimentary') {
-                    // Directly add to enrolled courses without form
-                    _joinFreeClass();
-                    
-                    // NEWLY ADDED: Navigate to profile tab after successful enrollment
-                    // This will be done after a short delay to allow the enrollment to complete
-                    Future.delayed(const Duration(seconds: 1), () {
-                      // Pop back to previous screen (typically the one showing list of courses)
-                      Navigator.pop(context);
-                      
-                      // Find the scaffold that contains the bottom navigation bar
-                      // and select the profile tab (index 4)
-                      final scaffoldMessenger = ScaffoldMessenger.of(context);
-                      scaffoldMessenger.showSnackBar(
-                        const SnackBar(content: Text('Check your Profile tab to access the course')),
-                      );
-                    });
+                    // Redirect directly to Moodle for complementary courses
+                    _launchCourseDirectly(context);
                   } else {
                     // Show enquiry form for paid courses
                     setState(() {
