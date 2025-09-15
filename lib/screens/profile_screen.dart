@@ -599,7 +599,7 @@ void _removeCourseFromEnrolled(String courseId) async {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Mark Course as Finished'),
-        content: const Text('Are you sure you want to mark this course as finished? It will be moved to your course history as completed.'),
+        content: const Text('Are you sure you want to mark this course as finished? The course will remain in this section but be marked as completed.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -607,40 +607,54 @@ void _removeCourseFromEnrolled(String courseId) async {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Mark Finished'),
             style: TextButton.styleFrom(
               foregroundColor: Colors.green,
             ),
+            child: const Text('Mark Finished'),
           ),
         ],
       ),
     );
 
     if (confirm == true) {
-      // Update local state immediately
+      // Update local state immediately - mark as completed but keep in enrolledCourses
       setState(() {
-        User.currentUser = User.currentUser.markCourseAsCompleted(courseId);
+        final updatedEnrollments = User.currentUser.enrolledCourses.map((enrollment) {
+          if (enrollment.courseId == courseId) {
+            return enrollment.copyWith(
+              status: EnrollmentStatus.completed,
+              progress: "100% complete",
+            );
+          }
+          return enrollment;
+        }).toList();
+
+        User.currentUser = User.currentUser.copyWith(
+          enrolledCourses: updatedEnrollments,
+        );
       });
 
       // Update in Firestore
       final currentUser = _authService.currentUser;
       if (currentUser != null) {
-        // Delete from subcollection first
+        // Update subcollection first
         try {
-          await FirebaseFirestore.instance
+          final snapshot = await FirebaseFirestore.instance
               .collection('users')
               .doc(currentUser.id)
               .collection('enrolledCourses')
               .where('courseId', isEqualTo: courseId)
-              .get()
-              .then((snapshot) {
-            for (var doc in snapshot.docs) {
-              doc.reference.delete();
-            }
-          });
-          print('Deleted course $courseId from subcollection');
+              .get();
+
+          for (var doc in snapshot.docs) {
+            await doc.reference.update({
+              'status': 'completed',
+              'progress': '100% complete',
+            });
+          }
+          print('Updated course $courseId status in subcollection');
         } catch (e) {
-          print('Error deleting from subcollection: $e');
+          print('Error updating subcollection: $e');
         }
 
         // Update main user document
@@ -661,7 +675,7 @@ void _removeCourseFromEnrolled(String courseId) async {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Course marked as finished! Check your course history.'),
+            content: Text('Course marked as completed!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -1099,14 +1113,34 @@ Widget _buildProfileTab() {
     };
   }).toList();
   
-  // Filter active and pending enrollments
+  // Helper function to check if a course is free/complimentary
+  bool isFreeComplimentaryCourse(String courseId) {
+    final course = Course.sampleCourses.firstWhere(
+      (c) => c.id == courseId,
+      orElse: () => Course.sampleCourses.first,
+    );
+    return course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary';
+  }
+
+  // Filter enrollments for "My Enrolled Courses" (free/complimentary courses)
   final activeEnrollments = enrolledCoursesList.where(
-    (item) => (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.active ||
-              (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.confirmed
+    (item) {
+      final enrollment = item['enrollment'] as EnrolledCourse;
+      return isFreeComplimentaryCourse(enrollment.courseId) &&
+             (enrollment.status == EnrollmentStatus.active ||
+              enrollment.status == EnrollmentStatus.confirmed ||
+              enrollment.status == EnrollmentStatus.completed);
+    }
   ).toList();
-  
+
+  // Filter enrollments for "Enquiry Courses" (paid courses)
   final pendingEnrollments = enrolledCoursesList.where(
-    (item) => (item['enrollment'] as EnrolledCourse).status == EnrollmentStatus.pending
+    (item) {
+      final enrollment = item['enrollment'] as EnrolledCourse;
+      return !isFreeComplimentaryCourse(enrollment.courseId) &&
+             (enrollment.status == EnrollmentStatus.pending ||
+              enrollment.status == EnrollmentStatus.completed);
+    }
   ).toList();
 
   return Column(
@@ -1334,10 +1368,12 @@ Widget _buildProfileTab() {
             ),
             const SizedBox(height: 12),
 
-            // Check if we have actual active/confirmed enrollments
+            // Check if we have actual active/confirmed/completed enrollments for free courses
             if (User.currentUser.enrolledCourses
-                .where((e) => e.status == EnrollmentStatus.active || 
-                          e.status == EnrollmentStatus.confirmed)
+                .where((e) => (e.status == EnrollmentStatus.active ||
+                          e.status == EnrollmentStatus.confirmed ||
+                          e.status == EnrollmentStatus.completed) &&
+                          isFreeComplimentaryCourse(e.courseId))
                 .isEmpty)
               // No active enrollments, show empty state message instead of demo courses
               _buildEmptyState(
@@ -1346,11 +1382,13 @@ Widget _buildProfileTab() {
                 Icons.school,
               )
             else
-              // Display actual enrolled courses that are active or confirmed
+              // Display actual enrolled courses that are active, confirmed, or completed (free courses)
               Column(
                 children: User.currentUser.enrolledCourses
-                  .where((e) => e.status == EnrollmentStatus.active || 
-                              e.status == EnrollmentStatus.confirmed)
+                  .where((e) => (e.status == EnrollmentStatus.active ||
+                              e.status == EnrollmentStatus.confirmed ||
+                              e.status == EnrollmentStatus.completed) &&
+                              isFreeComplimentaryCourse(e.courseId))
                   .map((enrollment) {
                     // Find the corresponding course data
                     final courseData = Course.sampleCourses.firstWhere(
@@ -1371,9 +1409,11 @@ Widget _buildProfileTab() {
 
             const SizedBox(height: 16),
             
-            // Pending Enrollments section
+            // Enquiry Courses section
           if (User.currentUser.enrolledCourses
-              .where((e) => e.status == EnrollmentStatus.pending)
+              .where((e) => (e.status == EnrollmentStatus.pending ||
+                          e.status == EnrollmentStatus.completed) &&
+                          !isFreeComplimentaryCourse(e.courseId))
               .isNotEmpty) 
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1382,7 +1422,7 @@ Widget _buildProfileTab() {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Pending Enrollments',
+                      'Enquiry Courses',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -1403,9 +1443,11 @@ Widget _buildProfileTab() {
                 ),
                 const SizedBox(height: 12),
                 
-                // List pending enrollments by directly querying User.currentUser
+                // List pending and completed enquiry enrollments by directly querying User.currentUser
                 ...User.currentUser.enrolledCourses
-                  .where((e) => e.status == EnrollmentStatus.pending)
+                  .where((e) => (e.status == EnrollmentStatus.pending ||
+                              e.status == EnrollmentStatus.completed) &&
+                              !isFreeComplimentaryCourse(e.courseId))
                   .map((enrollment) {
                     // Find the corresponding course data
                     final courseData = Course.sampleCourses.firstWhere(
@@ -1433,7 +1475,7 @@ Widget _buildProfileTab() {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Pending Enrollments',
+                        'Enquiry Courses',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -1453,89 +1495,89 @@ Widget _buildProfileTab() {
                 ],
               ),
 
-            const SizedBox(height: 16),
-            
-            // Upcoming Schedule
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Upcoming Schedule',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showCalendar = true;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.blue[200]!),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_month,
-                          size: 16,
-                          color: Colors.blue[700],
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'View Calendar',
-                          style: TextStyle(
-                            color: Colors.blue[700],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            
-            if (upcomingSchedules.isEmpty)
-              _buildEmptyState(
-                'No upcoming sessions',
-                'Your scheduled learning sessions will appear here',
-                Icons.event_busy,
-              )
-            else
-              Column(
-                children: upcomingSchedules
-                    .take(2)
-                    .map((schedule) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: _buildScheduleCard(schedule),
-                        ))
-                    .toList(),
-              ),
-                
-            if (upcomingSchedules.length > 2)
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _showCalendar = true;
-                  });
-                },
-                child: Text(
-                  'View More',
-                  style: TextStyle(
-                    color: Colors.blue[700],
-                  ),
-                ),
-              ),
+            // Upcoming Schedule section - hidden for now, may be implemented in future
+            // const SizedBox(height: 16),
+            //
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       'Upcoming Schedule',
+            //       style: TextStyle(
+            //         fontWeight: FontWeight.bold,
+            //       ),
+            //     ),
+            //     GestureDetector(
+            //       onTap: () {
+            //         setState(() {
+            //           _showCalendar = true;
+            //         });
+            //       },
+            //       child: Container(
+            //         padding: const EdgeInsets.symmetric(
+            //           horizontal: 10,
+            //           vertical: 5,
+            //         ),
+            //         decoration: BoxDecoration(
+            //           color: Colors.blue[50],
+            //           borderRadius: BorderRadius.circular(16),
+            //           border: Border.all(color: Colors.blue[200]!),
+            //         ),
+            //         child: Row(
+            //           children: [
+            //             Icon(
+            //               Icons.calendar_month,
+            //               size: 16,
+            //               color: Colors.blue[700],
+            //             ),
+            //             const SizedBox(width: 4),
+            //             Text(
+            //               'View Calendar',
+            //               style: TextStyle(
+            //                 color: Colors.blue[700],
+            //                 fontSize: 12,
+            //                 fontWeight: FontWeight.w500,
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 12),
+            //
+            // if (upcomingSchedules.isEmpty)
+            //   _buildEmptyState(
+            //     'No upcoming sessions',
+            //     'Your scheduled learning sessions will appear here',
+            //     Icons.event_busy,
+            //   )
+            // else
+            //   Column(
+            //     children: upcomingSchedules
+            //         .take(2)
+            //         .map((schedule) => Padding(
+            //               padding: const EdgeInsets.only(bottom: 8.0),
+            //               child: _buildScheduleCard(schedule),
+            //             ))
+            //         .toList(),
+            //   ),
+            //
+            // if (upcomingSchedules.length > 2)
+            //   TextButton(
+            //     onPressed: () {
+            //       setState(() {
+            //         _showCalendar = true;
+            //       });
+            //     },
+            //     child: Text(
+            //       'View More',
+            //       style: TextStyle(
+            //         color: Colors.blue[700],
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       ),

@@ -421,8 +421,8 @@ Future<void> _launchCourseURL(BuildContext context) async {
           
           const SizedBox(height: 8),
           
-          // Mark as finished button
-          if (onRemove != null)
+          // Mark as finished button - only show if not completed
+          if (onRemove != null && enrollment.status != EnrollmentStatus.completed)
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
@@ -437,6 +437,37 @@ Future<void> _launchCourseURL(BuildContext context) async {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+              ),
+            ),
+
+          // Show completed status if course is completed
+          if (enrollment.status == EnrollmentStatus.completed)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.green[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green[200]!),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    size: 20,
+                    color: Colors.green[700],
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Course Completed',
+                    style: TextStyle(
+                      color: Colors.green[700],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
               ),
             ),
         ],

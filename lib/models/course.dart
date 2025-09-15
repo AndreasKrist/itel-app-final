@@ -138,1069 +138,1079 @@ class Course {
   
 static List<Course> sampleCourses = [
     
-    Course(
-      id: '1',
-      courseCode: 'MSE01',
-      title: 'Essential Excel for Sales & Marketing (Part 1)',
-      category: 'Business Operations',
-      certType: 'Microsoft',
-      rating: 4.7,
-      duration: 'Unlimited Time',
-      price: '\$0',
-      funding: 'Complimentary',
-      deliveryMethods: ['OLL'],
-      nextAvailableDate: 'Available',
-      moodleCourseId: '19',
-      description: 'In this course, you will learn how to make the most of Excel features, which is excellent for simplifying your job as a Sales & Marketing. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Conditional Formatting, and Sparklines. During this course, you will discover how to utilise the conditional formatting feature in your Excel, which makes it easy to highlight specific values or make particular cells easy to identify. You will also be introduced to the Sparklines, a tiny chart in a worksheet cell that provides a visual representation of data',
-      outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Basic Pivot Table': [
-        'Basic Pivot Table',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Conditional Formatting': [
-        'Conditional Formatting',
-        'Quiz 4',
-      ],
-      'Topic 5: Sparklines': [
-        'Sparklines',
-        'Quiz 5',
-      ],
-    },
-      prerequisites: [
-        'Basic computer skills',
-        'No prior Excel experience required',
-      ],
-      whoShouldAttend: 'Sales & Marketing',
-      importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job, which is excellent for simplifying their task.',
-      feeStructure: {
-      },
-    ),
-    Course(
-    id: '2',
-    courseCode: 'MSE02',
-    title: 'Essential Excel for Admin (Part 1)',
-    category: 'Business Operations',
-    certType: 'Microsoft',
-    rating: 4.5,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '17',
-    description: 'In this course, you will discover how to effectively use Excel features to simplify your tasks and improve efficiency as an Administration. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Worksheet Protections, and Setup Printing. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Basic Pivot Table': [
-        'Basic Pivot Table',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Worksheet Protection': [
-        'Worksheet Protection',
-        'Quiz 4',
-      ],
-      'Topic 5: Printing Setup': [
-        'Printing Setup',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Excel experience required',
-    ],
-    whoShouldAttend: 'Administrator',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job to streamline and improve efficiency.',
-    feeStructure: {
-    },
-  ),
 
-  Course(
-    id: '3',
-    courseCode: 'MSE03',
-    title: 'Essential Excel for Business Owner (Part 1)',
-    category: 'IT Business Management & Strategy',
-    certType: 'Microsoft',
-    rating: 4.7,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '15',
-    description: 'In this course, as a business owner, you will learn how to make the most of Excel features, which is excellent for managing your business more effectively. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Watch Window, and Data Validation. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Pivot Table': [
-        'Pivot Table',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Watch Window': [
-        'Watch Window',
-        'Quiz 4',
-      ],
-      'Topic 5: Data Validation': [
-        'Data Validation',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Excel experience required',
-    ],
-    whoShouldAttend: 'Bussiness Owner',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their business to streamline and enhance their business operations.',
-    feeStructure: {
+
+
+  //   Course(
+  //     id: '1',
+  //     courseCode: 'MSE01',
+  //     title: 'Essential Excel for Sales & Marketing (Part 1)',
+  //     category: 'Business Operations',
+  //     certType: 'Microsoft',
+  //     rating: 4.7,
+  //     duration: 'Unlimited Time',
+  //     price: '\$0',
+  //     funding: 'Complimentary',
+  //     deliveryMethods: ['OLL'],
+  //     nextAvailableDate: 'Available',
+  //     moodleCourseId: '19',
+  //     description: 'In this course, you will learn how to make the most of Excel features, which is excellent for simplifying your job as a Sales & Marketing. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Conditional Formatting, and Sparklines. During this course, you will discover how to utilise the conditional formatting feature in your Excel, which makes it easy to highlight specific values or make particular cells easy to identify. You will also be introduced to the Sparklines, a tiny chart in a worksheet cell that provides a visual representation of data',
+  //     outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Basic Pivot Table': [
+  //       'Basic Pivot Table',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Conditional Formatting': [
+  //       'Conditional Formatting',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Sparklines': [
+  //       'Sparklines',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //     prerequisites: [
+  //       'Basic computer skills',
+  //       'No prior Excel experience required',
+  //     ],
+  //     whoShouldAttend: 'Sales & Marketing',
+  //     importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job, which is excellent for simplifying their task.',
+  //     feeStructure: {
+  //     },
+  //   ),
+  //   Course(
+  //   id: '2',
+  //   courseCode: 'MSE02',
+  //   title: 'Essential Excel for Admin (Part 1)',
+  //   category: 'Business Operations',
+  //   certType: 'Microsoft',
+  //   rating: 4.5,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '17',
+  //   description: 'In this course, you will discover how to effectively use Excel features to simplify your tasks and improve efficiency as an Administration. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Worksheet Protections, and Setup Printing. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Basic Pivot Table': [
+  //       'Basic Pivot Table',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Worksheet Protection': [
+  //       'Worksheet Protection',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Printing Setup': [
+  //       'Printing Setup',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Excel experience required',
+  //   ],
+  //   whoShouldAttend: 'Administrator',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job to streamline and improve efficiency.',
+  //   feeStructure: {
+  //   },
+  // ),
+
+  // Course(
+  //   id: '3',
+  //   courseCode: 'MSE03',
+  //   title: 'Essential Excel for Business Owner (Part 1)',
+  //   category: 'IT Business Management & Strategy',
+  //   certType: 'Microsoft',
+  //   rating: 4.7,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '15',
+  //   description: 'In this course, as a business owner, you will learn how to make the most of Excel features, which is excellent for managing your business more effectively. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Watch Window, and Data Validation. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Pivot Table': [
+  //       'Pivot Table',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Watch Window': [
+  //       'Watch Window',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Data Validation': [
+  //       'Data Validation',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Excel experience required',
+  //   ],
+  //   whoShouldAttend: 'Bussiness Owner',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their business to streamline and enhance their business operations.',
+  //   feeStructure: {
       
-    },
-  ),
+  //   },
+  // ),
 
-  Course(
-    id: '4',
-    courseCode: 'MSE04',
-    title: 'Essential Excel for HR',
-    category: 'Business Operations',
-    certType: 'Microsoft',
-    rating: 4.6,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '14',
-    description: 'In this course, you will learn how to make the most of Excel features as a Human Resources. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Automatic Subtotals, and Excel Table. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Pivot Table': [
-        'Pivot Table',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Automatic Subtotal': [
-        'Automatic Subtotal',
-        'Quiz 4',
-      ],
-      'Topic 5: Excel Tables': [
-        'Excel Tables',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Excel experience required',
-    ],
-    whoShouldAttend: 'Human Resources Person',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job to streamline and improve their productivity.',
-    feeStructure: {
-    },
-  ),
+  // Course(
+  //   id: '4',
+  //   courseCode: 'MSE04',
+  //   title: 'Essential Excel for HR',
+  //   category: 'Business Operations',
+  //   certType: 'Microsoft',
+  //   rating: 4.6,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '14',
+  //   description: 'In this course, you will learn how to make the most of Excel features as a Human Resources. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Automatic Subtotals, and Excel Table. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Pivot Table': [
+  //       'Pivot Table',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Automatic Subtotal': [
+  //       'Automatic Subtotal',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Excel Tables': [
+  //       'Excel Tables',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Excel experience required',
+  //   ],
+  //   whoShouldAttend: 'Human Resources Person',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their job to streamline and improve their productivity.',
+  //   feeStructure: {
+  //   },
+  // ),
 
-  Course(
-    id: '5',
-    courseCode: 'MSE05',
-    title: 'Essential Excel for Office Worker (Part 1)',
-    category: 'Business Operations',
-    certType: 'Microsoft',
-    rating: 4.5,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '12',
-    description: 'In this course, you will learn how to make the most of Excel features as a worker. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Filtering, and Header and footer. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Pivot Table': [
-        'Pivot Table',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Automatic Subtotal': [
-        'Automatic Subtotal',
-        'Quiz 4',
-      ],
-      'Topic 5: Excel Tables': [
-        'Excel Tables',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Excel experience required',
-    ],
-    whoShouldAttend: 'Office Worker.',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their daily work, streamlining their work processes and boosting productivity.',
-    feeStructure: {
-    },
-  ),
+  // Course(
+  //   id: '5',
+  //   courseCode: 'MSE05',
+  //   title: 'Essential Excel for Office Worker (Part 1)',
+  //   category: 'Business Operations',
+  //   certType: 'Microsoft',
+  //   rating: 4.5,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '12',
+  //   description: 'In this course, you will learn how to make the most of Excel features as a worker. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Filtering, and Header and footer. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Pivot Table': [
+  //       'Pivot Table',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Automatic Subtotal': [
+  //       'Automatic Subtotal',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Excel Tables': [
+  //       'Excel Tables',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Excel experience required',
+  //   ],
+  //   whoShouldAttend: 'Office Worker.',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Excel features into their daily work, streamlining their work processes and boosting productivity.',
+  //   feeStructure: {
+  //   },
+  // ),
 
-  Course(
-    id: '6',
-    courseCode: 'MSE06',
-    title: 'Fundamental Excel for Students (Part 1)',
-    category: 'Business Operations',
-    certType: 'Microsoft',
-    rating: 4.4,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '9',
-    description: 'In this course, you will learn how to make the most of Excel features as a student. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Flash Fill, and Absolute Cell Referencing. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Pivot Table': [
-        'Pivot Table',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Absolute Referencing': [
-        'Automatic Subtotal',
-        'Quiz 4',
-      ],
-      'Topic 5: Flash Fill': [
-        'Excel Tables',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Excel experience required',
-    ],
-    whoShouldAttend: 'Office workers, administrators, managers, and anyone who uses email in a professional capacity.',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental Excel features into their daily activities, making their tasks more efficient and productive.',
-    feeStructure: {
-    },
-  ),
+  // Course(
+  //   id: '6',
+  //   courseCode: 'MSE06',
+  //   title: 'Fundamental Excel for Students (Part 1)',
+  //   category: 'Business Operations',
+  //   certType: 'Microsoft',
+  //   rating: 4.4,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '9',
+  //   description: 'In this course, you will learn how to make the most of Excel features as a student. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Flash Fill, and Absolute Cell Referencing. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Pivot Table': [
+  //       'Pivot Table',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Absolute Referencing': [
+  //       'Automatic Subtotal',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Flash Fill': [
+  //       'Excel Tables',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Excel experience required',
+  //   ],
+  //   whoShouldAttend: 'Office workers, administrators, managers, and anyone who uses email in a professional capacity.',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental Excel features into their daily activities, making their tasks more efficient and productive.',
+  //   feeStructure: {
+  //   },
+  // ),
 
-  Course(
-    id: '7',
-    courseCode: 'MSP01',
-    title: 'PPT for Worker (Part 1)',
-    category: 'AI & IoT',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '23',
-    description: 'In this course, you will learn how to make the most of PowerPoint features as a worker. Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Sections, and working with images. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Smart Art': [
-        'SmartArt',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Sections': [
-        'Sections',
-        'Quiz 4',
-      ],
-      'Topic 5: Remove Background': [
-        'Remove Background',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior PowerPoint experience required',
-    ],
-    whoShouldAttend: 'Office Worker',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their daily work, streamlining their work processes and boosting productivity.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '8',
-    courseCode: 'MSP02',
-    title: 'Essential PowerPoint for Sales & Marketing (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '20',
-    description: 'In this course, you will learn how to make the most of PowerPoint features, which is excellent for simplifying your job as a Sales & Marketing. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Custom Slide Shows, and Merging Shapes. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Smart Art': [
-        'SmartArt',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Custom Slide Shows': [
-        'Custom Slide Shows',
-        'Quiz 4',
-      ],
-      'Topic 5: Merging Shapes': [
-        'Merging Shapes',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior PowerPoint experience required',
-    ],
-    whoShouldAttend: 'Sales & Marketing',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their job, which is excellent for simplifying their task.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '9',
-    courseCode: 'MSP03',
-    title: 'Essential PowerPoint for Business Owner (Part 1)',
-    category: 'Business Operations',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '16',
-    description: 'In this course, you will learn how to make the most of PowerPoint features as a business owner, Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Custom Animations, and Reuse Slides. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Smart Art': [
-        'SmartArt',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Custom Animation': [
-        'Custom Animation',
-        'Quiz 4',
-      ],
-      'Topic 5: Reuse Slides': [
-        'Reuse Slides',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior PowerPoint experience required',
-    ],
-    whoShouldAttend: 'Business Owner',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their business to streamline and enhance their business operations.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '10',
-    courseCode: 'MSP04',
-    title: 'Essential PowerPoint for Students',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '10',
-    description: 'In this course, you will learn how to make the most of PowerPoint features as a student. Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Slides from Outline, and Annotation tools. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Smart Art Graphics': [
-        'SmartArt',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Slides from Outline': [
-        'Slides from Outline',
-        'Quiz 4',
-      ],
-      'Topic 5: Using Annotation Tools': [
-        'Using Annotation Tools',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior PowerPoint experience required',
-    ],
-    whoShouldAttend: 'Students',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental PowerPoint features into their daily activities, making their tasks more efficient and productive.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '11',
-    courseCode: 'MSO01',
-    title: 'Essential Word for Sales & Marketing',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '22',
-    description: 'In this course, you will learn how to make the most of Word features, which is excellent for simplifying your job as a Sales & Marketing,. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Screenshots, and Cropping Images. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Styles': [
-        'Styles',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Screenshot Tool': [
-        'Screenshot Tool',
-        'Quiz 4',
-      ],
-      'Topic 5: Cropping Image': [
-        'Cropping Image',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Microsoft Word experience required',
-    ],
-    whoShouldAttend: 'Sales & Marketing',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job, which is excellent for simplifying their task.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '12',
-    courseCode: 'MSO02',
-    title: 'Essential Word for Admin',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '21',
-    description: 'In this course, you will discover how to effectively use Excel features to simplify your tasks and improve efficiency as an Administration. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Table Cell Layout, and Hyperlink. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills. ',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Styles': [
-        'Styles',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Table Cell Layout': [
-        'Table Cell Layout',
-        'Quiz 4',
-      ],
-      'Topic 5: Hyperlink': [
-        'Hyperlink',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Microsoft Word experience required',
-    ],
-    whoShouldAttend: 'Administrator',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job to streamline and improve efficiency.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '13',
-    courseCode: 'MSO03',
-    title: 'Essential Word for HR (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '18',
-    description: 'In this course, you will learn how to make the most of Word features as a Human Resources. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Headers and Footers, and Setting Tab Stops. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Styles': [
-        'Styles',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Headers and Footers': [
-        'Headers and Footers',
-        'Quiz 4',
-      ],
-      'Topic 5: Setting Tab Stops': [
-        'Setting Tab Stops',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Microsoft Word experience required',
-    ],
-    whoShouldAttend: 'Human Resources Person',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job to streamline and improve their productivity.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '14',
-    courseCode: 'MSO04',
-    title: 'Essential Word for Office Worker',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Available',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Unlimited Time',
-    moodleCourseId: '13',
-    description: 'In this course, you will learn how to make the most of Word features as a worker. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Inserting Breaks, and Word Table. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Styles': [
-        'Styles',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Inserting Breaks': [
-        'Inserting Breaks',
-        'Quiz 4',
-      ],
-      'Topic 5: Word Table': [
-        'Word Table',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Microsoft Word experience required',
-    ],
-    whoShouldAttend: 'Office Worker',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their daily work, streamlining their work processes and boosting productivity.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '15',
-    courseCode: 'MSO05',
-    title: 'Word Essential for Students (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '11',
-    description: 'In this course, you will learn how to make the most of Word features as a student. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Bibliography, and Bulleted and Numbered Lists (Multi-Level Lists). This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Styles': [
-        'Styles',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Bibliography': [
-        'Bibliography',
-        'Quiz 4',
-      ],
-      'Topic 5: Multilevel Lists': [
-        'Multilevel Lists',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Microsoft Word experience required',
-    ],
-    whoShouldAttend: 'Students',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental Word features into their daily activities, making their tasks more efficient and productive.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '16',
-    courseCode: 'MSO06',
-    title: 'Essential Word for Business Owner (Part 1)',
-    category: 'Office Productivity',
-    certType: 'Microsoft',
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '8',
-    description: 'In this course, you will learn how to make the most of Word features as a business owner. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Add Watermark, and Document Protections. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
-    outline: {
-      'Topic 1: Themes': [
-        'Themes',
-        'Quiz 1',
-      ],
-      'Topic 2: Styles': [
-        'Styles',
-        'Quiz 2',
-      ],
-      'Topic 3: Charts': [
-        'Charts',
-        'Quiz 3',
-      ],
-      'Topic 4: Adding Watermark': [
-        'Adding Watermark',
-        'Quiz 4',
-      ],
-      'Topic 5: Document Protection': [
-        'Document Protection',
-        'Quiz 5',
-      ],
-    },
-    prerequisites: [
-      'Basic computer skills',
-      'No prior Microsoft Word experience required',
-    ],
-    whoShouldAttend: 'Business Owner',
-    importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their business to streamline and enhance their business operations.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '17',
-    courseCode: 'SS01',
-    title: 'Presentasi Memukau dengan Teknik Public Speaking',
-    category: 'Soft Skills',
-    certType: null,
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '4',
-    description: 'Modul ini memuat pembelajaraan tentang bagaimana melakukan presentasi yang memukau dengan berbagai macam penerapan praktis teknik-teknik public speaking. Pembelajaran diawali dengan bagaimana mengatasi kegugupan saat berbicara di depan umum, dan bagaimana menambah kepercayaan diri. Pembelajaran inti dari modul ini adalah mengenai struktur presentasi yang kuat dengan komposisi opening yang menarik, body content yang tertata, dan closing yang kuat sehingga yang mendukung pesan yang ingin disampaikan, Kekuatan verbal dalam pemilihan kata dan dibawakan dengan gaya story telling sangat mempengaruhi kekuatan presentasi. Pembelajaran akan diakhiri dengan beberapa tips bagaimana menggunakan vocal variety and body language yang mendukung upaya presentasi memukau.',
-    outline: {
-      'Lesson 1: Presentation in Daily Life': [
-        'Manfaat Presentasi',
-        'Mengatasi Grogi',
-        'Langkah Membangun Kepercayaan',
-      ],
-      'Lesson 2: Attractive Opening': [
-        'Struktur Komunikasi',
-        'Cara Melakukan Opening',
-      ],
-      'Lesson 3: Body Content': [
-        'Pemetaan Ide',
-        'Mid Test',
-      ],
-      'Lesson 4: Strong Closing': [
-        'Rangkuman dan Konklusi',
-        'Inspirasi',
-      ],
-      'Lesson 5: Presentation Delivery': [
-        'Variasi Vokal',
-        'Bahasa Tubuh',
-        'Alat Bantu Visual',
-        'Perbaikan Penampilan',
-      ],
-      'Lesson 6: Closing': [
-        'Closing',
-        'Post Test',
-      ],
-    },
-    prerequisites: [
-      'Courage to Learn',
-    ],
-    whoShouldAttend: 'Anyone who is seeking to improve their presentation skills',
-    importantNotes: 'Pembelajar mampu menjelaskan seluruh komponen Teknik public speaking yang dibutuhkan untuk melakukan presentasi yang memukau dan dapat menerapkannya dalam praktik presentasi sehari-hari .',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '18',
-    courseCode: 'SS02',
-    title: 'Public Speaking',
-    category: 'Soft Skills',
-    certType: null,
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '5',
-    description: 'Modul ini memuat pembelajaraan tentang bagaimana melakukan presentasi yang memukau dengan berbagai macam penerapan praktis teknik-teknik public speaking. Pembelajaran diawali dengan mengenal lebih jauh apa itu public speaking, syarat menjadi seorang public speaker dan melakukan pemataan audiens. Materi juga membahas tentang bagaimana mengatasi kegugupan saat berbicara di depan umum, dan bagaimana mengatasi kendala saat tampil.',
-    outline: {
-      'Lesson 1: The Public Speaking': [
-        'Introduction Public Speaking',
-      ],
-      'Lesson 2: The Audience Mapping 1': [
-        'Mapping Audience Part A',
-      ],
-      'Lesson 3: The Audience Mapping 2': [
-        'Mid-Test',
-        'Mapping Audience Part B',
-      ],
-      'Lesson 4: Bahasa Tubuh': [
-        'Bahasa Tubuh',
-      ],
-      'Lesson 5: Tipe Komunikator': [
-        'Tipe Komunikator',
-      ],
-      'Lesson 6: The Flow of Mind': [
-        'Alur Berpikir Pembicara',
-      ],
-      'Lesson 7: Kesalahan Umum Presentasi': [
-        'Kesalahan Umum Presentasi',
-      ],
-      'Lesson 8: Closing': [
-        'Closing Donnt',
-        'Post-Test',
-        'Feedback',
-      ],
-    },
-    prerequisites: [
-      'Courage to Learn',
-    ],
-    whoShouldAttend: 'Anyone who is seeking to improve their Public speaking skills',
-    importantNotes: 'Pembelajar mampu menjelaskan seluruh komponen Teknik public speaking yang dibutuhkan untuk melakukan presentasi yang memukau dan dapat menerapkannya dalam praktik presentasi sehari-hari',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '19',
-    courseCode: 'SS03',
-    title: 'Kunci Pemimpin Sejati',
-    category: 'Soft Skills',
-    certType: null,
-    rating: 4.8,
-    duration: 'Unlimited Time',
-    price: '\$0',
-    funding: 'Complimentary',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: 'Available',
-    moodleCourseId: '5',
-    description: 'Modul ini untuk mempelajari hal-hal yang sangat dibutuhkan sebagai seorang pemimpin, terutama apabila baru pertama kali mendapatkan peran atau pun jabatan tersebut. Selain itu modul ini juga dilengkapi dengan tipe-tipe karakter anggota tim, hal ini agar dapat mengoptimalkan potensi para anggota tim dan membuat sistem kerjasama yang baik. Materi ini juga akan membahas mengatasi konflik dan kesalahpahaman yang dapat terjadi di dalam kerjasama. Hal ini dimulai dengan bagaimana membuat kejelasan pesan untuk tujuan tim atau pun organisasi pada umumnya. Serta akan mempelajari tips-tips untuk pengembangan anggota tim menjadi lebih baik lagi di kedepannya. ',
-    outline: {
-      'Lesson 1: Peran dan Pola Pikir Pemimpin': [
-        'Pola Pikir Pemimpin Sejati',
-        'Kesalahan Umum Seorang Pemimpin',
-        'Peran Sebagai Pemimpin',
-      ],
-      'Lesson 2: Pengenalan dan Pemetaan Tim': [
-        'Mid Test',
-        'Tipe Karakter Tim',
-        'Karakter Pertama - The Initiator',
-        'Karakter Kedua - The Executor',
-        'Karakter Ketiga - The Supporter',
-        'Karakter Keempat - The Follower',
-      ],
-      'Lesson 3: Komunikasi Tim': [
-        'Tujuan Komunikasi',
-        'Kejelasan Pesan',
-      ],
-      'Lesson 4: Mengelola Tim': [
-        'Mengatasi Konflik',
-        'Mengembangkan Potensi Tim',
-      ],
-      'Lesson 5: Closing': [
-        'Closing',
-        'Post-Tets',
-        'Evaluation',
-      ],
-    },
-    prerequisites: [
-      'Courage to Learn',
-    ],
-    whoShouldAttend: 'Anyone who is seeking to improve their Leadership skills',
-    importantNotes: 'Pembelajar mampu melakukan komunikasi dan peran kepemimpinan untuk mengarahkan tim melakukan pekerjaannya dan selaras dengan divisi lain. ',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '20',
-    courseCode: 'SCTP01',
-    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
-    category: 'SCTP',
-    certType: null,
-    rating: 4.8,
-    duration: '19 days',
-    price: '\$0',
-    funding: 'Eligible for funding',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: ', 2025',
-    moodleCourseId: '38',
-    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
-    outline: {
-      'Topic 1: Brainstorming': [
-      ],
-      'Topic 2: Affinity Diagram': [
-        'Quiz',
-      ],
-      "Topic 3: 5 Why's": [
-        'Quiz',
-      ],
-      'Topic 4: Fishbone Diagram': [
-        'Quiz',
-      ],
-    },
-    prerequisites: [
-      'Minimum 21 years old.',
-      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
-      'Workplace Literacy and Numeracy Level 4',
-    ],
-    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
-    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '21',
-    courseCode: 'MSO501',
-    title: 'Effective Decision Making for Operations Level (Classroom and Asynchronous E- learning)',
-    category: 'SCTP',
-    certType: null,
-    rating: 4.8,
-    duration: '19 days',
-    price: '\$0',
-    funding: 'Eligible for funding',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: ', 2025',
-    moodleCourseId: '38',
-    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
-    outline: {
-      'Topic 1: Directive Decision Makin': [
-      ],
-      'Topic 2: Analyctical Decision Makers': [
-        'Quiz',
-      ],
-      "Topic 3: Conceptual Decision Makers": [
-        'Quiz',
-      ],
-      'Topic 4: Behavioral Decision Makers': [
-        'Quiz',
-      ],
-    },
-    prerequisites: [
-      'Minimum 21 years old.',
-      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
-      'Workplace Literacy and Numeracy Level 4',
-    ],
-    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
-    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '22',
-    courseCode: 'MSO501',
-    title: 'Effective Decision Making for Operations Level (Classroom and Asynchronous E- learning)',
-    category: 'SCTP',
-    certType: null,
-    rating: 4.8,
-    duration: '19 days',
-    price: '\$0',
-    funding: 'Eligible for funding',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: ', 2025',
-    moodleCourseId: '38',
-    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
-    outline: {
-      'Topic 1: Directive Decision Makin': [
-      ],
-      'Topic 2: Analyctical Decision Makers': [
-        'Quiz',
-      ],
-      "Topic 3: Conceptual Decision Makers": [
-        'Quiz',
-      ],
-      'Topic 4: Behavioral Decision Makers': [
-        'Quiz',
-      ],
-    },
-    prerequisites: [
-      'Minimum 21 years old.',
-      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
-      'Workplace Literacy and Numeracy Level 4',
-    ],
-    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
-    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '23',
-    courseCode: 'MSO501',
-    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
-    category: 'SCTP',
-    certType: null,
-    rating: 4.8,
-    duration: '19 days',
-    price: '\$0',
-    funding: 'Eligible for funding',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: ', 2025',
-    moodleCourseId: '38',
-    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
-    outline: {
-      'Topic 1: Brainstorming': [
-      ],
-      'Topic 2: Affinity Diagram': [
-        'Quiz',
-      ],
-      "Topic 3: 5 Why's": [
-        'Quiz',
-      ],
-      'Topic 4: Fishbone Diagram': [
-        'Quiz',
-      ],
-    },
-    prerequisites: [
-      'Minimum 21 years old.',
-      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
-      'Workplace Literacy and Numeracy Level 4',
-    ],
-    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
-    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
-    feeStructure: {
-    },
-  ),
-  Course(
-    id: '24',
-    courseCode: 'MSO501',
-    title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous E-learning)',
-    category: 'SCTP',
-    certType: null,
-    rating: 4.8,
-    duration: '19 days',
-    price: '\$0',
-    funding: 'Eligible for funding',
-    deliveryMethods: ['OLL'],
-    nextAvailableDate: ', 2025',
-    moodleCourseId: '38',
-    description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
-    outline: {
-      'Topic 1: Brainstorming': [
-      ],
-      'Topic 2: Affinity Diagram': [
-        'Quiz',
-      ],
-      "Topic 3: 5 Why's": [
-        'Quiz',
-      ],
-      'Topic 4: Fishbone Diagram': [
-        'Quiz',
-      ],
-    },
-    prerequisites: [
-      'Minimum 21 years old.',
-      'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
-      'Workplace Literacy and Numeracy Level 4',
-    ],
-    whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
-    importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
-    feeStructure: {
-    },
-  ),
+  // Course(
+  //   id: '7',
+  //   courseCode: 'MSP01',
+  //   title: 'PPT for Worker (Part 1)',
+  //   category: 'AI & IoT',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '23',
+  //   description: 'In this course, you will learn how to make the most of PowerPoint features as a worker. Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Sections, and working with images. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Smart Art': [
+  //       'SmartArt',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Sections': [
+  //       'Sections',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Remove Background': [
+  //       'Remove Background',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior PowerPoint experience required',
+  //   ],
+  //   whoShouldAttend: 'Office Worker',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their daily work, streamlining their work processes and boosting productivity.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '8',
+  //   courseCode: 'MSP02',
+  //   title: 'Essential PowerPoint for Sales & Marketing (Part 1)',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '20',
+  //   description: 'In this course, you will learn how to make the most of PowerPoint features, which is excellent for simplifying your job as a Sales & Marketing. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Custom Slide Shows, and Merging Shapes. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Smart Art': [
+  //       'SmartArt',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Custom Slide Shows': [
+  //       'Custom Slide Shows',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Merging Shapes': [
+  //       'Merging Shapes',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior PowerPoint experience required',
+  //   ],
+  //   whoShouldAttend: 'Sales & Marketing',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their job, which is excellent for simplifying their task.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '9',
+  //   courseCode: 'MSP03',
+  //   title: 'Essential PowerPoint for Business Owner (Part 1)',
+  //   category: 'Business Operations',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '16',
+  //   description: 'In this course, you will learn how to make the most of PowerPoint features as a business owner, Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Custom Animations, and Reuse Slides. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Smart Art': [
+  //       'SmartArt',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Custom Animation': [
+  //       'Custom Animation',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Reuse Slides': [
+  //       'Reuse Slides',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior PowerPoint experience required',
+  //   ],
+  //   whoShouldAttend: 'Business Owner',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of PowerPoint features into their business to streamline and enhance their business operations.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '10',
+  //   courseCode: 'MSP04',
+  //   title: 'Essential PowerPoint for Students',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '10',
+  //   description: 'In this course, you will learn how to make the most of PowerPoint features as a student. Throughout this course, you will delve into various features, including using Themes, SmartArt, Charts, Slides from Outline, and Annotation tools. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Smart Art Graphics': [
+  //       'SmartArt',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Slides from Outline': [
+  //       'Slides from Outline',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Using Annotation Tools': [
+  //       'Using Annotation Tools',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior PowerPoint experience required',
+  //   ],
+  //   whoShouldAttend: 'Students',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental PowerPoint features into their daily activities, making their tasks more efficient and productive.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '11',
+  //   courseCode: 'MSO01',
+  //   title: 'Essential Word for Sales & Marketing',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '22',
+  //   description: 'In this course, you will learn how to make the most of Word features, which is excellent for simplifying your job as a Sales & Marketing,. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Screenshots, and Cropping Images. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Styles': [
+  //       'Styles',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Screenshot Tool': [
+  //       'Screenshot Tool',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Cropping Image': [
+  //       'Cropping Image',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Microsoft Word experience required',
+  //   ],
+  //   whoShouldAttend: 'Sales & Marketing',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job, which is excellent for simplifying their task.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '12',
+  //   courseCode: 'MSO02',
+  //   title: 'Essential Word for Admin',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '21',
+  //   description: 'In this course, you will discover how to effectively use Excel features to simplify your tasks and improve efficiency as an Administration. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Table Cell Layout, and Hyperlink. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills. ',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Styles': [
+  //       'Styles',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Table Cell Layout': [
+  //       'Table Cell Layout',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Hyperlink': [
+  //       'Hyperlink',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Microsoft Word experience required',
+  //   ],
+  //   whoShouldAttend: 'Administrator',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job to streamline and improve efficiency.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '13',
+  //   courseCode: 'MSO03',
+  //   title: 'Essential Word for HR (Part 1)',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '18',
+  //   description: 'In this course, you will learn how to make the most of Word features as a Human Resources. Throughout this course, you will delve into various features, including using Themes, Basic Pivot Table, Charts, Headers and Footers, and Setting Tab Stops. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Styles': [
+  //       'Styles',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Headers and Footers': [
+  //       'Headers and Footers',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Setting Tab Stops': [
+  //       'Setting Tab Stops',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Microsoft Word experience required',
+  //   ],
+  //   whoShouldAttend: 'Human Resources Person',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their job to streamline and improve their productivity.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '14',
+  //   courseCode: 'MSO04',
+  //   title: 'Essential Word for Office Worker',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Available',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Unlimited Time',
+  //   moodleCourseId: '13',
+  //   description: 'In this course, you will learn how to make the most of Word features as a worker. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Inserting Breaks, and Word Table. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Styles': [
+  //       'Styles',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Inserting Breaks': [
+  //       'Inserting Breaks',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Word Table': [
+  //       'Word Table',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Microsoft Word experience required',
+  //   ],
+  //   whoShouldAttend: 'Office Worker',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their daily work, streamlining their work processes and boosting productivity.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '15',
+  //   courseCode: 'MSO05',
+  //   title: 'Word Essential for Students (Part 1)',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '11',
+  //   description: 'In this course, you will learn how to make the most of Word features as a student. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Bibliography, and Bulleted and Numbered Lists (Multi-Level Lists). This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Styles': [
+  //       'Styles',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Bibliography': [
+  //       'Bibliography',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Multilevel Lists': [
+  //       'Multilevel Lists',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Microsoft Word experience required',
+  //   ],
+  //   whoShouldAttend: 'Students',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of fundamental Word features into their daily activities, making their tasks more efficient and productive.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '16',
+  //   courseCode: 'MSO06',
+  //   title: 'Essential Word for Business Owner (Part 1)',
+  //   category: 'Office Productivity',
+  //   certType: 'Microsoft',
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '8',
+  //   description: 'In this course, you will learn how to make the most of Word features as a business owner. Throughout this course, you will delve into various features, including using Themes, Styles, Charts, Add Watermark, and Document Protections. This course will give a live demonstration of how to use and apply each feature. It will help you practice the features effectively and enhance your skills.',
+  //   outline: {
+  //     'Topic 1: Themes': [
+  //       'Themes',
+  //       'Quiz 1',
+  //     ],
+  //     'Topic 2: Styles': [
+  //       'Styles',
+  //       'Quiz 2',
+  //     ],
+  //     'Topic 3: Charts': [
+  //       'Charts',
+  //       'Quiz 3',
+  //     ],
+  //     'Topic 4: Adding Watermark': [
+  //       'Adding Watermark',
+  //       'Quiz 4',
+  //     ],
+  //     'Topic 5: Document Protection': [
+  //       'Document Protection',
+  //       'Quiz 5',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Basic computer skills',
+  //     'No prior Microsoft Word experience required',
+  //   ],
+  //   whoShouldAttend: 'Business Owner',
+  //   importantNotes: 'Upon finishing the course, the student will have the ability to incorporate a range of Word features into their business to streamline and enhance their business operations.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '17',
+  //   courseCode: 'SS01',
+  //   title: 'Presentasi Memukau dengan Teknik Public Speaking',
+  //   category: 'Soft Skills',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '4',
+  //   description: 'Modul ini memuat pembelajaraan tentang bagaimana melakukan presentasi yang memukau dengan berbagai macam penerapan praktis teknik-teknik public speaking. Pembelajaran diawali dengan bagaimana mengatasi kegugupan saat berbicara di depan umum, dan bagaimana menambah kepercayaan diri. Pembelajaran inti dari modul ini adalah mengenai struktur presentasi yang kuat dengan komposisi opening yang menarik, body content yang tertata, dan closing yang kuat sehingga yang mendukung pesan yang ingin disampaikan, Kekuatan verbal dalam pemilihan kata dan dibawakan dengan gaya story telling sangat mempengaruhi kekuatan presentasi. Pembelajaran akan diakhiri dengan beberapa tips bagaimana menggunakan vocal variety and body language yang mendukung upaya presentasi memukau.',
+  //   outline: {
+  //     'Lesson 1: Presentation in Daily Life': [
+  //       'Manfaat Presentasi',
+  //       'Mengatasi Grogi',
+  //       'Langkah Membangun Kepercayaan',
+  //     ],
+  //     'Lesson 2: Attractive Opening': [
+  //       'Struktur Komunikasi',
+  //       'Cara Melakukan Opening',
+  //     ],
+  //     'Lesson 3: Body Content': [
+  //       'Pemetaan Ide',
+  //       'Mid Test',
+  //     ],
+  //     'Lesson 4: Strong Closing': [
+  //       'Rangkuman dan Konklusi',
+  //       'Inspirasi',
+  //     ],
+  //     'Lesson 5: Presentation Delivery': [
+  //       'Variasi Vokal',
+  //       'Bahasa Tubuh',
+  //       'Alat Bantu Visual',
+  //       'Perbaikan Penampilan',
+  //     ],
+  //     'Lesson 6: Closing': [
+  //       'Closing',
+  //       'Post Test',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Courage to Learn',
+  //   ],
+  //   whoShouldAttend: 'Anyone who is seeking to improve their presentation skills',
+  //   importantNotes: 'Pembelajar mampu menjelaskan seluruh komponen Teknik public speaking yang dibutuhkan untuk melakukan presentasi yang memukau dan dapat menerapkannya dalam praktik presentasi sehari-hari .',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '18',
+  //   courseCode: 'SS02',
+  //   title: 'Public Speaking',
+  //   category: 'Soft Skills',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '5',
+  //   description: 'Modul ini memuat pembelajaraan tentang bagaimana melakukan presentasi yang memukau dengan berbagai macam penerapan praktis teknik-teknik public speaking. Pembelajaran diawali dengan mengenal lebih jauh apa itu public speaking, syarat menjadi seorang public speaker dan melakukan pemataan audiens. Materi juga membahas tentang bagaimana mengatasi kegugupan saat berbicara di depan umum, dan bagaimana mengatasi kendala saat tampil.',
+  //   outline: {
+  //     'Lesson 1: The Public Speaking': [
+  //       'Introduction Public Speaking',
+  //     ],
+  //     'Lesson 2: The Audience Mapping 1': [
+  //       'Mapping Audience Part A',
+  //     ],
+  //     'Lesson 3: The Audience Mapping 2': [
+  //       'Mid-Test',
+  //       'Mapping Audience Part B',
+  //     ],
+  //     'Lesson 4: Bahasa Tubuh': [
+  //       'Bahasa Tubuh',
+  //     ],
+  //     'Lesson 5: Tipe Komunikator': [
+  //       'Tipe Komunikator',
+  //     ],
+  //     'Lesson 6: The Flow of Mind': [
+  //       'Alur Berpikir Pembicara',
+  //     ],
+  //     'Lesson 7: Kesalahan Umum Presentasi': [
+  //       'Kesalahan Umum Presentasi',
+  //     ],
+  //     'Lesson 8: Closing': [
+  //       'Closing Donnt',
+  //       'Post-Test',
+  //       'Feedback',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Courage to Learn',
+  //   ],
+  //   whoShouldAttend: 'Anyone who is seeking to improve their Public speaking skills',
+  //   importantNotes: 'Pembelajar mampu menjelaskan seluruh komponen Teknik public speaking yang dibutuhkan untuk melakukan presentasi yang memukau dan dapat menerapkannya dalam praktik presentasi sehari-hari',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '19',
+  //   courseCode: 'SS03',
+  //   title: 'Kunci Pemimpin Sejati',
+  //   category: 'Soft Skills',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: 'Unlimited Time',
+  //   price: '\$0',
+  //   funding: 'Complimentary',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: 'Available',
+  //   moodleCourseId: '5',
+  //   description: 'Modul ini untuk mempelajari hal-hal yang sangat dibutuhkan sebagai seorang pemimpin, terutama apabila baru pertama kali mendapatkan peran atau pun jabatan tersebut. Selain itu modul ini juga dilengkapi dengan tipe-tipe karakter anggota tim, hal ini agar dapat mengoptimalkan potensi para anggota tim dan membuat sistem kerjasama yang baik. Materi ini juga akan membahas mengatasi konflik dan kesalahpahaman yang dapat terjadi di dalam kerjasama. Hal ini dimulai dengan bagaimana membuat kejelasan pesan untuk tujuan tim atau pun organisasi pada umumnya. Serta akan mempelajari tips-tips untuk pengembangan anggota tim menjadi lebih baik lagi di kedepannya. ',
+  //   outline: {
+  //     'Lesson 1: Peran dan Pola Pikir Pemimpin': [
+  //       'Pola Pikir Pemimpin Sejati',
+  //       'Kesalahan Umum Seorang Pemimpin',
+  //       'Peran Sebagai Pemimpin',
+  //     ],
+  //     'Lesson 2: Pengenalan dan Pemetaan Tim': [
+  //       'Mid Test',
+  //       'Tipe Karakter Tim',
+  //       'Karakter Pertama - The Initiator',
+  //       'Karakter Kedua - The Executor',
+  //       'Karakter Ketiga - The Supporter',
+  //       'Karakter Keempat - The Follower',
+  //     ],
+  //     'Lesson 3: Komunikasi Tim': [
+  //       'Tujuan Komunikasi',
+  //       'Kejelasan Pesan',
+  //     ],
+  //     'Lesson 4: Mengelola Tim': [
+  //       'Mengatasi Konflik',
+  //       'Mengembangkan Potensi Tim',
+  //     ],
+  //     'Lesson 5: Closing': [
+  //       'Closing',
+  //       'Post-Tets',
+  //       'Evaluation',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Courage to Learn',
+  //   ],
+  //   whoShouldAttend: 'Anyone who is seeking to improve their Leadership skills',
+  //   importantNotes: 'Pembelajar mampu melakukan komunikasi dan peran kepemimpinan untuk mengarahkan tim melakukan pekerjaannya dan selaras dengan divisi lain. ',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '20',
+  //   courseCode: 'SCTP01',
+  //   title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
+  //   category: 'SCTP',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: '19 days',
+  //   price: '\$0',
+  //   funding: 'Eligible for funding',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: ', 2025',
+  //   moodleCourseId: '38',
+  //   description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
+  //   outline: {
+  //     'Topic 1: Brainstorming': [
+  //     ],
+  //     'Topic 2: Affinity Diagram': [
+  //       'Quiz',
+  //     ],
+  //     "Topic 3: 5 Why's": [
+  //       'Quiz',
+  //     ],
+  //     'Topic 4: Fishbone Diagram': [
+  //       'Quiz',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Minimum 21 years old.',
+  //     'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+  //     'Workplace Literacy and Numeracy Level 4',
+  //   ],
+  //   whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+  //   importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '21',
+  //   courseCode: 'MSO501',
+  //   title: 'Effective Decision Making for Operations Level (Classroom and Asynchronous E- learning)',
+  //   category: 'SCTP',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: '19 days',
+  //   price: '\$0',
+  //   funding: 'Eligible for funding',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: ', 2025',
+  //   moodleCourseId: '38',
+  //   description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
+  //   outline: {
+  //     'Topic 1: Directive Decision Makin': [
+  //     ],
+  //     'Topic 2: Analyctical Decision Makers': [
+  //       'Quiz',
+  //     ],
+  //     "Topic 3: Conceptual Decision Makers": [
+  //       'Quiz',
+  //     ],
+  //     'Topic 4: Behavioral Decision Makers': [
+  //       'Quiz',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Minimum 21 years old.',
+  //     'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+  //     'Workplace Literacy and Numeracy Level 4',
+  //   ],
+  //   whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+  //   importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '22',
+  //   courseCode: 'MSO501',
+  //   title: 'Effective Decision Making for Operations Level (Classroom and Asynchronous E- learning)',
+  //   category: 'SCTP',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: '19 days',
+  //   price: '\$0',
+  //   funding: 'Eligible for funding',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: ', 2025',
+  //   moodleCourseId: '38',
+  //   description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
+  //   outline: {
+  //     'Topic 1: Directive Decision Makin': [
+  //     ],
+  //     'Topic 2: Analyctical Decision Makers': [
+  //       'Quiz',
+  //     ],
+  //     "Topic 3: Conceptual Decision Makers": [
+  //       'Quiz',
+  //     ],
+  //     'Topic 4: Behavioral Decision Makers': [
+  //       'Quiz',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Minimum 21 years old.',
+  //     'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+  //     'Workplace Literacy and Numeracy Level 4',
+  //   ],
+  //   whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+  //   importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '23',
+  //   courseCode: 'MSO501',
+  //   title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous Elearning)',
+  //   category: 'SCTP',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: '19 days',
+  //   price: '\$0',
+  //   funding: 'Eligible for funding',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: ', 2025',
+  //   moodleCourseId: '38',
+  //   description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
+  //   outline: {
+  //     'Topic 1: Brainstorming': [
+  //     ],
+  //     'Topic 2: Affinity Diagram': [
+  //       'Quiz',
+  //     ],
+  //     "Topic 3: 5 Why's": [
+  //       'Quiz',
+  //     ],
+  //     'Topic 4: Fishbone Diagram': [
+  //       'Quiz',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Minimum 21 years old.',
+  //     'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+  //     'Workplace Literacy and Numeracy Level 4',
+  //   ],
+  //   whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+  //   importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
+  //   feeStructure: {
+  //   },
+  // ),
+  // Course(
+  //   id: '24',
+  //   courseCode: 'MSO501',
+  //   title: 'Effective Problem Solving for Operations Level (Classroom and Asynchronous E-learning)',
+  //   category: 'SCTP',
+  //   certType: null,
+  //   rating: 4.8,
+  //   duration: '19 days',
+  //   price: '\$0',
+  //   funding: 'Eligible for funding',
+  //   deliveryMethods: ['OLL'],
+  //   nextAvailableDate: ', 2025',
+  //   moodleCourseId: '38',
+  //   description: 'This course is designed to help  trainees with no or little background in ICT to start their career in the IT industry using the latest technology and trend in networking and IT Service Management. On top of that, trainees would be well equipped with problem solving and decision making skills to prepare them to face their daily tasks as Network Administrator. The technical side of this course is based on CompTIA’s curriculum. The Computing Technology Industry Association (CompTIA) is a non-profit trade association, issuing professional certification for the information technology (IT) industry. CompTIA is a vendor neutral certification using independent source of information based on the latest development of technology.',
+  //   outline: {
+  //     'Topic 1: Brainstorming': [
+  //     ],
+  //     'Topic 2: Affinity Diagram': [
+  //       'Quiz',
+  //     ],
+  //     "Topic 3: 5 Why's": [
+  //       'Quiz',
+  //     ],
+  //     'Topic 4: Fishbone Diagram': [
+  //       'Quiz',
+  //     ],
+  //   },
+  //   prerequisites: [
+  //     'Minimum 21 years old.',
+  //     'Minimum Grade 5 in any 3 subjects of GCE N Levels or equivalent' ,
+  //     'Workplace Literacy and Numeracy Level 4',
+  //   ],
+  //   whoShouldAttend: 'Singapore Citizen or Singapore Permanent Resident, Minimum 21 years old',
+  //   importantNotes: 'Attended at least 75% of the course and declared as competent during the assessments.',
+  //   feeStructure: {
+  //   },
+  // ),
+
+
+
+
+
+
+
 //    ^
 //FREEE -------------------------------------------------------------------------------------------------------------
 //BAYAR ------------------------------------------------------------------------------------------------------------------
@@ -26411,6 +26421,343 @@ The C|EH v13 not only provides extensive hands-on coverage but also integrates A
     'SG Citizens age 40 years old and above': {'Individual': '\$317.50', 'Company Sponsored (Non-SME)': '\$317.50', 'Company Sponsored (SME)': '\$317.50'},
   },
     ),
+
+
+// ini yang penting for now for this event
+
+  Course(
+    id: '213',
+    courseCode: 'NETd-101',
+    title: 'Networking Infrastructure & Architecture Literacy – Foundations and Concepts',
+    category: 'Information Technology',
+    certType: 'CompTIA',
+    rating: 4.5,
+    duration: '1 Hour (60 minutes)',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '20',
+    description: 'This foundational course provides essential knowledge of networking infrastructure and architecture concepts. Designed for beginners, IT teams, and business professionals, participants will gain comprehensive understanding of network fundamentals, key components of network design and topology, and explore various protocols, devices, and technologies used in modern networking environments. The course emphasizes practical application of networking knowledge to real-world scenarios while addressing critical security considerations and industry best practices.',
+    outline: {
+      'Nano Module 1: Introduction to Networking': [
+        'What is Networking Infrastructure?',
+        'Why Networking Matters',
+        'Real-World Networking Scenarios',
+      ],
+      'Nano Module 2: Network Components & Devices': [
+        'Core Devices Explained',
+        'Supporting Components',
+        'Device Roles in Practice',
+      ],
+      'Nano Module 3: Network Topologies & Architectures': [
+        'Topology Types',
+        'Architecture Styles',
+        'Design Considerations',
+      ],
+      'Nano Module 4: Networking Protocols & IP Addressing': [
+        'Protocols Overview',
+        'IP Addressing & Subnetting',
+        'Protocol Application in Practice',
+      ],
+      'Nano Module 5: Network Security & Management': [
+        'Security Fundamentals',
+        'Security Best Practices',
+        'Network Management & Trends',
+        'END',
+      ],
+      'Nano Quiz on Networking Infrastructure & Architecture Literacy': [
+        'Nano Quiz on Networking Infrastructure & Architecture Literacy',
+        'Thank you',
+      ],
+    },
+    prerequisites: [
+      'Basic computer literacy',
+      'Understanding of fundamental IT concepts',
+      'No prior networking experience required',
+    ],
+    whoShouldAttend: 'Beginners, IT Teams, Business Professionals',
+    importantNotes: 'Upon completion of this course, participants will have solid foundational knowledge of networking infrastructure and architecture, enabling them to understand network environments, communicate effectively with IT teams, and make informed decisions about networking solutions in their professional roles.',
+    feeStructure: {
+    },
+  ),
+
+  Course(
+    id: '214',
+    courseCode: 'DATA-101',
+    title: 'Data Analytics Literacy – Turning Data into Insights',
+    category: 'Data Science & Analytics',
+    certType: 'Microsoft',
+    rating: 4.6,
+    duration: '1 Hour (60 minutes)',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '19',
+    description: 'This comprehensive course introduces participants to the fundamental concepts and importance of data analytics in modern business environments. Designed for beginners, professionals, and business teams, this course explores different types of analytics including descriptive, diagnostic, predictive, and prescriptive approaches. Participants will learn the complete data analytics process from collection and cleaning through analysis, visualization, and interpretation. The course covers benefits, risks, ethical considerations, and emerging trends in data analytics, enabling learners to apply basic analytics concepts to real-world scenarios and make data-driven decisions in their professional roles.',
+    outline: {
+      'Nano Module 1: Introduction to Data Analytics': [
+        'What is Data Analytics?',
+        'Types of Data Analytics',
+      ],
+      'Nano Module 2: Data Collection & Cleaning': [
+        'Data Collection',
+        'Data Cleaning / Preprocessing',
+      ],
+      'Nano Module 3: Data Analysis Techniques': [
+        'Descriptive & Diagnostic Analysis',
+        'Predictive & Prescriptive Analysis',
+      ],
+      'Nano Module 4: Data Visualization & Interpretation': [
+        'Data Visualization',
+        'Interpretation & Communication',
+      ],
+      'Nano Module 5: Benefits, Risks & Ethics': [
+        'Benefits of Data Analytics',
+        'Risks & Ethics',
+      ],
+      'Nano Module 6: Future Trends': [
+        'Emerging Trends',
+        'Preparing for the Future',
+        'END',
+      ],
+      'Nano Quiz on Data Analytics': [
+        'Nano Quiz on Data Analytics',
+        'Thank you',
+      ],
+    },
+    prerequisites: [
+      'Basic computer literacy',
+      'No prior data analytics experience required',
+      'Basic understanding of business concepts helpful but not required',
+    ],
+    whoShouldAttend: 'Beginners, Professionals, Business Teams',
+    importantNotes: 'Upon completion of this course, participants will have foundational knowledge of data analytics concepts and processes, enabling them to understand data-driven decision making, communicate effectively with data teams, and identify opportunities for applying analytics in their work environment.',
+    feeStructure: {
+    },
+  ),
+
+Course(
+    id: '215',
+    courseCode: 'CLOUD-101',
+    title: 'Cloud Computing & Virtualization Literacy – Foundations and Concepts',
+    category: 'Information Technology',
+    certType: 'Microsoft',
+    rating: 4.5,
+    duration: '1 Hour (60 minutes)',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '18',
+    description: 'This foundational course provides comprehensive knowledge of cloud computing and virtualization concepts for beginners, IT teams, and business professionals. Participants will understand core cloud computing and virtualization principles, explore different types of cloud services and deployment models, and learn how virtualization fundamentals underpin modern cloud computing infrastructure. The course covers critical topics including benefits, risks, security considerations, and emerging trends in cloud technologies, enabling learners to apply this knowledge to real-world scenarios and make informed decisions about cloud adoption and implementation strategies.',
+    outline: {
+      'Nano Module 1: Introduction to Cloud Computing': [
+        'What is Cloud Computing?',
+        'Cloud Service Models',
+      ],
+      'Nano Module 2: Cloud Deployment Models': [
+        'Deployment Models',
+        'Benefits of Cloud Computing',
+      ],
+      'Nano Module 3: Virtualization Fundamentals': [
+        'What is Virtualization?',
+        'Types of Virtualization',
+      ],
+      'Nano Module 4: Cloud Security & Risks': [
+        'Security Considerations',
+        'Risks of Cloud Computing',
+      ],
+      'Nano Module 5: Cloud Management & Trends': [
+        'Cloud Management Tools',
+        'Emerging Trends in Cloud & Virtualization',
+        'END',
+      ],
+      'Nano Quiz on Cloud Computing & Virtualization Literacy': [
+        'Nano Quiz on Cloud Computing & Virtualization Literacy',
+        'Thank you',
+      ],
+    },
+    prerequisites: [
+      'Basic computer literacy',
+      'Understanding of fundamental IT concepts',
+      'No prior cloud computing experience required',
+    ],
+    whoShouldAttend: 'Beginners, IT Teams, Business Professionals',
+    importantNotes: 'Upon completion of this course, participants will have solid foundational knowledge of cloud computing and virtualization technologies, enabling them to understand cloud environments, make informed decisions about cloud adoption, and communicate effectively with technical teams about cloud infrastructure and strategy.',
+    feeStructure: {
+    },
+  ),
+
+  Course(
+    id: '216',
+    courseCode: 'AI-101',
+    title: 'AI Literacy – Understanding Artificial Intelligence',
+    category: 'Artificial Intelligence',
+    certType: 'Microsoft',
+    rating: 4.8,
+    duration: '1 Hour (60 minutes)',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '17',
+    description: 'This comprehensive foundational course is designed for beginners, professionals, and business teams seeking essential AI knowledge. Participants will define AI and its key components, understand different types of AI and how they function, and explore real-world applications in both consumer and enterprise settings. The course covers AI benefits, risks, and ethical considerations while examining emerging AI trends and opportunities. Learners will appreciate AI\'s societal and strategic impact, gaining the knowledge needed to navigate the AI-augmented workplace and make informed decisions about AI adoption and implementation.',
+    outline: {
+      'Nano Module 1: Introduction to AI': [
+        'What is AI?',
+        'Evolution of AI',
+      ],
+      'Nano Module 2: How AI Works': [
+        'Core AI Technologies',
+        'Data, Training & Iteration',
+      ],
+      'Nano Module 3: Applications of AI': [
+        'Consumer Applications',
+        'Industrial & Enterprise Applications',
+      ],
+      'Nano Module 4: Benefits of AI': [
+        'Operational & Business Benefits',
+        'Societal & Strategic Benefits',
+      ],
+      'Nano Module 5: Risk, Challenges & Ethics': [
+        'AI Risks & Challenges',
+        'Ethical Considerations',
+      ],
+      'Nano Module 6: Future Trends in AI': [
+        'Emerging AI Trends',
+        'Preparing for the AI Future',
+      ],
+      'Nano Module 7: The AI Augmented Human Workforce': [
+        'The AI Augmented Human Workforce 1',
+        'The AI Augmented Human Workforce 2',
+        'END',
+      ],
+      'Nano Quiz on AI Literacy': [
+        'Nano Quiz on AI Literacy',
+        'Thank you',
+      ],
+    },
+    prerequisites: [
+      'Basic computer literacy',
+      'No prior AI experience required',
+      'Curiosity about emerging technologies',
+    ],
+    whoShouldAttend: 'Beginners, Professionals, and Business Teams seeking foundational AI knowledge',
+    importantNotes: 'Upon completion of this course, participants will have comprehensive foundational knowledge of artificial intelligence, enabling them to understand AI technologies, make informed decisions about AI implementation, and effectively participate in AI-related discussions and strategic planning in their professional environment.',
+    feeStructure: {
+    },
+  ),
+
+  Course(
+    id: '217',
+    courseCode: 'CYBER-101',
+    title: 'Cybersecurity Literacy – Foundations and Concepts',
+    category: 'Information Security',
+    certType: 'CompTIA',
+    rating: 4.7,
+    duration: '1 Hour (60 minutes)',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '14',
+    description: 'This essential foundational course provides comprehensive cybersecurity knowledge for beginners, business professionals, and IT teams. Participants will understand fundamental cybersecurity concepts and terminology, identify common threats and vulnerabilities, and learn key security practices for both individuals and organizations. The course covers the critical role of cybersecurity policies and compliance requirements while enabling learners to apply practical knowledge to real-world scenarios. This course empowers participants to make informed security decisions and implement effective cybersecurity measures in their personal and professional environments.',
+    outline: {
+      'Nano Module 1: Introduction to Cybersecurity': [
+        'What is Cybersecurity?',
+        'Importance of Cybersecurity',
+      ],
+      'Nano Module 2: Common Cyber Threats': [
+        'Types of Cyber Threats',
+        'Vulnerabilities',
+      ],
+      'Nano Module 3: Cybersecurity Practices': [
+        'Passwords & Authentication',
+        'Network & System Security',
+      ],
+      'Nano Module 4: Data & Application Security': [
+        'Data Protection',
+        'Application Security',
+      ],
+      'Nano Module 5: Cybersecurity Policies & Trends': [
+        'Policies & Compliance',
+        'Emerging Trends in Cybersecurity',
+        'END',
+      ],
+      'Nano Quiz on Cybersecurity Literacy': [
+        'Nano Quiz on Cybersecurity Literacy',
+        'Thank you',
+      ],
+    },
+    prerequisites: [
+      'Basic computer literacy',
+      'Understanding of basic internet and technology concepts',
+      'No prior cybersecurity experience required',
+    ],
+    whoShouldAttend: 'Beginners, Business Professionals, and IT Teams',
+    importantNotes: 'Upon completion of this course, participants will have essential cybersecurity knowledge enabling them to recognize threats, implement security best practices, understand compliance requirements, and contribute to creating a more secure digital environment in their personal and professional activities.',
+    feeStructure: {
+    },
+  ),
+
+Course(
+    id: '218',
+    courseCode: 'IOT-101',
+    title: 'IoT Literacy — Understanding the Internet of Things',
+    category: 'Information Technology',
+    certType: 'Microsoft',
+    rating: 4.6,
+    duration: '1 Hour (60 minutes)',
+    price: '\$0',
+    funding: 'Complimentary',
+    deliveryMethods: ['OLL'],
+    nextAvailableDate: 'Available',
+    moodleCourseId: '13',
+    description: 'This comprehensive foundational course is designed for general learners, professionals, and business teams seeking essential IoT knowledge. Participants will understand what IoT is and how it works, explore key components and technologies powering IoT systems, and learn about real-world applications across various industries. The course covers the benefits, risks, and ethical considerations of IoT implementation while developing awareness of future trends and opportunities in the IoT landscape. This course empowers learners to make informed decisions about IoT adoption and understand its transformative impact on modern business and daily life.',
+    outline: {
+      'Nano Module 1: Introduction to IoT': [
+        'What is IoT?',
+        'Why IoT Matters Today',
+      ],
+      'Nano Module 2: How IoT Works': [
+        'IoT Ecosystem Basics',
+        'Data Flow Example',
+      ],
+      'Nano Module 3: Applications of IoT': [
+        'Consumer IoT',
+        'Industrial & Commercial IoT',
+      ],
+      'Nano Module 4: Benefits of IoT': [
+        'Key Advantages',
+        'Real-World Success Examples',
+      ],
+      'Nano Module 5: Risks, Challenges & Ethics': [
+        'Security Concerns',
+        'Ethical & Operational Challenges',
+      ],
+      'Nano Module 6: The Future of IoT': [
+        'Emerging Trends',
+        'Opportunities Ahead',
+        'END',
+      ],
+      'Nano Quiz on IoT Literacy': [
+        'Nano Quiz on IoT Literacy',
+        'Thank you',
+      ],
+    },
+    prerequisites: [
+      'Basic computer literacy',
+      'Understanding of internet and basic technology concepts',
+      'No prior IoT experience required',
+    ],
+    whoShouldAttend: 'General Learners, Professionals, and Business Teams seeking foundational IoT knowledge',
+    importantNotes: 'Upon completion of this course, participants will have comprehensive foundational knowledge of IoT technologies, enabling them to understand IoT ecosystems, recognize implementation opportunities, assess risks and benefits, and make informed decisions about IoT adoption in their personal and professional contexts.',
+    feeStructure: {
+    },
+  ),
+
 
   ];
 
