@@ -32,7 +32,7 @@ flutter pub get
 ### 4. Configure APIs
 - [ ] Xendit API keys in `lib/config/xendit_config.dart`
 - [ ] Check Firebase project settings
-- [ ] Verify Moodle integration URL: https://online.itel.com.sg
+- [ ] Verify Moodle integration URL: https://lms.itel.com.sg
 
 ### 5. Test Setup
 ```bash

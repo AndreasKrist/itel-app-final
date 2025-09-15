@@ -89,7 +89,7 @@ void _joinFreeClass() async {
       nextSessionDate: DateTime.now().add(const Duration(days: 3)), 
       nextSessionTime: '10:00 AM - 12:00 PM',
       location: widget.course.deliveryMethods?.contains('OLL') ?? false 
-          ? 'https://online.itel.com.sg'
+          ? 'https://lms.itel.com.sg'
           : 'ITEL Training Center (Room 101)',
       progress: '0% complete', // Start with 0% progress
     );
@@ -361,7 +361,7 @@ void _toggleFavorite() async {
       await _trackCourseAccess();
       
       // Base Moodle URL
-      final moodleSiteUrl = 'https://online.itel.com.sg';
+      final moodleSiteUrl = 'https://lms.itel.com.sg';
       
       // Get course ID if available
       final courseId = widget.course.moodleCourseId;
@@ -450,7 +450,7 @@ void _toggleFavorite() async {
         isOnline: true, // Complementary courses are online via Moodle
         nextSessionDate: null, // No specific session date for self-paced courses
         nextSessionTime: null,
-        location: 'https://online.itel.com.sg', // Moodle URL
+        location: 'https://lms.itel.com.sg', // Moodle URL
         instructorName: null,
         progress: null, // No progress tracking for complementary courses
         gradeOrCertificate: null,

@@ -68,7 +68,7 @@ class EnrolledCourseCard extends StatelessWidget {
 Future<void> _launchCourseURL(BuildContext context) async {
   try {
     // Base Moodle URL
-    final moodleSiteUrl = 'https://online.itel.com.sg'; // Replace with your actual Moodle URL
+    final moodleSiteUrl = 'https://lms.itel.com.sg'; // Replace with your actual Moodle URL
     
     // Get course ID if available
     final courseId = course.moodleCourseId;
