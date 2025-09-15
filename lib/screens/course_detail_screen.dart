@@ -369,8 +369,8 @@ void _toggleFavorite() async {
       // For mobile app, we need to include the course ID in the deep link if available
       String moodleAppUrl;
       if (courseId != null) {
-        // Format: moodlemobile://link=https://moodle.site/course/view.php?id=123
-        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/course/view.php?id=$courseId';
+        // Format: moodlemobile://link=https://moodle.site/enrol/index.php?id=123 (for enrollment page)
+        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/enrol/index.php?id=$courseId';
       } else {
         // Default to site homepage if no course ID
         moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl';
@@ -393,8 +393,8 @@ void _toggleFavorite() async {
       // For browser, create a URL that will redirect to the course after login
       String webUrl;
       if (courseId != null) {
-        // Direct to the course page
-        webUrl = '$moodleSiteUrl/course/view.php?id=$courseId';
+        // Direct to the course page with auto-enrollment for complementary courses
+        webUrl = '$moodleSiteUrl/enrol/index.php?id=$courseId';
       } else {
         // Default to login page
         webUrl = '$moodleSiteUrl/login/index.php';

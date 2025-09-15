@@ -76,8 +76,15 @@ Future<void> _launchCourseURL(BuildContext context) async {
     // For mobile app, we need to include the course ID in the deep link if available
     String moodleAppUrl;
     if (courseId != null) {
-      // Format: moodlemobile://link=https://moodle.site/course/view.php?id=123
-      moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/course/view.php?id=$courseId';
+      // For complementary courses, direct to enrollment page first, then course
+      // Check if it's a complementary course
+      if (course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary') {
+        // Format: moodlemobile://link=https://moodle.site/enrol/index.php?id=123 (for enrollment)
+        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/enrol/index.php?id=$courseId';
+      } else {
+        // Format: moodlemobile://link=https://moodle.site/course/view.php?id=123 (direct to course)
+        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/course/view.php?id=$courseId';
+      }
     } else {
       // Default to site homepage if no course ID
       moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl';
@@ -100,8 +107,14 @@ Future<void> _launchCourseURL(BuildContext context) async {
     // For browser, create a URL that will redirect to the course after login
     String webUrl;
     if (courseId != null) {
-      // Direct to the course page
-      webUrl = '$moodleSiteUrl/course/view.php?id=$courseId';
+      // For complementary courses, direct to enrollment page first
+      if (course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary') {
+        // Direct to enrollment page for complementary courses
+        webUrl = '$moodleSiteUrl/enrol/index.php?id=$courseId';
+      } else {
+        // Direct to the course page for enrolled paid courses
+        webUrl = '$moodleSiteUrl/course/view.php?id=$courseId';
+      }
     } else {
       // Default to login page
       webUrl = '$moodleSiteUrl/login/index.php';
