@@ -54,32 +54,34 @@ class AuthService {
 Future<void> loadUserData() async {
   final firebase_auth.User? firebaseUser = _firebaseAuth.currentUser;
   if (firebaseUser == null) return;
-  
+
   try {
     print('Loading user data for ${firebaseUser.uid}');
-    
+
     // Get user profile data first
     final userProfile = await _preferencesService.getUserProfile(firebaseUser.uid);
     print('User profile loaded: ${userProfile != null}');
-    
+
     // Always use the dedicated loadFavorites method which handles both Firestore and local storage
     final favorites = await _preferencesService.loadFavorites(firebaseUser.uid);
     print('Favorites loaded: $favorites');
-    
+
     // Load enrolled courses data from profile
     List<EnrolledCourse> enrolledCourses = [];
+    List<EnrolledCourse> courseHistory = [];
+
     if (userProfile != null && userProfile.containsKey('enrolledCourses')) {
       try {
         final enrolledCoursesData = List<Map<String, dynamic>>.from(userProfile['enrolledCourses'] ?? []);
         enrolledCourses = enrolledCoursesData.map((data) => EnrolledCourse(
           courseId: data['courseId'] ?? '',
-          enrollmentDate: data['enrollmentDate'] != null 
-            ? DateTime.parse(data['enrollmentDate']) 
+          enrollmentDate: data['enrollmentDate'] != null
+            ? DateTime.parse(data['enrollmentDate'])
             : DateTime.now(),
           status: _getEnrollmentStatusFromString(data['status'] ?? 'pending'),
           isOnline: data['isOnline'] ?? false,
-          nextSessionDate: data['nextSessionDate'] != null 
-            ? DateTime.parse(data['nextSessionDate']) 
+          nextSessionDate: data['nextSessionDate'] != null
+            ? DateTime.parse(data['nextSessionDate'])
             : null,
           nextSessionTime: data['nextSessionTime'],
           location: data['location'],
@@ -92,7 +94,33 @@ Future<void> loadUserData() async {
         print('Error parsing enrolled courses: $e');
       }
     }
-    
+
+    // Load course history data
+    if (userProfile != null && userProfile.containsKey('courseHistory')) {
+      try {
+        final courseHistoryData = List<Map<String, dynamic>>.from(userProfile['courseHistory'] ?? []);
+        courseHistory = courseHistoryData.map((data) => EnrolledCourse(
+          courseId: data['courseId'] ?? '',
+          enrollmentDate: data['enrollmentDate'] != null
+            ? DateTime.parse(data['enrollmentDate'])
+            : DateTime.now(),
+          status: _getEnrollmentStatusFromString(data['status'] ?? 'cancelled'),
+          isOnline: data['isOnline'] ?? false,
+          nextSessionDate: data['nextSessionDate'] != null
+            ? DateTime.parse(data['nextSessionDate'])
+            : null,
+          nextSessionTime: data['nextSessionTime'],
+          location: data['location'],
+          instructorName: data['instructorName'],
+          progress: data['progress'],
+          gradeOrCertificate: data['gradeOrCertificate'],
+        )).toList();
+        print('Loaded ${courseHistory.length} course history items');
+      } catch (e) {
+        print('Error parsing course history: $e');
+      }
+    }
+
     // If profile doesn't exist, create it
     if (userProfile == null) {
       print('User profile not found, creating one');
@@ -106,9 +134,10 @@ Future<void> loadUserData() async {
         membershipExpiryDate: 'March 7, 2027',
         favoriteCoursesIds: [], // Pass the loaded favorites
         enrolledCourses: [], // Empty enrolled courses for new users
+        courseHistory: [], // Empty course history for new users
       );
     }
-    
+
     // Update the currentUser with the loaded data
     User.currentUser = User(
       id: firebaseUser.uid,
@@ -120,10 +149,13 @@ Future<void> loadUserData() async {
       membershipExpiryDate: userProfile?['membershipExpiryDate'] ?? 'March 7, 2027',
       favoriteCoursesIds: favorites, // Use the loaded favorites
       enrolledCourses: enrolledCourses, // Use the loaded enrolled courses
+      courseHistory: courseHistory, // Use the loaded course history
     );
-    
+
     print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds.length} items');
     print('Favorite IDs: ${User.currentUser.favoriteCoursesIds}');
+    print('Enrolled courses: ${User.currentUser.enrolledCourses.length} items');
+    print('Course history: ${User.currentUser.courseHistory.length} items');
   } catch (e) {
     print('Error loading user data: $e');
   }

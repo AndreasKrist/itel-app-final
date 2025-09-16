@@ -174,8 +174,8 @@ class TrendingScreen extends StatelessWidget {
                   onPressed: () {
                 
                     LinkHandler.openLink(
-                      context, 
-                      'https://itel.com.sg/resources/events/',
+                      context,
+                      'https://itel.com.sg/resources/event',
                       fallbackMessage: 'Opening subscription page...'
                     );
                   },

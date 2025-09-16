@@ -76,7 +76,7 @@ void _toggleFavorite(Course course) async {
   try {
     // Get current user
     final currentUser = _authService.currentUser;
-    
+
     if (currentUser == null || currentUser.id.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -89,33 +89,36 @@ void _toggleFavorite(Course course) async {
     // Create an updated favorites list
     List<String> updatedFavorites = List.from(User.currentUser.favoriteCoursesIds);
     bool shouldAdd = !updatedFavorites.contains(course.id);
-    
+
     // Update list based on new state
     if (shouldAdd) {
       updatedFavorites.add(course.id);
     } else {
       updatedFavorites.remove(course.id);
     }
-    
+
     // Update local state immediately for responsive UI
     setState(() {
       User.currentUser = User.currentUser.copyWith(
         favoriteCoursesIds: updatedFavorites,
       );
     });
-    
-    // Update in Firestore directly with saveUserProfile
+
+    // Update in Firestore directly with saveUserProfile to ensure persistence
     await _preferencesService.saveUserProfile(
       userId: currentUser.id,
-      name: currentUser.name,
-      email: currentUser.email,
-      phone: currentUser.phone, 
-      company: currentUser.company,
-      tier: currentUser.tier,
-      membershipExpiryDate: currentUser.membershipExpiryDate,
+      name: User.currentUser.name,
+      email: User.currentUser.email,
+      phone: User.currentUser.phone,
+      company: User.currentUser.company,
+      tier: User.currentUser.tier,
+      membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
+      courseHistory: User.currentUser.courseHistory,
     );
+
+    print('Successfully updated favorites in courses screen: ${updatedFavorites.length} items');
   } catch (e) {
     print('Error toggling favorite: $e');
     if (mounted) {
@@ -148,7 +151,7 @@ void _toggleFavorite(Course course) async {
     if (activeFilters['funding'] == 'available') {
       result = result.where((course) => course.funding?.contains('Eligible') ?? false).toList();
     } else if (activeFilters['funding'] == 'none') {
-      result = result.where((course) => course.funding?.contains('Not eligible') ?? false).toList();
+      result = result.where((course) => course.funding == null || course.funding!.contains('Not eligible')).toList();
     } else if (activeFilters['funding'] == 'free') {
       result = result.where((course) => course.price.contains('Free') || course.price == '\$0').toList();
     }
@@ -159,24 +162,36 @@ void _toggleFavorite(Course course) async {
       if (activeFilters['duration'] == 'short') {
         // Filter for short courses (< 2 days)
         result = result.where((course) {
-          // Check if duration contains "day" or "days"
-          if (course.duration.contains('day')) {
-            final days = int.tryParse(course.duration.split(' ')[0]) ?? 0;
-            return days < 2;
-          } 
-          // For non-day formats, assume weeks are long
+          final durationLower = course.duration.toLowerCase();
+          final numericPart = int.tryParse(course.duration.split(' ')[0]) ?? 0;
+
+          if (durationLower.contains('day')) {
+            return numericPart < 2;
+          } else if (durationLower.contains('hour')) {
+            return numericPart < 48; // Less than 48 hours (2 days)
+          } else if (durationLower.contains('minute')) {
+            return numericPart < 2880; // Less than 2880 minutes (2 days)
+          } else if (durationLower.contains('week') || durationLower.contains('month')) {
+            return false; // Weeks and months are always long
+          }
           return false;
         }).toList();
       } else if (activeFilters['duration'] == 'long') {
         // Filter for long courses (2+ days)
         result = result.where((course) {
-          // Check if duration contains "day" or "days"
-          if (course.duration.contains('day')) {
-            final days = int.tryParse(course.duration.split(' ')[0]) ?? 0;
-            return days >= 2;
-          } 
-          // For non-day formats (weeks, months), consider them long
-          return true;
+          final durationLower = course.duration.toLowerCase();
+          final numericPart = int.tryParse(course.duration.split(' ')[0]) ?? 0;
+
+          if (durationLower.contains('day')) {
+            return numericPart >= 2;
+          } else if (durationLower.contains('hour')) {
+            return numericPart >= 48; // 48+ hours (2+ days)
+          } else if (durationLower.contains('minute')) {
+            return numericPart >= 2880; // 2880+ minutes (2+ days)
+          } else if (durationLower.contains('week') || durationLower.contains('month')) {
+            return true; // Weeks and months are always long
+          }
+          return false;
         }).toList();
       }
     }
@@ -194,54 +209,119 @@ void _toggleFavorite(Course course) async {
     // Apply sorting
     if (activeSort == 'priceLow') {
       return List.from(result)..sort((a, b) {
-        final aPrice = double.tryParse(a.price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
-        final bPrice = double.tryParse(b.price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
-        return aPrice.compareTo(bPrice);
+        final aPriceStr = a.price.replaceAll(RegExp(r'[^\d.]'), '');
+        final bPriceStr = b.price.replaceAll(RegExp(r'[^\d.]'), '');
+        final aPrice = double.tryParse(aPriceStr);
+        final bPrice = double.tryParse(bPriceStr);
+
+        // If both have numeric prices, compare normally
+        if (aPrice != null && bPrice != null) {
+          return aPrice.compareTo(bPrice);
+        }
+        // If only a has numeric price, a comes first
+        if (aPrice != null && bPrice == null) {
+          return -1;
+        }
+        // If only b has numeric price, b comes first
+        if (aPrice == null && bPrice != null) {
+          return 1;
+        }
+        // If both are non-numeric, sort alphabetically
+        return a.price.compareTo(b.price);
       });
     } else if (activeSort == 'priceHigh') {
       return List.from(result)..sort((a, b) {
-        final aPrice = double.tryParse(a.price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
-        final bPrice = double.tryParse(b.price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
-        return bPrice.compareTo(aPrice);
+        final aPriceStr = a.price.replaceAll(RegExp(r'[^\d.]'), '');
+        final bPriceStr = b.price.replaceAll(RegExp(r'[^\d.]'), '');
+        final aPrice = double.tryParse(aPriceStr);
+        final bPrice = double.tryParse(bPriceStr);
+
+        // If both have numeric prices, compare in reverse order
+        if (aPrice != null && bPrice != null) {
+          return bPrice.compareTo(aPrice);
+        }
+        // If only a has numeric price, a comes first
+        if (aPrice != null && bPrice == null) {
+          return -1;
+        }
+        // If only b has numeric price, b comes first
+        if (aPrice == null && bPrice != null) {
+          return 1;
+        }
+        // If both are non-numeric, sort alphabetically
+        return a.price.compareTo(b.price);
       });
     } else if (activeSort == 'durationLow') {
       return List.from(result)..sort((a, b) {
-        // Get numeric duration for days
-        int getDurationDays(String duration) {
-          if (duration.contains('day')) {
-            return int.tryParse(duration.split(' ')[0]) ?? 0;
-          } else if (duration.contains('week')) {
-            return (int.tryParse(duration.split(' ')[0]) ?? 0) * 7;
-          } else if (duration.contains('month')) {
-            return (int.tryParse(duration.split(' ')[0]) ?? 0) * 30;
+        // Get numeric duration in hours for precise comparison
+        int getDurationInHours(String duration) {
+          final durationLower = duration.toLowerCase();
+          final numericPart = int.tryParse(duration.split(' ')[0]) ?? 0;
+
+          if (durationLower.contains('day')) {
+            return numericPart * 24; // Convert days to hours
+          } else if (durationLower.contains('week')) {
+            return numericPart * 7 * 24; // Convert weeks to hours
+          } else if (durationLower.contains('month')) {
+            return numericPart * 30 * 24; // Convert months to hours
+          } else if (durationLower.contains('hour')) {
+            return numericPart; // Already in hours
+          } else if (durationLower.contains('minute')) {
+            return (numericPart / 60).ceil(); // Convert minutes to hours
           }
           return 0;
         }
         
-        final aDays = getDurationDays(a.duration);
-        final bDays = getDurationDays(b.duration);
-        return aDays.compareTo(bDays);
+        final aDuration = getDurationInHours(a.duration);
+        final bDuration = getDurationInHours(b.duration);
+        return aDuration.compareTo(bDuration);
       });
     } else if (activeSort == 'durationHigh') {
       return List.from(result)..sort((a, b) {
-        // Get numeric duration for days
-        int getDurationDays(String duration) {
-          if (duration.contains('day')) {
-            return int.tryParse(duration.split(' ')[0]) ?? 0;
-          } else if (duration.contains('week')) {
-            return (int.tryParse(duration.split(' ')[0]) ?? 0) * 7;
-          } else if (duration.contains('month')) {
-            return (int.tryParse(duration.split(' ')[0]) ?? 0) * 30;
+        // Get numeric duration in hours for precise comparison
+        int getDurationInHours(String duration) {
+          final durationLower = duration.toLowerCase();
+          final numericPart = int.tryParse(duration.split(' ')[0]) ?? 0;
+
+          if (durationLower.contains('day')) {
+            return numericPart * 24; // Convert days to hours
+          } else if (durationLower.contains('week')) {
+            return numericPart * 7 * 24; // Convert weeks to hours
+          } else if (durationLower.contains('month')) {
+            return numericPart * 30 * 24; // Convert months to hours
+          } else if (durationLower.contains('hour')) {
+            return numericPart; // Already in hours
+          } else if (durationLower.contains('minute')) {
+            return (numericPart / 60).ceil(); // Convert minutes to hours
           }
           return 0;
         }
         
-        final aDays = getDurationDays(a.duration);
-        final bDays = getDurationDays(b.duration);
-        return bDays.compareTo(aDays);
+        final aDuration = getDurationInHours(a.duration);
+        final bDuration = getDurationInHours(b.duration);
+        return bDuration.compareTo(aDuration);
       });
     }
-    
+
+    // Default ordering: show complimentary/free courses first when no sorting is applied
+    if (activeSort == 'none') {
+      return List.from(result)..sort((a, b) {
+        final aIsFree = a.price.toLowerCase().contains('free') ||
+                       a.price.contains('\$0') ||
+                       a.price == '0';
+        final bIsFree = b.price.toLowerCase().contains('free') ||
+                       b.price.contains('\$0') ||
+                       b.price == '0';
+
+        // If only one is free, free comes first
+        if (aIsFree && !bIsFree) return -1;
+        if (!aIsFree && bIsFree) return 1;
+
+        // If both are free or both are paid, maintain original order
+        return 0;
+      });
+    }
+
     return result;
   }
 

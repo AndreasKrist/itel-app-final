@@ -51,7 +51,7 @@ void _showEditProfileDialog() {
   try {
     // Get current user
     final currentUser = _authService.currentUser;
-    
+
     if (currentUser == null || currentUser.id.isEmpty) {
       if (mounted) {
         Navigator.pop(context); // Close dialog
@@ -73,8 +73,8 @@ void _showEditProfileDialog() {
       }
       return;
     }
-    
-    // First update in Firestore to ensure data is saved
+
+    // First update in Firestore to ensure data is saved with ALL user data
     await _preferencesService.saveUserProfile(
       userId: firebaseUser.uid,
       name: name,
@@ -85,11 +85,12 @@ void _showEditProfileDialog() {
       membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
       enrolledCourses: User.currentUser.enrolledCourses,
+      courseHistory: User.currentUser.courseHistory,
     );
-    
+
     // Update Firebase Auth display name
     await firebaseUser.updateDisplayName(name);
-    
+
     // Update local user model AFTER saving to ensure consistency
     if (mounted) {
       setState(() {
@@ -99,7 +100,7 @@ void _showEditProfileDialog() {
           company: company,
         );
       });
-      
+
       Navigator.pop(context); // Close dialog
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -107,6 +108,8 @@ void _showEditProfileDialog() {
           backgroundColor: Colors.green,
         ),
       );
+
+      print('Profile updated successfully. Current user: ${User.currentUser.name}, ${User.currentUser.phone}, ${User.currentUser.company}');
     }
   } catch (e) {
     print('Error updating profile: $e');
@@ -178,16 +181,35 @@ Future<void> _loadFavoritesFromFirebase() async {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Reload enrollments whenever the screen comes into focus
-    _loadEnrollmentsFromFirebase();
-    _loadFavoritesFromFirebase();
+    // Reload data whenever the screen comes into focus
+    _reloadUserData();
   }
+
   // Add to the _ProfileScreenState class
   @override
   void initState() {
     super.initState();
-    _loadEnrollmentsFromFirebase();
-    _loadFavoritesFromFirebase();
+    _reloadUserData();
+  }
+
+  // Reload user data including favorites and enrollments
+  Future<void> _reloadUserData() async {
+    try {
+      print('Reloading user data on profile screen');
+      // Use auth service to reload all user data from Firestore
+      await _authService.loadUserData();
+
+      // Force UI update after data reload
+      if (mounted) {
+        setState(() {
+          // This will trigger a rebuild with the updated data
+        });
+      }
+
+      print('User data reloaded. Favorites: ${User.currentUser.favoriteCoursesIds.length}, Enrollments: ${User.currentUser.enrolledCourses.length}');
+    } catch (e) {
+      print('Error reloading user data: $e');
+    }
   }
 
 // Replace this method in the ProfileScreen class
@@ -503,7 +525,7 @@ void _toggleFavorite(Course course) async {
   try {
     // Get current user
     final currentUser = _authService.currentUser;
-    
+
     if (currentUser == null || currentUser.id.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -516,33 +538,36 @@ void _toggleFavorite(Course course) async {
     // Create an updated favorites list
     List<String> updatedFavorites = List.from(User.currentUser.favoriteCoursesIds);
     bool shouldAdd = !updatedFavorites.contains(course.id);
-    
+
     // Update list based on new state
     if (shouldAdd) {
       updatedFavorites.add(course.id);
     } else {
       updatedFavorites.remove(course.id);
     }
-    
+
     // Update local state immediately for responsive UI
     setState(() {
       User.currentUser = User.currentUser.copyWith(
         favoriteCoursesIds: updatedFavorites,
       );
     });
-    
-    // Update in Firestore directly with saveUserProfile
+
+    // Update in Firestore directly with saveUserProfile to ensure persistence
     await _preferencesService.saveUserProfile(
       userId: currentUser.id,
-      name: currentUser.name,
-      email: currentUser.email,
-      phone: currentUser.phone, 
-      company: currentUser.company,
-      tier: currentUser.tier,
-      membershipExpiryDate: currentUser.membershipExpiryDate,
+      name: User.currentUser.name,
+      email: User.currentUser.email,
+      phone: User.currentUser.phone,
+      company: User.currentUser.company,
+      tier: User.currentUser.tier,
+      membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
+      courseHistory: User.currentUser.courseHistory,
     );
+
+    print('Successfully updated favorites: ${updatedFavorites.length} items');
   } catch (e) {
     print('Error toggling favorite: $e');
     if (mounted) {
