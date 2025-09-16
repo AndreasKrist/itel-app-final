@@ -33,8 +33,11 @@ class CourseCard extends StatelessWidget {
         );
       },
       child: Container(
-        height: 200, // Fixed height for uniform card sizes
-        padding: const EdgeInsets.all(16),
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height * 0.22,
+          maxHeight: MediaQuery.of(context).size.height * 0.32,
+        ),
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -57,6 +60,7 @@ class CourseCard extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
+                        textScaleFactor: MediaQuery.textScaleFactorOf(context).clamp(0.8, 1.2),
                       ),
                       const SizedBox(height: 4),
                       Text(

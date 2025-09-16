@@ -96,22 +96,27 @@ class AboutScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatistic(
-                  icon: Icons.people,
-                  number: '214,842+',
-                  label: 'Graduates',
+                Expanded(
+                  child: _buildStatistic(
+                    icon: Icons.people,
+                    number: '214,842+',
+                    label: 'Graduates',
+                  ),
                 ),
-                _buildStatistic(
-                  icon: Icons.book,
-                  number: '250+',
-                  label: 'No. of Courses',
+                Expanded(
+                  child: _buildStatistic(
+                    icon: Icons.book,
+                    number: '250+',
+                    label: 'No. of Courses',
+                  ),
                 ),
-                _buildStatistic(
-                  icon: Icons.calendar_today,
-                  number: '23',
-                  label: 'Years in Business',
+                Expanded(
+                  child: _buildStatistic(
+                    icon: Icons.calendar_today,
+                    number: '23',
+                    label: 'Years in Business',
+                  ),
                 ),
               ],
             ),
@@ -435,6 +440,9 @@ class AboutScreen extends StatelessWidget {
             fontSize: 14,
             color: Colors.blue[500],
           ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

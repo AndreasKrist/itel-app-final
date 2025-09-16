@@ -204,9 +204,10 @@ Future<void> _launchCourseURL(BuildContext context) async {
           
           const SizedBox(height: 12),
           
-          // Progress indicator (if active)
-          // Show progress only for paid courses, not for complementary courses
-          if (enrollment.progress != null && 
+          // Progress indicator (if active and not completed)
+          // Show progress only for paid courses, not for complementary courses, and not for completed courses
+          if (enrollment.progress != null &&
+              enrollment.status != EnrollmentStatus.completed &&
               !(course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary')) ...[
             Row(
               children: [
@@ -417,12 +418,16 @@ Future<void> _launchCourseURL(BuildContext context) async {
                           color: Colors.orange[700],
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          'Enquiry Pending',
-                          style: TextStyle(
-                            color: Colors.orange[700],
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
+                        Flexible(
+                          child: Text(
+                            'Enquiry Pending',
+                            style: TextStyle(
+                              color: Colors.orange[700],
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -441,7 +446,7 @@ Future<void> _launchCourseURL(BuildContext context) async {
               child: OutlinedButton.icon(
                 onPressed: onRemove,
                 icon: const Icon(Icons.check_circle, size: 16),
-                label: const Text('Mark as Finished'),
+                label: const Text('Mark as Completed'),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(color: Colors.green[300]!),

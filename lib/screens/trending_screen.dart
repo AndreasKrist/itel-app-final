@@ -28,16 +28,17 @@ class TrendingScreen extends StatelessWidget {
         .where((item) => item.type == TrendingItemType.courseAssessor)
         .toList();
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: MediaQuery.of(context).size.width * 0.1,
+                height: MediaQuery.of(context).size.width * 0.1,
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -99,7 +100,7 @@ class TrendingScreen extends StatelessWidget {
             _buildSectionHeader(context, 'Featured Articles'),
             const SizedBox(height: 12),
             SizedBox(
-              height: 160,
+              height: MediaQuery.of(context).size.height * 0.2,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -195,6 +196,7 @@ class TrendingScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

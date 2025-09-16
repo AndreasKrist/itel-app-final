@@ -924,7 +924,7 @@ void _toggleFavorite() async {
                         _buildSectionTitle('Related Courses'),
                         const SizedBox(height: 12),
                         SizedBox(
-                          height: 160,
+                          height: MediaQuery.of(context).size.height * 0.22,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: relatedCourses.length,
@@ -956,6 +956,7 @@ void _toggleFavorite() async {
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
                                         course.title,
@@ -972,6 +973,8 @@ void _toggleFavorite() async {
                                           color: Colors.grey[500],
                                           fontSize: 12,
                                         ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 8),
                                       Row(
@@ -985,9 +988,12 @@ void _toggleFavorite() async {
                                           const SizedBox(width: 8),
                                           Icon(Icons.access_time, color: Colors.grey[400], size: 14),
                                           const SizedBox(width: 4),
-                                          Text(
-                                            course.duration,
-                                            style: const TextStyle(fontSize: 12),
+                                          Flexible(
+                                            child: Text(
+                                              course.duration,
+                                              style: const TextStyle(fontSize: 12),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -1014,6 +1020,8 @@ void _toggleFavorite() async {
                                               color: Colors.blue[700],
                                               fontSize: 10,
                                             ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       ],

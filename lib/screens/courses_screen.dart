@@ -327,10 +327,11 @@ void _toggleFavorite(Course course) async {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+    return SafeArea(
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -340,9 +341,9 @@ void _toggleFavorite(Course course) async {
                   Row(
                     children: [
                       Container(
-                        width: 40,
-                        height: 40,
-                        padding: const EdgeInsets.all(6),
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        height: MediaQuery.of(context).size.width * 0.1,
+                        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
@@ -757,7 +758,8 @@ Container(
               child: CircularProgressIndicator(),
             ),
           ),
-      ],
+        ],
+      ),
     );
   }
   
