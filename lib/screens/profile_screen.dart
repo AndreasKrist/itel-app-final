@@ -2026,9 +2026,9 @@ Widget _buildCoursesTab() {
           ],
         ),
       ),
-      
+
       const SizedBox(height: 24),
-      
+
       // Membership Tiers
       Text(
         'Available Membership Plans',

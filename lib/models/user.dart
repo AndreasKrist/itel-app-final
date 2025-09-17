@@ -195,7 +195,7 @@ class User {
     email: 'user@example.com', // Generic email
     phone: '+XX XXXXXXXXXX', // Generic phone
     company: 'Company Name', // Generic company
-    tier: MembershipTier.tier1,
+    tier: MembershipTier.standard,
     membershipExpiryDate: 'March 7, 2027',
     favoriteCoursesIds: [], // Start with empty favorites - will be loaded from Firebase
     enrolledCourses: [], // Start with empty enrollments - will be loaded from Firebase

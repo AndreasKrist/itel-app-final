@@ -30,7 +30,7 @@ class AuthService {
         // Use empty strings/defaults for other required fields
         phone: '+62 821xxxxxxxx', // Default phone
         company: 'Lilo Store LTD', // Default company
-        tier: MembershipTier.tier1, // Default tier for all signed-up users
+        tier: MembershipTier.standard, // Default tier for all signed-up users
         membershipExpiryDate: 'March 7, 2027', // Default expiry
       );
     } catch (e) {
@@ -130,7 +130,7 @@ Future<void> loadUserData() async {
         email: firebaseUser.email ?? '',
         phone: '', // Empty phone instead of hardcoded number
         company: '', // Empty company instead of hardcoded company
-        tier: MembershipTier.tier1,
+        tier: MembershipTier.standard,
         membershipExpiryDate: 'March 7, 2027',
         favoriteCoursesIds: [], // Pass the loaded favorites
         enrolledCourses: [], // Empty enrolled courses for new users
@@ -249,7 +249,7 @@ MembershipTier _getTierFromString(String? tierString) {
             email: userCredential.user!.email ?? '',
             phone: '', // Empty phone instead of hardcoded number
             company: '', // Empty company instead of hardcoded company
-            tier: MembershipTier.tier1,
+            tier: MembershipTier.standard,
             membershipExpiryDate: 'March 7, 2027',
             favoriteCoursesIds: [],
           );
@@ -310,7 +310,7 @@ MembershipTier _getTierFromString(String? tierString) {
           email: email,
           phone: '', // Empty phone instead of hardcoded number
           company: '', // Empty company instead of hardcoded company
-          tier: MembershipTier.tier1,
+          tier: MembershipTier.standard,
           membershipExpiryDate: 'March 7, 2027',
           favoriteCoursesIds: [],
         );

@@ -359,37 +359,57 @@ void _toggleFavorite() async {
     try {
       // First, track the course access (lightweight enrollment for complementary courses)
       await _trackCourseAccess();
-      
+
       // Base Moodle URL
       final moodleSiteUrl = 'https://lms.itel.com.sg';
-      
+
       // Get course ID if available
       final courseId = widget.course.moodleCourseId;
-      
-      // For mobile app, we need to include the course ID in the deep link if available
-      String moodleAppUrl;
+
+      // Try multiple app URL schemes in order of preference
+      List<String> moodleAppUrls = [];
+
       if (courseId != null) {
-        // Format: moodlemobile://link=https://moodle.site/enrol/index.php?id=123 (for enrollment page)
-        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl/enrol/index.php?id=$courseId';
+        // 1. Try your custom Moodle app scheme (replace 'yourappscheme' with your actual scheme)
+        moodleAppUrls.add('itelmooodleapp://link=$moodleSiteUrl/enrol/index.php?id=$courseId');
+        // 2. Try official Moodle app as fallback
+        moodleAppUrls.add('moodlemobile://link=$moodleSiteUrl/enrol/index.php?id=$courseId');
       } else {
         // Default to site homepage if no course ID
-        moodleAppUrl = 'moodlemobile://link=$moodleSiteUrl';
+        moodleAppUrls.add('itelmooodleapp://link=$moodleSiteUrl');
+        moodleAppUrls.add('moodlemobile://link=$moodleSiteUrl');
       }
-      
-      // Try to launch Moodle mobile app first
-      final canLaunchMoodleApp = await canLaunchUrl(Uri.parse(moodleAppUrl));
-      
-      if (canLaunchMoodleApp) {
-        // Show message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Opening Moodle app...'))
-        );
-        
-        // Launch the Moodle mobile app with deep link to course
-        await launchUrl(Uri.parse(moodleAppUrl));
-        return;
+
+      // Try to launch apps in order of preference
+      bool appLaunched = false;
+      for (String appUrl in moodleAppUrls) {
+        try {
+          final canLaunchApp = await canLaunchUrl(Uri.parse(appUrl));
+          if (canLaunchApp) {
+            // Show message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Opening ITEL Moodle app...'))
+            );
+
+            // Launch the app with deep link to course
+            await launchUrl(Uri.parse(appUrl));
+            appLaunched = true;
+            break;
+          }
+        } catch (e) {
+          print('Failed to launch $appUrl: $e');
+          continue;
+        }
       }
-      
+
+      if (appLaunched) return;
+
+      // If no app was launched, show dialog to encourage app download
+      if (context.mounted) {
+        final shouldContinue = await _showMoodleAppDialog(context);
+        if (!shouldContinue) return;
+      }
+
       // For browser, create a URL that will redirect to the course after login
       String webUrl;
       if (courseId != null) {
@@ -399,12 +419,12 @@ void _toggleFavorite() async {
         // Default to login page
         webUrl = '$moodleSiteUrl/login/index.php';
       }
-      
+
       // Show message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Opening Moodle website...'))
       );
-      
+
       // Launch in browser
       await launchUrl(
         Uri.parse(webUrl),
@@ -418,6 +438,90 @@ void _toggleFavorite() async {
         );
       }
     }
+  }
+
+  // Show dialog encouraging users to download ITEL Moodle app
+  Future<bool> _showMoodleAppDialog(BuildContext context) async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Better Learning Experience'),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'For the best learning experience, we recommend using the ITEL Moodle mobile app.',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 12),
+              Text(
+                'App benefits:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text('• Offline course access'),
+              Text('• Better mobile interface'),
+              Text('• Push notifications'),
+              Text('• Faster loading'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Continue in Browser'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).pop(false);
+                // Replace with your actual app store URLs
+                const appStoreUrl = 'https://apps.apple.com/app/your-itel-moodle-app'; // iOS
+                const playStoreUrl = 'https://play.google.com/store/apps/details?id=your.itel.moodle.app'; // Android
+
+                try {
+                  // Try to determine platform and open appropriate store
+                  // For now, let's try Android first then iOS
+                  bool launched = false;
+
+                  try {
+                    if (await canLaunchUrl(Uri.parse(playStoreUrl))) {
+                      await launchUrl(Uri.parse(playStoreUrl), mode: LaunchMode.externalApplication);
+                      launched = true;
+                    }
+                  } catch (e) {
+                    print('Failed to open Play Store: $e');
+                  }
+
+                  if (!launched) {
+                    try {
+                      if (await canLaunchUrl(Uri.parse(appStoreUrl))) {
+                        await launchUrl(Uri.parse(appStoreUrl), mode: LaunchMode.externalApplication);
+                        launched = true;
+                      }
+                    } catch (e) {
+                      print('Failed to open App Store: $e');
+                    }
+                  }
+
+                  if (!launched) {
+                    // Fallback: show a message with instructions
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please search for "ITEL Moodle" in your app store'),
+                        duration: Duration(seconds: 4),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  print('Error opening app store: $e');
+                }
+              },
+              child: const Text('Download App'),
+            ),
+          ],
+        );
+      },
+    ) ?? false;
   }
 
   // Track access to complementary courses (lightweight enrollment)
