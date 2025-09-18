@@ -233,9 +233,11 @@ void _toggleFavorite(Course course) async {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
+          Container(
+            color: Colors.blue[700],
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
@@ -262,20 +264,21 @@ void _toggleFavorite(Course course) async {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
-                    'Technology Service Training Provider',
+                    'Technology Training',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue[800],
+                          color: Colors.white,
                         ),
                     textAlign: TextAlign.right,
                   ),
                 ),
               ),
               ],
+              ),
             ),
           ),
-          const SizedBox(height: 24),
-          
+          const SizedBox(height: 12),
+
           // Search bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -321,9 +324,9 @@ void _toggleFavorite(Course course) async {
             ),
             ),
           ),
-          
-          const SizedBox(height: 24),
-          
+
+          const SizedBox(height: 16),
+
           // Search results or regular content
           if (_isSearching) ...[
             Padding(
