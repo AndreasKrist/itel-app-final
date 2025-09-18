@@ -43,6 +43,80 @@ class TrendingItem {
     this.eventFormat,
     this.eventLearningPoints,
   });
+
+  // JSON serialization methods
+  factory TrendingItem.fromJson(Map<String, dynamic> json) {
+    return TrendingItem(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      category: json['category'] as String,
+      type: _stringToTrendingItemType(json['type'] as String),
+      date: json['date'] as String?,
+      readTime: json['readTime'] as String?,
+      imageUrl: json['imageUrl'] as String?,
+      customLink: json['customLink'] as String?,
+      description: json['description'] as String?,
+      tags: (json['tags'] as List<dynamic>?)?.cast<String>(),
+      fullContent: json['fullContent'] as String?,
+      eventTime: json['eventTime'] as String?,
+      eventLocation: json['eventLocation'] as String?,
+      eventFormat: json['eventFormat'] as String?,
+      eventLearningPoints: (json['eventLearningPoints'] as List<dynamic>?)?.cast<String>(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'category': category,
+      'type': _trendingItemTypeToString(type),
+      'date': date,
+      'readTime': readTime,
+      'imageUrl': imageUrl,
+      'customLink': customLink,
+      'description': description,
+      'tags': tags,
+      'fullContent': fullContent,
+      'eventTime': eventTime,
+      'eventLocation': eventLocation,
+      'eventFormat': eventFormat,
+      'eventLearningPoints': eventLearningPoints,
+    };
+  }
+
+  // Helper methods for enum conversion
+  static TrendingItemType _stringToTrendingItemType(String typeString) {
+    switch (typeString) {
+      case 'upcomingEvents':
+        return TrendingItemType.upcomingEvents;
+      case 'coursePromotion':
+        return TrendingItemType.coursePromotion;
+      case 'featuredArticles':
+        return TrendingItemType.featuredArticles;
+      case 'techTipsOfTheWeek':
+        return TrendingItemType.techTipsOfTheWeek;
+      case 'courseAssessor':
+        return TrendingItemType.courseAssessor;
+      default:
+        throw ArgumentError('Unknown TrendingItemType: $typeString');
+    }
+  }
+
+  static String _trendingItemTypeToString(TrendingItemType type) {
+    switch (type) {
+      case TrendingItemType.upcomingEvents:
+        return 'upcomingEvents';
+      case TrendingItemType.coursePromotion:
+        return 'coursePromotion';
+      case TrendingItemType.featuredArticles:
+        return 'featuredArticles';
+      case TrendingItemType.techTipsOfTheWeek:
+        return 'techTipsOfTheWeek';
+      case TrendingItemType.courseAssessor:
+        return 'courseAssessor';
+    }
+  }
   
   static List<TrendingItem> sampleItems = [
     TrendingItem(

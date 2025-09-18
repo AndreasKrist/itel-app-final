@@ -1,0 +1,64 @@
+{
+  "lastUpdated": "2025-01-20T10:00:00Z",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "tip1",
+      "title": "10 Essential Windows Shortcuts Every User Should Know",
+      "category": "TechTips of the Week",
+      "type": "techTipsOfTheWeek",
+      "date": "January 29, 2025",
+      "imageUrl": "",
+      "description": "Boost your productivity with these 10 powerful Windows shortcuts that will save you time and make your computing experience more efficient.",
+      "tags": ["Windows", "Shortcuts", "Productivity"],
+      "fullContent": "Master these 10 essential Windows shortcuts to dramatically improve your productivity and streamline your daily computing tasks:\n\n1. Windows Key + L - Lock Your Computer\nInstantly lock your screen when stepping away from your desk. This is crucial for maintaining security in shared workspaces.\n\n2. Alt + Tab - Switch Between Applications\nQuickly cycle through open applications without using your mouse. Hold Alt and press Tab repeatedly to navigate between programs.\n\n3. Windows Key + D - Show/Hide Desktop\nInstantly minimize all windows to access your desktop, or restore them with the same shortcut.\n\n4. Ctrl + Shift + Esc - Open Task Manager\nDirect access to Task Manager without going through Ctrl+Alt+Del. Perfect for managing unresponsive applications.\n\n5. Windows Key + I - Open Settings\nQuickly access Windows Settings instead of navigating through menus.\n\n6. Windows Key + S - Open Search\nInstantly open the Windows search function to find files, applications, or settings.\n\n7. Ctrl + C, Ctrl + V, Ctrl + X - Copy, Paste, Cut\nThe holy trinity of productivity shortcuts. Essential for moving text, files, and data efficiently.\n\n8. Windows Key + Arrow Keys - Snap Windows\nUse left/right arrows to snap windows to half the screen, or up/down to maximize/minimize windows.\n\n9. Alt + F4 - Close Current Window\nQuickly close the active window or application without clicking the X button.\n\n10. Windows Key + V - Clipboard History\nAccess your clipboard history to paste from multiple copied items (requires Windows 10 version 1809 or later).\n\nPro Tip: Practice these shortcuts daily for a week, and they'll become second nature. Your mouse will thank you for the reduced workload!\n\nBonus: Windows Key + Period (.) opens the emoji panel for adding expressions to your messages! 😊"
+    },
+    {
+      "id": "course1",
+      "title": "Adobe Photoshop Complete Level 1",
+      "category": "Course Promotion",
+      "type": "coursePromotion",
+      "customLink": "course://102",
+      "description": "Master the fundamentals of Adobe Photoshop with our comprehensive Level 1 course. Perfect for beginners looking to develop professional design skills.",
+      "tags": ["Adobe", "Photoshop", "Design"]
+    },
+    {
+      "id": "assess1",
+      "title": "PTSA - Prelim Tech Skills Assessor",
+      "category": "Course Assessor",
+      "type": "courseAssessor",
+      "customLink": "https://itel-ptsa.vercel.app/",
+      "description": "Assess your preliminary technology skills and get personalized learning recommendations.",
+      "tags": ["Assessment", "Skills", "PTSA"]
+    },
+    {
+      "id": "course2",
+      "title": "Microsoft Excel Visual Basic Applications (VBA)",
+      "category": "Course Promotion",
+      "type": "coursePromotion",
+      "customLink": "course://79",
+      "description": "Automate your Excel workflows and boost productivity with VBA programming. Learn to create powerful macros and custom applications.",
+      "tags": ["Microsoft", "Excel", "VBA"]
+    },
+    {
+      "id": "event1",
+      "title": "Tech Skill-Up Festival 2025",
+      "category": "Upcoming Events",
+      "type": "upcomingEvents",
+      "date": "March 12, 2025",
+      "imageUrl": "assets/images/techskill.png",
+      "customLink": "https://itel.com.sg/itel-tech-skill-up-festival-2025/",
+      "description": "A hands-on workshop introducing the fundamentals of artificial intelligence and machine learning for beginners.",
+      "tags": ["Skill", "Course", "Workshop"],
+      "eventTime": "09:00 AM - 05:00 PM",
+      "eventLocation": "ITEL Training Center, Singapore",
+      "eventFormat": "In-person workshop",
+      "eventLearningPoints": [
+        "Latest industry trends and technologies",
+        "Hands-on practical skills and techniques",
+        "Networking opportunities with industry experts",
+        "Certificate of participation"
+      ]
+    }
+  ]
+}

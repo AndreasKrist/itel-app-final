@@ -6,6 +6,7 @@ import '../widgets/course_card.dart';
 import '../widgets/trending_card.dart';
 import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
+import '../services/trending_content_service.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(String)? onCategorySelected;
@@ -18,24 +19,46 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Course> courses = Course.sampleCourses;
-  // Get one item from each category for home screen trending section
-  List<TrendingItem> trendingItems = _getHomeTrendingItems();
-  final bool _isLoading = false;
+  List<TrendingItem> trendingItems = [];
+  bool _isLoading = true;
+  final TrendingContentService _contentService = TrendingContentService();
   
   // Service instances
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AuthService _authService = AuthService();
-  
+
   // Search controller and query
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   bool _isSearching = false;
-  
+
   @override
   void initState() {
     super.initState();
     // Add listener to search controller
     _searchController.addListener(_onSearchChanged);
+    // Load trending content
+    _loadTrendingContent();
+  }
+
+  Future<void> _loadTrendingContent() async {
+    try {
+      final allItems = await _contentService.getTrendingContent();
+      if (mounted) {
+        setState(() {
+          trendingItems = _getHomeTrendingItems(allItems);
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      // Fallback to static content if dynamic loading fails
+      if (mounted) {
+        setState(() {
+          trendingItems = _getHomeTrendingItems(TrendingItem.sampleItems);
+          _isLoading = false;
+        });
+      }
+    }
   }
   
   @override
@@ -169,8 +192,7 @@ void _toggleFavorite(Course course) async {
   }
 
   // Get trending items for home screen - one from each category
-  static List<TrendingItem> _getHomeTrendingItems() {
-    final allItems = TrendingItem.sampleItems;
+  static List<TrendingItem> _getHomeTrendingItems(List<TrendingItem> allItems) {
     List<TrendingItem> homeItems = [];
     
     // Get one item from each category
@@ -523,15 +545,29 @@ void _toggleFavorite(Course course) async {
                         ),
                   ),
                   const SizedBox(height: 16),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: trendingItems.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) => TrendingCard(
-                      item: trendingItems[index],
-                    ),
-                  ),
+                  _isLoading
+                      ? const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : trendingItems.isEmpty
+                          ? const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Text('No trending content available'),
+                              ),
+                            )
+                          : ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: trendingItems.length,
+                              separatorBuilder: (context, index) => const SizedBox(height: 12),
+                              itemBuilder: (context, index) => TrendingCard(
+                                item: trendingItems[index],
+                              ),
+                            ),
                 ],
               ),
             ),

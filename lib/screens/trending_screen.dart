@@ -2,14 +2,100 @@ import 'package:flutter/material.dart';
 import '../models/trending_item.dart';
 import '../widgets/trending_card.dart';
 import '../utils/link_handler.dart';
+import '../services/trending_content_service.dart';
 
-
-class TrendingScreen extends StatelessWidget {
+class TrendingScreen extends StatefulWidget {
   const TrendingScreen({super.key});
 
   @override
+  State<TrendingScreen> createState() => _TrendingScreenState();
+}
+
+class _TrendingScreenState extends State<TrendingScreen> {
+  final TrendingContentService _contentService = TrendingContentService();
+  List<TrendingItem> _allItems = [];
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTrendingContent();
+  }
+
+  Future<void> _loadTrendingContent() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      final items = await _contentService.getTrendingContent();
+
+      if (mounted) {
+        setState(() {
+          _allItems = items;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _allItems = TrendingItem.sampleItems; // Fallback to hardcoded content
+          _isLoading = false;
+          _errorMessage = 'Using offline content';
+        });
+      }
+    }
+  }
+
+  Future<void> _refreshContent() async {
+    try {
+      final items = await _contentService.refreshContent();
+      if (mounted) {
+        setState(() {
+          _allItems = items;
+          _errorMessage = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Content updated successfully!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to refresh: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<TrendingItem> allItems = TrendingItem.sampleItems;
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Loading trending content...'),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final List<TrendingItem> allItems = _allItems;
     
     // Group items by type
     final List<TrendingItem> upcomingEvents = allItems
@@ -29,43 +115,88 @@ class TrendingScreen extends StatelessWidget {
         .toList();
 
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      child: RefreshIndicator(
+        onRefresh: _refreshContent,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(), // Enable pull-to-refresh
+          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.1,
-                height: MediaQuery.of(context).size.width * 0.1,
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
+              Row(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.1,
+                    height: MediaQuery.of(context).size.width * 0.1,
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Image.asset(
-                  'assets/images/itel.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                "What's Trending",
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    child: Image.asset(
+                      'assets/images/itel.png',
+                      fit: BoxFit.contain,
                     ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      "What's Trending",
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                  // Refresh button
+                  IconButton(
+                    onPressed: _refreshContent,
+                    icon: const Icon(Icons.refresh),
+                    tooltip: 'Refresh content',
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 24),
+
+              // Error message display
+              if (_errorMessage != null) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.orange[200]!),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.orange[700],
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _errorMessage!,
+                          style: TextStyle(
+                            color: Colors.orange[700],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: 24),
           
           // Upcoming Events section
           if (upcomingEvents.isNotEmpty) ...[
@@ -195,8 +326,9 @@ class TrendingScreen extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
+            ],
+          ),
+        ),
       ),
     );
   }
