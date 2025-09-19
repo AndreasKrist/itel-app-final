@@ -7,6 +7,7 @@ import '../widgets/trending_card.dart';
 import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
 import '../services/trending_content_service.dart';
+import '../services/course_remote_config_service.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(String)? onCategorySelected;
@@ -18,11 +19,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Course> courses = Course.sampleCourses;
+  List<Course> courses = [];
   List<TrendingItem> trendingItems = [];
   bool _isLoading = true;
   final TrendingContentService _contentService = TrendingContentService();
-  
+  final CourseRemoteConfigService _courseRemoteConfigService = CourseRemoteConfigService();
+
   // Service instances
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AuthService _authService = AuthService();
@@ -37,30 +39,70 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Add listener to search controller
     _searchController.addListener(_onSearchChanged);
-    // Load trending content
-    _loadTrendingContent();
+    // Load content
+    _loadContent();
   }
 
-  Future<void> _loadTrendingContent() async {
+  Future<void> _loadContent() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      final allItems = await _contentService.getTrendingContent();
+      // Load courses and trending content concurrently
+      final results = await Future.wait([
+        _courseRemoteConfigService.getRemoteCourses(),
+        _contentService.getTrendingContent(),
+      ]);
+
       if (mounted) {
         setState(() {
-          trendingItems = _getHomeTrendingItems(allItems);
+          courses = results[0] as List<Course>;
+          trendingItems = _getHomeTrendingItems(results[1] as List<TrendingItem>);
           _isLoading = false;
         });
       }
     } catch (e) {
-      // Fallback to static content if dynamic loading fails
+      print('Error loading content: $e');
+
+      // Fallback to sample courses if remote loading fails
       if (mounted) {
         setState(() {
-          trendingItems = _getHomeTrendingItems(TrendingItem.sampleItems);
+          courses = Course.sampleCourses;
+          trendingItems = _getHomeTrendingItems([]);
           _isLoading = false;
         });
       }
     }
   }
-  
+
+  Future<void> _refreshContent() async {
+    try {
+      // Force refresh both courses and trending content
+      final results = await Future.wait([
+        _courseRemoteConfigService.refreshCourses(),
+        _contentService.refreshContent(),
+      ]);
+
+      if (mounted) {
+        setState(() {
+          courses = results[0] as List<Course>;
+          trendingItems = _getHomeTrendingItems(results[1] as List<TrendingItem>);
+        });
+      }
+    } catch (e) {
+      print('Error refreshing content: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to refresh content: $e'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
@@ -229,10 +271,12 @@ void _toggleFavorite(Course course) async {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return RefreshIndicator(
+      onRefresh: _refreshContent,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Container(
             color: Colors.blue[700],
             child: Padding(
@@ -576,6 +620,7 @@ void _toggleFavorite(Course course) async {
             ),
           ],
         ],
+        ),
       ),
     );
   }

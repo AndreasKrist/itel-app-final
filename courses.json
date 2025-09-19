@@ -1,0 +1,188 @@
+{
+  "courses": [
+    {
+      "id": "1",
+      "courseCode": "SEC101",
+      "title": "Network Security Fundamentals",
+      "category": "Cybersecurity",
+      "certType": "CEH",
+      "rating": 4.8,
+      "duration": "5 days",
+      "price": "$3,215.50",
+      "funding": "Eligible for funding",
+      "isFavorite": false,
+      "deliveryMethods": ["OLL", "ILT"],
+      "startDate": "March 15, 2025",
+      "nextAvailableDate": "April 20, 2025",
+      "description": "This comprehensive course introduces students to the fundamentals of network security, covering essential concepts and techniques to protect digital information and infrastructure from cyber threats.",
+      "outline": {
+        "Lesson 1: Introduction to Network Security": [
+          "Understanding security principles",
+          "Threat landscape overview",
+          "Security objectives and strategies"
+        ],
+        "Lesson 2: Threat Assessment": [
+          "Identifying vulnerabilities",
+          "Risk assessment methodologies",
+          "Threat modeling techniques"
+        ],
+        "Lesson 3: Security Protocols": [
+          "Encryption fundamentals",
+          "Authentication protocols",
+          "Secure communication channels"
+        ],
+        "Lesson 4: Penetration Testing": [
+          "Testing methodologies",
+          "Tool selection and usage",
+          "Reporting and analysis"
+        ]
+      },
+      "prerequisites": [
+        "Basic understanding of networking concepts",
+        "Familiarity with operating systems",
+        "Knowledge of TCP/IP protocols"
+      ],
+      "whoShouldAttend": "IT professionals, network administrators, security specialists, and anyone interested in building a career in cybersecurity.",
+      "importantNotes": "Participants are required to bring their own laptops. All software needed for the course will be provided.",
+      "feeStructure": {
+        "Full Course Fee": {
+          "Price": "$3,215.50"
+        },
+        "SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above": {
+          "Individual": "$1,740.50",
+          "Company Sponsored (Non-SME)": "$1,740.50",
+          "Company Sponsored (SME)": "$1,150.50"
+        },
+        "SG Citizens age 40 years old and above": {
+          "Individual": "$1,150.50",
+          "Company Sponsored (Non-SME)": "$1,150.50",
+          "Company Sponsored (SME)": "$1,150.50"
+        }
+      },
+      "progress": null,
+      "completionDate": null,
+      "moodleCourseId": null
+    },
+    {
+      "id": "2",
+      "courseCode": "CLD201",
+      "title": "Cloud Infrastructure Management",
+      "category": "Cloud Computing",
+      "certType": "CCNA",
+      "rating": 4.6,
+      "duration": "10 days",
+      "price": "$3,499.50",
+      "funding": "Not eligible for funding",
+      "isFavorite": false,
+      "deliveryMethods": ["OLL", "ILT"],
+      "startDate": "April 5, 2025",
+      "nextAvailableDate": "May 15, 2025",
+      "description": "Learn to design, implement, and manage cloud infrastructure across major platforms including AWS, Azure, and Google Cloud.",
+      "outline": {
+        "Lesson 1: Cloud Computing Fundamentals": [
+          "Cloud service models",
+          "Deployment models",
+          "Cloud architecture principles"
+        ],
+        "Lesson 2: AWS/Azure/GCP Services": [
+          "Compute services",
+          "Storage options",
+          "Networking in the cloud"
+        ],
+        "Lesson 3: Infrastructure as Code": [
+          "Configuration management",
+          "Terraform basics",
+          "Infrastructure automation"
+        ],
+        "Lesson 4: Cloud Security": [
+          "Identity and access management",
+          "Network security",
+          "Compliance frameworks"
+        ]
+      },
+      "prerequisites": [
+        "Basic understanding of IT infrastructure",
+        "Familiarity with virtualization concepts",
+        "Basic scripting or programming skills"
+      ],
+      "whoShouldAttend": "IT administrators, system engineers, DevOps professionals, and technical managers interested in cloud technologies.",
+      "importantNotes": "Students will need to create free accounts on AWS, Azure, and Google Cloud platforms before the course starts.",
+      "feeStructure": {
+        "Full Course Fee": {
+          "Price": "$3,499.50"
+        },
+        "SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above": {
+          "Individual": "$1,999.50",
+          "Company Sponsored (Non-SME)": "$1,999.50",
+          "Company Sponsored (SME)": "$1,299.50"
+        },
+        "SG Citizens age 40 years old and above": {
+          "Individual": "$1,299.50",
+          "Company Sponsored (Non-SME)": "$1,299.50",
+          "Company Sponsored (SME)": "$1,299.50"
+        }
+      },
+      "progress": null,
+      "completionDate": null,
+      "moodleCourseId": null
+    },
+    {
+      "id": "3",
+      "courseCode": "NET301",
+      "title": "Advanced Network Management",
+      "category": "Networking",
+      "certType": "CCNP",
+      "rating": 4.9,
+      "duration": "12 days",
+      "price": "$3,899.50",
+      "funding": "Eligible for funding",
+      "isFavorite": false,
+      "deliveryMethods": ["ILT"],
+      "startDate": "May 10, 2025",
+      "nextAvailableDate": "June 25, 2025",
+      "description": "An advanced course covering enterprise network management, complex routing protocols, and modern networking technologies.",
+      "outline": {
+        "Lesson 1: Advanced Routing Protocols": [
+          "BGP configuration and tuning",
+          "OSPF advanced features",
+          "Route redistribution and filtering"
+        ],
+        "Lesson 2: Network Design": [
+          "Enterprise network architecture",
+          "High availability design",
+          "Campus network design"
+        ],
+        "Lesson 3: Troubleshooting Methodologies": [
+          "Systematic troubleshooting approach",
+          "Protocol analysis",
+          "Root cause identification"
+        ]
+      },
+      "prerequisites": [
+        "CCNA certification or equivalent knowledge",
+        "At least 1 year of networking experience",
+        "Understanding of routing and switching fundamentals"
+      ],
+      "whoShouldAttend": "Network engineers, system administrators, and IT professionals looking to advance their networking knowledge.",
+      "importantNotes": "This course includes hands-on lab exercises on real networking equipment.",
+      "feeStructure": {
+        "Full Course Fee": {
+          "Price": "$3,899.50"
+        },
+        "SG Citizens aged 21 - 39 years old / PRs aged 21 years old and above": {
+          "Individual": "$2,199.50",
+          "Company Sponsored (Non-SME)": "$2,199.50",
+          "Company Sponsored (SME)": "$1,399.50"
+        },
+        "SG Citizens age 40 years old and above": {
+          "Individual": "$1,399.50",
+          "Company Sponsored (Non-SME)": "$1,399.50",
+          "Company Sponsored (SME)": "$1,399.50"
+        }
+      },
+      "progress": null,
+      "completionDate": null,
+      "moodleCourseId": null
+    }
+  ]
+}

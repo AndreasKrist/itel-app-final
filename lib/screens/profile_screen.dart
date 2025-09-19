@@ -7,6 +7,7 @@ import '../widgets/enrolled_course_card.dart';
 import '../models/enrolled_course.dart';
 import '../services/auth_service.dart';
 import '../services/user_preferences_service.dart';
+import '../services/course_remote_config_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/course_card.dart';//import 'course_outline_screen.dart';
@@ -34,6 +35,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
+
+  final CourseRemoteConfigService _courseRemoteConfigService = CourseRemoteConfigService();
+  List<Course> _allCourses = [];
   
 
 void _showEditProfileDialog() {
@@ -190,6 +194,25 @@ Future<void> _loadFavoritesFromFirebase() async {
   void initState() {
     super.initState();
     _reloadUserData();
+    _loadCourses();
+  }
+
+  Future<void> _loadCourses() async {
+    try {
+      final courses = await _courseRemoteConfigService.getRemoteCourses();
+      if (mounted) {
+        setState(() {
+          _allCourses = courses;
+        });
+      }
+    } catch (e) {
+      print('Error loading courses in profile: $e');
+      if (mounted) {
+        setState(() {
+          _allCourses = Course.sampleCourses; // Fallback
+        });
+      }
+    }
   }
 
   // Reload user data including favorites and enrollments
@@ -1128,9 +1151,9 @@ Widget _buildProfileTab() {
   
   // Get enrolled courses by matching them with their course data
   final enrolledCoursesList = currentUser.enrolledCourses.map((enrollment) {
-    final courseData = Course.sampleCourses.firstWhere(
+    final courseData = _allCourses.firstWhere(
       (c) => c.id == enrollment.courseId,
-      orElse: () => Course.sampleCourses.first, // Fallback
+      orElse: () => _allCourses.isNotEmpty ? _allCourses.first : Course.sampleCourses.first, // Fallback
     );
     return {
       'enrollment': enrollment,
@@ -1140,9 +1163,9 @@ Widget _buildProfileTab() {
   
   // Helper function to check if a course is free/complimentary
   bool isFreeComplimentaryCourse(String courseId) {
-    final course = Course.sampleCourses.firstWhere(
+    final course = _allCourses.firstWhere(
       (c) => c.id == courseId,
-      orElse: () => Course.sampleCourses.first,
+      orElse: () => _allCourses.isNotEmpty ? _allCourses.first : Course.sampleCourses.first,
     );
     return course.price == '\$0' || course.price.contains('Free') || course.funding == 'Complimentary';
   }
@@ -1416,9 +1439,9 @@ Widget _buildProfileTab() {
                               isFreeComplimentaryCourse(e.courseId))
                   .map((enrollment) {
                     // Find the corresponding course data
-                    final courseData = Course.sampleCourses.firstWhere(
+                    final courseData = _allCourses.firstWhere(
                       (c) => c.id == enrollment.courseId,
-                      orElse: () => Course.sampleCourses.first, // Fallback
+                      orElse: () => _allCourses.isNotEmpty ? _allCourses.first : Course.sampleCourses.first, // Fallback
                     );
                     
                     return Padding(
@@ -1475,9 +1498,9 @@ Widget _buildProfileTab() {
                               !isFreeComplimentaryCourse(e.courseId))
                   .map((enrollment) {
                     // Find the corresponding course data
-                    final courseData = Course.sampleCourses.firstWhere(
+                    final courseData = _allCourses.firstWhere(
                       (c) => c.id == enrollment.courseId,
-                      orElse: () => Course.sampleCourses.first, // Fallback
+                      orElse: () => _allCourses.isNotEmpty ? _allCourses.first : Course.sampleCourses.first, // Fallback
                     );
                     
                     return Padding(
@@ -1636,9 +1659,9 @@ Widget _buildProfileTab() {
                 .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
                 .map((enrollment) {
                 // Find the corresponding course data
-                final courseData = Course.sampleCourses.firstWhere(
+                final courseData = _allCourses.firstWhere(
                   (c) => c.id == enrollment.courseId,
-                  orElse: () => Course.sampleCourses.first, // Fallback
+                  orElse: () => _allCourses.isNotEmpty ? _allCourses.first : Course.sampleCourses.first, // Fallback
                 );
                 
                 return Padding(
@@ -1834,7 +1857,7 @@ Widget _buildCoursesTab() {
   
   // Get all favorited courses
   final favoriteIds = User.currentUser.favoriteCoursesIds;
-  final favoriteCourses = Course.sampleCourses
+  final favoriteCourses = _allCourses
       .where((course) => favoriteIds.contains(course.id))
       .toList();
 

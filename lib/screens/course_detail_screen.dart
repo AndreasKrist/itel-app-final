@@ -6,6 +6,7 @@ import '../widgets/enquiry_form.dart';
 import '../models/enrolled_course.dart';
 import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
+import '../services/course_remote_config_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,11 +26,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   // All state variables
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AuthService _authService = AuthService();
+  final CourseRemoteConfigService _courseRemoteConfigService = CourseRemoteConfigService();
   bool _isLoading = false;
   late bool isFavorite;
   bool _showEnquiryForm = false;
   final Map<String, bool> _expandedSections = {};
-  late List<Course> relatedCourses;
+  List<Course> relatedCourses = [];
 
   @override
   void initState() {
@@ -37,20 +39,47 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     isFavorite = User.currentUser.favoriteCoursesIds.contains(widget.course.id);
     print('Initial isFavorite state: $isFavorite for course ${widget.course.id}');
     print('Current favorites in initState: ${User.currentUser.favoriteCoursesIds}');
-    
+
     // Initialize all outline sections as collapsed
     if (widget.course.outline != null) {
       for (var key in widget.course.outline!.keys) {
         _expandedSections[key] = false;
       }
     }
-    
-    // Get related courses (same category or certification type)
-    relatedCourses = Course.sampleCourses.where((course) {
-      return course.id != widget.course.id && 
-             (course.category == widget.course.category || 
+
+    // Load related courses from remote
+    _loadRelatedCourses();
+  }
+
+  Future<void> _loadRelatedCourses() async {
+    try {
+      final allCourses = await _courseRemoteConfigService.getRemoteCourses();
+
+      // Get related courses (same category or certification type)
+      final filtered = allCourses.where((course) {
+        return course.id != widget.course.id &&
+             (course.category == widget.course.category ||
               course.certType == widget.course.certType);
-    }).take(5).toList();
+      }).take(5).toList();
+
+      if (mounted) {
+        setState(() {
+          relatedCourses = filtered;
+        });
+      }
+    } catch (e) {
+      print('Error loading related courses: $e');
+      // Fallback to sample courses
+      if (mounted) {
+        setState(() {
+          relatedCourses = Course.sampleCourses.where((course) {
+            return course.id != widget.course.id &&
+                 (course.category == widget.course.category ||
+                  course.certType == widget.course.certType);
+          }).take(5).toList();
+        });
+      }
+    }
   }
 
   // Replace the _joinFreeClass method in course_detail_screen.dart

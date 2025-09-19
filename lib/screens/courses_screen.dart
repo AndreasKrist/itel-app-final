@@ -7,6 +7,7 @@ import '../widgets/filter_modal.dart';
 import '../widgets/sort_modal.dart';
 import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
+import '../services/course_remote_config_service.dart';
 
 class CoursesScreen extends StatefulWidget {
   final String? initialCategory;
@@ -18,7 +19,7 @@ class CoursesScreen extends StatefulWidget {
 }
 
 class _CoursesScreenState extends State<CoursesScreen> {
-  List<Course> courses = Course.sampleCourses;
+  List<Course> courses = [];
   Map<String, String> activeFilters = {
     'funding': 'all',
     'duration': 'all',
@@ -28,11 +29,12 @@ class _CoursesScreenState extends State<CoursesScreen> {
   String activeSort = 'none';
   bool showFilters = false;
   bool showSortOptions = false;
-  final bool _isLoading = false;
-  
+  bool _isLoading = true;
+
   // Service instances
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AuthService _authService = AuthService();
+  final CourseRemoteConfigService _courseRemoteConfigService = CourseRemoteConfigService();
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   bool _isSearching = false;
@@ -42,10 +44,84 @@ void initState() {
   super.initState();
   // Add listener to search controller
   _searchController.addListener(_onSearchChanged);
-  
+
   // Set initial category if provided
   if (widget.initialCategory != null) {
     activeFilters['category'] = widget.initialCategory!;
+  }
+
+  // Load courses from remote configuration
+  _loadCourses();
+}
+
+Future<void> _loadCourses() async {
+  try {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final remoteCourses = await _courseRemoteConfigService.getRemoteCourses();
+
+    setState(() {
+      courses = remoteCourses;
+      _isLoading = false;
+    });
+
+    print('Loaded ${courses.length} courses from remote configuration');
+  } catch (e) {
+    print('Error loading courses: $e');
+
+    // Fallback to sample courses if remote loading fails
+    setState(() {
+      courses = Course.sampleCourses;
+      _isLoading = false;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Using offline course data'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+}
+
+Future<void> _refreshCourses() async {
+  try {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final remoteCourses = await _courseRemoteConfigService.refreshCourses();
+
+    setState(() {
+      courses = remoteCourses;
+      _isLoading = false;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Courses updated successfully'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  } catch (e) {
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to refresh courses: $e'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
   }
 }
 
@@ -330,8 +406,11 @@ void _toggleFavorite(Course course) async {
     return SafeArea(
       child: Stack(
         children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+          RefreshIndicator(
+            onRefresh: _refreshCourses,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+              physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -670,6 +749,7 @@ Container(
             ],
           ),
         ),
+        ),
         
         // Filter modal
         if (showFilters)
@@ -754,7 +834,7 @@ Container(
         if (_isLoading)
           Container(
             color: Colors.black.withOpacity(0.3),
-            child: Center(
+            child: const Center(
               child: CircularProgressIndicator(),
             ),
           ),
