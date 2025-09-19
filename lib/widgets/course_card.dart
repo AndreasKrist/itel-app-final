@@ -33,10 +33,6 @@ class CourseCard extends StatelessWidget {
         );
       },
       child: Container(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height * 0.22,
-          maxHeight: MediaQuery.of(context).size.height * 0.32,
-        ),
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -153,7 +149,7 @@ class CourseCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Spacer(), // This pushes everything below to the bottom
+            const SizedBox(height: 20), // Perfect balance - not too tight, not too spacious
             // Optional status text (funding/progress/completion) - made bigger
             if (course.funding != null)
               Padding(

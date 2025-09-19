@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class FormSubmissionService {
-  // Use your deployed Google Apps Script web app URL
-  static const String scriptUrl = 'https://script.google.com/macros/s/AKfycbyZZmJy_lpqWOpfh8ZNlX9qRxnXdTXUuRGKynv56CnElD9bU4O57P4-rKNr_2R38ctFsw/exec';
+  // Replace this with your new deployed Google Apps Script web app URL
+  static const String scriptUrl = 'https://script.google.com/macros/s/AKfycbyVMQFMnnQ2IEwo7X7vAppgTxezoEa6d4pZP77eMLyMU67MVMJ3oqYS7wZ2dKsiVIEP/exec';
   
   /// Submits form data to the Google Sheets through Google Apps Script
   /// Returns a Future with success status and message
@@ -13,20 +13,20 @@ class FormSubmissionService {
       
       // Add timestamp in ISO format
       formData['timestamp'] = DateTime.now().toIso8601String();
-      
-      // Use URLEncoded form data instead of JSON
-      final body = formData.entries.map((e) => 
-        '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value.toString())}').join('&');
-      
+
+      // Convert form data to JSON
+      final jsonData = jsonEncode(formData);
+
       print('Sending request to: $scriptUrl');
-      
-      // Send the POST request with URLEncoded data
+      print('Request data: $jsonData');
+
+      // Send the POST request with JSON data
       final response = await http.post(
         Uri.parse(scriptUrl),
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
         },
-        body: body,
+        body: jsonData,
       ).timeout(const Duration(seconds: 30)); // Longer timeout
       
       print('Received response with status code: ${response.statusCode}');

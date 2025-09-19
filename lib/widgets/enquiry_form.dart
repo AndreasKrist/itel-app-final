@@ -29,9 +29,12 @@ class _EnquiryFormState extends State<EnquiryForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _occupationController = TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
-  final TextEditingController _consultantController = TextEditingController();
+
+  String? _selectedAgeGroup;
+  String? _selectedJobIndustry;
+  String? _selectedJobTitle;
+  String? _selectedConsultant;
   final TextEditingController _remarksController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
 
@@ -65,9 +68,6 @@ class _EnquiryFormState extends State<EnquiryForm> {
       _nameController.text = currentUser.name;
       _emailController.text = currentUser.email;
       _phoneController.text = currentUser.phone;
-      if (currentUser.company != null && currentUser.company!.isNotEmpty) {
-        _occupationController.text = currentUser.company!;
-      }
     }
   }
 
@@ -76,9 +76,7 @@ class _EnquiryFormState extends State<EnquiryForm> {
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _occupationController.dispose();
     _experienceController.dispose();
-    _consultantController.dispose();
     _remarksController.dispose();
     _detailsController.dispose();
     super.dispose();
@@ -103,12 +101,14 @@ void _submitForm() async {
         'name': _nameController.text,
         'email': _emailController.text,
         'phone': _phoneController.text,
-        'occupation': _occupationController.text,
+        'ageGroup': _selectedAgeGroup ?? '',
+        'jobIndustry': _selectedJobIndustry ?? '',
+        'jobTitle': _selectedJobTitle ?? '',
         'experience': _experienceController.text,
         'course': widget.course.title,
         'courseCode': widget.course.courseCode,
         'enquiryType': _getEnquiryTypes(),
-        'consultant': _consultantController.text,
+        'consultant': _selectedConsultant ?? '',
         'heardFrom': _getHeardFromSources(),
         'remarks': _remarksController.text,
         'joinMailingList': _joinMailingList.toString(),
@@ -117,8 +117,8 @@ void _submitForm() async {
       
       print("Form data prepared, submitting to service...");
       
-      // For testing, use mockSubmitEnquiry instead
-      final result = await FormSubmissionService.mockSubmitEnquiry(formData);
+      // Submit to Google Sheets via Google Apps Script
+      final result = await FormSubmissionService.submitEnquiry(formData);
       
       print("Form submission result: $result");
       
@@ -465,12 +465,104 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
                       },
                     ),
                     const SizedBox(height: 16),
-                    
-                    // Occupation
-                    _buildFieldLabel('Occupation', false),
-                    _buildTextField(
-                      controller: _occupationController,
-                      hintText: 'IT Manager, Student, Unemployed, etc.',
+
+                    // Age Group
+                    _buildFieldLabel('Age Group', true),
+                    _buildDropdown(
+                      value: _selectedAgeGroup,
+                      hint: 'Select your age group',
+                      items: ['Male', 'Female', 'Non-binary/Non-conforming'],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedAgeGroup = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select your age group';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Job Industry
+                    _buildFieldLabel('Job Industry / Sector', true),
+                    _buildDropdown(
+                      value: _selectedJobIndustry,
+                      hint: 'Select your Job Industry / Sector',
+                      items: [
+                        'Information Technology / IT Services',
+                        'Telecommunications',
+                        'Finance / Banking / Insurance',
+                        'Accounting / Audit / Tax',
+                        'Engineering (Mechanical, Electrical, Civil, etc.)',
+                        'Education / Training',
+                        'Healthcare / Medical / Pharmaceuticals',
+                        'Retail / E-Commerce',
+                        'Manufacturing/Production',
+                        'Construction / Property/Real Estate',
+                        'Oil & Gas / Energy / Utilities',
+                        'Transportation / Logistics/Supply Chain',
+                        'Hospitality / F&B / Tourism',
+                        'Legal / Law',
+                        'Government/Public Sector',
+                        'Media/Advertising/PR',
+                        'Arts / Design / Creative',
+                        'Human Resources / Recruitment',
+                        'Customer Service / Call Center',
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedJobIndustry = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select your job industry';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Job Title
+                    _buildFieldLabel('Job Title', true),
+                    _buildDropdown(
+                      value: _selectedJobTitle,
+                      hint: 'Select your Job Title',
+                      items: [
+                        'Administrative/Clerical',
+                        'Customer Service / Support',
+                        'Sales / Business Development',
+                        'Marketing / Digital Marketing',
+                        'Management / Operations',
+                        'Technical / IT Support',
+                        'Software / Web Development',
+                        'Data / Analytics / Research',
+                        'Engineering / Technical',
+                        'Human Resources / Recruitment',
+                        'Teaching/Training/Coaching',
+                        'Healthcare / Medical Services',
+                        'Creative / Design/Multimedia',
+                        'Legal / Compliance',
+                        'Finance / Accounting',
+                        'Project Management',
+                        'Student / Intern',
+                        'Entrepreneur / Business Owner',
+                        'Freelance / Consultant',
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedJobTitle = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select your job title';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16),
                     
@@ -533,8 +625,27 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
                     const SizedBox(height: 16),
                     
                     // Consultant
-                    _buildFieldLabel('Consultant Name, if any:', false),
-                    _buildTextField(controller: _consultantController),
+                    _buildFieldLabel('Consultant\'s Name', false),
+                    _buildDropdown(
+                      value: _selectedConsultant,
+                      hint: 'Kindly select the ITEL Representative who assisted you',
+                      items: [
+                        'Irish M',
+                        'Ann Loh',
+                        'Jovelyn Balili',
+                        'Leslie Carsula',
+                        'Stanley Lim',
+                        'Melvin Tan',
+                        'Marvin Costales',
+                        'Jennifer Tan',
+                        'Ian Morrison',
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedConsultant = value;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 16),
                     
                     // Where did you hear about ITEL
@@ -746,6 +857,57 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDropdown({
+    required String? value,
+    required String hint,
+    required List<String> items,
+    required void Function(String?) onChanged,
+    String? Function(String?)? validator,
+  }) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.blue[300]!),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.red[300]!),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      items: items.map((String item) {
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(
+            item,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[800],
+            ),
+          ),
+        );
+      }).toList(),
+      onChanged: onChanged,
+      validator: validator,
+      isExpanded: true,
+      icon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
     );
   }
 }
