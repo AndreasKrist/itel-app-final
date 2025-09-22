@@ -60,7 +60,7 @@ class _TrendingScreenState extends State<TrendingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Content updated successfully!'),
-            backgroundColor: Colors.green,
+            backgroundColor: Color(0xFF00FF00),
             duration: Duration(seconds: 2),
           ),
         );
@@ -178,7 +178,7 @@ class _TrendingScreenState extends State<TrendingScreen> {
                     children: [
                       Icon(
                         Icons.info_outline,
-                        color: Colors.orange[700],
+                        color: Color(0xFFFF6600),
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -186,7 +186,7 @@ class _TrendingScreenState extends State<TrendingScreen> {
                         child: Text(
                           _errorMessage!,
                           style: TextStyle(
-                            color: Colors.orange[700],
+                            color: Color(0xFFFF6600),
                             fontSize: 14,
                           ),
                         ),
@@ -291,14 +291,14 @@ class _TrendingScreenState extends State<TrendingScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Subscribe to our newsletter to get the latest news and updates about our courses and events.',
                   style: TextStyle(
-                    color: Colors.blue[800],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -312,7 +312,7 @@ class _TrendingScreenState extends State<TrendingScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[700],
+                    backgroundColor: Color(0xFF0056AC),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(

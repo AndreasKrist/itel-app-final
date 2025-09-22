@@ -226,7 +226,7 @@ void _submitForm() async {
                 ),
               ],
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: Color(0xFF00FF00),
             duration: Duration(seconds: 5),
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           ),
@@ -736,7 +736,7 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
                       child: ElevatedButton(
                         onPressed: _consentToPrivacyPolicy ? _submitForm : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[600],
+                          backgroundColor: Color(0xFF0056AC),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -842,7 +842,7 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
             child: Checkbox(
               value: value,
               onChanged: onChanged,
-              activeColor: Colors.blue[600],
+              activeColor: Color(0xFF0056AC),
             ),
           ),
           const SizedBox(width: 8),

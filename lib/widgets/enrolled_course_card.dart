@@ -30,13 +30,13 @@ class EnrolledCourseCard extends StatelessWidget {
   Color _getStatusColor() {
     switch (enrollment.status) {
       case EnrollmentStatus.pending:
-        return Colors.orange;
+        return Color(0xFFFF6600);
       case EnrollmentStatus.confirmed:
-        return Colors.blue;
+        return Color(0xFF0056AC);
       case EnrollmentStatus.active:
-        return Colors.green;
+        return Color(0xFF00FF00);
       case EnrollmentStatus.completed:
-        return Colors.purple;
+        return Color(0xFF9900FF);
       case EnrollmentStatus.cancelled:
         return Colors.red;
       default:
@@ -327,7 +327,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Colors.blue[700],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
               ],
@@ -338,7 +338,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
             LinearProgressIndicator(
               value: double.tryParse(enrollment.progress!.replaceAll(RegExp(r'[^0-9.]'), ''))! / 100,
               backgroundColor: Colors.grey[200],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF0056AC)!),
               borderRadius: BorderRadius.circular(4),
             ),
             const SizedBox(height: 12),
@@ -364,7 +364,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                     child: Icon(
                       Icons.computer,
                       size: 24,
-                      color: Colors.green[700],
+                      color: Color(0xFF00FF00),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -376,20 +376,20 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                           'Course Access',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.green[800],
+                            color: Color(0xFF00FF00),
                           ),
                         ),
                         Text(
                           'Online Session',
                           style: TextStyle(
-                            color: Colors.green[700],
+                            color: Color(0xFF00FF00),
                             fontSize: 13,
                           ),
                         ),
                         Text(
                           'Access course materials anytime',
                           style: TextStyle(
-                            color: Colors.green[600],
+                            color: Color(0xFF00FF00),
                             fontSize: 12,
                           ),
                         ),
@@ -419,7 +419,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                     child: Icon(
                       enrollment.isOnline ? Icons.computer : Icons.location_on,
                       size: 24,
-                      color: Colors.blue[700],
+                      color: Color(0xFF0056AC),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -431,13 +431,13 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                           'Next Session',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[800],
+                            color: Color(0xFF0056AC),
                           ),
                         ),
                         Text(
                           '${_formatDate(enrollment.nextSessionDate!)} • ${enrollment.nextSessionTime}',
                           style: TextStyle(
-                            color: Colors.blue[700],
+                            color: Color(0xFF0056AC),
                             fontSize: 13,
                           ),
                         ),
@@ -445,7 +445,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                         Text(
                           enrollment.isOnline ? 'Online Session' : enrollment.location ?? 'Location TBA',
                           style: TextStyle(
-                            color: Colors.blue[600],
+                            color: Color(0xFF0056AC),
                             fontSize: 12,
                           ),
                         ),
@@ -493,7 +493,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                     icon: const Icon(Icons.login, size: 16),
                     label: const Text('Access Course'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[600],
+                      backgroundColor: Color(0xFF00FF00),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       shape: RoundedRectangleBorder(
@@ -518,14 +518,14 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                         Icon(
                           Icons.hourglass_empty,
                           size: 16,
-                          color: Colors.orange[700],
+                          color: Color(0xFFFF6600),
                         ),
                         const SizedBox(width: 4),
                         Flexible(
                           child: Text(
                             'Enquiry Pending',
                             style: TextStyle(
-                              color: Colors.orange[700],
+                              color: Color(0xFFFF6600),
                               fontWeight: FontWeight.w500,
                               fontSize: 13,
                             ),
@@ -553,7 +553,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(color: Colors.green[300]!),
-                  foregroundColor: Colors.green[700],
+                  foregroundColor: Color(0xFF00FF00),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -577,13 +577,13 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                   Icon(
                     Icons.check_circle,
                     size: 20,
-                    color: Colors.green[700],
+                    color: Color(0xFF00FF00),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Course Completed',
                     style: TextStyle(
-                      color: Colors.green[700],
+                      color: Color(0xFF00FF00),
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),

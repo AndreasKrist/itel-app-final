@@ -196,7 +196,7 @@ class TrendingCard extends StatelessWidget {
                   child: Text(
                     'View Details',
                     style: TextStyle(
-                      color: Colors.orange[700]!,
+                      color: Color(0xFFFF6600)!,
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
                     ),
@@ -211,7 +211,7 @@ class TrendingCard extends StatelessWidget {
   }
   
   Color _getColorForType(TrendingItemType type) {
-    return Colors.blue[700]!;
+    return Color(0xFF0056AC)!;
   }
   
   Color _getLightColorForType(TrendingItemType type) {

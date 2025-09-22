@@ -250,7 +250,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Payment successful! Processing membership...'),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF00FF00),
         duration: Duration(seconds: 2),
       ),
     );
@@ -302,7 +302,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Payment - ${widget.tier.displayName}'),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: Color(0xFF0056AC),
         foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.close),
@@ -387,7 +387,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                  Icon(Icons.info_outline, color: Color(0xFF0056AC), size: 20),
                   const SizedBox(width: 8),
                   const Expanded(
                     child: Text(
@@ -407,13 +407,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.refresh, color: Colors.blue[700], size: 16),
+                  Icon(Icons.refresh, color: Color(0xFF0056AC), size: 16),
                   const SizedBox(width: 4),
                   Text(
                     'Status: ${_getStatusText(_paymentStatus)}',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.blue[700],
+                      color: Color(0xFF0056AC),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -431,7 +431,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               },
               icon: const Icon(Icons.check_circle),
               label: const Text('Complete Payment'),
-              backgroundColor: Colors.green,
+              backgroundColor: Color(0xFF00FF00),
               foregroundColor: Colors.white,
             )
           : null,
@@ -441,11 +441,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'PAID':
-        return Colors.green;
+        return Color(0xFF00FF00);
       case 'EXPIRED':
         return Colors.red;
       case 'PENDING':
-        return Colors.orange;
+        return Color(0xFFFF6600);
       default:
         return Colors.grey;
     }
@@ -492,7 +492,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: Colors.orange[700], size: 20),
+                    Icon(Icons.info_outline, color: Color(0xFFFF6600), size: 20),
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
@@ -519,7 +519,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Navigator.pop(context); // Close payment screen
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: _paymentStatus == 'PAID' ? Colors.green : Colors.red,
+              backgroundColor: _paymentStatus == 'PAID' ? Color(0xFF00FF00) : Colors.red,
               foregroundColor: Colors.white,
             ),
             child: Text(_paymentStatus == 'PAID' ? 'Continue' : 'Cancel Payment'),

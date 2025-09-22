@@ -238,7 +238,7 @@ class _AppMockupState extends State<AppMockup> {
                   });
                 },
                 type: BottomNavigationBarType.fixed,
-                selectedItemColor: Colors.blue[600],
+                selectedItemColor: Color(0xFF0056AC),
                 unselectedItemColor: Colors.grey[500],
                 items: const [
                   BottomNavigationBarItem(
@@ -306,7 +306,7 @@ class GuestProfileScreen extends StatelessWidget {
                   Icon(
                     Icons.person_outline,
                     size: 64,
-                    color: Colors.blue[300],
+                    color: Color(0xFF0056AC),
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -315,7 +315,7 @@ class GuestProfileScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
+                      color: Color(0xFF0056AC),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -336,7 +336,7 @@ class GuestProfileScreen extends StatelessWidget {
                     icon: const Icon(Icons.login),
                     label: const Text('Sign In as Member'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[600],
+                      backgroundColor: Color(0xFF0056AC),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                       shape: RoundedRectangleBorder(

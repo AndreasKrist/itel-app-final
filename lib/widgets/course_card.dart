@@ -79,7 +79,7 @@ class CourseCard extends StatelessWidget {
                           child: Text(
                             course.certType!,
                             style: TextStyle(
-                              color: Colors.blue[800],
+                              color: Color(0xFF0056AC),
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -108,7 +108,7 @@ class CourseCard extends StatelessWidget {
                           ? course.getDiscountedPrice(userTier)
                           : course.price,
                       style: TextStyle(
-                        color: isDiscountEligible ? Colors.green[600] : Colors.blue[600],
+                        color: isDiscountEligible ? Color(0xFF00FF00) : Color(0xFF0056AC),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -117,7 +117,7 @@ class CourseCard extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 2),
                         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                         decoration: BoxDecoration(
-                          color: Colors.blue[700],
+                          color: Color(0xFF0056AC),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -140,7 +140,7 @@ class CourseCard extends StatelessWidget {
                         },
                         child: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.orange : Colors.grey,
+                          color: isFavorite ? Color(0xFFFF6600) : Colors.grey,
                           size: 24,
                         ),
                       ),
@@ -157,7 +157,7 @@ class CourseCard extends StatelessWidget {
                 child: Text(
                   course.funding!,
                   style: TextStyle(
-                    color: course.funding!.contains('Eligible') ? Colors.green[600] : Colors.grey[600],
+                    color: course.funding!.contains('Eligible') ? Color(0xFF00FF00) : Colors.grey[600],
                     fontSize: 14, // Increased from 12 to 14
                     fontWeight: FontWeight.w500,
                   ),
@@ -171,7 +171,7 @@ class CourseCard extends StatelessWidget {
                 child: Text(
                   course.progress!,
                   style: TextStyle(
-                    color: Colors.orange[700],
+                    color: Color(0xFFFF6600),
                     fontSize: 14, // Increased from 12 to 14
                     fontWeight: FontWeight.w600, // Made bolder
                   ),
@@ -185,7 +185,7 @@ class CourseCard extends StatelessWidget {
                 child: Text(
                   'Completed ${course.completionDate}',
                   style: TextStyle(
-                    color: Colors.green[700],
+                    color: Color(0xFF00FF00),
                     fontSize: 14, // Increased from 12 to 14
                     fontWeight: FontWeight.w600, // Made bolder
                   ),
@@ -202,7 +202,7 @@ class CourseCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.star, color: Colors.orange, size: 18), // Increased from 16 to 18
+                        Icon(Icons.star, color: Color(0xFFFF6600), size: 18), // Increased from 16 to 18
                         const SizedBox(width: 4),
                         Text(
                           course.rating.toString(),
@@ -247,7 +247,7 @@ class CourseCard extends StatelessWidget {
                   child: Text(
                     'View Details',
                     style: TextStyle(
-                      color: Colors.orange,
+                      color: Color(0xFFFF6600),
                       fontWeight: FontWeight.w500,
                     ),
                   ),

@@ -18,7 +18,7 @@ class GuestBanner extends StatelessWidget {
         children: [
           Icon(
             Icons.info_outline,
-            color: Colors.blue[700],
+            color: Color(0xFF0056AC),
             size: 20,
           ),
           const SizedBox(width: 8),
@@ -26,7 +26,7 @@ class GuestBanner extends StatelessWidget {
             child: Text(
               'You are currently browsing as a Guest.',
               style: TextStyle(
-                color: Colors.blue[800],
+                color: Color(0xFF0056AC),
                 fontSize: 12,
               ),
             ),
@@ -50,7 +50,7 @@ class GuestBanner extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[700],
+                  backgroundColor: Color(0xFF0056AC),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                   minimumSize: const Size(0, 24),
@@ -70,7 +70,7 @@ class GuestBanner extends StatelessWidget {
               Text(
                 'Sign-in for Full Access',
                 style: TextStyle(
-                  color: Colors.blue[600],
+                  color: Color(0xFF0056AC),
                   fontSize: 10,
                   height: 1.0,
                 ),

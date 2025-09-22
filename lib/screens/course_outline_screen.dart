@@ -109,7 +109,7 @@ class _CourseOutlineScreenState extends State<CourseOutlineScreen> {
           // Course information header
           Container(
             padding: const EdgeInsets.all(16),
-            color: Colors.blue[700],
+            color: Color(0xFF0056AC),
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +144,7 @@ class _CourseOutlineScreenState extends State<CourseOutlineScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.blue[900],
+                          color: Color(0xFF0056AC),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -170,7 +170,7 @@ class _CourseOutlineScreenState extends State<CourseOutlineScreen> {
               children: [
                 Icon(
                   Icons.menu_book,
-                  color: Colors.blue[700],
+                  color: Color(0xFF0056AC),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -178,7 +178,7 @@ class _CourseOutlineScreenState extends State<CourseOutlineScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[700],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
               ],
@@ -215,7 +215,7 @@ class _CourseOutlineScreenState extends State<CourseOutlineScreen> {
                                   sectionKey,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue[800],
+                                    color: Color(0xFF0056AC),
                                   ),
                                 ),
                               ),
@@ -256,7 +256,7 @@ class _CourseOutlineScreenState extends State<CourseOutlineScreen> {
                                       width: 6,
                                       height: 6,
                                       decoration: BoxDecoration(
-                                        color: Colors.blue[600],
+                                        color: Color(0xFF0056AC),
                                         shape: BoxShape.circle,
                                       ),
                                     ),

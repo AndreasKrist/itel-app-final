@@ -193,7 +193,7 @@ void _joinFreeClass() async {
               ),
             ],
           ),
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xFF00FF00),
           duration: Duration(seconds: 4),
         ),
       );
@@ -631,7 +631,7 @@ void _toggleFavorite() async {
           IconButton(
             icon: Icon(
               isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.pink : null,
+              color: isFavorite ? Color(0xFFFF6600) : null,
             ),
             onPressed: _toggleFavorite,
           ),
@@ -655,7 +655,7 @@ void _toggleFavorite() async {
                 // Course header
                 Container(
                   width: double.infinity,
-                  color: Colors.blue[700],
+                  color: Color(0xFF0056AC),
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -674,7 +674,7 @@ void _toggleFavorite() async {
                             child: Text(
                               widget.course.courseCode,
                               style: TextStyle(
-                                color: Colors.blue[700],
+                                color: Color(0xFF0056AC),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -712,7 +712,7 @@ void _toggleFavorite() async {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.blue[900],
+                                color: Color(0xFF0056AC),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
@@ -900,7 +900,7 @@ void _toggleFavorite() async {
                                             child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('• ', style: TextStyle(color: Colors.blue[700])),
+                                                Text('• ', style: TextStyle(color: Color(0xFF0056AC))),
                                                 Expanded(child: Text(item)),
                                               ],
                                             ),
@@ -968,7 +968,7 @@ void _toggleFavorite() async {
                                   children: [
                                     Icon(
                                       Icons.check_circle,
-                                      color: Colors.green[600],
+                                      color: Color(0xFF00FF00),
                                       size: 20,
                                     ),
                                     const SizedBox(width: 12),
@@ -1134,7 +1134,7 @@ void _toggleFavorite() async {
                                       Text(
                                         course.price,
                                         style: TextStyle(
-                                          color: Colors.blue[600],
+                                          color: Color(0xFF0056AC),
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12,
                                         ),
@@ -1150,7 +1150,7 @@ void _toggleFavorite() async {
                                           child: Text(
                                             course.certType!,
                                             style: TextStyle(
-                                              color: Colors.blue[700],
+                                              color: Color(0xFF0056AC),
                                               fontSize: 10,
                                             ),
                                             maxLines: 1,
@@ -1259,7 +1259,7 @@ void _toggleFavorite() async {
                   backgroundColor: widget.course.price == '\$0' || 
                                   widget.course.price.contains('Free') || 
                                   widget.course.funding == 'Complimentary' 
-                                ? Colors.green[600] : Colors.blue[600],
+                                ? Color(0xFF00FF00) : Color(0xFF0056AC),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -1358,7 +1358,7 @@ void _toggleFavorite() async {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.blue[700],
+                    color: Color(0xFF0056AC),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -1375,7 +1375,7 @@ void _toggleFavorite() async {
                   child: Text(
                     'As a PRO member, you receive a 25% discount on this course!',
                     style: TextStyle(
-                      color: Colors.blue[800],
+                      color: Color(0xFF0056AC),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1398,7 +1398,7 @@ void _toggleFavorite() async {
             // Table header
             TableRow(
               decoration: BoxDecoration(
-                color: Colors.blue[700],
+                color: Color(0xFF0056AC),
               ),
               children: [
                 _buildTableHeaderCell('Criteria', isFirstColumn: true),

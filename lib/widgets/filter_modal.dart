@@ -227,7 +227,7 @@ class _FilterModalState extends State<FilterModal> {
                 child: ElevatedButton(
                   onPressed: widget.onApply,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[600],
+                    backgroundColor: Color(0xFF0056AC),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(

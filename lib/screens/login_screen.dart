@@ -231,7 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue[800],
+                          color: Color(0xFF0056AC),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -240,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
-                          color: Colors.blue[700],
+                          color: Color(0xFF0056AC),
                           fontSize: 20,
                         ),
                       ),
@@ -356,7 +356,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       'Forgot Password?',
                       style: TextStyle(
-                        color: Colors.blue[700],
+                        color: Color(0xFF0056AC),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -369,7 +369,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ElevatedButton(
                   onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[700],
+                    backgroundColor: Color(0xFF0056AC),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -473,7 +473,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Join Now',
                         style: TextStyle(
-                          color: Colors.blue[700],
+                          color: Color(0xFF0056AC),
                           fontWeight: FontWeight.bold,
                         ),
                       ),

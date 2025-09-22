@@ -278,7 +278,7 @@ void _toggleFavorite(Course course) async {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           Container(
-            color: Colors.blue[700],
+            color: Color(0xFF0056AC),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               child: Row(
@@ -427,7 +427,7 @@ void _toggleFavorite(Course course) async {
                     'Popular Courses',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue[800],
+                          color: Color(0xFF0056AC),
                         ),
                   ),
                   const SizedBox(height: 16),
@@ -456,7 +456,7 @@ void _toggleFavorite(Course course) async {
                       'Complimentary Courses',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[800],
+                            color: Color(0xFF0056AC),
                           ),
                     ),
                     const SizedBox(height: 16),
@@ -486,7 +486,7 @@ void _toggleFavorite(Course course) async {
                       'Funded Courses',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[800],
+                            color: Color(0xFF0056AC),
                           ),
                     ),
                     const SizedBox(height: 16),
@@ -516,7 +516,7 @@ void _toggleFavorite(Course course) async {
                       'SCTP Courses',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[800],
+                            color: Color(0xFF0056AC),
                           ),
                     ),
                     const SizedBox(height: 16),
@@ -707,7 +707,7 @@ void _toggleFavorite(Course course) async {
                   child: Icon(
                     _getIconData(discipline['icon']!),
                     size: 32,
-                    color: Colors.blue[700],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
                 const SizedBox(height: 12),

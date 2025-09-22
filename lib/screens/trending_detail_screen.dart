@@ -302,14 +302,14 @@ class TrendingDetailScreen extends StatelessWidget {
               'Upcoming Information Sessions',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.blue[700],
+                color: Color(0xFF0056AC),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Join our free information sessions to learn more about the new certification path and how it can benefit your career.',
               style: TextStyle(
-                color: Colors.blue[700],
+                color: Color(0xFF0056AC),
               ),
             ),
           ],
@@ -455,7 +455,7 @@ List<Widget> _formatContent(String content) {
             LinkHandler.openEventRegistration(context, customLink);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green[600],
+            backgroundColor: Color(0xFF00FF00),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
@@ -507,7 +507,7 @@ List<Widget> _formatContent(String content) {
                   LinkHandler.openNewsLink(context, customLink);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[600],
+                  backgroundColor: Color(0xFF0056AC),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -557,7 +557,7 @@ List<Widget> _formatContent(String content) {
                 LinkHandler.openRelatedCoursesLink(context, customLink);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[600],
+                backgroundColor: Color(0xFF0056AC),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -650,7 +650,7 @@ List<Widget> _formatContent(String content) {
   }
   
   Color _getColorForType(TrendingItemType type) {
-    return Colors.blue[700]!;
+    return Color(0xFF0056AC)!;
   }
   
   Color _getLightColorForType(TrendingItemType type) {

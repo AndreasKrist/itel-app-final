@@ -48,7 +48,7 @@ class AboutScreen extends StatelessWidget {
             title: 'Vision',
             content: 'A World Class Life-Long Learning Center',
             bgColor: Colors.blue[50]!,
-            textColor: Colors.blue[800]!,
+            textColor: Color(0xFF0056AC)!,
           ),
           const SizedBox(height: 24),
           
@@ -350,7 +350,7 @@ class AboutScreen extends StatelessWidget {
             child: Icon(
               icon,
               size: 32,
-              color: Colors.blue[700],
+              color: Color(0xFF0056AC),
             ),
           ),
           const SizedBox(height: 16),
@@ -374,7 +374,7 @@ class AboutScreen extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: Colors.blue[500],
+          color: Color(0xFF0056AC),
           size: 30,
         ),
         const SizedBox(height: 8),
@@ -391,7 +391,7 @@ class AboutScreen extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.blue[500],
+            color: Color(0xFF0056AC),
           ),
           textAlign: TextAlign.center,
           maxLines: 2,
@@ -429,7 +429,7 @@ class AboutScreen extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              color: Colors.blue[700],
+              color: Color(0xFF0056AC),
               size: 24,
             ),
           ),
@@ -471,7 +471,7 @@ class AboutScreen extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: Colors.blue[700],
+            color: Color(0xFF0056AC),
             size: 24,
           ),
           const SizedBox(width: 16),

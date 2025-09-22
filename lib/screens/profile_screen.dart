@@ -109,7 +109,7 @@ void _showEditProfileDialog() {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Profile updated successfully'),
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xFF00FF00),
         ),
       );
 
@@ -624,7 +624,7 @@ Future<void> _cleanupAllSubcollectionData() async {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Cleaned up ${snapshot.docs.length} old enrollment records'),
-            backgroundColor: Colors.green,
+            backgroundColor: Color(0xFF00FF00),
           ),
         );
       }
@@ -656,7 +656,7 @@ void _removeCourseFromEnrolled(String courseId) async {
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(
-              foregroundColor: Colors.green,
+              foregroundColor: Color(0xFF00FF00),
             ),
             child: const Text('Mark Finished'),
           ),
@@ -724,7 +724,7 @@ void _removeCourseFromEnrolled(String courseId) async {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Course marked as completed!'),
-            backgroundColor: Colors.green,
+            backgroundColor: Color(0xFF00FF00),
           ),
         );
       }
@@ -760,7 +760,7 @@ void _removeCourseFromEnrolled(String courseId) async {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.blue[700],
+                  color: Color(0xFF0056AC),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -780,7 +780,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                             style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue[700],
+                              color: Color(0xFF0056AC),
                             ),
                           ),
                         ),
@@ -930,7 +930,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue[800],
+                                  color: Color(0xFF0056AC),
                                 ),
                               ),
                               IconButton(
@@ -1000,11 +1000,11 @@ void _removeCourseFromEnrolled(String courseId) async {
                             },
                             calendarStyle: CalendarStyle(
                               markerDecoration: BoxDecoration(
-                                color: Colors.blue[700],
+                                color: Color(0xFF0056AC),
                                 shape: BoxShape.circle,
                               ),
                               selectedDecoration: BoxDecoration(
-                                color: Colors.blue[700],
+                                color: Color(0xFF0056AC),
                                 shape: BoxShape.circle,
                               ),
                               todayDecoration: BoxDecoration(
@@ -1035,7 +1035,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: Colors.blue[800],
+                                  color: Color(0xFF0056AC),
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -1058,7 +1058,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                                       ),
                                       child: Icon(
                                         Icons.school,
-                                        color: Colors.blue[700],
+                                        color: Color(0xFF0056AC),
                                         size: 24,
                                       ),
                                     ),
@@ -1122,7 +1122,7 @@ Widget _buildTabButton(String title, String tabId) {
           color: isActive ? Colors.blue.withOpacity(0.05) : Colors.transparent,
           border: Border(
             bottom: BorderSide(
-              color: isActive ? Colors.blue[600]! : Colors.transparent,
+              color: isActive ? Color(0xFF0056AC)! : Colors.transparent,
               width: 3,
             ),
           ),
@@ -1131,7 +1131,7 @@ Widget _buildTabButton(String title, String tabId) {
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isActive ? Colors.blue[600] : Colors.grey[600],
+            color: isActive ? Color(0xFF0056AC) : Colors.grey[600],
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
             fontSize: 15,
           ),
@@ -1240,13 +1240,13 @@ Widget _buildProfileTab() {
                             Icon(
                               Icons.edit,
                               size: 16,
-                              color: Colors.blue[700],
+                              color: Color(0xFF0056AC),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               'Edit',
                               style: TextStyle(
-                                color: Colors.blue[700],
+                                color: Color(0xFF0056AC),
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -1268,13 +1268,13 @@ Widget _buildProfileTab() {
                           Icon(
                             _showPersonalInfo ? Icons.visibility : Icons.visibility_off,
                             size: 18,
-                            color: Colors.blue[600],
+                            color: Color(0xFF0056AC),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             _showPersonalInfo ? 'Hide' : 'Show',
                             style: TextStyle(
-                              color: Colors.blue[600],
+                              color: Color(0xFF0056AC),
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
                             ),
@@ -1397,13 +1397,13 @@ Widget _buildProfileTab() {
                         Icon(
                           Icons.calendar_month,
                           size: 16,
-                          color: Colors.blue[700],
+                          color: Color(0xFF0056AC),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           'View Calendar',
                           style: TextStyle(
-                            color: Colors.blue[700],
+                            color: Color(0xFF0056AC),
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -1696,7 +1696,7 @@ Widget _buildProfileTab() {
                               child: Text(
                                 'COMPLETED',
                                 style: TextStyle(
-                                  color: Colors.green[700],
+                                  color: Color(0xFF00FF00),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
                                 ),
@@ -1718,7 +1718,7 @@ Widget _buildProfileTab() {
                         Text(
                           'Completed ${_formatDate(DateTime.now())}',
                           style: TextStyle(
-                            color: Colors.green[700],
+                            color: Color(0xFF00FF00),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -1793,7 +1793,7 @@ Widget _buildProfileTab() {
                                 child: Text(
                                   course.certType!,
                                   style: TextStyle(
-                                    color: Colors.blue[700],
+                                    color: Color(0xFF0056AC),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
                                   ),
@@ -1817,7 +1817,7 @@ Widget _buildProfileTab() {
                           Text(
                             'Completed ${course.completionDate}',
                             style: TextStyle(
-                              color: Colors.green[700],
+                              color: Color(0xFF00FF00),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -1886,13 +1886,13 @@ Widget _buildCoursesTab() {
                 Icon(
                   Icons.favorite,
                   size: 16,
-                  color: Colors.pink[400],
+                  color: Color(0xFFFF6600),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '${favoriteCourses.length} ${favoriteCourses.length == 1 ? 'Course' : 'Courses'}',
                   style: TextStyle(
-                    color: Colors.pink[700],
+                    color: Color(0xFFFF6600),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -1944,7 +1944,7 @@ Widget _buildCoursesTab() {
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    side: BorderSide(color: Colors.blue[600]!),
+                    side: BorderSide(color: Color(0xFF0056AC)!),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -1952,7 +1952,7 @@ Widget _buildCoursesTab() {
                   child: Text(
                     'Browse Courses',
                     style: TextStyle(
-                      color: Colors.blue[600],
+                      color: Color(0xFF0056AC),
                     ),
                   ),
                 ),
@@ -2008,7 +2008,7 @@ Widget _buildCoursesTab() {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
                 Container(
@@ -2034,14 +2034,14 @@ Widget _buildCoursesTab() {
             const SizedBox(height: 8),
             Text(
               'Valid until: ${currentUser.membershipExpiryDate}',
-              style: TextStyle(color: Colors.blue[800]),
+              style: TextStyle(color: Color(0xFF0056AC)),
             ),
             if (currentUser.tier != MembershipTier.standard) ...[
               const SizedBox(height: 8),
               Text(
                 'Discount: ${(currentUser.tier.discountPercentage * 100).toInt()}% off all courses',
                 style: TextStyle(
-                  color: Colors.green[700],
+                  color: Color(0xFF00FF00),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -2143,7 +2143,7 @@ Widget _buildTierCard({
       color: Colors.white,
       borderRadius: BorderRadius.circular(12),
       border: Border.all(
-        color: isPopular ? Colors.orange : Colors.grey[300]!,
+        color: isPopular ? Color(0xFFFF6600) : Colors.grey[300]!,
         width: isPopular ? 2 : 1,
       ),
       boxShadow: [
@@ -2188,7 +2188,7 @@ Widget _buildTierCard({
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.orange,
+                        color: Color(0xFFFF6600),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
@@ -2208,13 +2208,13 @@ Widget _buildTierCard({
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue[700],
+                  color: Color(0xFF0056AC),
                 ),
               ),
               Text(
                 '$discount discount on all courses',
                 style: TextStyle(
-                  color: Colors.green[600],
+                  color: Color(0xFF00FF00),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -2234,7 +2234,7 @@ Widget _buildTierCard({
                   children: [
                     Icon(
                       Icons.check_circle,
-                      color: Colors.green[600],
+                      color: Color(0xFF00FF00),
                       size: 16,
                     ),
                     const SizedBox(width: 8),
@@ -2260,7 +2260,7 @@ Widget _buildTierCard({
                     backgroundColor: isCurrentTier 
                         ? Colors.grey[400]
                         : canChange 
-                            ? (isPopular ? Colors.orange : Colors.blue[600])
+                            ? (isPopular ? Color(0xFFFF6600) : Color(0xFF0056AC))
                             : Colors.grey[400],
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -2291,9 +2291,9 @@ Color _getTierColor(MembershipTier tier) {
     case MembershipTier.standard:
       return Colors.grey[600]!;
     case MembershipTier.tier1:
-      return Colors.blue[600]!;
+      return Color(0xFF0056AC)!;
     case MembershipTier.tier2:
-      return Colors.orange[600]!;
+      return Color(0xFFFF6600)!;
     case MembershipTier.tier3:
       return Colors.purple[600]!;
   }
@@ -2342,7 +2342,7 @@ Future<void> _purchaseMembership(MembershipTier tier) async {
             const Text(
               'Special Offer: First year completely FREE!',
               style: TextStyle(
-                color: Colors.green,
+                color: Color(0xFF00FF00),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -2358,7 +2358,7 @@ Future<void> _purchaseMembership(MembershipTier tier) async {
               child: const Text(
                 '🧪 Test Mode: Use test payment methods only',
                 style: TextStyle(
-                  color: Colors.blue,
+                  color: Color(0xFF0056AC),
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
@@ -2479,7 +2479,7 @@ Future<void> _handlePaymentComplete(bool success, MembershipTier tier, String? i
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Payment was cancelled or failed'),
-        backgroundColor: Colors.orange,
+        backgroundColor: Color(0xFFFF6600),
       ),
     );
   }
@@ -2492,7 +2492,7 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Successfully changed to ${tier.displayName}!'),
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF00FF00),
       ),
     );
   } else {
@@ -2603,14 +2603,14 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[700],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
                 Text(
                   _getMonthAbbreviation(schedule.date.month),
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.blue[700],
+                    color: Color(0xFF0056AC),
                   ),
                 ),
               ],
@@ -2670,7 +2670,7 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
-                color: schedule.isPending ? Colors.orange[800] : Colors.green[800],
+                color: schedule.isPending ? Color(0xFFFF6600) : Color(0xFF00FF00),
               ),
             ),
           ),
@@ -2732,7 +2732,7 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
             width: 16,
             height: 16,
             decoration: BoxDecoration(
-              color: Colors.blue[600],
+              color: Color(0xFF0056AC),
               shape: BoxShape.circle,
             ),
           ),
@@ -2741,7 +2741,7 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
             child: Text(
               text,
               style: TextStyle(
-                color: Colors.blue[800],
+                color: Color(0xFF0056AC),
               ),
             ),
           ),

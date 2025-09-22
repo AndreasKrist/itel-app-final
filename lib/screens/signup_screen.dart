@@ -154,13 +154,13 @@ Future<void> _signup() async {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.blue[700]),
+          icon: Icon(Icons.arrow_back, color: Color(0xFF0056AC)),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Create Account',
           style: TextStyle(
-            color: Colors.blue[800],
+            color: Color(0xFF0056AC),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -296,7 +296,7 @@ Future<void> _signup() async {
               ElevatedButton(
                 onPressed: _isLoading ? null : _signup,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[700],
+                  backgroundColor: Color(0xFF0056AC),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -366,7 +366,7 @@ Future<void> _signup() async {
               ),
               child: Icon(
                 icon,
-                color: isSelected ? Colors.blue[700] : Colors.grey[600],
+                color: isSelected ? Color(0xFF0056AC) : Colors.grey[600],
               ),
             ),
             const SizedBox(width: 16),
@@ -378,7 +378,7 @@ Future<void> _signup() async {
                     title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.blue[700] : Colors.black,
+                      color: isSelected ? Color(0xFF0056AC) : Colors.black,
                     ),
                   ),
                   Text(
@@ -399,7 +399,7 @@ Future<void> _signup() async {
                   _selectedAccountType = value!;
                 });
               },
-              activeColor: Colors.blue[700],
+              activeColor: Color(0xFF0056AC),
             ),
           ],
         ),

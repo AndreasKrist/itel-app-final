@@ -471,7 +471,7 @@ void _toggleFavorite(Course course) async {
                                 Icons.sort,
                                 size: 18,
                                 color: activeSort != 'none' 
-                                    ? Colors.orange[700] 
+                                    ? Color(0xFFFF6600)
                                     : Colors.grey[700],
                               ),
                               const SizedBox(width: 4),
@@ -479,7 +479,7 @@ void _toggleFavorite(Course course) async {
                                 'Sort',
                                 style: TextStyle(
                                   color: activeSort != 'none' 
-                                      ? Colors.orange[700] 
+                                      ? Color(0xFFFF6600)
                                       : Colors.grey[700],
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -510,7 +510,7 @@ void _toggleFavorite(Course course) async {
                                 Icons.filter_list,
                                 size: 18,
                                 color: activeFilters.values.any((value) => value != 'all')
-                                    ? Colors.blue[700] 
+                                    ? Color(0xFF0056AC)
                                     : Colors.grey[700],
                               ),
                               const SizedBox(width: 4),
@@ -518,7 +518,7 @@ void _toggleFavorite(Course course) async {
                                 'Filter',
                                 style: TextStyle(
                                   color: activeFilters.values.any((value) => value != 'all')
-                                      ? Colors.blue[700] 
+                                      ? Color(0xFF0056AC)
                                       : Colors.grey[700],
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -884,7 +884,7 @@ Container(
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? Colors.blue[600] : Colors.grey[200],
+          color: isActive ? Color(0xFF0056AC) : Colors.grey[200],
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
