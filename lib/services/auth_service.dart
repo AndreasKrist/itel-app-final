@@ -27,9 +27,9 @@ class AuthService {
         id: firebaseUser.uid,
         name: firebaseUser.displayName ?? 'User',
         email: firebaseUser.email ?? '',
-        // Use empty strings/defaults for other required fields
-        phone: '+62 821xxxxxxxx', // Default phone
-        company: 'Lilo Store LTD', // Default company
+        // Use empty strings for other fields - user can fill them later
+        phone: '', // Empty by default - user can add their real phone
+        company: '', // Empty by default - user can add their company
         tier: MembershipTier.standard, // Default tier for all signed-up users
         membershipExpiryDate: 'March 7, 2027', // Default expiry
       );

@@ -1147,7 +1147,15 @@ Widget _buildProfileTab() {
 
   
   final upcomingSchedules = Schedule.getDummySchedules();
-  final completedCourses = Course.userCourseHistory.where((course) => course.completionDate != null).toList();
+
+  // Count actual completed courses from user's enrollments and course history
+  final userCompletedEnrollments = currentUser.enrolledCourses
+      .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
+      .length;
+  final userCompletedHistory = currentUser.courseHistory
+      .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
+      .length;
+  final totalCompletedCount = userCompletedEnrollments + userCompletedHistory;
   
   // Get enrolled courses by matching them with their course data
   final enrolledCoursesList = currentUser.enrolledCourses.map((enrollment) {
@@ -1345,21 +1353,21 @@ Widget _buildProfileTab() {
                   'In Progress',
                   '${activeEnrollments.length}', // Use enrolled courses count
                   Icons.pending_actions,
-                  Colors.orange,
+                  Colors.blue,
                 ),
                 const SizedBox(width: 12),
                 _buildStatCard(
                   'Completed',
-                  '${completedCourses.length}',
+                  '${totalCompletedCount}',
                   Icons.check_circle,
                   Colors.green,
                 ),
                 const SizedBox(width: 12),
                 _buildStatCard(
-                  'Pending',
+                  'Enquiry',
                   '${pendingEnrollments.length}', // Use pending enrollments count
                   Icons.hourglass_empty,
-                  Colors.blue,
+                  Colors.orange,
                 ),
               ],
             ),
@@ -1630,223 +1638,224 @@ Widget _buildProfileTab() {
         ),
       ),
       
-      const SizedBox(height: 24),
-      
+      // const SizedBox(height: 24),
+
       // Course History - Show completed courses from history + static completed courses
-      Text(
-        'Course History',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 12),
-      
+      // Commented out for now - can be re-enabled later when needed
+      // Text(
+      //   'Course History',
+      //   style: TextStyle(
+      //     fontSize: 18,
+      //     fontWeight: FontWeight.bold,
+      //   ),
+      // ),
+      // const SizedBox(height: 12),
+
       // Show completed courses
-      if (User.currentUser.courseHistory
-          .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
-          .isEmpty && completedCourses.isEmpty)
-        _buildEmptyState(
-          'No completed courses',
-          'Courses you mark as finished will appear here',
-          Icons.history,
-        )
-      else
-        Column(
-          children: [
-            // Show user-completed courses (marked as finished)
-            ...User.currentUser.courseHistory
-                .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
-                .map((enrollment) {
-                // Find the corresponding course data
-                final courseData = _allCourses.firstWhere(
-                  (c) => c.id == enrollment.courseId,
-                  orElse: () => _allCourses.isNotEmpty ? _allCourses.first : Course.sampleCourses.first, // Fallback
-                );
-                
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.green[50],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                'COMPLETED',
-                                style: TextStyle(
-                                  color: Color(0xFF00FF00),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                courseData.title,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Completed ${_formatDate(DateTime.now())}',
-                          style: TextStyle(
-                            color: Color(0xFF00FF00),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Progress: ${enrollment.progress ?? "100% complete"}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 13,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.book,
-                              size: 16,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Course Code: ${courseData.courseCode}',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-            
-            // Show pre-existing completed courses (from sample data)
-            if (completedCourses.isNotEmpty) ...[
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: completedCourses.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final course = completedCourses[index];
-                  return Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            if (course.certType != null) ...[
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  course.certType!,
-                                  style: TextStyle(
-                                    color: Color(0xFF0056AC),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                            Expanded(
-                              child: Text(
-                                course.title,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        if (course.completionDate != null)
-                          Text(
-                            'Completed ${course.completionDate}',
-                            style: TextStyle(
-                              color: Color(0xFF00FF00),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.book,
-                              size: 16,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Course Code: ${course.courseCode}',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
-          ],
-        ),
-      const SizedBox(height: 24),
+      // if (User.currentUser.courseHistory
+      //     .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
+      //     .isEmpty && completedCourses.isEmpty)
+      //   _buildEmptyState(
+      //     'No completed courses',
+      //     'Courses you mark as finished will appear here',
+      //     Icons.history,
+      //   )
+      // else
+      //   Column(
+      //     children: [
+      //       // Show user-completed courses (marked as finished)
+      //       ...User.currentUser.courseHistory
+      //           .where((enrollment) => enrollment.status == EnrollmentStatus.completed)
+      //           .map((enrollment) {
+      //           // Find the corresponding course data
+      //           final courseData = _allCourses.firstWhere(
+      //             (c) => c.id == enrollment.courseId,
+      //             orElse: () => _allCourses.isNotEmpty ? _allCourses.first : Course.sampleCourses.first, // Fallback
+      //           );
+      //
+      //           return Padding(
+      //             padding: const EdgeInsets.only(bottom: 12),
+      //             child: Container(
+      //               padding: const EdgeInsets.all(16),
+      //               decoration: BoxDecoration(
+      //                 color: Colors.white,
+      //                 borderRadius: BorderRadius.circular(12),
+      //                 boxShadow: [
+      //                   BoxShadow(
+      //                     color: Colors.black.withOpacity(0.05),
+      //                     blurRadius: 10,
+      //                     offset: const Offset(0, 2),
+      //                   ),
+      //                 ],
+      //               ),
+      //               child: Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 children: [
+      //                   Row(
+      //                     children: [
+      //                       Container(
+      //                         padding: const EdgeInsets.symmetric(
+      //                           horizontal: 8,
+      //                           vertical: 2,
+      //                         ),
+      //                         decoration: BoxDecoration(
+      //                           color: Colors.green[50],
+      //                           borderRadius: BorderRadius.circular(10),
+      //                         ),
+      //                         child: Text(
+      //                           'COMPLETED',
+      //                           style: TextStyle(
+      //                             color: Color(0xFF00FF00),
+      //                             fontWeight: FontWeight.bold,
+      //                             fontSize: 12,
+      //                           ),
+      //                         ),
+      //                       ),
+      //                       const SizedBox(width: 8),
+      //                       Expanded(
+      //                         child: Text(
+      //                           courseData.title,
+      //                           style: const TextStyle(
+      //                             fontSize: 16,
+      //                             fontWeight: FontWeight.bold,
+      //                           ),
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   const SizedBox(height: 8),
+      //                   Text(
+      //                     'Completed ${_formatDate(DateTime.now())}',
+      //                     style: TextStyle(
+      //                       color: Color(0xFF00FF00),
+      //                       fontWeight: FontWeight.w500,
+      //                     ),
+      //                   ),
+      //                   const SizedBox(height: 4),
+      //                   Text(
+      //                     'Progress: ${enrollment.progress ?? "100% complete"}',
+      //                     style: TextStyle(
+      //                       color: Colors.grey[600],
+      //                       fontSize: 13,
+      //                     ),
+      //                   ),
+      //                   const SizedBox(height: 4),
+      //                   Row(
+      //                     children: [
+      //                       Icon(
+      //                         Icons.book,
+      //                         size: 16,
+      //                         color: Colors.grey[600],
+      //                       ),
+      //                       const SizedBox(width: 4),
+      //                       Text(
+      //                         'Course Code: ${courseData.courseCode}',
+      //                         style: TextStyle(
+      //                           color: Colors.grey[600],
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //           );
+      //         }),
+      //
+      //       // Show pre-existing completed courses (from sample data)
+      //       if (completedCourses.isNotEmpty) ...[
+      //         ListView.separated(
+      //           shrinkWrap: true,
+      //           physics: const NeverScrollableScrollPhysics(),
+      //           itemCount: completedCourses.length,
+      //           separatorBuilder: (context, index) => const SizedBox(height: 12),
+      //           itemBuilder: (context, index) {
+      //             final course = completedCourses[index];
+      //             return Container(
+      //               padding: const EdgeInsets.all(16),
+      //               decoration: BoxDecoration(
+      //                 color: Colors.white,
+      //                 borderRadius: BorderRadius.circular(12),
+      //                 boxShadow: [
+      //                   BoxShadow(
+      //                     color: Colors.black.withOpacity(0.05),
+      //                     blurRadius: 10,
+      //                     offset: const Offset(0, 2),
+      //                   ),
+      //                 ],
+      //               ),
+      //               child: Column(
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 children: [
+      //                   Row(
+      //                     children: [
+      //                       if (course.certType != null) ...[
+      //                         Container(
+      //                           padding: const EdgeInsets.symmetric(
+      //                             horizontal: 8,
+      //                             vertical: 2,
+      //                           ),
+      //                           decoration: BoxDecoration(
+      //                             color: Colors.blue[50],
+      //                             borderRadius: BorderRadius.circular(10),
+      //                           ),
+      //                           child: Text(
+      //                             course.certType!,
+      //                             style: TextStyle(
+      //                               color: Color(0xFF0056AC),
+      //                               fontWeight: FontWeight.bold,
+      //                               fontSize: 12,
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         const SizedBox(width: 8),
+      //                       ],
+      //                       Expanded(
+      //                         child: Text(
+      //                           course.title,
+      //                           style: const TextStyle(
+      //                             fontSize: 16,
+      //                             fontWeight: FontWeight.bold,
+      //                           ),
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   const SizedBox(height: 8),
+      //                   if (course.completionDate != null)
+      //                     Text(
+      //                       'Completed ${course.completionDate}',
+      //                       style: TextStyle(
+      //                         color: Color(0xFF00FF00),
+      //                         fontWeight: FontWeight.w500,
+      //                       ),
+      //                     ),
+      //                   const SizedBox(height: 8),
+      //                   Row(
+      //                     children: [
+      //                       Icon(
+      //                         Icons.book,
+      //                         size: 16,
+      //                         color: Colors.grey[600],
+      //                       ),
+      //                       const SizedBox(width: 4),
+      //                       Text(
+      //                         'Course Code: ${course.courseCode}',
+      //                         style: TextStyle(
+      //                           color: Colors.grey[600],
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ],
+      //               ),
+      //             );
+      //           },
+      //         ),
+      //       ],
+      //     ],
+      //   ),
+      // const SizedBox(height: 24),
     ],
   );
 }

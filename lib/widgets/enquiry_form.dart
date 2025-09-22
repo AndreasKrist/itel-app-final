@@ -62,13 +62,12 @@ class _EnquiryFormState extends State<EnquiryForm> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill with user data if available
-    final currentUser = _authService.currentUser;
-    if (currentUser != null) {
-      _nameController.text = currentUser.name;
-      _emailController.text = currentUser.email;
-      _phoneController.text = currentUser.phone;
-    }
+    // Pre-fill with user data if available - use User.currentUser which has full profile data
+    final currentUser = User.currentUser;
+    _nameController.text = currentUser.name;
+    _emailController.text = currentUser.email;
+    // Always use whatever phone number is in the user's profile
+    _phoneController.text = currentUser.phone;
   }
 
   @override
@@ -166,31 +165,21 @@ void _submitForm() async {
         // 3. Then save to the main user document
         try {
           print("Saving to main user document...");
-          // Get user from authentication service
-          final authUser = _authService.currentUser;
-          
-          if (authUser != null) {
-            await _preferencesService.saveUserProfile(
-              userId: currentUser.uid,
-              name: authUser.name,
-              email: authUser.email,
-              phone: authUser.phone,
-              company: authUser.company,
-              tier: authUser.tier,
-              membershipExpiryDate: authUser.membershipExpiryDate,
-              favoriteCoursesIds: authUser.favoriteCoursesIds,
-              enrolledCourses: User.currentUser.enrolledCourses,
-            );
-          } else {
-            // Fallback with form data if auth user isn't available
-            await _preferencesService.saveUserProfile(
-              userId: currentUser.uid,
-              name: _nameController.text,
-              email: _emailController.text,
-              phone: _phoneController.text,
-              enrolledCourses: User.currentUser.enrolledCourses,
-            );
-          }
+          // Use User.currentUser which has the full profile data including phone/company
+          final fullUser = User.currentUser;
+
+          await _preferencesService.saveUserProfile(
+            userId: currentUser.uid,
+            name: fullUser.name,
+            email: fullUser.email,
+            phone: fullUser.phone, // This preserves the existing phone number
+            company: fullUser.company, // This preserves the existing company
+            tier: fullUser.tier,
+            membershipExpiryDate: fullUser.membershipExpiryDate,
+            favoriteCoursesIds: fullUser.favoriteCoursesIds,
+            enrolledCourses: User.currentUser.enrolledCourses,
+            courseHistory: User.currentUser.courseHistory,
+          );
           print("Successfully saved to user document");
         } catch (e) {
           print("Error saving to user document: $e");

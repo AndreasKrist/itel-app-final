@@ -150,17 +150,18 @@ void _toggleFavorite(Course course) async {
       );
     });
     
-    // Update in Firestore directly with saveUserProfile
+    // Update in Firestore directly with saveUserProfile - use User.currentUser to preserve phone/company
     await _preferencesService.saveUserProfile(
       userId: currentUser.id,
-      name: currentUser.name,
-      email: currentUser.email,
-      phone: currentUser.phone, 
-      company: currentUser.company,
-      tier: currentUser.tier,
-      membershipExpiryDate: currentUser.membershipExpiryDate,
+      name: User.currentUser.name,
+      email: User.currentUser.email,
+      phone: User.currentUser.phone, // Preserve existing phone
+      company: User.currentUser.company, // Preserve existing company
+      tier: User.currentUser.tier,
+      membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
+      courseHistory: User.currentUser.courseHistory,
     );
   } catch (e) {
     print('Error toggling favorite: $e');

@@ -145,14 +145,15 @@ void _joinFreeClass() async {
       if (currentUser != null) {
         await _preferencesService.saveUserProfile(
           userId: firebaseUser.uid,
-          name: currentUser.name,
-          email: currentUser.email,
-          phone: currentUser.phone,
-          company: currentUser.company,
-          tier: currentUser.tier,
-          membershipExpiryDate: currentUser.membershipExpiryDate,
-          favoriteCoursesIds: currentUser.favoriteCoursesIds,
+          name: User.currentUser.name,
+          email: User.currentUser.email,
+          phone: User.currentUser.phone, // Preserve existing phone
+          company: User.currentUser.company, // Preserve existing company
+          tier: User.currentUser.tier,
+          membershipExpiryDate: User.currentUser.membershipExpiryDate,
+          favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
           enrolledCourses: User.currentUser.enrolledCourses,
+          courseHistory: User.currentUser.courseHistory,
         );
         print("Successfully saved to main user document");
       } else {
@@ -358,17 +359,18 @@ void _toggleFavorite() async {
       favoriteCoursesIds: updatedFavorites,
     );
     
-    // Then update Firestore
+    // Then update Firestore - use User.currentUser to preserve phone/company data
     await _preferencesService.saveUserProfile(
       userId: currentUser.id,
-      name: currentUser.name,
-      email: currentUser.email,
-      phone: currentUser.phone,
-      company: currentUser.company,
-      tier: currentUser.tier,
-      membershipExpiryDate: currentUser.membershipExpiryDate,
+      name: User.currentUser.name,
+      email: User.currentUser.email,
+      phone: User.currentUser.phone, // Preserve existing phone
+      company: User.currentUser.company, // Preserve existing company
+      tier: User.currentUser.tier,
+      membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
+      courseHistory: User.currentUser.courseHistory,
     );
   } catch (e) {
     // If there's an error, revert the UI
@@ -597,13 +599,13 @@ void _toggleFavorite() async {
       if (currentUser != null) {
         await _preferencesService.saveUserProfile(
           userId: firebaseUser.uid,
-          name: currentUser.name,
-          email: currentUser.email,
-          phone: currentUser.phone,
-          company: currentUser.company,
-          tier: currentUser.tier,
-          membershipExpiryDate: currentUser.membershipExpiryDate,
-          favoriteCoursesIds: currentUser.favoriteCoursesIds,
+          name: User.currentUser.name,
+          email: User.currentUser.email,
+          phone: User.currentUser.phone, // Preserve existing phone
+          company: User.currentUser.company, // Preserve existing company
+          tier: User.currentUser.tier,
+          membershipExpiryDate: User.currentUser.membershipExpiryDate,
+          favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
           enrolledCourses: User.currentUser.enrolledCourses,
           courseHistory: User.currentUser.courseHistory,
         );
