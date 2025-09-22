@@ -4,6 +4,7 @@ import '../screens/trending_detail_screen.dart';
 import '../screens/course_detail_screen.dart';
 import '../models/course.dart';
 import '../utils/link_handler.dart';
+import '../services/course_remote_config_service.dart';
 
 class TrendingCard extends StatelessWidget {
   final TrendingItem item;
@@ -24,25 +25,7 @@ class TrendingCard extends StatelessWidget {
             fallbackMessage: 'Opening PTSA assessment...'
           );
         } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
-          // Extract course ID from customLink (format: course://ID)
-          String courseId = item.customLink!.replaceFirst('course://', '');
-          // Find the course by ID
-          Course? course = Course.sampleCourses.firstWhere(
-            (c) => c.id == courseId,
-            orElse: () => Course(id: '', title: '', category: '', rating: 0.0, duration: '', price: ''),
-          );
-          if (course.id.isNotEmpty) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CourseDetailScreen(course: course),
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Course not found')),
-            );
-          }
+          _handleCoursePromotion(context, item);
         } else {
           Navigator.push(
             context,
@@ -160,25 +143,7 @@ class TrendingCard extends StatelessWidget {
                         fallbackMessage: 'Opening PTSA assessment...'
                       );
                     } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
-                      // Extract course ID from customLink (format: course://ID)
-                      String courseId = item.customLink!.replaceFirst('course://', '');
-                      // Find the course by ID
-                      Course? course = Course.sampleCourses.firstWhere(
-                        (c) => c.id == courseId,
-                        orElse: () => Course(id: '', title: '', category: '', rating: 0.0, duration: '', price: ''),
-                      );
-                      if (course.id.isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CourseDetailScreen(course: course),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Course not found')),
-                        );
-                      }
+                      _handleCoursePromotion(context, item);
                     } else {
                       Navigator.push(
                         context,
@@ -209,7 +174,74 @@ class TrendingCard extends StatelessWidget {
       ),
     );
   }
-  
+
+  Future<void> _handleCoursePromotion(BuildContext context, TrendingItem item) async {
+    // Extract course ID from customLink (format: course://ID)
+    String courseId = item.customLink!.replaceFirst('course://', '');
+
+    // First try to find the course locally
+    Course? course = Course.sampleCourses.firstWhere(
+      (c) => c.id == courseId,
+      orElse: () => Course(id: '', title: '', category: '', rating: 0.0, duration: '', price: ''),
+    );
+
+    // If found locally, navigate directly
+    if (course.id.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CourseDetailScreen(course: course),
+        ),
+      );
+      return;
+    }
+
+    // If not found locally, show loading and fetch from GitHub
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      // Fetch courses from GitHub
+      final courseService = CourseRemoteConfigService();
+      final remoteCourses = await courseService.getRemoteCourses();
+
+      // Find the course in remote data
+      final remoteCourse = remoteCourses.firstWhere(
+        (c) => c.id == courseId,
+        orElse: () => Course(id: '', title: '', category: '', rating: 0.0, duration: '', price: ''),
+      );
+
+      // Close loading dialog
+      Navigator.pop(context);
+
+      if (remoteCourse.id.isNotEmpty) {
+        // Navigate to course detail with remote course data
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CourseDetailScreen(course: remoteCourse),
+          ),
+        );
+      } else {
+        // Course not found even in remote data
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Course not found (ID: $courseId)')),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog and show error
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading course: ${e.toString()}')),
+      );
+    }
+  }
+
   Color _getColorForType(TrendingItemType type) {
     return Color(0xFF0056AC)!;
   }
