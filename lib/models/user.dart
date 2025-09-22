@@ -14,11 +14,11 @@ extension MembershipTierExtension on MembershipTier {
       case MembershipTier.standard:
         return 'Standard';
       case MembershipTier.tier1:
-        return 'Tier 1 Premium';
+        return 'Tier 1 Bronze';
       case MembershipTier.tier2:
-        return 'Tier 2 Professional'; 
+        return 'Tier 2 Silver';
       case MembershipTier.tier3:
-        return 'Tier 3 Enterprise';
+        return 'Tier 3 Gold';
     }
   }
   
@@ -193,8 +193,8 @@ class User {
     id: '1',
     name: 'User Name', // Generic name
     email: 'user@example.com', // Generic email
-    phone: '+XX XXXXXXXXXX', // Generic phone
-    company: 'Company Name', // Generic company
+    phone: '', // Empty phone - will be filled from user data
+    company: '', // Empty company - will be filled from user data
     tier: MembershipTier.standard,
     membershipExpiryDate: 'March 7, 2027',
     favoriteCoursesIds: [], // Start with empty favorites - will be loaded from Firebase
