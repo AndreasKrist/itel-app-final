@@ -140,120 +140,64 @@ class AboutScreen extends StatelessWidget {
                 ),
               ],
             ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 30,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Text('Microsoft',
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Microsoft Partner',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 30,
-                          color: Colors.red,
-                          child: const Center(
-                            child: Text('CompTIA',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.purple[100],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('ITIL',
-                                style: TextStyle(
-                                  color: Colors.purple[800],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Accredited',
-                                style: TextStyle(
-                                  color: Colors.purple[800],
-                                  fontSize: 8,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.orange, width: 2),
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Text('EC-Council',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.orange[800],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildPartnerImage('assets/images/partner1.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/partner2.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/partner3.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/partner4.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/partner5.jpg'),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 24),
-          
+
+          // Accolades section
+          _buildSectionTitle('Accolades'),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildPartnerImage('assets/images/accolade1.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/accolade2.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/accolade3.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/accolade4.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/accolade5.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/accolade6.webp'),
+                  const SizedBox(width: 12),
+                  _buildPartnerImage('assets/images/accolade7.webp'),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
           // Contact Us
           _buildSectionTitle('Contact Us'),
           const SizedBox(height: 12),
@@ -366,13 +310,13 @@ class AboutScreen extends StatelessWidget {
         Expanded(
           child: _buildMissionItem(
             icon: Icons.people,
-            title: 'Develop Human Capital for In-Demand Skills',
+            title: 'Develop Human Capital for In-Demand Skills and Knowledge',
           ),
         ),
         Expanded(
           child: _buildMissionItem(
             icon: Icons.public,
-            title: 'Contribute to Society Through Quality Education',
+            title: 'Contribute to Society and Nation Through Quality Education',
           ),
         ),
       ],
@@ -381,34 +325,43 @@ class AboutScreen extends StatelessWidget {
 
   Widget _buildMissionItem({required IconData icon, required String title}) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue[100]!, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.blue.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
-          Icon(
-            icon,
-            size: 40,
-            color: Colors.blue[600],
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue[50],
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 32,
+              color: Colors.blue[700],
+            ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Text(
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: Colors.blue[800],
+              color: Colors.grey[800],
+              height: 1.4,
             ),
           ),
         ],
@@ -543,6 +496,17 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPartnerImage(String imagePath) {
+    return SizedBox(
+      width: 100,
+      height: 80,
+      child: Image.asset(
+        imagePath,
+        fit: BoxFit.contain,
       ),
     );
   }

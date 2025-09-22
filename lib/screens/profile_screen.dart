@@ -2066,7 +2066,7 @@ Widget _buildCoursesTab() {
       // Tier Cards
       _buildTierCard(
         tier: MembershipTier.tier1,
-        title: 'Tier 1 Premium',
+        title: 'Tier 1 Bronze',
         price: 'FREE for 1 Year',
         originalPrice: '',
         discount: '15%',
@@ -2085,7 +2085,7 @@ Widget _buildCoursesTab() {
       
       _buildTierCard(
         tier: MembershipTier.tier2,
-        title: 'Tier 2 Professional',
+        title: 'Tier 2 Silver',
         price: '\$299.99 (One-time)',
         originalPrice: '',
         discount: '25%',
@@ -2104,7 +2104,7 @@ Widget _buildCoursesTab() {
       
       _buildTierCard(
         tier: MembershipTier.tier3,
-        title: 'Tier 3 Enterprise',
+        title: 'Tier 3 Gold',
         price: '\$599.99 (One-time)',
         originalPrice: '',
         discount: '35%',
@@ -2192,7 +2192,7 @@ Widget _buildTierCard({
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
-                        'POPULAR',
+                        'RECOMMENDED',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 10,
@@ -2254,7 +2254,8 @@ Widget _buildTierCard({
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isCurrentTier ? null : canChange ? () => _purchaseMembership(tier) : null,
+                  // onPressed: isCurrentTier ? null : canChange ? () => _purchaseMembership(tier) : null, // Temporarily disabled
+                  onPressed: null, // Remove this line and uncomment above to re-enable upgrade functionality
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isCurrentTier 
                         ? Colors.grey[400]
