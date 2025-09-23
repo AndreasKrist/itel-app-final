@@ -37,7 +37,7 @@ class TrendingDetailScreen extends StatelessWidget {
             // Banner Image
             Container(
               width: double.infinity,
-              height: 200,
+              height: 40,
               decoration: BoxDecoration(
                 color: _getColorForType(item.type),
                 image: item.imageUrl != null
