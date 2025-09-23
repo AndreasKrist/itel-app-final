@@ -376,20 +376,20 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                           'Course Access',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF00FF00),
+                            color: Colors.black,
                           ),
                         ),
                         Text(
                           'Online Session',
                           style: TextStyle(
-                            color: Color(0xFF00FF00),
+                            color: Colors.black,
                             fontSize: 13,
                           ),
                         ),
                         Text(
                           'Access course materials anytime',
                           style: TextStyle(
-                            color: Color(0xFF00FF00),
+                            color: Colors.black,
                             fontSize: 12,
                           ),
                         ),
@@ -490,11 +490,11 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () => _launchCourseURL(context),
-                    icon: const Icon(Icons.login, size: 16),
+                    icon: const Icon(Icons.login, size: 16, ),
                     label: const Text('Access Course'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF00FF00),
-                      foregroundColor: Colors.white,
+                      foregroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -553,7 +553,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   side: BorderSide(color: Colors.green[300]!),
-                  foregroundColor: Color(0xFF00FF00),
+                  foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -567,7 +567,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.green[50],
+                color: Color(0xFF00FF00),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.green[200]!),
               ),
@@ -576,14 +576,14 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                 children: [
                   Icon(
                     Icons.check_circle,
-                    size: 20,
-                    color: Color(0xFF00FF00),
+                    size: 18,
+                    color: Color(0xFF9900FF),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Course Completed',
                     style: TextStyle(
-                      color: Color(0xFF00FF00),
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),

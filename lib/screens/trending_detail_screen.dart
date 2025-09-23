@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../models/trending_item.dart';
 import '../utils/link_handler.dart';
 
@@ -381,59 +382,47 @@ class TrendingDetailScreen extends StatelessWidget {
   );
 }
 
-// Helper method to format text with proper paragraphs and bullet points
+// Helper method to format text with Markdown support
 List<Widget> _formatContent(String content) {
-  List<Widget> widgets = [];
-  List<String> paragraphs = content.split('\n\n');
-  
-  for (String paragraph in paragraphs) {
-    if (paragraph.trim().isEmpty) continue;
-    
-    // Check if paragraph is a bullet list
-    if (paragraph.contains('•')) {
-      // Process bullet list
-      List<String> lines = paragraph.split('\n');
-      
-      // Check if the first line is a heading (no bullet)
-      if (!lines[0].trim().startsWith('•')) {
-        widgets.add(
-          Text(
-            lines[0].trim(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[800],
-              fontSize: 16,
-            ),
-          ),
-        );
-        widgets.add(const SizedBox(height: 8));
-        lines = lines.sublist(1); // Remove the first line
-      }
-      
-      // Process remaining bullet points
-      for (String line in lines) {
-        if (line.trim().isEmpty) continue;
-        if (line.trim().startsWith('•')) {
-          widgets.add(_buildBulletPoint(line.replaceFirst('•', '').trim()));
-        }
-      }
-      widgets.add(const SizedBox(height: 8));
-    } else {
-      // Normal paragraph
-      widgets.add(
-        Text(
-          paragraph.trim(),
-          style: TextStyle(
-            height: 1.5,
-            color: Colors.grey[800],
-          ),
+  return [
+    MarkdownBody(
+      data: content,
+      styleSheet: MarkdownStyleSheet(
+        p: TextStyle(
+          height: 1.5,
+          color: Colors.grey[800],
+          fontSize: 16,
         ),
-      );
-      widgets.add(const SizedBox(height: 16));
-    }
-  }
-  
-  return widgets;
+        h1: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[900],
+        ),
+        h2: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[900],
+        ),
+        h3: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[900],
+        ),
+        listBullet: TextStyle(
+          color: _getColorForType(item.type),
+          fontSize: 16,
+        ),
+        strong: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.grey[900],
+        ),
+        em: TextStyle(
+          fontStyle: FontStyle.italic,
+          color: Colors.grey[800],
+        ),
+      ),
+    ),
+  ];
 }
   
   Widget _buildBottomAction(BuildContext context, String? customLink) {
