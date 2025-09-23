@@ -109,7 +109,6 @@ void _showEditProfileDialog() {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Profile updated successfully'),
-          backgroundColor: Color(0xFF00FF00),
         ),
       );
 
@@ -1384,42 +1383,42 @@ Widget _buildProfileTab() {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showCalendar = true;
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.blue[200]!),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_month,
-                          size: 16,
-                          color: Color(0xFF0056AC),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'View Calendar',
-                          style: TextStyle(
-                            color: Color(0xFF0056AC),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () {
+                //     setState(() {
+                //       _showCalendar = true;
+                //     });
+                //   },
+                //   child: Container(
+                //     padding: const EdgeInsets.symmetric(
+                //       horizontal: 10,
+                //       vertical: 5,
+                //     ),
+                //     decoration: BoxDecoration(
+                //       color: Colors.blue[50],
+                //       borderRadius: BorderRadius.circular(16),
+                //       border: Border.all(color: Colors.blue[200]!),
+                //     ),
+                //     child: Row(
+                //       children: [
+                //         Icon(
+                //           Icons.calendar_month,
+                //           size: 16,
+                //           color: Color(0xFF0056AC),
+                //         ),
+                //         const SizedBox(width: 4),
+                //         Text(
+                //           'View Calendar',
+                //           style: TextStyle(
+                //             color: Color(0xFF0056AC),
+                //             fontSize: 12,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 12),
@@ -2075,7 +2074,7 @@ Widget _buildCoursesTab() {
       // Tier Cards
       _buildTierCard(
         tier: MembershipTier.tier1,
-        title: 'Tier 1 Bronze',
+        title: 'Associate',
         price: 'FREE for 1 Year',
         originalPrice: '',
         discount: '15%',
@@ -2094,7 +2093,7 @@ Widget _buildCoursesTab() {
       
       _buildTierCard(
         tier: MembershipTier.tier2,
-        title: 'Tier 2 Silver',
+        title: 'Professional',
         price: '\$299.99 (One-time)',
         originalPrice: '',
         discount: '25%',
@@ -2113,7 +2112,7 @@ Widget _buildCoursesTab() {
       
       _buildTierCard(
         tier: MembershipTier.tier3,
-        title: 'Tier 3 Gold',
+        title: 'Specialist',
         price: '\$599.99 (One-time)',
         originalPrice: '',
         discount: '35%',

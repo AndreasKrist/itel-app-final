@@ -60,7 +60,6 @@ class _TrendingScreenState extends State<TrendingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Content updated successfully!'),
-            backgroundColor: Color(0xFF00FF00),
             duration: Duration(seconds: 2),
           ),
         );

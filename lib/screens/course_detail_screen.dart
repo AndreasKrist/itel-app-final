@@ -194,7 +194,6 @@ void _joinFreeClass() async {
               ),
             ],
           ),
-          backgroundColor: Color(0xFF00FF00),
           duration: Duration(seconds: 4),
         ),
       );
@@ -1262,7 +1261,9 @@ void _toggleFavorite() async {
                                   widget.course.price.contains('Free') || 
                                   widget.course.funding == 'Complimentary' 
                                 ? Color(0xFF00FF00) : Color(0xFF0056AC),
-                  foregroundColor: Colors.white,
+                  foregroundColor: widget.course.funding == 'Complimentary'
+                ? Colors.black   // black text+icon if Complimentary
+                : Colors.white,  // white otherwise
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

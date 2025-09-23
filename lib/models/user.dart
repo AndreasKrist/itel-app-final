@@ -12,13 +12,13 @@ extension MembershipTierExtension on MembershipTier {
   String get displayName {
     switch (this) {
       case MembershipTier.standard:
-        return 'Standard';
+        return 'Associate';
       case MembershipTier.tier1:
-        return 'Tier 1 Bronze';
+        return 'Associate';
       case MembershipTier.tier2:
-        return 'Tier 2 Silver';
+        return 'Professional';
       case MembershipTier.tier3:
-        return 'Tier 3 Gold';
+        return 'Specialist';
     }
   }
   
