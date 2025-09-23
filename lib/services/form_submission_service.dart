@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class FormSubmissionService {
   // Replace this with your new deployed Google Apps Script web app URL
-  static const String scriptUrl = 'https://script.google.com/macros/s/AKfycbyVMQFMnnQ2IEwo7X7vAppgTxezoEa6d4pZP77eMLyMU67MVMJ3oqYS7wZ2dKsiVIEP/exec';
+  static const String scriptUrl = 'https://script.google.com/macros/s/AKfycby1sMTVuKreooY5blAxoTm0_i9oQbtbyALtnE0h1z27YqVDX5SUEdcCZMelZvJ-Jc7U/exec';
   
   /// Submits form data to the Google Sheets through Google Apps Script
   /// Returns a Future with success status and message

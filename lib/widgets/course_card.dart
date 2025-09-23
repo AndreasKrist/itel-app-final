@@ -154,16 +154,34 @@ class CourseCard extends StatelessWidget {
             if (course.funding != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
-                child: Text(
-                  course.funding!,
-                  style: TextStyle(
-                    color: course.funding!.contains('Eligible') ? Color(0xFF00FF00) : Colors.grey[600],
-                    fontSize: 14, // Increased from 12 to 14
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                child: course.funding!.contains('Eligible')
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Color(0xD9013220),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        course.funding!,
+                        style: TextStyle(
+                          color: Color(0xFF00FF00),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  : Text(
+                      course.funding!,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
               ),
             if (course.progress != null)
               Padding(

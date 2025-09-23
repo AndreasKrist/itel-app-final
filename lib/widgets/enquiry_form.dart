@@ -32,6 +32,7 @@ class _EnquiryFormState extends State<EnquiryForm> {
   final TextEditingController _experienceController = TextEditingController();
 
   String? _selectedAgeGroup;
+  String? _selectedGender;
   String? _selectedJobIndustry;
   String? _selectedJobTitle;
   String? _selectedConsultant;
@@ -96,11 +97,16 @@ void _submitForm() async {
       print("Starting form submission...");
       
       // Create a map with all form values
+      print("DEBUG: _selectedAgeGroup = $_selectedAgeGroup");
+      print("DEBUG: _selectedGender = $_selectedGender");
+      print("DEBUG: _selectedJobIndustry = $_selectedJobIndustry");
+
       final Map<String, dynamic> formData = {
         'name': _nameController.text,
         'email': _emailController.text,
         'phone': _phoneController.text,
         'ageGroup': _selectedAgeGroup ?? '',
+        'gender': _selectedGender ?? '',
         'jobIndustry': _selectedJobIndustry ?? '',
         'jobTitle': _selectedJobTitle ?? '',
         'experience': _experienceController.text,
@@ -460,7 +466,7 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
                     _buildDropdown(
                       value: _selectedAgeGroup,
                       hint: 'Select your age group',
-                      items: ['Male', 'Female', 'Non-binary/Non-conforming'],
+                      items: ['20 and below', '21-29', '30-39', '40-49', '50-59', '60 and above'],
                       onChanged: (value) {
                         setState(() {
                           _selectedAgeGroup = value;
@@ -469,6 +475,26 @@ Future<void> _saveEnrollmentToFirebase(EnrolledCourse enrollment) async {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please select your age group';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Gender
+                    _buildFieldLabel('Gender', true),
+                    _buildDropdown(
+                      value: _selectedGender,
+                      hint: 'Select your gender',
+                      items: ['Male', 'Female', 'Non-binary / Non-conforming'],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedGender = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select your gender';
                         }
                         return null;
                       },
