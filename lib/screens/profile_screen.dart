@@ -1349,24 +1349,24 @@ Widget _buildProfileTab() {
             Row(
               children: [
                 _buildStatCard(
-                  'In Progress',
+                  'Enrolled',
                   '${activeEnrollments.length}', // Use enrolled courses count
                   Icons.pending_actions,
-                  Colors.blue,
+                  Color(0xFF0056AC),
                 ),
                 const SizedBox(width: 12),
                 _buildStatCard(
                   'Completed',
                   '${totalCompletedCount}',
                   Icons.check_circle,
-                  Colors.green,
+                  Color(0xFF00FF00),
                 ),
                 const SizedBox(width: 12),
                 _buildStatCard(
                   'Enquiry',
                   '${pendingEnrollments.length}', // Use pending enrollments count
                   Icons.hourglass_empty,
-                  Colors.orange,
+                  Color(0xFFFF6600),
                 ),
               ],
             ),
@@ -2541,20 +2541,25 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
     );
   }
   
-  Widget _buildStatCard(String title, String value, IconData icon, MaterialColor color) {
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    bool isGreen = color == const Color(0xFF00FF00);
+    Color textColor = isGreen ? const Color(0xD9013220) : color;
+    Color bgColor = isGreen ? color : color.withOpacity(0.2);
+    Color borderColor = isGreen ? const Color(0xD9013220) : color.withOpacity(0.3);
+
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: color[50],
+          color: bgColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color[100]!),
+          border: Border.all(color: borderColor),
         ),
         child: Column(
           children: [
             Icon(
               icon,
-              color: color[700],
+              color: textColor,
               size: 24,
             ),
             const SizedBox(height: 8),
@@ -2563,7 +2568,7 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: color[800],
+                color: textColor,
               ),
             ),
             const SizedBox(height: 4),
@@ -2571,7 +2576,7 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
               title,
               style: TextStyle(
                 fontSize: 12,
-                color: color[800],
+                color: textColor,
               ),
               textAlign: TextAlign.center,
             ),

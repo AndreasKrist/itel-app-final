@@ -34,9 +34,9 @@ class EnrolledCourseCard extends StatelessWidget {
       case EnrollmentStatus.confirmed:
         return Color(0xFF0056AC);
       case EnrollmentStatus.active:
-        return Color(0xFF00FF00);
+        return Color(0xFF0056AC);
       case EnrollmentStatus.completed:
-        return Color(0xFF9900FF);
+        return Color(0xFF00FF00);
       case EnrollmentStatus.cancelled:
         return Colors.red;
       default:
@@ -349,7 +349,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.green[50],
+                color: Colors.blue[50],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -359,12 +359,12 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.green[100]!),
+                      border: Border.all(color: Colors.blue[100]!),
                     ),
                     child: Icon(
                       Icons.computer,
                       size: 24,
-                      color: Color(0xFF00FF00),
+                      color: Color(0xFF0056AC),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -472,8 +472,10 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.menu_book, size: 16),
-                  label: const Text('Course Outline'),
+                  icon: const Icon(Icons.menu_book, size: 16, color: Colors.black,),
+                  label: const Text('Course Outline',style: TextStyle(
+                              color: Colors.black,),
+                              ),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     side: BorderSide(color: Colors.blue[300]!),
@@ -490,11 +492,11 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () => _launchCourseURL(context),
-                    icon: const Icon(Icons.login, size: 16, ),
+                    icon: const Icon(Icons.login, size: 16,color: Colors.white, ),
                     label: const Text('Access Course'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF00FF00),
-                      foregroundColor: Colors.black,
+                      backgroundColor: Color(0xFF0056AC),
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -548,11 +550,11 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
               width: double.infinity,
               child: OutlinedButton.icon(
                 onPressed: onRemove,
-                icon: const Icon(Icons.check_circle, size: 16),
+                icon: const Icon(Icons.check_circle, size: 16, color: Color(0xFF0056AC),),
                 label: const Text('Mark as Completed'),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  side: BorderSide(color: Colors.green[300]!),
+                  side: BorderSide(color: Colors.blue[300]!),
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -577,7 +579,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                   Icon(
                     Icons.check_circle,
                     size: 18,
-                    color: Color(0xFF9900FF),
+                    color: Color(0xFF0056AC),
                   ),
                   const SizedBox(width: 8),
                   Text(
