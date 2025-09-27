@@ -1,4 +1,4 @@
-package com.example.itel_app
+package com.itel.app
 
 import io.flutter.embedding.android.FlutterActivity
 
