@@ -54,120 +54,142 @@ class TrendingCard extends StatelessWidget {
           children: [
             // Left side: Content
             Expanded(
+              flex: 3, // Give more space to content
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Type indicator
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _getLightColorForType(item.type),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _getIconForType(item.type),
-                          size: 12,
-                          color: _getColorForType(item.type),
+                  Row(
+                    children: [
+                      // Type indicator
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getLightColorForType(item.type),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          _getTypeText(item.type),
-                          style: TextStyle(
-                            color: _getColorForType(item.type),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              _getIconForType(item.type),
+                              size: 12,
+                              color: _getColorForType(item.type),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              _getTypeText(item.type),
+                              style: TextStyle(
+                                color: _getColorForType(item.type),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+
+                      const SizedBox(width: 12),
+
+                      // Date/Time on same row as type indicator
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              item.type == TrendingItemType.upcomingEvents || item.date != null
+                                  ? Icons.calendar_today
+                                  : Icons.access_time,
+                              color: Colors.grey[400],
+                              size: 14,
+                            ),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                item.date ?? item.readTime ?? '',
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
-                  // Title
+
+                  // Title with better text handling
                   Text(
                     item.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  
-                  const SizedBox(height: 4),
-                  
-                  // Category
-                  Text(
-                    item.category,
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 14,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  // Category and View Details on same row
+                  Row(
+                    children: [
+                      // Category
+                      Expanded(
+                        child: Text(
+                          item.category,
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                      // View details button on the right side of category row
+                      TextButton(
+                        onPressed: () {
+                          if (item.type == TrendingItemType.courseAssessor && item.customLink != null) {
+                            LinkHandler.openLink(
+                              context,
+                              item.customLink!,
+                              fallbackMessage: 'Opening PTSA assessment...'
+                            );
+                          } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
+                            _handleCoursePromotion(context, item);
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TrendingDetailScreen(item: item),
+                              ),
+                            );
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'View Details',
+                          style: TextStyle(
+                            color: Color(0xFFFF6600)!,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ),
-            
-            // Right side: Date/Time
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      item.type == TrendingItemType.upcomingEvents || item.date != null
-                          ? Icons.calendar_today
-                          : Icons.access_time,
-                      color: Colors.grey[400],
-                      size: 16,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      item.date ?? item.readTime ?? '',
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-                
-                const SizedBox(height: 8),
-                
-                // View details button
-                TextButton(
-                  onPressed: () {
-                    if (item.type == TrendingItemType.courseAssessor && item.customLink != null) {
-                      LinkHandler.openLink(
-                        context, 
-                        item.customLink!,
-                        fallbackMessage: 'Opening PTSA assessment...'
-                      );
-                    } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
-                      _handleCoursePromotion(context, item);
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TrendingDetailScreen(item: item),
-                        ),
-                      );
-                    }
-                  },
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(
-                    'View Details',
-                    style: TextStyle(
-                      color: Color(0xFFFF6600)!,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ],
         ),

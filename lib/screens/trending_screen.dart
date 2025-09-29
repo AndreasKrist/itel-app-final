@@ -196,8 +196,22 @@ class _TrendingScreenState extends State<TrendingScreen> {
               ],
 
               const SizedBox(height: 24),
-          
-          // Upcoming Events section
+
+          // Course Assessor section - First priority
+          if (courseAssessor.isNotEmpty) ...[
+            _buildSectionHeader(context, 'Course Assessor'),
+            const SizedBox(height: 12),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: courseAssessor.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) => TrendingCard(item: courseAssessor[index]),
+            ),
+            const SizedBox(height: 24),
+          ],
+
+          // Upcoming Events section - Second priority
           if (upcomingEvents.isNotEmpty) ...[
             _buildSectionHeader(context, 'Upcoming Events'),
             const SizedBox(height: 12),
@@ -210,22 +224,8 @@ class _TrendingScreenState extends State<TrendingScreen> {
             ),
             const SizedBox(height: 24),
           ],
-          
-          // Course Promotion section
-          if (coursePromotion.isNotEmpty) ...[
-            _buildSectionHeader(context, 'Course Promotion'),
-            const SizedBox(height: 12),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: coursePromotion.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => TrendingCard(item: coursePromotion[index]),
-            ),
-            const SizedBox(height: 24),
-          ],
-          
-          // Featured Articles section (Carousel style)
+
+          // Featured Articles section - Third priority (Carousel style)
           if (featuredArticles.isNotEmpty) ...[
             _buildSectionHeader(context, 'Featured Articles'),
             const SizedBox(height: 12),
@@ -244,8 +244,22 @@ class _TrendingScreenState extends State<TrendingScreen> {
             ),
             const SizedBox(height: 24),
           ],
-          
-          // TechTips of the Week section
+
+          // Course Promotion section - Fourth priority
+          if (coursePromotion.isNotEmpty) ...[
+            _buildSectionHeader(context, 'Course Promotion'),
+            const SizedBox(height: 12),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: coursePromotion.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) => TrendingCard(item: coursePromotion[index]),
+            ),
+            const SizedBox(height: 24),
+          ],
+
+          // TechTips of the Week section - Fifth priority
           if (techTipsOfTheWeek.isNotEmpty) ...[
             _buildSectionHeader(context, 'TechTips of the Week'),
             const SizedBox(height: 12),
@@ -255,20 +269,6 @@ class _TrendingScreenState extends State<TrendingScreen> {
               itemCount: techTipsOfTheWeek.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) => TrendingCard(item: techTipsOfTheWeek[index]),
-            ),
-            const SizedBox(height: 24),
-          ],
-          
-          // Course Assessor section
-          if (courseAssessor.isNotEmpty) ...[
-            _buildSectionHeader(context, 'Course Assessor'),
-            const SizedBox(height: 12),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: courseAssessor.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) => TrendingCard(item: courseAssessor[index]),
             ),
             const SizedBox(height: 24),
           ],

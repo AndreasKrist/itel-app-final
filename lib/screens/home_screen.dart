@@ -234,24 +234,29 @@ void _toggleFavorite(Course course) async {
     return baseList.where((course) => sctpCourseIds.contains(course.id)).toList();
   }
 
-  // Get trending items for home screen - one from each category
+  // Get trending items for home screen - ordered priority: Course Assessor, Events, Articles
   static List<TrendingItem> _getHomeTrendingItems(List<TrendingItem> allItems) {
+    if (allItems.isEmpty) return [];
+
     List<TrendingItem> homeItems = [];
-    
-    // Get one item from each category
-    final upcomingEvents = allItems.where((item) => item.type == TrendingItemType.upcomingEvents).take(1);
-    final coursePromotion = allItems.where((item) => item.type == TrendingItemType.coursePromotion).take(1);
-    final featuredArticles = allItems.where((item) => item.type == TrendingItemType.featuredArticles).take(1);
-    final techTips = allItems.where((item) => item.type == TrendingItemType.techTipsOfTheWeek).take(1);
-    final courseAssessor = allItems.where((item) => item.type == TrendingItemType.courseAssessor).take(1);
-    
-    homeItems.addAll(upcomingEvents);
-    homeItems.addAll(coursePromotion);
-    homeItems.addAll(featuredArticles);
-    homeItems.addAll(techTips);
-    homeItems.addAll(courseAssessor);
-    
-    return homeItems;
+
+    // Define the preferred order: Course Assessor first, then Events, then Articles
+    final preferredOrder = [
+      TrendingItemType.courseAssessor,
+      TrendingItemType.upcomingEvents,
+      TrendingItemType.featuredArticles,
+      TrendingItemType.coursePromotion,
+      TrendingItemType.techTipsOfTheWeek,
+    ];
+
+    // Add items in the preferred order
+    for (var type in preferredOrder) {
+      final itemsOfType = allItems.where((item) => item.type == type).take(1);
+      homeItems.addAll(itemsOfType);
+    }
+
+    // Limit to maximum 5 items for home screen
+    return homeItems.take(5).toList();
   }
 
   // Get course disciplines/categories
