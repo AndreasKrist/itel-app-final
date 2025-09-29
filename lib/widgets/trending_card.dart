@@ -283,7 +283,7 @@ class TrendingCard extends StatelessWidget {
       case TrendingItemType.techTipsOfTheWeek:
         return Icons.lightbulb;
       case TrendingItemType.courseAssessor:
-        return Icons.assessment;
+        return Icons.build;
     }
   }
   
@@ -298,7 +298,7 @@ class TrendingCard extends StatelessWidget {
       case TrendingItemType.techTipsOfTheWeek:
         return 'Tech Tip';
       case TrendingItemType.courseAssessor:
-        return 'Assessment';
+        return 'Tool';
     }
   }
 }

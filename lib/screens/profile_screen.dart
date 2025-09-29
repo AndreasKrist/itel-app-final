@@ -2089,8 +2089,10 @@ Widget _buildCoursesTab() {
         currentUserTier: currentUser.tier,
       ),
       
+      // Professional and Specialist tiers hidden for now
+      /*
       const SizedBox(height: 12),
-      
+
       _buildTierCard(
         tier: MembershipTier.tier2,
         title: 'Professional',
@@ -2107,9 +2109,9 @@ Widget _buildCoursesTab() {
         isPopular: false,
         currentUserTier: currentUser.tier,
       ),
-      
+
       const SizedBox(height: 12),
-      
+
       _buildTierCard(
         tier: MembershipTier.tier3,
         title: 'Specialist',
@@ -2127,7 +2129,10 @@ Widget _buildCoursesTab() {
         isPopular: true,
         currentUserTier: currentUser.tier,
       ),
-      
+
+      const SizedBox(height: 12),
+      */
+
       const SizedBox(height: 24),
     ],
   );

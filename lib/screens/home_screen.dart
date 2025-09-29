@@ -553,7 +553,7 @@ void _toggleFavorite(Course course) async {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.grey[350],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -587,7 +587,7 @@ void _toggleFavorite(Course course) async {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: Colors.grey[500],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

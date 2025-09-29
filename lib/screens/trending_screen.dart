@@ -199,7 +199,7 @@ class _TrendingScreenState extends State<TrendingScreen> {
 
           // Course Assessor section - First priority
           if (courseAssessor.isNotEmpty) ...[
-            _buildSectionHeader(context, 'Course Assessor'),
+            _buildSectionHeader(context, 'Tools'),
             const SizedBox(height: 12),
             ListView.separated(
               shrinkWrap: true,
