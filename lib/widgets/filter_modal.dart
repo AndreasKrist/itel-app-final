@@ -219,7 +219,10 @@ class _FilterModalState extends State<FilterModal> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Cancel'),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),

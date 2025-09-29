@@ -263,7 +263,7 @@ class CourseCard extends StatelessWidget {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Text(
-                    'View Details',
+                    'Course Overview',
                     style: TextStyle(
                       color: Color(0xFFFF6600),
                       fontWeight: FontWeight.w500,

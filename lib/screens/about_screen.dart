@@ -62,23 +62,7 @@ class AboutScreen extends StatelessWidget {
           _buildSectionTitle('Our Story'),
           const SizedBox(height: 12),
           Text(
-            'ITEL was founded in 2001 by Franky Espehana in response to the increasing demand for IT training services. With its early origins as a New Horizons franchise, the company has moved forward to rebrand to the present day ITEL.\n\nHeadquartered in Singapore, ITEL is an authorized Accredited Training Organization (ATO) and Continuing Education Training (CET), service provider of industry training courses in the area of IT and Business. Training sessions are conducted on premise within its training centre, externally within client site and remotely.',
-            style: TextStyle(
-              color: Colors.grey[800],
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'In collaboration with Singapore Government affiliated organizations such as SkillsFuture Singapore (SSG), ITEL has been entrusted with funded and subsidized training courses. We also collaborate closely with internationally recognised industry vendors like EC-Council, CompTIA, Microsoft, and PeopleCert. This provides you and your team with the skills and knowledge necessary to excel in the rapidly evolving IT landscape.',
-            style: TextStyle(
-              color: Colors.grey[800],
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'ITEL also offers a customised and or curated approach towards its corporate and group courses. Curriculum and delivery can be crafted to suit each group\'s needs.\n\nAt ITEL, we build on past insights to continuously enhance our training products and services, ensuring they evolve to address current needs and anticipate future advancements.',
+            'ITEL was conceived in 2001 by the need for IT Training Services. With its early origins as a New Horizons franchise, the company has moved forward to rebrand to the present-day ITEL.\n\nHeadquartered in Singapore, ITEL is an authorized Accredited Training Organization (ATO) and Continuing Education and Training (CET) service provider of industry training courses in the area of IT and Business. Training sessions are conducted on premises within its training centre, externally within the client site, and remotely.\n\nOver the past 23 years, ITEL has built a strong track record with more than 214,842 graduates and 250+ courses offered. In collaboration with Singapore Government–affiliated organizations such as SkillsFuture Singapore (SSG) and industry leaders like EC-Council, CompTIA, Microsoft, and PeopleCert, ITEL has been entrusted to deliver 26 SSG-funded courses alongside a growing suite of non-funded programs that are gaining popularity.\n\nITEL also offers a customized or curated approach to its corporate and group courses. Curriculum and delivery can be crafted to suit each group\'s needs.\n\nAt ITEL, we build on past insights to continuously enhance our training products and services, ensuring they evolve to address current needs and anticipate future advancements.',
             style: TextStyle(
               color: Colors.grey[800],
               height: 1.5,
@@ -358,7 +342,7 @@ class AboutScreen extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 9,
               fontWeight: FontWeight.w500,
               color: Colors.grey[800],
               height: 1.4,

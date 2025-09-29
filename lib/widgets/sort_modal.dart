@@ -123,7 +123,10 @@ class _SortModalState extends State<SortModal> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Cancel'),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),

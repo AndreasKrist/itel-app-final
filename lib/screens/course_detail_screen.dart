@@ -627,7 +627,7 @@ void _toggleFavorite() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Course Details'),
+        title: const Text('Course Overview'),
         actions: [
           IconButton(
             icon: Icon(
@@ -1045,6 +1045,8 @@ void _toggleFavorite() async {
                 ),
                 
                 // Related Courses Section with full-width background
+                // TODO: Uncomment when needed in the future
+                /*
                 if (relatedCourses.isNotEmpty) ...[
                   Container(
                     width: double.infinity,
@@ -1068,7 +1070,7 @@ void _toggleFavorite() async {
                                 return InkWell(
                                 onTap: () {
                                   Navigator.pushReplacement(
-                                    context, 
+                                    context,
                                     MaterialPageRoute(
                                       builder: (context) => CourseDetailScreen(course: course),
                                     ),
@@ -1170,6 +1172,7 @@ void _toggleFavorite() async {
                     ),
                   ),
                 ],
+                */
                 
                 const SizedBox(height: 60), // Space for the bottom button
               ],
