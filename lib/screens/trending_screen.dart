@@ -230,7 +230,7 @@ class _TrendingScreenState extends State<TrendingScreen> {
             _buildSectionHeader(context, 'Featured Articles'),
             const SizedBox(height: 12),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.2,
+              height: 160, // Further increased height to accommodate all content
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 0),
