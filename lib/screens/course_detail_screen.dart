@@ -418,7 +418,7 @@ void _toggleFavorite() async {
           if (canLaunchApp) {
             // Show message
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Opening ITEL Moodle app...'))
+              const SnackBar(content: Text('Accesing ITEL Learn App...'))
             );
 
             // Launch the app with deep link to course

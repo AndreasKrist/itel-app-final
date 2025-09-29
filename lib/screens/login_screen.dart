@@ -191,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[50],
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -236,10 +236,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        " ''Training You Today for Tomorrow'' ",
+                        "Training You Today for Tomorrow",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontStyle: FontStyle.italic,
+                          fontStyle: FontStyle.normal,
                           color: Color(0xFF0056AC),
                           fontSize: 20,
                         ),
@@ -249,7 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Sign in now to start learning!',
+                  'Sign in to explore more!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -280,10 +280,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey[300]!),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
                     ],
@@ -293,7 +294,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       hintText: 'Email',
-                      prefixIcon: Icon(Icons.email, color: Colors.blue[400]),
+                      prefixIcon: Icon(Icons.email, color: Color(0xFF0056AC)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -309,10 +310,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey[300]!),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
                     ],
@@ -322,7 +324,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       hintText: 'Password',
-                      prefixIcon: Icon(Icons.lock, color: Colors.blue[400]),
+                      prefixIcon: Icon(Icons.lock, color: Color(0xFF0056AC)),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword ? Icons.visibility : Icons.visibility_off,
@@ -387,7 +389,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       )
                     : const Text(
-                        'Sign In',
+                        'Sign in',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -406,8 +408,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: Colors.grey[300]!),
                     ),
-                    elevation: 1,
+                    elevation: 3,
                   ),
                   icon: _isGoogleLoading
                     ? SizedBox(
@@ -438,6 +441,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 OutlinedButton(
                   onPressed: _isLoading || _isGoogleLoading ? null : _loginAsGuest,
                   style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     side: BorderSide(color: Colors.blue[200]!),
                     shape: RoundedRectangleBorder(

@@ -41,7 +41,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[100],
-        fontFamily: 'Poppins',
+        fontFamily: 'DINRoundPro',
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
       ),
       home: const AuthWrapper(),
       debugShowCheckedModeBanner: false,

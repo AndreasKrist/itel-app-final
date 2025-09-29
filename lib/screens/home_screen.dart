@@ -557,6 +557,7 @@ void _toggleFavorite(Course course) async {
                     'Course Discipline',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFF0056AC),
                         ),
                   ),
                   const SizedBox(height: 16),
@@ -590,6 +591,7 @@ void _toggleFavorite(Course course) async {
                     "What's Trending",
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFF0056AC),
                         ),
                   ),
                   const SizedBox(height: 16),
