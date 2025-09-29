@@ -62,6 +62,26 @@ class EnrolledCourseCard extends StatelessWidget {
     }
   }
 
+  // Helper function to get completion text based on enrollment type
+  String _getCompletionText() {
+    // Check if this is an enquiry course by checking if it's NOT a free/complimentary course
+    // AND checking if it was originally pending or is a paid course enrollment
+    bool isEnquiry = !_isFreeComplimentaryCourse(enrollment.courseId);
+
+    return isEnquiry ? 'Enquiry Completed' : 'Course Completed';
+  }
+
+  // Helper function to check if a course is free/complimentary
+  bool _isFreeComplimentaryCourse(String courseId) {
+    // Check if the course price is free or has complimentary funding
+    final coursePrice = course.price.toLowerCase();
+    final courseFunding = course.funding?.toLowerCase() ?? '';
+
+    return coursePrice.contains('free') ||
+           coursePrice.contains('\$0') ||
+           courseFunding.contains('complimentary');
+  }
+
   // Simple method to launch course URL
   // Updated _launchCourseURL method with course deep linking
 
@@ -583,7 +603,7 @@ Future<bool> _showMoodleAppDialog(BuildContext context) async {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Course Completed',
+                    _getCompletionText(),
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
