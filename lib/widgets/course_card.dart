@@ -132,111 +132,107 @@ class CourseCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            // Single row with funding, progress/completion, duration, and Course Overview
+            // Funding, Progress/Completion, and Duration row
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Left side: Funding, Progress/Completion, and Duration
-                Expanded(
-                  child: Row(
-                    children: [
-                      // Funding status
-                      if (course.funding != null) ...[
-                        course.funding!.contains('Eligible')
-                          ? Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: Color(0xD9013220),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                'Funded',
-                                style: TextStyle(
-                                  color: Color(0xFF00FF00),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
-                          : Text(
-                              course.funding!,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        const SizedBox(width: 12),
-                      ],
-                      // Progress status
-                      if (course.progress != null) ...[
-                        Text(
-                          course.progress!,
-                          style: TextStyle(
-                            color: Color(0xFFFF6600),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                // Funding status
+                if (course.funding != null) ...[
+                  course.funding!.contains('Eligible')
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Color(0xD9013220),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        const SizedBox(width: 12),
-                      ],
-                      // Completion date
-                      if (course.completionDate != null) ...[
-                        Text(
-                          'Completed ${course.completionDate}',
+                        child: Text(
+                          'Funded',
                           style: TextStyle(
                             color: Color(0xFF00FF00),
                             fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(width: 12),
-                      ],
-                      // Duration
-                      Icon(Icons.access_time, color: Colors.grey[400], size: 18),
-                      const SizedBox(width: 4),
-                      Text(
-                        course.duration,
-                        style: const TextStyle(
+                      )
+                    : Text(
+                        course.funding!,
+                        style: TextStyle(
+                          color: Colors.grey[600],
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                ),
-                // Right side: Course Overview button
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CourseDetailScreen(course: course),
-                      ),
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(
-                    'Course Overview',
+                  const SizedBox(width: 12),
+                ],
+                // Progress status
+                if (course.progress != null) ...[
+                  Text(
+                    course.progress!,
                     style: TextStyle(
                       color: Color(0xFFFF6600),
-                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                // Completion date
+                if (course.completionDate != null) ...[
+                  Text(
+                    'Completed ${course.completionDate}',
+                    style: TextStyle(
+                      color: Color(0xFF00FF00),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                // Duration
+                Icon(Icons.access_time, color: Colors.grey[400], size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  course.duration,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 8),
+            // Course Overview button on its own row
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CourseDetailScreen(course: course),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  'Course Overview',
+                  style: TextStyle(
+                    color: Color(0xFFFF6600),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

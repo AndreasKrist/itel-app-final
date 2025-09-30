@@ -439,7 +439,7 @@ void _toggleFavorite(Course course) async {
                   const SizedBox(height: 16),
                   
                   SizedBox(
-                    height: 175,
+                    height: 185,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: popularCourses.length,
@@ -468,7 +468,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
                     
                     SizedBox(
-                      height: 175,
+                      height: 185,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: complimentaryCourses.length,
@@ -498,7 +498,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
 
                     SizedBox(
-                      height: 175,
+                      height: 185,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: fundedCourses.length,
@@ -528,7 +528,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
 
                     SizedBox(
-                      height: 175,
+                      height: 185,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: sctpCourses.length,
