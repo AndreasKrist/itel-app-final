@@ -207,66 +207,65 @@ class _AppMockupState extends State<AppMockup> {
             // Guest banner (only visible for guest users)
             if (widget.isGuest)
               const GuestBanner(),
-              
+
             // Main Content
             Expanded(
               child: _currentIndex == 4 && widget.isGuest
                   ? GuestProfileScreen(onSignOut: widget.onSignOut) // Pass sign out callback
                   : screens[_currentIndex],
             ),
-            
-            // Bottom Navigation
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  top: BorderSide(color: Colors.grey[200]!),
-                ),
-              ),
-              child: BottomNavigationBar(
-                currentIndex: _currentIndex,
-                onTap: (index) {
-                  setState(() {
-                    // If switching to profile tab, trigger reload of enrollments
-                    if (index == 4 && _currentIndex != 4) {
-                      // We need to trigger the ProfileScreen to reload data
-                      print("Switching to profile tab - data will be refreshed");
-                    }
-                    
-                    // Clear selected category if manually switching to courses tab
-                    if (index == 1 && _currentIndex != 1) {
-                      _selectedCategory = null;
-                    }
-                    
-                    _currentIndex = index;
-                  });
-                },
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Color(0xFF0056AC),
-                unselectedItemColor: Colors.grey[500],
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.book),
-                    label: 'Courses',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.trending_up),
-                    label: 'Trending',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.info),
-                    label: 'About',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey[200]!),
+          ),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              // If switching to profile tab, trigger reload of enrollments
+              if (index == 4 && _currentIndex != 4) {
+                // We need to trigger the ProfileScreen to reload data
+                print("Switching to profile tab - data will be refreshed");
+              }
+
+              // Clear selected category if manually switching to courses tab
+              if (index == 1 && _currentIndex != 1) {
+                _selectedCategory = null;
+              }
+
+              _currentIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Color(0xFF0056AC),
+          unselectedItemColor: Colors.grey[500],
+          elevation: 0,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book),
+              label: 'Courses',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.trending_up),
+              label: 'Trending',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.info),
+              label: 'About',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
             ),
           ],
         ),
