@@ -131,87 +131,89 @@ class CourseCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20), // Perfect balance - not too tight, not too spacious
-            // Optional status text (funding/progress/completion) - made bigger
-            if (course.funding != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: course.funding!.contains('Eligible')
-                  ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Color(0xD9013220),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        'Funded',
-                        style: TextStyle(
-                          color: Color(0xFF00FF00),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
-                  : Text(
-                      course.funding!,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-              ),
-            if (course.progress != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Text(
-                  course.progress!,
-                  style: TextStyle(
-                    color: Color(0xFFFF6600),
-                    fontSize: 14, // Increased from 12 to 14
-                    fontWeight: FontWeight.w600, // Made bolder
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            if (course.completionDate != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Text(
-                  'Completed ${course.completionDate}',
-                  style: TextStyle(
-                    color: Color(0xFF00FF00),
-                    fontSize: 14, // Increased from 12 to 14
-                    fontWeight: FontWeight.w600, // Made bolder
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            // Bottom row with duration on left and View Details on right
+            const SizedBox(height: 20),
+            // Single row with funding, progress/completion, duration, and Course Overview
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Left side: Duration only
-                Row(
-                  children: [
-                    Icon(Icons.access_time, color: Colors.grey[400], size: 18),
-                    const SizedBox(width: 4),
-                    Text(
-                      course.duration,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                // Left side: Funding, Progress/Completion, and Duration
+                Expanded(
+                  child: Row(
+                    children: [
+                      // Funding status
+                      if (course.funding != null) ...[
+                        course.funding!.contains('Eligible')
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Color(0xD9013220),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'Funded',
+                                style: TextStyle(
+                                  color: Color(0xFF00FF00),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          : Text(
+                              course.funding!,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        const SizedBox(width: 12),
+                      ],
+                      // Progress status
+                      if (course.progress != null) ...[
+                        Text(
+                          course.progress!,
+                          style: TextStyle(
+                            color: Color(0xFFFF6600),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                      // Completion date
+                      if (course.completionDate != null) ...[
+                        Text(
+                          'Completed ${course.completionDate}',
+                          style: TextStyle(
+                            color: Color(0xFF00FF00),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                      // Duration
+                      Icon(Icons.access_time, color: Colors.grey[400], size: 18),
+                      const SizedBox(width: 4),
+                      Text(
+                        course.duration,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                // Right side: View Details button
+                // Right side: Course Overview button
                 TextButton(
                   onPressed: () {
                     Navigator.push(

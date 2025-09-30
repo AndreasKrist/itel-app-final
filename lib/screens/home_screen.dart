@@ -439,13 +439,13 @@ void _toggleFavorite(Course course) async {
                   const SizedBox(height: 16),
                   
                   SizedBox(
-                    height: 215, // Perfect size - not too tight, not too spacious
+                    height: 165,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: popularCourses.length,
                       separatorBuilder: (context, index) => const SizedBox(width: 12),
                       itemBuilder: (context, index) => SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.85, // Control the width of each card
+                        width: MediaQuery.of(context).size.width * 0.85,
                         child: CourseCard(
                           course: popularCourses[index],
                           onFavoriteToggle: _toggleFavorite,
@@ -468,13 +468,13 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
                     
                     SizedBox(
-                      height: 215, // Perfect size - not too tight, not too spacious
+                      height: 165,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: complimentaryCourses.length,
                         separatorBuilder: (context, index) => const SizedBox(width: 12),
                         itemBuilder: (context, index) => SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.85, // Control the width of each card
+                          width: MediaQuery.of(context).size.width * 0.85,
                           child: CourseCard(
                             course: complimentaryCourses[index],
                             onFavoriteToggle: _toggleFavorite,
@@ -498,7 +498,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
 
                     SizedBox(
-                      height: 215,
+                      height: 165,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: fundedCourses.length,
@@ -528,7 +528,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
 
                     SizedBox(
-                      height: 215,
+                      height: 165,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: sctpCourses.length,
