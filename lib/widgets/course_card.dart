@@ -68,24 +68,6 @@ class CourseCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      if (course.certType != null) ...[
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.blue[50],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            course.certType!,
-                            style: TextStyle(
-                              color: Color(0xFF0056AC),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ),
@@ -162,7 +144,7 @@ class CourseCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        course.funding!,
+                        'Funded',
                         style: TextStyle(
                           color: Color(0xFF00FF00),
                           fontSize: 14,
@@ -211,39 +193,21 @@ class CourseCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-            // Bottom row with rating/duration on left and View Details on right
+            // Bottom row with duration on left and View Details on right
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Left side: Rating and Duration - made bigger
+                // Left side: Duration only
                 Row(
                   children: [
-                    Row(
-                      children: [
-                        Icon(Icons.star, color: Color(0xFFFF6600), size: 18), // Increased from 16 to 18
-                        const SizedBox(width: 4),
-                        Text(
-                          course.rating.toString(),
-                          style: const TextStyle(
-                            fontSize: 14, // Increased from 12 to 14
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-                    Row(
-                      children: [
-                        Icon(Icons.access_time, color: Colors.grey[400], size: 18), // Increased from 16 to 18
-                        const SizedBox(width: 4),
-                        Text(
-                          course.duration,
-                          style: const TextStyle(
-                            fontSize: 14, // Increased from 12 to 14
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    Icon(Icons.access_time, color: Colors.grey[400], size: 18),
+                    const SizedBox(width: 4),
+                    Text(
+                      course.duration,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
