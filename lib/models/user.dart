@@ -12,9 +12,9 @@ extension MembershipTierExtension on MembershipTier {
   String get displayName {
     switch (this) {
       case MembershipTier.standard:
-        return 'Associate';
+        return 'Associate Member';
       case MembershipTier.tier1:
-        return 'Associate';
+        return 'Associate Member';
       case MembershipTier.tier2:
         return 'Professional';
       case MembershipTier.tier3:

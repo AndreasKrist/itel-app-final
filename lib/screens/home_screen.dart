@@ -439,7 +439,7 @@ void _toggleFavorite(Course course) async {
                   const SizedBox(height: 16),
                   
                   SizedBox(
-                    height: 165,
+                    height: 175,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: popularCourses.length,
@@ -468,7 +468,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
                     
                     SizedBox(
-                      height: 165,
+                      height: 175,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: complimentaryCourses.length,
@@ -498,7 +498,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
 
                     SizedBox(
-                      height: 165,
+                      height: 175,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: fundedCourses.length,
@@ -528,7 +528,7 @@ void _toggleFavorite(Course course) async {
                     const SizedBox(height: 16),
 
                     SizedBox(
-                      height: 165,
+                      height: 175,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         itemCount: sctpCourses.length,
@@ -568,13 +568,13 @@ void _toggleFavorite(Course course) async {
                   const SizedBox(height: 16),
                   
                   SizedBox(
-                    height: 180,
+                    height: 100,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: courseDisciplines.length,
                       separatorBuilder: (context, index) => const SizedBox(width: 12),
                       itemBuilder: (context, index) => SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.45,
+                        width: MediaQuery.of(context).size.width * 0.55,
                         child: _buildDisciplineCard(courseDisciplines[index]),
                       ),
                     ),
@@ -683,7 +683,7 @@ void _toggleFavorite(Course course) async {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -696,39 +696,39 @@ void _toggleFavorite(Course course) async {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           onTap: () {
             // Switch to courses tab with category filter
             widget.onCategorySelected?.call(discipline['name']!);
           },
           child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            padding: const EdgeInsets.all(12),
+            child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.blue[50],
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     _getIconData(discipline['icon']!),
-                    size: 32,
+                    size: 24,
                     color: Color(0xFF0056AC),
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  discipline['name']!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[800],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    discipline['name']!,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[800],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

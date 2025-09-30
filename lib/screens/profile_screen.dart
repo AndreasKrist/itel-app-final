@@ -809,25 +809,27 @@ void _removeCourseFromEnrolled(String courseId) async {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: _getTierColor(currentUser.tier),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      '${(currentUser.tier.discountPercentage * 100).toInt()}% OFF',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
+                                  if (currentUser.tier.discountPercentage > 0) ...[
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: _getTierColor(currentUser.tier),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        '${(currentUser.tier.discountPercentage * 100).toInt()}% OFF',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ],
                               ),
                           ],
@@ -2012,7 +2014,7 @@ Widget _buildCoursesTab() {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  currentUser.tier.displayName,
+                  'Membership Type: Associate',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -2041,10 +2043,10 @@ Widget _buildCoursesTab() {
             ),
             const SizedBox(height: 8),
             Text(
-              'Valid until: ${currentUser.membershipExpiryDate}',
+              'Membership Validity Period:',
               style: TextStyle(color: Color(0xFF0056AC)),
             ),
-            if (currentUser.tier != MembershipTier.standard) ...[
+            if (currentUser.tier != MembershipTier.standard && currentUser.tier.discountPercentage > 0) ...[
               const SizedBox(height: 8),
               Text(
                 'Discount: ${(currentUser.tier.discountPercentage * 100).toInt()}% off all courses',
@@ -2074,12 +2076,12 @@ Widget _buildCoursesTab() {
       // Tier Cards
       _buildTierCard(
         tier: MembershipTier.tier1,
-        title: 'Associate',
+        title: 'Associate Member',
         price: 'FREE for 1 Year',
         originalPrice: '',
-        discount: '15%',
+        discount: '',
         features: [
-          '15% discount on all courses',
+          'Member discount to selected courses',
           'Priority support',
           'Extended resource access',
           '1 year completely free',
@@ -2224,13 +2226,14 @@ Widget _buildTierCard({
                   color: Color(0xFF0056AC),
                 ),
               ),
-              Text(
-                '$discount discount on all courses',
-                style: TextStyle(
-                  color: Color(0xFF00FF00),
-                  fontWeight: FontWeight.w500,
+              if (discount.isNotEmpty)
+                Text(
+                  '$discount discount on all courses',
+                  style: TextStyle(
+                    color: Color(0xFF00FF00),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
             ],
           ),
         ),
