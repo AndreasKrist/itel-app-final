@@ -98,16 +98,17 @@ Future<void> _signup() async {
       );
       
       if (!mounted) return;
-      
+
       print("Registration successful, updating UI");
-      
-      // Make sure we reset loading state just in case
+
+      // If we get here without an exception, registration was successful
+      // Reset loading state and navigate the user to the main app
       setState(() {
         _isLoading = false;
       });
-      
-      // If we get here without an exception, registration was successful
-      // Navigate the user to the main app
+
+      // Pop the signup screen and notify parent that user is logged in
+      Navigator.of(context).pop();
       widget.onLoginStatusChanged(true);
       
     } on firebase_auth.FirebaseAuthException catch (e) {
