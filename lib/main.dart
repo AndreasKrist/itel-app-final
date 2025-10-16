@@ -197,7 +197,14 @@ class _AppMockupState extends State<AppMockup> {
       const TrendingScreen(),
       const AboutScreen(),
       // Pass the sign out callback to the profile screen
-      ProfileScreen(onSignOut: widget.onSignOut),
+      ProfileScreen(
+        onSignOut: widget.onSignOut,
+        onNavigateToCourses: () {
+          setState(() {
+            _currentIndex = 1; // Navigate to Courses tab (index 1)
+          });
+        },
+      ),
     ];
 
     return Scaffold(

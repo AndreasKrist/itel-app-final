@@ -17,10 +17,12 @@ import 'payment_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
+  final VoidCallback? onNavigateToCourses;
 
   const ProfileScreen({
     super.key,
     required this.onSignOut,
+    this.onNavigateToCourses,
   });
 
   @override
@@ -1953,6 +1955,9 @@ Widget _buildCoursesTab() {
                 OutlinedButton(
                   onPressed: () {
                     // Navigate to courses tab/screen
+                    if (widget.onNavigateToCourses != null) {
+                      widget.onNavigateToCourses!();
+                    }
                   },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white,
