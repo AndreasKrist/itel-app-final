@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
-enum AccountType { corporate, private, trial }
+enum AccountType { corporate, private }
 
 class SignupScreen extends StatefulWidget {
   final Function(bool) onLoginStatusChanged;
@@ -197,22 +197,15 @@ Future<void> _signup() async {
                     _buildAccountTypeOption(
                       AccountType.private,
                       'Private',
-                      'Individual access to all courses',
+                      'Individual access to courses',
                       Icons.person,
                     ),
                     Divider(height: 1, color: Colors.grey[200]),
                     _buildAccountTypeOption(
                       AccountType.corporate,
                       'Corporate',
-                      'For business or team learning',
+                      'Organizational business access to courses',
                       Icons.business,
-                    ),
-                    Divider(height: 1, color: Colors.grey[200]),
-                    _buildAccountTypeOption(
-                      AccountType.trial,
-                      'Trial',
-                      'Try our platform for 30 days',
-                      Icons.access_time,
                     ),
                   ],
                 ),

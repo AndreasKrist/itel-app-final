@@ -154,6 +154,7 @@ void _joinFreeClass() async {
           favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
           enrolledCourses: User.currentUser.enrolledCourses,
           courseHistory: User.currentUser.courseHistory,
+          giveAccess: User.currentUser.giveAccess,
         );
         print("Successfully saved to main user document");
       } else {
@@ -164,6 +165,7 @@ void _joinFreeClass() async {
           name: firebaseUser.displayName ?? "User",
           email: firebaseUser.email ?? "",
           enrolledCourses: User.currentUser.enrolledCourses,
+          giveAccess: User.currentUser.giveAccess,
         );
       }
     } catch (e) {
@@ -370,6 +372,7 @@ void _toggleFavorite() async {
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
       courseHistory: User.currentUser.courseHistory,
+      giveAccess: User.currentUser.giveAccess,
     );
   } catch (e) {
     // If there's an error, revert the UI
@@ -607,6 +610,7 @@ void _toggleFavorite() async {
           favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
           enrolledCourses: User.currentUser.enrolledCourses,
           courseHistory: User.currentUser.courseHistory,
+          giveAccess: User.currentUser.giveAccess,
         );
         print("Successfully tracked course access in main user document");
       }
@@ -1246,12 +1250,26 @@ void _toggleFavorite() async {
                 ),
                 child: ElevatedButton(
                 onPressed: _isLoading ? null : () {
-                  // Check if the course is free
-                  if (widget.course.price == '\$0' || 
-                      widget.course.price.contains('Free') || 
+                  // Check if the course is complimentary
+                  if (widget.course.price == '\$0' ||
+                      widget.course.price.contains('Free') ||
                       widget.course.funding == 'Complimentary') {
-                    // Redirect directly to Moodle for complementary courses
-                    _launchCourseDirectly(context);
+                    // Check if THIS USER has access
+                    final hasAccess = User.currentUser.giveAccess == 1;
+
+                    if (hasAccess) {
+                      // User has access, launch the course
+                      _launchCourseDirectly(context);
+                    } else {
+                      // User is locked, show message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Access restricted. Please contact admin for access to this course.'),
+                          backgroundColor: Colors.orange,
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    }
                   } else {
                     // Show enquiry form for paid courses
                     setState(() {
@@ -1260,19 +1278,34 @@ void _toggleFavorite() async {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: widget.course.price == '\$0' || 
-                                  widget.course.price.contains('Free') || 
-                                  widget.course.funding == 'Complimentary' 
-                                ? Color(0xFF00FF00) : Color(0xFF0056AC),
-                  foregroundColor: widget.course.funding == 'Complimentary'
-                ? Colors.black   // black text+icon if Complimentary
-                : Colors.white,  // white otherwise
+                  backgroundColor: () {
+                    final isComplimentary = widget.course.price == '\$0' ||
+                                          widget.course.price.contains('Free') ||
+                                          widget.course.funding == 'Complimentary';
+
+                    if (isComplimentary) {
+                      final hasAccess = User.currentUser.giveAccess == 1;
+                      return hasAccess ? Color(0xFF00FF00) : Colors.grey; // Green if access, Grey if locked
+                    }
+                    return Color(0xFF0056AC); // Blue for paid courses
+                  }(),
+                  foregroundColor: () {
+                    final isComplimentary = widget.course.price == '\$0' ||
+                                          widget.course.price.contains('Free') ||
+                                          widget.course.funding == 'Complimentary';
+
+                    if (isComplimentary) {
+                      final hasAccess = User.currentUser.giveAccess == 1;
+                      return hasAccess ? Colors.black : Colors.white; // Black text if green, White if grey
+                    }
+                    return Colors.white;
+                  }(),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: _isLoading 
+                child: _isLoading
                   ? SizedBox(
                       height: 20,
                       width: 20,
@@ -1281,16 +1314,33 @@ void _toggleFavorite() async {
                         strokeWidth: 3,
                       ),
                     )
-                  : Text(
-                    widget.course.price == '\$0' || 
-                    widget.course.price.contains('Free') || 
-                    widget.course.funding == 'Complimentary'
-                    ? 'Access Course Now'
-                    : 'Enquire Now',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      ),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Show lock icon if no access
+                        if (widget.course.price == '\$0' ||
+                            widget.course.price.contains('Free') ||
+                            widget.course.funding == 'Complimentary') ...[
+                          if (User.currentUser.giveAccess == 0)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Icon(Icons.lock, size: 20),
+                            ),
+                        ],
+                        Text(
+                          widget.course.price == '\$0' ||
+                          widget.course.price.contains('Free') ||
+                          widget.course.funding == 'Complimentary'
+                          ? (User.currentUser.giveAccess == 1
+                              ? 'Access Course Now'
+                              : 'Access Restricted')
+                          : 'Enquire Now',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                 ),
               ),

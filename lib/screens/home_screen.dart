@@ -162,6 +162,7 @@ void _toggleFavorite(Course course) async {
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
       courseHistory: User.currentUser.courseHistory,
+      giveAccess: User.currentUser.giveAccess,
     );
   } catch (e) {
     print('Error toggling favorite: $e');

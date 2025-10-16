@@ -185,6 +185,7 @@ void _submitForm() async {
             favoriteCoursesIds: fullUser.favoriteCoursesIds,
             enrolledCourses: User.currentUser.enrolledCourses,
             courseHistory: User.currentUser.courseHistory,
+            giveAccess: User.currentUser.giveAccess,
           );
           print("Successfully saved to user document");
         } catch (e) {

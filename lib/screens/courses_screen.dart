@@ -192,6 +192,7 @@ void _toggleFavorite(Course course) async {
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
       courseHistory: User.currentUser.courseHistory,
+      giveAccess: User.currentUser.giveAccess,
     );
 
     print('Successfully updated favorites in courses screen: ${updatedFavorites.length} items');

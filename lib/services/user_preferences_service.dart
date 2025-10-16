@@ -60,6 +60,7 @@ class UserPreferencesService {
     List<String> favoriteCoursesIds = const [],
     List<EnrolledCourse> enrolledCourses = const [],
     List<EnrolledCourse> courseHistory = const [],
+    int giveAccess = 0,
   }) async {
     try {
       print('Saving user profile for $userId with ${enrolledCourses.length} enrolled courses');
@@ -154,6 +155,7 @@ class UserPreferencesService {
         'favoriteCoursesIds': favoriteCoursesIds,
         'enrolledCourses': enrolledCoursesData,
         'courseHistory': courseHistoryData,
+        'giveAccess': giveAccess,
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
       

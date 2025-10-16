@@ -24,7 +24,7 @@ class GuestBanner extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'You are currently browsing as a Guest.',
+              'You are currently a Guest. Please Sign In as a Member for more access.',
               style: TextStyle(
                 color: Color(0xFF0056AC),
                 fontSize: 12,

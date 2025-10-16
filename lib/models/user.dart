@@ -75,6 +75,7 @@ class User {
   final List<String> favoriteCoursesIds;
   final List<EnrolledCourse> enrolledCourses;
   final List<EnrolledCourse> courseHistory;
+  final int giveAccess;  // 0 = locked, 1 = can access complimentary courses
 
   // Updated constructor with safer defaults
   User({
@@ -89,6 +90,7 @@ class User {
     this.favoriteCoursesIds = const [],  // Default to empty list
     this.enrolledCourses = const [],  // Default to empty list
     this.courseHistory = const [],  // Default to empty list
+    this.giveAccess = 0,  // Default to locked (0)
   });
 
   User copyWith({
@@ -103,6 +105,7 @@ class User {
     List<String>? favoriteCoursesIds,
     List<EnrolledCourse>? enrolledCourses,
     List<EnrolledCourse>? courseHistory,
+    int? giveAccess,
   }) {
     return User(
       id: id ?? this.id,
@@ -116,6 +119,7 @@ class User {
       favoriteCoursesIds: favoriteCoursesIds ?? this.favoriteCoursesIds,
       enrolledCourses: enrolledCourses ?? this.enrolledCourses,
       courseHistory: courseHistory ?? this.courseHistory,
+      giveAccess: giveAccess ?? this.giveAccess,
     );
   }
 
@@ -186,6 +190,7 @@ class User {
     email: '',
     tier: MembershipTier.standard,
     membershipExpiryDate: 'Not applicable',
+    giveAccess: 0,  // Guests are locked by default
   );
 
   // Sample user for logged-in state - will be replaced by Firebase user data
@@ -200,5 +205,6 @@ class User {
     favoriteCoursesIds: [], // Start with empty favorites - will be loaded from Firebase
     enrolledCourses: [], // Start with empty enrollments - will be loaded from Firebase
     courseHistory: [], // Start with empty history - will be loaded from Firebase
+    giveAccess: 0,  // Default to locked (0)
   );
 }

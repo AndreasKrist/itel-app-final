@@ -87,6 +87,7 @@ class MembershipService {
         membershipExpiryDate: _formatDate(expiryDate),
         favoriteCoursesIds: currentUser.favoriteCoursesIds,
         enrolledCourses: currentUser.enrolledCourses,
+        giveAccess: currentUser.giveAccess,
       );
       
       // Update local user

@@ -135,8 +135,13 @@ Future<void> loadUserData() async {
         favoriteCoursesIds: [], // Pass the loaded favorites
         enrolledCourses: [], // Empty enrolled courses for new users
         courseHistory: [], // Empty course history for new users
+        giveAccess: 0, // Default to locked
       );
     }
+
+    // Load giveAccess field with default value of 0 if not present
+    final int giveAccess = userProfile?['giveAccess'] ?? 0;
+    print('Loaded giveAccess: $giveAccess (${giveAccess == 1 ? "CAN ACCESS" : "LOCKED"})');
 
     // Update the currentUser with the loaded data
     User.currentUser = User(
@@ -150,6 +155,7 @@ Future<void> loadUserData() async {
       favoriteCoursesIds: favorites, // Use the loaded favorites
       enrolledCourses: enrolledCourses, // Use the loaded enrolled courses
       courseHistory: courseHistory, // Use the loaded course history
+      giveAccess: giveAccess, // Use the loaded giveAccess value
     );
 
     print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds.length} items');
@@ -252,6 +258,7 @@ MembershipTier _getTierFromString(String? tierString) {
             tier: MembershipTier.standard,
             membershipExpiryDate: 'March 7, 2027',
             favoriteCoursesIds: [],
+            giveAccess: 0, // Default to locked
           );
         }
         
@@ -313,6 +320,7 @@ MembershipTier _getTierFromString(String? tierString) {
           tier: MembershipTier.standard,
           membershipExpiryDate: 'March 7, 2027',
           favoriteCoursesIds: [],
+          giveAccess: 0, // Default to locked
         );
         
         // Load user data including favorites
@@ -342,6 +350,7 @@ MembershipTier _getTierFromString(String? tierString) {
           name: 'Guest',
           email: '',
           favoriteCoursesIds: [],
+          giveAccess: 0, // Guests are locked by default
         );
         
         // Load user data (though it's minimal for anonymous users)

@@ -90,6 +90,7 @@ void _showEditProfileDialog() {
       favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
       enrolledCourses: User.currentUser.enrolledCourses,
       courseHistory: User.currentUser.courseHistory,
+      giveAccess: User.currentUser.giveAccess,
     );
 
     // Update Firebase Auth display name
@@ -587,6 +588,7 @@ void _toggleFavorite(Course course) async {
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
       courseHistory: User.currentUser.courseHistory,
+      giveAccess: User.currentUser.giveAccess,
     );
 
     print('Successfully updated favorites: ${updatedFavorites.length} items');
@@ -716,6 +718,7 @@ void _removeCourseFromEnrolled(String courseId) async {
           favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
           enrolledCourses: User.currentUser.enrolledCourses,
           courseHistory: User.currentUser.courseHistory,
+          giveAccess: User.currentUser.giveAccess,
         );
       }
 
@@ -2041,21 +2044,6 @@ Widget _buildCoursesTab() {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Membership Validity Period:',
-              style: TextStyle(color: Color(0xFF0056AC)),
-            ),
-            if (currentUser.tier != MembershipTier.standard && currentUser.tier.discountPercentage > 0) ...[
-              const SizedBox(height: 8),
-              Text(
-                'Discount: ${(currentUser.tier.discountPercentage * 100).toInt()}% off all courses',
-                style: TextStyle(
-                  color: Color(0xFF00FF00),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
           ],
         ),
       ),
@@ -2064,7 +2052,7 @@ Widget _buildCoursesTab() {
 
       // Membership Tiers
       Text(
-        'Available Membership Plans',
+        'Available Membership',
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -2077,14 +2065,12 @@ Widget _buildCoursesTab() {
       _buildTierCard(
         tier: MembershipTier.tier1,
         title: 'Associate Member',
-        price: 'FREE for 1 Year',
+        price: '',
         originalPrice: '',
         discount: '',
         features: [
-          'Member discount to selected courses',
           'Priority support',
           'Extended resource access',
-          '1 year completely free',
           'Click to activate (not automatic)',
         ],
         isPopular: false,
@@ -2217,15 +2203,17 @@ Widget _buildTierCard({
                     ),
                 ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                price,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0056AC),
+              if (price.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(
+                  price,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0056AC),
+                  ),
                 ),
-              ),
+              ],
               if (discount.isNotEmpty)
                 Text(
                   '$discount discount on all courses',
@@ -2583,10 +2571,12 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
             Text(
               title,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 color: textColor,
               ),
               textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
