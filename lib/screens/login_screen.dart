@@ -90,28 +90,32 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         switch (e.code) {
           case 'user-not-found':
-            _errorMessage = "No user found with this email";
+            _errorMessage = "No account found with this email";
             break;
           case 'wrong-password':
-            _errorMessage = "Wrong password provided";
+            _errorMessage = "Incorrect password. Please try again";
             break;
           case 'invalid-credential':
-            _errorMessage = "Email or password is incorrect";
+          case 'INVALID_LOGIN_CREDENTIALS':
+            _errorMessage = "Incorrect email or password";
             break;
           case 'invalid-email':
-            _errorMessage = "Invalid email format";
+            _errorMessage = "Please enter a valid email address";
             break;
           case 'user-disabled':
             _errorMessage = "This account has been disabled";
             break;
+          case 'too-many-requests':
+            _errorMessage = "Too many login attempts. Please try again later";
+            break;
           default:
-            _errorMessage = "Login failed: ${e.message}";
+            _errorMessage = "Unable to sign in. Please check your credentials";
         }
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _errorMessage = "An error occurred during login";
+        _errorMessage = "Something went wrong. Please try again";
         _isLoading = false;
         print("Login error: ${e.toString()}");
       });
