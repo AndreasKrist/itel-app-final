@@ -507,9 +507,9 @@ void _toggleFavorite() async {
             ElevatedButton(
               onPressed: () async {
                 Navigator.of(context).pop(false);
-                // Replace with your actual app store URLs
-                const appStoreUrl = 'https://apps.apple.com/app/your-itel-moodle-app'; // iOS
-                const playStoreUrl = 'https://play.google.com/store/apps/details?id=your.itel.moodle.app'; // Android
+                // App store URLs for ITEL Moodle app
+                const appStoreUrl = 'https://apps.apple.com/app/itel-learn/id6739293488'; // iOS
+                const playStoreUrl = 'https://play.google.com/store/apps/details?id=com.itel.learn'; // Android
 
                 try {
                   // Try to determine platform and open appropriate store
