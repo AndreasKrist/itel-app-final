@@ -143,6 +143,19 @@ Future<void> loadUserData() async {
     final int giveAccess = userProfile?['giveAccess'] ?? 0;
     print('Loaded giveAccess: $giveAccess (${giveAccess == 1 ? "CAN ACCESS" : "LOCKED"})');
 
+    // Load corporate fields
+    final String accountType = userProfile?['accountType'] ?? 'private';
+    final String? companyAddress = userProfile?['companyAddress'];
+    final double trainingCredits = (userProfile?['trainingCredits'] ?? 0.0).toDouble();
+    final List<Map<String, dynamic>> trainingCreditHistory = userProfile?['trainingCreditHistory'] != null
+        ? List<Map<String, dynamic>>.from(userProfile!['trainingCreditHistory'])
+        : [];
+
+    print('Loaded account type: $accountType');
+    if (accountType == 'corporate') {
+      print('Corporate account - Credits: \$${trainingCredits.toStringAsFixed(2)}, History items: ${trainingCreditHistory.length}');
+    }
+
     // Update the currentUser with the loaded data
     User.currentUser = User(
       id: firebaseUser.uid,
@@ -150,12 +163,16 @@ Future<void> loadUserData() async {
       email: firebaseUser.email ?? userProfile?['email'] ?? '',
       phone: userProfile?['phone'] ?? '',
       company: userProfile?['company'] ?? '',
+      companyAddress: companyAddress,
+      accountType: accountType,
       tier: _getTierFromString(userProfile?['tier']),
       membershipExpiryDate: userProfile?['membershipExpiryDate'] ?? 'March 7, 2027',
       favoriteCoursesIds: favorites, // Use the loaded favorites
       enrolledCourses: enrolledCourses, // Use the loaded enrolled courses
       courseHistory: courseHistory, // Use the loaded course history
       giveAccess: giveAccess, // Use the loaded giveAccess value
+      trainingCredits: trainingCredits,
+      trainingCreditHistory: trainingCreditHistory,
     );
 
     print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds.length} items');
@@ -298,35 +315,46 @@ MembershipTier _getTierFromString(String? tierString) {
   }
 
   // Register with email and password
-  Future<User?> registerWithEmailPassword(String email, String password, String name) async {
+  Future<User?> registerWithEmailPassword(
+    String email,
+    String password,
+    String name, {
+    String accountType = 'private',
+    String? company,
+    String? companyAddress,
+  }) async {
     try {
       // Create the user first
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      
+
       // Update display name separately (don't wait for it to complete)
       if (credential.user != null) {
         await credential.user!.updateDisplayName(name);
-        
+
         // Create Firestore profile
         await _preferencesService.saveUserProfile(
           userId: credential.user!.uid,
           name: name,
           email: email,
           phone: '', // Empty phone instead of hardcoded number
-          company: '', // Empty company instead of hardcoded company
+          company: company ?? '', // Company name for corporate accounts
+          companyAddress: companyAddress, // Company address for corporate accounts
+          accountType: accountType, // 'private' or 'corporate'
           tier: MembershipTier.standard,
           membershipExpiryDate: 'March 7, 2027',
           favoriteCoursesIds: [],
           giveAccess: 0, // Default to locked
+          trainingCredits: 0.0, // Default to 0 credits
+          trainingCreditHistory: [], // Empty history
         );
-        
+
         // Load user data including favorites
         await loadUserData();
       }
-      
+
       // Return user without relying on the updateProfile or reload operations
       return _userFromFirebase(credential.user);
     } on firebase_auth.FirebaseAuthException catch (e) {

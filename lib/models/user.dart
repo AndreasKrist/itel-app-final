@@ -69,6 +69,8 @@ class User {
   final String email;
   final String phone;
   final String? company;
+  final String? companyAddress;  // Company address for corporate accounts
+  final String accountType;  // 'private' or 'corporate'
   final String? profileImage;
   final MembershipTier tier;
   final String membershipExpiryDate;
@@ -76,6 +78,8 @@ class User {
   final List<EnrolledCourse> enrolledCourses;
   final List<EnrolledCourse> courseHistory;
   final int giveAccess;  // 0 = locked, 1 = can access complimentary courses
+  final double trainingCredits;  // Available training credits for corporate accounts
+  final List<Map<String, dynamic>> trainingCreditHistory;  // History of credit usage
 
   // Updated constructor with safer defaults
   User({
@@ -84,6 +88,8 @@ class User {
     required this.email,
     this.phone = '',  // Default to empty string
     this.company,
+    this.companyAddress,
+    this.accountType = 'private',  // Default to private account
     this.profileImage,
     this.tier = MembershipTier.standard,  // Default tier
     this.membershipExpiryDate = 'Not applicable',  // Default expiry
@@ -91,6 +97,8 @@ class User {
     this.enrolledCourses = const [],  // Default to empty list
     this.courseHistory = const [],  // Default to empty list
     this.giveAccess = 0,  // Default to locked (0)
+    this.trainingCredits = 0.0,  // Default to 0 credits
+    this.trainingCreditHistory = const [],  // Default to empty history
   });
 
   User copyWith({
@@ -99,6 +107,8 @@ class User {
     String? email,
     String? phone,
     String? company,
+    String? companyAddress,
+    String? accountType,
     String? profileImage,
     MembershipTier? tier,
     String? membershipExpiryDate,
@@ -106,6 +116,8 @@ class User {
     List<EnrolledCourse>? enrolledCourses,
     List<EnrolledCourse>? courseHistory,
     int? giveAccess,
+    double? trainingCredits,
+    List<Map<String, dynamic>>? trainingCreditHistory,
   }) {
     return User(
       id: id ?? this.id,
@@ -113,6 +125,8 @@ class User {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       company: company ?? this.company,
+      companyAddress: companyAddress ?? this.companyAddress,
+      accountType: accountType ?? this.accountType,
       profileImage: profileImage ?? this.profileImage,
       tier: tier ?? this.tier,
       membershipExpiryDate: membershipExpiryDate ?? this.membershipExpiryDate,
@@ -120,6 +134,8 @@ class User {
       enrolledCourses: enrolledCourses ?? this.enrolledCourses,
       courseHistory: courseHistory ?? this.courseHistory,
       giveAccess: giveAccess ?? this.giveAccess,
+      trainingCredits: trainingCredits ?? this.trainingCredits,
+      trainingCreditHistory: trainingCreditHistory ?? this.trainingCreditHistory,
     );
   }
 
@@ -191,6 +207,7 @@ class User {
     tier: MembershipTier.standard,
     membershipExpiryDate: 'Not applicable',
     giveAccess: 0,  // Guests are locked by default
+    accountType: 'private',
   );
 
   // Sample user for logged-in state - will be replaced by Firebase user data
@@ -200,11 +217,15 @@ class User {
     email: 'user@example.com', // Generic email
     phone: '', // Empty phone - will be filled from user data
     company: '', // Empty company - will be filled from user data
+    companyAddress: '', // Empty company address - will be filled from user data
+    accountType: 'private', // Default to private account
     tier: MembershipTier.standard,
     membershipExpiryDate: 'March 7, 2027',
     favoriteCoursesIds: [], // Start with empty favorites - will be loaded from Firebase
     enrolledCourses: [], // Start with empty enrollments - will be loaded from Firebase
     courseHistory: [], // Start with empty history - will be loaded from Firebase
     giveAccess: 0,  // Default to locked (0)
+    trainingCredits: 0.0,  // Default to 0 credits
+    trainingCreditHistory: [], // Start with empty history
   );
 }

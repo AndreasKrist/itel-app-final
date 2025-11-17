@@ -87,12 +87,16 @@ void _showEditProfileDialog() {
       email: User.currentUser.email,
       phone: phone,
       company: company,
+      companyAddress: User.currentUser.companyAddress,
+      accountType: User.currentUser.accountType,
       tier: User.currentUser.tier,
       membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
       enrolledCourses: User.currentUser.enrolledCourses,
       courseHistory: User.currentUser.courseHistory,
       giveAccess: User.currentUser.giveAccess,
+      trainingCredits: User.currentUser.trainingCredits,
+      trainingCreditHistory: User.currentUser.trainingCreditHistory,
     );
 
     // Update Firebase Auth display name
@@ -585,12 +589,16 @@ void _toggleFavorite(Course course) async {
       email: User.currentUser.email,
       phone: User.currentUser.phone,
       company: User.currentUser.company,
+      companyAddress: User.currentUser.companyAddress,
+      accountType: User.currentUser.accountType,
       tier: User.currentUser.tier,
       membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: updatedFavorites,
       enrolledCourses: User.currentUser.enrolledCourses,
       courseHistory: User.currentUser.courseHistory,
       giveAccess: User.currentUser.giveAccess,
+      trainingCredits: User.currentUser.trainingCredits,
+      trainingCreditHistory: User.currentUser.trainingCreditHistory,
     );
 
     print('Successfully updated favorites: ${updatedFavorites.length} items');
@@ -715,12 +723,16 @@ void _removeCourseFromEnrolled(String courseId) async {
           email: currentUser.email,
           phone: currentUser.phone,
           company: currentUser.company,
+          companyAddress: User.currentUser.companyAddress,
+          accountType: User.currentUser.accountType,
           tier: currentUser.tier,
           membershipExpiryDate: currentUser.membershipExpiryDate,
           favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
           enrolledCourses: User.currentUser.enrolledCourses,
           courseHistory: User.currentUser.courseHistory,
           giveAccess: User.currentUser.giveAccess,
+          trainingCredits: User.currentUser.trainingCredits,
+          trainingCreditHistory: User.currentUser.trainingCreditHistory,
         );
       }
 
@@ -807,7 +819,9 @@ void _removeCourseFromEnrolled(String courseId) async {
                               Row(
                                 children: [
                                   Text(
-                                    currentUser.tier.displayName,
+                                    currentUser.accountType == 'corporate'
+                                        ? 'Corporate Account'
+                                        : currentUser.tier.displayName,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.white.withOpacity(0.9),
@@ -1306,21 +1320,29 @@ Widget _buildProfileTab() {
             if (_showPersonalInfo) ...[
               _buildInfoRow('Email', currentUser.email),
               _buildInfoRow('Phone', currentUser.phone),
-              if (currentUser.company != null)
+              if (currentUser.company != null && currentUser.company!.isNotEmpty && currentUser.accountType != 'corporate')
                 _buildInfoRow('Company', currentUser.company!),
             ] else ...[
               // Show masked information
               _buildInfoRow('Email', _maskEmail(currentUser.email)),
               _buildInfoRow('Phone', _maskPhone(currentUser.phone)),
-              if (currentUser.company != null)
+              if (currentUser.company != null && currentUser.company!.isNotEmpty && currentUser.accountType != 'corporate')
                 _buildInfoRow('Company', '********'),
             ],
           ],
         ),
       ),
-      
+
+      // Company Information Section (Corporate accounts only)
+      if (currentUser.accountType == 'corporate') ...[
+        const SizedBox(height: 24),
+        _buildCompanyInformationSection(currentUser),
+      ],
+
       const SizedBox(height: 24),
-      
+
+      // Dashboard Section (Hidden for corporate accounts)
+      if (currentUser.accountType != 'corporate') ...[
       // Dashboard Section
       Container(
         padding: const EdgeInsets.all(16),
@@ -1643,7 +1665,8 @@ Widget _buildProfileTab() {
           ],
         ),
       ),
-      
+      ], // End of dashboard section (hidden for corporate accounts)
+
       // const SizedBox(height: 24),
 
       // Course History - Show completed courses from history + static completed courses
@@ -1865,7 +1888,201 @@ Widget _buildProfileTab() {
     ],
   );
 }
-  
+
+// Company Information Section for Corporate accounts
+Widget _buildCompanyInformationSection(User currentUser) {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Company Information',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.business, size: 14, color: Color(0xFF0056AC)),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Corporate',
+                    style: TextStyle(
+                      color: Color(0xFF0056AC),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // Company Name
+        if (currentUser.company != null && currentUser.company!.isNotEmpty)
+          _buildInfoRow('Company', currentUser.company!),
+
+        // Company Address
+        if (currentUser.companyAddress != null && currentUser.companyAddress!.isNotEmpty)
+          _buildInfoRow('Address', currentUser.companyAddress!),
+
+        const SizedBox(height: 16),
+
+        // Available Training Credits Card
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF0056AC), Colors.blue[700]!],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Available Training Credits',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Icon(
+                    Icons.account_balance_wallet,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '\$${currentUser.trainingCredits.toStringAsFixed(2)}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Training Credit History
+        Text(
+          'Training Credit History',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        if (currentUser.trainingCreditHistory.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                'No credit history yet',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          )
+        else
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: currentUser.trainingCreditHistory.length,
+            separatorBuilder: (context, index) => Divider(height: 1, color: Colors.grey[200]),
+            itemBuilder: (context, index) {
+              final historyItem = currentUser.trainingCreditHistory[index];
+              final courseName = historyItem['courseName'] ?? 'Unknown Course';
+              final amount = historyItem['amount'] ?? 0.0;
+              final date = historyItem['date'] ?? '';
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            courseName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                          if (date.isNotEmpty)
+                            Text(
+                              date,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '\$${amount.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        color: amount < 0 ? Colors.red[600] : Color(0xFF00FF00),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+      ],
+    ),
+  );
+}
+
 Widget _buildCoursesTab() {
   // Always use User.currentUser for consistent user data
   final currentUser = User.currentUser;

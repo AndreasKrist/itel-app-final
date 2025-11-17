@@ -23,8 +23,9 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
+  final TextEditingController _companyAddressController = TextEditingController();
   final AuthService _authService = AuthService();
-  
+
   AccountType _selectedAccountType = AccountType.private;
   bool _isLoading = false;
   bool _obscurePassword = true;
@@ -38,6 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _companyController.dispose();
+    _companyAddressController.dispose();
     super.dispose();
   }
 
@@ -52,7 +54,8 @@ Future<void> _signup() async {
         _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty ||
-        (_selectedAccountType == AccountType.corporate && _companyController.text.isEmpty)) {
+        (_selectedAccountType == AccountType.corporate && _companyController.text.isEmpty) ||
+        (_selectedAccountType == AccountType.corporate && _companyAddressController.text.isEmpty)) {
       setState(() {
         _errorMessage = "Please fill in all required fields";
         _isLoading = false;
@@ -90,13 +93,16 @@ Future<void> _signup() async {
     try {
       // Register with Firebase
       print("Attempting to register user with email: ${_emailController.text}");
-      
+
       await _authService.registerWithEmailPassword(
         _emailController.text.trim(),
         _passwordController.text,
         _nameController.text.trim(),
+        accountType: _selectedAccountType == AccountType.corporate ? 'corporate' : 'private',
+        company: _selectedAccountType == AccountType.corporate ? _companyController.text.trim() : null,
+        companyAddress: _selectedAccountType == AccountType.corporate ? _companyAddressController.text.trim() : null,
       );
-      
+
       if (!mounted) return;
 
       print("Registration successful, updating UI");
@@ -282,6 +288,38 @@ Future<void> _signup() async {
                   controller: _companyController,
                   hintText: 'Company Name',
                   prefixIcon: Icons.business,
+                ),
+                const SizedBox(height: 16),
+                // Company Address textarea
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: _companyAddressController,
+                    maxLines: 3,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      hintText: 'Company Address',
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(bottom: 40),
+                        child: Icon(Icons.location_on, color: Colors.blue[400]),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],

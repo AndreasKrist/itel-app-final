@@ -55,12 +55,16 @@ class UserPreferencesService {
     required String email,
     String phone = '',
     String? company,
+    String? companyAddress,
+    String accountType = 'private',
     MembershipTier tier = MembershipTier.standard,
     String membershipExpiryDate = 'Not applicable',
     List<String> favoriteCoursesIds = const [],
     List<EnrolledCourse> enrolledCourses = const [],
     List<EnrolledCourse> courseHistory = const [],
     int giveAccess = 0,
+    double trainingCredits = 0.0,
+    List<Map<String, dynamic>> trainingCreditHistory = const [],
   }) async {
     try {
       print('Saving user profile for $userId with ${enrolledCourses.length} enrolled courses');
@@ -142,7 +146,7 @@ class UserPreferencesService {
       
       // Update in batches to avoid timeouts on large data
       final batch = _firestore.batch();
-      
+
       // Main user document update
       final userDocRef = _usersCollection.doc(userId);
       batch.set(userDocRef, {
@@ -150,15 +154,19 @@ class UserPreferencesService {
         'email': email,
         'phone': phone,
         'company': company,
+        'companyAddress': companyAddress,
+        'accountType': accountType,
         'tier': _tierToString(tier),
         'membershipExpiryDate': membershipExpiryDate,
         'favoriteCoursesIds': favoriteCoursesIds,
         'enrolledCourses': enrolledCoursesData,
         'courseHistory': courseHistoryData,
         'giveAccess': giveAccess,
+        'trainingCredits': trainingCredits,
+        'trainingCreditHistory': trainingCreditHistory,
         'lastUpdated': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
-      
+
       // Commit the batch
       await batch.commit();
       
