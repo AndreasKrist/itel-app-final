@@ -1920,20 +1920,21 @@ Widget _buildCompanyInformationSection(User currentUser) {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
                 color: Colors.blue[50],
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.business, size: 14, color: Color(0xFF0056AC)),
-                  const SizedBox(width: 4),
+                  Icon(Icons.business, size: 12, color: Color(0xFF0056AC)),
+                  const SizedBox(width: 3),
                   Text(
                     'Associate Corporate',
                     style: TextStyle(
                       color: Color(0xFF0056AC),
-                      fontSize: 12,
+                      fontSize: 10,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -2245,62 +2246,66 @@ Widget _buildCoursesTab() {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (currentUser.accountType == 'corporate')
-                  Row(
-                    children: [
-                      Text(
-                        'Membership Type : ',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF0056AC),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          left: 6,
-                          right: 6,
-                          top: 2,
-                          bottom: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Text(
-                          'Associate Corporate',
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Text(
+                          'Membership Type : ',
                           style: TextStyle(
-                            color: Colors.white,
+                            fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            color: Color(0xFF0056AC),
                           ),
                         ),
-                      ),
-                    ],
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text(
+                              'Associate Corporate',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 else
-                  Text(
-                    'Membership Type : Associate',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0056AC),
+                  Flexible(
+                    child: Text(
+                      'Membership Type : Associate',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0056AC),
+                      ),
                     ),
                   ),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                    horizontal: 6,
+                    vertical: 3,
                   ),
                   decoration: BoxDecoration(
                     color: Colors.grey[350],
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
                     'ACTIVE',
                     style: TextStyle(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                      fontSize: 10,
                     ),
                   ),
                 ),
