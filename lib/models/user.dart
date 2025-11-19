@@ -69,6 +69,7 @@ class User {
   final String email;
   final String phone;
   final String? company;
+  final String? jobTitle;  // Job title for corporate accounts
   final String? companyAddress;  // Company address for corporate accounts
   final String accountType;  // 'private' or 'corporate'
   final String? profileImage;
@@ -88,6 +89,7 @@ class User {
     required this.email,
     this.phone = '',  // Default to empty string
     this.company,
+    this.jobTitle,
     this.companyAddress,
     this.accountType = 'private',  // Default to private account
     this.profileImage,
@@ -107,6 +109,7 @@ class User {
     String? email,
     String? phone,
     String? company,
+    String? jobTitle,
     String? companyAddress,
     String? accountType,
     String? profileImage,
@@ -125,6 +128,7 @@ class User {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       company: company ?? this.company,
+      jobTitle: jobTitle ?? this.jobTitle,
       companyAddress: companyAddress ?? this.companyAddress,
       accountType: accountType ?? this.accountType,
       profileImage: profileImage ?? this.profileImage,
@@ -217,6 +221,7 @@ class User {
     email: 'user@example.com', // Generic email
     phone: '', // Empty phone - will be filled from user data
     company: '', // Empty company - will be filled from user data
+    jobTitle: '', // Empty job title - will be filled from user data
     companyAddress: '', // Empty company address - will be filled from user data
     accountType: 'private', // Default to private account
     tier: MembershipTier.standard,

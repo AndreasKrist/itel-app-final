@@ -145,6 +145,7 @@ Future<void> loadUserData() async {
 
     // Load corporate fields
     final String accountType = userProfile?['accountType'] ?? 'private';
+    final String? jobTitle = userProfile?['jobTitle'];
     final String? companyAddress = userProfile?['companyAddress'];
     final double trainingCredits = (userProfile?['trainingCredits'] ?? 0.0).toDouble();
     final List<Map<String, dynamic>> trainingCreditHistory = userProfile?['trainingCreditHistory'] != null
@@ -163,6 +164,7 @@ Future<void> loadUserData() async {
       email: firebaseUser.email ?? userProfile?['email'] ?? '',
       phone: userProfile?['phone'] ?? '',
       company: userProfile?['company'] ?? '',
+      jobTitle: jobTitle,
       companyAddress: companyAddress,
       accountType: accountType,
       tier: _getTierFromString(userProfile?['tier']),
@@ -321,6 +323,7 @@ MembershipTier _getTierFromString(String? tierString) {
     String name, {
     String accountType = 'private',
     String? company,
+    String? jobTitle,
     String? companyAddress,
   }) async {
     try {
@@ -341,6 +344,7 @@ MembershipTier _getTierFromString(String? tierString) {
           email: email,
           phone: '', // Empty phone instead of hardcoded number
           company: company ?? '', // Company name for corporate accounts
+          jobTitle: jobTitle, // Job title for corporate accounts
           companyAddress: companyAddress, // Company address for corporate accounts
           accountType: accountType, // 'private' or 'corporate'
           tier: MembershipTier.standard,

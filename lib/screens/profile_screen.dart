@@ -14,6 +14,8 @@ import '../widgets/course_card.dart';//import 'course_outline_screen.dart';
 import '../widgets/edit_profile_dialog.dart';
 import '../services/membership_service.dart';
 import 'payment_screen.dart';
+import 'login_screen.dart';
+import 'signup_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -820,7 +822,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                                 children: [
                                   Text(
                                     currentUser.accountType == 'corporate'
-                                        ? 'Corporate Account'
+                                        ? 'Associate Corporate'
                                         : currentUser.tier.displayName,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -1928,7 +1930,7 @@ Widget _buildCompanyInformationSection(User currentUser) {
                   Icon(Icons.business, size: 14, color: Color(0xFF0056AC)),
                   const SizedBox(width: 4),
                   Text(
-                    'Corporate',
+                    'Associate Corporate',
                     style: TextStyle(
                       color: Color(0xFF0056AC),
                       fontSize: 12,
@@ -1945,6 +1947,10 @@ Widget _buildCompanyInformationSection(User currentUser) {
         // Company Name
         if (currentUser.company != null && currentUser.company!.isNotEmpty)
           _buildInfoRow('Company', currentUser.company!),
+
+        // Job Title
+        if (currentUser.jobTitle != null && currentUser.jobTitle!.isNotEmpty)
+          _buildInfoRow('Job Title', currentUser.jobTitle!),
 
         // Company Address
         if (currentUser.companyAddress != null && currentUser.companyAddress!.isNotEmpty)
@@ -2238,27 +2244,61 @@ Widget _buildCoursesTab() {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Membership Type: Associate',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0056AC),
+                if (currentUser.accountType == 'corporate')
+                  Row(
+                    children: [
+                      Text(
+                        'Membership Type : ',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF0056AC),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 6,
+                          right: 6,
+                          top: 2,
+                          bottom: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text(
+                          'Associate Corporate',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Text(
+                    'Membership Type : Associate',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF0056AC),
+                    ),
                   ),
-                ),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: _getTierColor(currentUser.tier),
+                    color: Colors.grey[350],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Text(
                     'ACTIVE',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.green,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -2272,32 +2312,132 @@ Widget _buildCoursesTab() {
 
       const SizedBox(height: 24),
 
-      // Membership Tiers
-      Text(
-        'Available Membership',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.grey[800],
+      // Show cards in different order based on account type
+      if (currentUser.accountType == 'corporate') ...[
+        // Associate Corporate Card (shown first for corporate users)
+        _buildTierCard(
+          tier: MembershipTier.tier1,
+          title: 'Associate Corporate',
+          price: '',
+          originalPrice: '',
+          discount: '',
+          features: [
+            'Organizational business access',
+            'Training credits system',
+            'Priority support',
+          ],
+          isPopular: false,
+          currentUserTier: currentUser.tier,
+          customButtonText: 'Active',
+          customButtonColor: Colors.green,
         ),
-      ),
-      const SizedBox(height: 16),
-      
-      // Tier Cards
-      _buildTierCard(
-        tier: MembershipTier.tier1,
-        title: 'Associate Member',
-        price: '',
-        originalPrice: '',
-        discount: '',
-        features: [
-          'Priority support',
-          'Extended resource access',
-          'Click to activate (not automatic)',
-        ],
-        isPopular: false,
-        currentUserTier: currentUser.tier,
-      ),
+
+        const SizedBox(height: 12),
+
+        // Associate Private Card (shown second for corporate users - disabled)
+        _buildTierCard(
+          tier: MembershipTier.tier1,
+          title: 'Associate Private',
+          price: '',
+          originalPrice: '',
+          discount: '',
+          features: [
+            'Extended resource access',
+            'Priority support',
+            'Click to activate (not automatic)',
+          ],
+          isPopular: false,
+          currentUserTier: currentUser.tier,
+          customButtonText: 'Upgrade Now',
+          isDisabled: true,
+        ),
+      ] else ...[
+        // Associate Private Card (shown first for private users)
+        _buildTierCard(
+          tier: MembershipTier.tier1,
+          title: 'Associate Private',
+          price: '',
+          originalPrice: '',
+          discount: '',
+          features: [
+            'Extended resource access',
+            'Priority support',
+            'Click to activate (not automatic)',
+          ],
+          isPopular: false,
+          currentUserTier: currentUser.tier,
+          customButtonText: 'Active',
+          customButtonColor: Colors.green,
+        ),
+
+        const SizedBox(height: 12),
+
+        // Associate Corporate Card (shown second for private users)
+        _buildTierCard(
+          tier: MembershipTier.tier1,
+          title: 'Associate Corporate',
+          price: '',
+          originalPrice: '',
+          discount: '',
+          features: [
+            'Organizational business access',
+            'Training credits system',
+            'Priority support',
+          ],
+          isPopular: false,
+          currentUserTier: currentUser.tier,
+          customButtonText: 'Upgrade Now',
+          onCustomButtonPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Corporate Account'),
+                  content: const Text('You can create a corporate account on the sign up page.'),
+                  actionsAlignment: MainAxisAlignment.spaceBetween,
+                  actions: [
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop(); // Close dialog
+
+                        // Get the auth service to handle sign out properly
+                        final authService = AuthService();
+                        await authService.signOut();
+
+                        // Use root navigator to push the signup screen
+                        if (mounted) {
+                          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => SignupScreen(
+                                onLoginStatusChanged: (isLoggedIn) async {
+                                  if (isLoggedIn) {
+                                    // After successful signup, trigger the parent's sign out callback
+                                    // which will reload the app state
+                                    widget.onSignOut();
+                                  }
+                                },
+                                initialAccountType: AccountType.corporate,
+                              ),
+                            ),
+                            (route) => false, // Remove all previous routes
+                          );
+                        }
+                      },
+                      child: const Text('Create Corporate Account'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ],
       
       // Professional and Specialist tiers hidden for now
       /*
@@ -2357,26 +2497,33 @@ Widget _buildTierCard({
   required List<String> features,
   required bool isPopular,
   required MembershipTier currentUserTier,
+  String? customButtonText,
+  Color? customButtonColor,
+  bool? isDisabled,
+  VoidCallback? onCustomButtonPressed,
 }) {
   final isCurrentTier = currentUserTier == tier;
   final canChange = currentUserTier != tier; // Allow both upgrade and downgrade for testing
-  
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(
-        color: isPopular ? Color(0xFFFF6600) : Colors.grey[300]!,
-        width: isPopular ? 2 : 1,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
+  final disabled = isDisabled ?? false;
+
+  return Opacity(
+    opacity: disabled ? 0.25 : 1.0,
+    child: Container(
+      decoration: BoxDecoration(
+        color: disabled ? Colors.grey[100] : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: disabled ? Colors.grey[300]! : (isPopular ? Color(0xFFFF6600) : Colors.grey[300]!),
+          width: isPopular ? 2 : 1,
         ),
-      ],
-    ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -2479,28 +2626,35 @@ Widget _buildTierCard({
               // Action Button
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  // onPressed: isCurrentTier ? null : canChange ? () => _purchaseMembership(tier) : null, // Temporarily disabled
-                  onPressed: null, // Remove this line and uncomment above to re-enable upgrade functionality
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isCurrentTier 
-                        ? Colors.grey[400]
-                        : canChange 
-                            ? (isPopular ? Color(0xFFFF6600) : Color(0xFF0056AC))
-                            : Colors.grey[400],
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: IgnorePointer(
+                  ignoring: (customButtonColor != null || disabled) && onCustomButtonPressed == null, // Ignore pointer if custom color is set or disabled, unless there's a custom callback
+                  child: ElevatedButton(
+                    // onPressed: isCurrentTier ? null : canChange ? () => _purchaseMembership(tier) : null, // Temporarily disabled
+                    onPressed: disabled ? null : (onCustomButtonPressed ?? () {}), // Use custom callback if provided, otherwise empty function
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: disabled
+                          ? Colors.grey[300]
+                          : (customButtonColor ?? (isCurrentTier
+                              ? Colors.grey[400]
+                              : canChange
+                                  ? (isPopular ? Color(0xFFFF6600) : Color(0xFF0056AC))
+                                  : Colors.grey[400])),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      disabledBackgroundColor: Colors.grey[300],
+                      disabledForegroundColor: Colors.grey[600],
                     ),
-                  ),
-                  child: Text(
-                    isCurrentTier 
-                        ? 'Current Plan'
-                        : canChange 
-                            ? (currentUserTier.index < tier.index ? 'Upgrade Now' : 'Change to This Plan')
-                            : 'Not Available',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    child: Text(
+                      customButtonText ?? (isCurrentTier
+                          ? 'Current Plan'
+                          : canChange
+                              ? (currentUserTier.index < tier.index ? 'Upgrade Now' : 'Change to This Plan')
+                              : 'Not Available'),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
@@ -2508,6 +2662,7 @@ Widget _buildTierCard({
           ),
         ),
       ],
+    ),
     ),
   );
 }

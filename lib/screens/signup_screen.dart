@@ -7,10 +7,12 @@ enum AccountType { corporate, private }
 
 class SignupScreen extends StatefulWidget {
   final Function(bool) onLoginStatusChanged;
-  
+  final AccountType? initialAccountType;
+
   const SignupScreen({
     super.key,
     required this.onLoginStatusChanged,
+    this.initialAccountType,
   });
 
   @override
@@ -23,14 +25,21 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
+  final TextEditingController _jobTitleController = TextEditingController();
   final TextEditingController _companyAddressController = TextEditingController();
   final AuthService _authService = AuthService();
 
-  AccountType _selectedAccountType = AccountType.private;
+  late AccountType _selectedAccountType;
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedAccountType = widget.initialAccountType ?? AccountType.private;
+  }
 
   @override
   void dispose() {
@@ -39,6 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _companyController.dispose();
+    _jobTitleController.dispose();
     _companyAddressController.dispose();
     super.dispose();
   }
@@ -55,6 +65,7 @@ Future<void> _signup() async {
         _passwordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty ||
         (_selectedAccountType == AccountType.corporate && _companyController.text.isEmpty) ||
+        (_selectedAccountType == AccountType.corporate && _jobTitleController.text.isEmpty) ||
         (_selectedAccountType == AccountType.corporate && _companyAddressController.text.isEmpty)) {
       setState(() {
         _errorMessage = "Please fill in all required fields";
@@ -100,6 +111,7 @@ Future<void> _signup() async {
         _nameController.text.trim(),
         accountType: _selectedAccountType == AccountType.corporate ? 'corporate' : 'private',
         company: _selectedAccountType == AccountType.corporate ? _companyController.text.trim() : null,
+        jobTitle: _selectedAccountType == AccountType.corporate ? _jobTitleController.text.trim() : null,
         companyAddress: _selectedAccountType == AccountType.corporate ? _companyAddressController.text.trim() : null,
       );
 
@@ -210,7 +222,7 @@ Future<void> _signup() async {
                     Divider(height: 1, color: Colors.grey[200]),
                     _buildAccountTypeOption(
                       AccountType.corporate,
-                      'Corporate',
+                      'Associate Corporate',
                       'Organizational business access to courses',
                       Icons.business,
                     ),
@@ -244,7 +256,7 @@ Future<void> _signup() async {
                 prefixIcon: Icons.person,
               ),
               const SizedBox(height: 16),
-              
+
               // Email field
               _buildTextField(
                 controller: _emailController,
@@ -253,41 +265,19 @@ Future<void> _signup() async {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
-              
-              // Password field
-              _buildTextField(
-                controller: _passwordController,
-                hintText: 'Password',
-                prefixIcon: Icons.lock,
-                obscureText: _obscurePassword,
-                toggleObscure: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              
-              // Confirm password field
-              _buildTextField(
-                controller: _confirmPasswordController,
-                hintText: 'Confirm Password',
-                prefixIcon: Icons.lock_outline,
-                obscureText: _obscureConfirmPassword,
-                toggleObscure: () {
-                  setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              
+
               // Company field (only for corporate accounts)
               if (_selectedAccountType == AccountType.corporate) ...[
                 _buildTextField(
                   controller: _companyController,
                   hintText: 'Company Name',
                   prefixIcon: Icons.business,
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _jobTitleController,
+                  hintText: 'Job Title',
+                  prefixIcon: Icons.work,
                 ),
                 const SizedBox(height: 16),
                 // Company Address textarea
@@ -323,6 +313,34 @@ Future<void> _signup() async {
                 ),
                 const SizedBox(height: 16),
               ],
+
+              // Password field
+              _buildTextField(
+                controller: _passwordController,
+                hintText: 'Password',
+                prefixIcon: Icons.lock,
+                obscureText: _obscurePassword,
+                toggleObscure: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Confirm password field
+              _buildTextField(
+                controller: _confirmPasswordController,
+                hintText: 'Confirm Password',
+                prefixIcon: Icons.lock_outline,
+                obscureText: _obscureConfirmPassword,
+                toggleObscure: () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
               
               // Signup button
               ElevatedButton(
