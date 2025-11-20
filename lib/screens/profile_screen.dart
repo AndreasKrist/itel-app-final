@@ -2898,9 +2898,9 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 80,
+            width: 100,
             child: Text(
-              label,
+              '$label:',
               style: TextStyle(
                 color: Colors.grey[600],
               ),
