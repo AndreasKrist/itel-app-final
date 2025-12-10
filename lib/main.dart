@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/courses_screen.dart';
@@ -12,6 +13,9 @@ import 'screens/profile_screen.dart';
 import 'screens/login_screen.dart';
 import 'widgets/guest_banner.dart';
 import 'services/user_preferences_service.dart';
+import 'providers/user_provider.dart';
+import 'services/account_manager_service.dart';
+import 'models/user.dart';
 
 
 
@@ -36,19 +40,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ITEL App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.grey[100],
-        fontFamily: 'DINRoundPro',
-        textTheme: TextTheme(
-          bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+    return ChangeNotifierProvider(
+      create: (_) => UserProvider(),
+      child: MaterialApp(
+        title: 'ITEL App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.grey[100],
+          fontFamily: 'DINRoundPro',
+          textTheme: TextTheme(
+            bodyLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
         ),
+        home: const AuthWrapper(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const AuthWrapper(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -63,6 +70,7 @@ class AuthWrapper extends StatefulWidget {
 class _AuthWrapperState extends State<AuthWrapper> {
   final AuthService _authService = AuthService();
   final UserPreferencesService _preferencesService = UserPreferencesService();
+  final AccountManagerService _accountManager = AccountManagerService();
 
   late bool _isLoggedIn;
   bool _isLoading = true;
@@ -72,61 +80,85 @@ class _AuthWrapperState extends State<AuthWrapper> {
     super.initState();
     _checkAuthState();
   }
-  
+
   Future<void> _checkAuthState() async {
     setState(() => _isLoading = true);
-    
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
     try {
+      // Load saved accounts from storage
+      final savedAccounts = await _accountManager.loadSavedAccounts();
+      userProvider.setSavedAccounts(savedAccounts);
+      print('Loaded ${savedAccounts.length} saved accounts');
+
       // Check if user is already authenticated
       _isLoggedIn = _authService.isAuthenticated;
-      
+
       // If logged in, load user data including favorites
       if (_isLoggedIn) {
         try {
           await _authService.loadUserData();
+          // Update provider with loaded user
+          userProvider.setUser(User.currentUser);
         } catch (e) {
           print('Error loading user data: $e');
           // If loading user data fails, continue as guest
           _isLoggedIn = false;
+          userProvider.clearUser();
         }
+      } else {
+        userProvider.clearUser();
       }
     } catch (e) {
       print('Error checking auth state: $e');
       // If auth check fails, default to not logged in
       _isLoggedIn = false;
+      userProvider.clearUser();
     }
-    
+
     setState(() => _isLoading = false);
   }
 
 void _handleLoginStatusChanged(bool isLoggedIn) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+
   // Set loading state
   setState(() {
     _isLoading = true;
   });
-  
+  userProvider.setLoading(true);
+
   // Update login status
   _isLoggedIn = isLoggedIn;
-  
+
   // If logged in, load user data
   if (isLoggedIn) {
     try {
       await _authService.loadUserData();
+      userProvider.setUser(User.currentUser);
     } catch (e) {
       print('Error loading user data: $e');
+      userProvider.clearUser();
     }
+  } else {
+    userProvider.clearUser();
   }
-  
+
   setState(() {
     _isLoading = false;
   });
+  userProvider.setLoading(false);
 }
 
   // This method will be passed to the AppMockup to handle sign out
   Future<void> _handleSignOut() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
     try {
       await _authService.signOut();
-      
+      userProvider.clearUser();
+
       // Update state to trigger re-render to login screen
       setState(() {
         _isLoggedIn = false;

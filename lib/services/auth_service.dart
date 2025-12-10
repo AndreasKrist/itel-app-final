@@ -2,17 +2,40 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user.dart';
+import '../models/saved_account.dart';
 import 'user_preferences_service.dart';
 import '../models/enrolled_course.dart';
+import 'account_manager_service.dart';
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final UserPreferencesService _preferencesService = UserPreferencesService();
+  final AccountManagerService _accountManager = AccountManagerService();
 
   // Check if user is authenticated
   bool get isAuthenticated {
     return _firebaseAuth.currentUser != null;
+  }
+
+  // Helper method to save account after successful login
+  Future<void> _saveAccountAfterLogin(firebase_auth.User firebaseUser, String authMethod) async {
+    try {
+      // Get account type from Firestore
+      final userProfile = await _preferencesService.getUserProfile(firebaseUser.uid);
+      final accountType = userProfile?['accountType'] ?? 'private';
+
+      final savedAccount = SavedAccount.fromFirebaseUser(
+        firebaseUser,
+        accountType: accountType,
+        authMethod: authMethod,
+      );
+
+      await _accountManager.addOrUpdateAccount(savedAccount);
+      print('Saved account: ${firebaseUser.email}');
+    } catch (e) {
+      print('Error saving account: $e');
+    }
   }
 
   // Simplified user conversion to avoid type issues
@@ -265,7 +288,7 @@ MembershipTier _getTierFromString(String? tierString) {
       if (userCredential.user != null) {
         // Check if user profile exists
         final userProfile = await _preferencesService.getUserProfile(userCredential.user!.uid);
-        
+
         // If not, create one
         if (userProfile == null) {
           await _preferencesService.saveUserProfile(
@@ -280,11 +303,14 @@ MembershipTier _getTierFromString(String? tierString) {
             giveAccess: 0, // Default to locked
           );
         }
-        
+
+        // Save account to saved accounts list
+        await _saveAccountAfterLogin(userCredential.user!, 'google');
+
         // Load user data including favorites
         await loadUserData();
       }
-      
+
       // Return user data
       return _userFromFirebase(userCredential.user);
     } catch (e) {
@@ -300,12 +326,15 @@ MembershipTier _getTierFromString(String? tierString) {
         email: email,
         password: password,
       );
-      
+
       if (credential.user != null) {
+        // Save account to saved accounts list
+        await _saveAccountAfterLogin(credential.user!, 'email');
+
         // Load user data including favorites
         await loadUserData();
       }
-      
+
       return _userFromFirebase(credential.user);
     } on firebase_auth.FirebaseAuthException catch (e) {
       print('Firebase Auth Error: ${e.code} - ${e.message}');
@@ -354,6 +383,9 @@ MembershipTier _getTierFromString(String? tierString) {
           trainingCredits: 0.0, // Default to 0 credits
           trainingCreditHistory: [], // Empty history
         );
+
+        // Save account to saved accounts list
+        await _saveAccountAfterLogin(credential.user!, 'email');
 
         // Load user data including favorites
         await loadUserData();
@@ -404,11 +436,48 @@ MembershipTier _getTierFromString(String? tierString) {
       if (currentUserId != null) {
         await _preferencesService.clearLocalStorage(currentUserId);
       }
-      
+
       await _googleSignIn.signOut();
       await _firebaseAuth.signOut();
     } catch (e) {
       print('Sign out failed: $e');
+      rethrow;
+    }
+  }
+
+  // Switch to a different saved account
+  // This will sign out current user and prompt for password/re-auth
+  Future<User?> switchToAccount(SavedAccount account) async {
+    try {
+      print('Switching to account: ${account.email}');
+
+      // Sign out current user first
+      await signOut();
+
+      // For email accounts, we can't auto-login (need password)
+      // For Google accounts, we can try silent sign-in if still authenticated
+      if (account.authMethod == 'google') {
+        // Try to sign in with Google
+        return await signInWithGoogle();
+      } else {
+        // For email accounts, we need to return null to show login screen
+        // The login screen can be pre-filled with the email
+        print('Email account requires password - returning null');
+        return null;
+      }
+    } catch (e) {
+      print('Error switching account: $e');
+      rethrow;
+    }
+  }
+
+  // Remove an account from saved accounts list
+  Future<void> removeAccount(String uid) async {
+    try {
+      await _accountManager.removeAccount(uid);
+      print('Removed account from saved list: $uid');
+    } catch (e) {
+      print('Error removing account: $e');
       rethrow;
     }
   }

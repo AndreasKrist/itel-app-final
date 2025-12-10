@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+13
+version: 1.0.0+16
 
 environment:
   sdk: ^3.6.2
@@ -38,6 +38,7 @@ dependencies:
   cloud_firestore: ^4.8.2
   shared_preferences: ^2.2.0
   flutter_markdown: ^0.6.18
+  provider: ^6.1.1  # State management for multi-account support
   # Xendit Payment Gateway Dependencies
   dio: ^5.3.2  # For HTTP requests to Xendit API
   webview_flutter: ^4.4.2  # For payment web view

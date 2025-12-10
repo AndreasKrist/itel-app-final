@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/course.dart';
 import '../models/user.dart';
 import '../models/schedule.dart';
@@ -16,6 +17,8 @@ import '../services/membership_service.dart';
 import 'payment_screen.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
+import '../widgets/account_switcher.dart';
+import '../providers/user_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -808,13 +811,39 @@ void _removeCourseFromEnrolled(String courseId) async {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              currentUser.name,
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                            // Name with dropdown arrow (Instagram style)
+                            Consumer<UserProvider>(
+                              builder: (context, userProvider, child) {
+                                final hasSavedAccounts = userProvider.savedAccounts.isNotEmpty;
+
+                                return GestureDetector(
+                                  onTap: hasSavedAccounts ? () => _showAccountSwitcherBottomSheet(context) : null,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          currentUser.name,
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      if (hasSavedAccounts) ...[
+                                        const SizedBox(width: 8),
+                                        Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: Colors.white,
+                                          size: 28,
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                             const SizedBox(height: 4),
                             // In the profile header section, update the tier display:
@@ -1225,7 +1254,7 @@ Widget _buildProfileTab() {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SizedBox(height: 16),
-      
+
       // Personal Information - Using Firebase user data
       Container(
         padding: const EdgeInsets.all(16),
@@ -2683,6 +2712,24 @@ Color _getTierColor(MembershipTier tier) {
     case MembershipTier.tier3:
       return Colors.purple[600]!;
   }
+}
+
+// Instagram-style account switcher bottom sheet
+void _showAccountSwitcherBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) => AccountSwitcher(
+      onAccountSwitched: () {
+        // Close the bottom sheet
+        Navigator.pop(context);
+        // Reload user data after switching accounts
+        _reloadUserData();
+      },
+    ),
+  );
 }
 
 // Clean up any previous payment state
