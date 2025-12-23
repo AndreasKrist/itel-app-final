@@ -6,12 +6,14 @@ import '../models/saved_account.dart';
 import 'user_preferences_service.dart';
 import '../models/enrolled_course.dart';
 import 'account_manager_service.dart';
+import 'user_notification_service.dart';
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AccountManagerService _accountManager = AccountManagerService();
+  final UserNotificationService _notificationService = UserNotificationService();
 
   // Check if user is authenticated
   bool get isAuthenticated {
@@ -307,6 +309,9 @@ MembershipTier _getTierFromString(String? tierString) {
         // Save account to saved accounts list
         await _saveAccountAfterLogin(userCredential.user!, 'google');
 
+        // Save FCM token for push notifications
+        await _notificationService.saveUserToken(userCredential.user!.uid);
+
         // Load user data including favorites
         await loadUserData();
       }
@@ -330,6 +335,9 @@ MembershipTier _getTierFromString(String? tierString) {
       if (credential.user != null) {
         // Save account to saved accounts list
         await _saveAccountAfterLogin(credential.user!, 'email');
+
+        // Save FCM token for push notifications
+        await _notificationService.saveUserToken(credential.user!.uid);
 
         // Load user data including favorites
         await loadUserData();
@@ -435,6 +443,9 @@ MembershipTier _getTierFromString(String? tierString) {
       final currentUserId = _firebaseAuth.currentUser?.uid;
       if (currentUserId != null) {
         await _preferencesService.clearLocalStorage(currentUserId);
+
+        // Remove FCM token from Firestore on logout
+        await _notificationService.removeUserToken(currentUserId);
       }
 
       await _googleSignIn.signOut();

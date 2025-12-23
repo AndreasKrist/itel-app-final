@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
+import 'services/firebase_messaging_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/courses_screen.dart';
 import 'screens/trending_screen.dart';
@@ -22,16 +24,24 @@ import 'models/user.dart';
 void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   try {
     // Initialize Firebase
     await Firebase.initializeApp();
     print('Firebase initialized successfully');
+
+    // Register background message handler
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+    // Initialize Firebase Messaging
+    final messagingService = FirebaseMessagingService();
+    await messagingService.initialize();
+    print('Firebase Messaging initialized successfully');
   } catch (e) {
     print('Firebase initialization error: $e');
     // Continue running the app even if Firebase fails
   }
-  
+
   runApp(const MyApp());
 }
 
