@@ -94,6 +94,7 @@ void _showEditProfileDialog() {
       company: company,
       companyAddress: User.currentUser.companyAddress,
       accountType: User.currentUser.accountType,
+      companyId: User.currentUser.companyId,
       tier: User.currentUser.tier,
       membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
@@ -596,6 +597,7 @@ void _toggleFavorite(Course course) async {
       company: User.currentUser.company,
       companyAddress: User.currentUser.companyAddress,
       accountType: User.currentUser.accountType,
+      companyId: User.currentUser.companyId,
       tier: User.currentUser.tier,
       membershipExpiryDate: User.currentUser.membershipExpiryDate,
       favoriteCoursesIds: updatedFavorites,
@@ -730,6 +732,7 @@ void _removeCourseFromEnrolled(String courseId) async {
           company: currentUser.company,
           companyAddress: User.currentUser.companyAddress,
           accountType: User.currentUser.accountType,
+          companyId: User.currentUser.companyId,
           tier: currentUser.tier,
           membershipExpiryDate: currentUser.membershipExpiryDate,
           favoriteCoursesIds: User.currentUser.favoriteCoursesIds,
@@ -1372,8 +1375,7 @@ Widget _buildProfileTab() {
 
       const SizedBox(height: 24),
 
-      // Dashboard Section (Hidden for corporate accounts)
-      if (currentUser.accountType != 'corporate') ...[
+      // Dashboard Section (Available for all account types)
       // Dashboard Section
       Container(
         padding: const EdgeInsets.all(16),
@@ -1696,7 +1698,6 @@ Widget _buildProfileTab() {
           ],
         ),
       ),
-      ], // End of dashboard section (hidden for corporate accounts)
 
       // const SizedBox(height: 24),
 

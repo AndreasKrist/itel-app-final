@@ -71,7 +71,8 @@ class User {
   final String? company;
   final String? jobTitle;  // Job title for corporate accounts
   final String? companyAddress;  // Company address for corporate accounts
-  final String accountType;  // 'private' or 'corporate'
+  final String accountType;  // 'private', 'corporate', or 'employee'
+  final String? companyId;  // Company ID to link employees to corporate accounts
   final String? profileImage;
   final MembershipTier tier;
   final String membershipExpiryDate;
@@ -92,6 +93,7 @@ class User {
     this.jobTitle,
     this.companyAddress,
     this.accountType = 'private',  // Default to private account
+    this.companyId,  // Company ID for linking employees to corporate accounts
     this.profileImage,
     this.tier = MembershipTier.standard,  // Default tier
     this.membershipExpiryDate = 'Not applicable',  // Default expiry
@@ -112,6 +114,7 @@ class User {
     String? jobTitle,
     String? companyAddress,
     String? accountType,
+    String? companyId,
     String? profileImage,
     MembershipTier? tier,
     String? membershipExpiryDate,
@@ -131,6 +134,7 @@ class User {
       jobTitle: jobTitle ?? this.jobTitle,
       companyAddress: companyAddress ?? this.companyAddress,
       accountType: accountType ?? this.accountType,
+      companyId: companyId ?? this.companyId,
       profileImage: profileImage ?? this.profileImage,
       tier: tier ?? this.tier,
       membershipExpiryDate: membershipExpiryDate ?? this.membershipExpiryDate,

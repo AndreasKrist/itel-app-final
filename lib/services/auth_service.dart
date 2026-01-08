@@ -172,6 +172,7 @@ Future<void> loadUserData() async {
     final String accountType = userProfile?['accountType'] ?? 'private';
     final String? jobTitle = userProfile?['jobTitle'];
     final String? companyAddress = userProfile?['companyAddress'];
+    final String? companyId = userProfile?['companyId'];
     final double trainingCredits = (userProfile?['trainingCredits'] ?? 0.0).toDouble();
     final List<Map<String, dynamic>> trainingCreditHistory = userProfile?['trainingCreditHistory'] != null
         ? List<Map<String, dynamic>>.from(userProfile!['trainingCreditHistory'])
@@ -180,6 +181,9 @@ Future<void> loadUserData() async {
     print('Loaded account type: $accountType');
     if (accountType == 'corporate') {
       print('Corporate account - Credits: \$${trainingCredits.toStringAsFixed(2)}, History items: ${trainingCreditHistory.length}');
+    }
+    if (accountType == 'employee' && companyId != null) {
+      print('Employee account - Company ID: $companyId');
     }
 
     // Update the currentUser with the loaded data
@@ -192,6 +196,7 @@ Future<void> loadUserData() async {
       jobTitle: jobTitle,
       companyAddress: companyAddress,
       accountType: accountType,
+      companyId: companyId,
       tier: _getTierFromString(userProfile?['tier']),
       membershipExpiryDate: userProfile?['membershipExpiryDate'] ?? 'March 7, 2027',
       favoriteCoursesIds: favorites, // Use the loaded favorites
