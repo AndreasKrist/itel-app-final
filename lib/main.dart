@@ -10,6 +10,7 @@ import 'services/firebase_messaging_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/courses_screen.dart';
 import 'screens/trending_screen.dart';
+import 'screens/community_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/login_screen.dart';
@@ -237,6 +238,7 @@ class _AppMockupState extends State<AppMockup> {
       HomeScreen(onCategorySelected: switchToCoursesWithCategory),
       CoursesScreen(initialCategory: _selectedCategory),
       const TrendingScreen(),
+      const CommunityScreen(),
       const AboutScreen(),
       // Pass the sign out callback to the profile screen
       ProfileScreen(
@@ -259,7 +261,7 @@ class _AppMockupState extends State<AppMockup> {
 
             // Main Content
             Expanded(
-              child: _currentIndex == 4 && widget.isGuest
+              child: _currentIndex == 5 && widget.isGuest
                   ? GuestProfileScreen(onSignOut: widget.onSignOut) // Pass sign out callback
                   : screens[_currentIndex],
             ),
@@ -278,7 +280,7 @@ class _AppMockupState extends State<AppMockup> {
           onTap: (index) {
             setState(() {
               // If switching to profile tab, trigger reload of enrollments
-              if (index == 4 && _currentIndex != 4) {
+              if (index == 5 && _currentIndex != 5) {
                 // We need to trigger the ProfileScreen to reload data
                 print("Switching to profile tab - data will be refreshed");
               }
@@ -307,6 +309,10 @@ class _AppMockupState extends State<AppMockup> {
             BottomNavigationBarItem(
               icon: Icon(Icons.trending_up),
               label: 'Trending',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people),
+              label: 'Community',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.info),
