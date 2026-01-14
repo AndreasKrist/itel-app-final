@@ -9,6 +9,7 @@ class ForumAnswer {
   final String content;
   final DateTime createdAt;
   final bool isAccepted;
+  final bool isStaffAnswer;  // Indicates if this is an official ITEL staff answer
 
   ForumAnswer({
     required this.id,
@@ -19,6 +20,7 @@ class ForumAnswer {
     required this.content,
     required this.createdAt,
     this.isAccepted = false,
+    this.isStaffAnswer = false,
   });
 
   factory ForumAnswer.fromJson(Map<String, dynamic> json, String id) {
@@ -31,6 +33,7 @@ class ForumAnswer {
       content: json['content'] as String? ?? '',
       createdAt: _parseTimestamp(json['createdAt']),
       isAccepted: json['isAccepted'] as bool? ?? false,
+      isStaffAnswer: json['isStaffAnswer'] as bool? ?? false,
     );
   }
 
@@ -43,6 +46,7 @@ class ForumAnswer {
       'content': content,
       'createdAt': Timestamp.fromDate(createdAt),
       'isAccepted': isAccepted,
+      'isStaffAnswer': isStaffAnswer,
     };
   }
 
@@ -55,6 +59,7 @@ class ForumAnswer {
     String? content,
     DateTime? createdAt,
     bool? isAccepted,
+    bool? isStaffAnswer,
   }) {
     return ForumAnswer(
       id: id ?? this.id,
@@ -65,6 +70,7 @@ class ForumAnswer {
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       isAccepted: isAccepted ?? this.isAccepted,
+      isStaffAnswer: isStaffAnswer ?? this.isStaffAnswer,
     );
   }
 

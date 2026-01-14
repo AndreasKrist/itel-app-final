@@ -88,8 +88,9 @@ class _ForumCreateQuestionScreenState extends State<ForumCreateQuestionScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Question posted successfully!'),
+            content: Text('Question submitted! It will be visible after review.'),
             backgroundColor: Colors.green,
+            duration: Duration(seconds: 4),
           ),
         );
         Navigator.pop(context);
@@ -113,7 +114,7 @@ class _ForumCreateQuestionScreenState extends State<ForumCreateQuestionScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Ask a Question'),
+        title: const Text('Ask ITEL'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -413,6 +414,36 @@ class _ForumCreateQuestionScreenState extends State<ForumCreateQuestionScreen> {
 
             const SizedBox(height: 24),
 
+            // Info note about moderation
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Your question will be reviewed before it appears publicly. ITEL staff will answer your question.',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
             // Submit button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -440,7 +471,7 @@ class _ForumCreateQuestionScreenState extends State<ForumCreateQuestionScreen> {
                           ),
                         )
                       : const Text(
-                          'Post Question',
+                          'Submit Question',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

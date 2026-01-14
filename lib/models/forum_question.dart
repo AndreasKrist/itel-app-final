@@ -5,6 +5,13 @@ enum QuestionStatus {
   resolved,
 }
 
+/// Approval status for question moderation
+enum ApprovalStatus {
+  pending,   // Waiting for admin/staff approval
+  approved,  // Approved and visible to public
+  rejected,  // Rejected by moderator
+}
+
 class ForumQuestion {
   final String id;
   final String authorId;
@@ -18,6 +25,7 @@ class ForumQuestion {
   final int answerCount;
   final QuestionStatus status;
   final String? acceptedAnswerId;
+  final ApprovalStatus approvalStatus;  // Moderation status
 
   ForumQuestion({
     required this.id,
@@ -32,6 +40,7 @@ class ForumQuestion {
     this.answerCount = 0,
     this.status = QuestionStatus.open,
     this.acceptedAnswerId,
+    this.approvalStatus = ApprovalStatus.pending,  // Default to pending
   });
 
   factory ForumQuestion.fromJson(Map<String, dynamic> json, String id) {
@@ -48,6 +57,7 @@ class ForumQuestion {
       answerCount: json['answerCount'] as int? ?? 0,
       status: _stringToStatus(json['status'] as String? ?? 'open'),
       acceptedAnswerId: json['acceptedAnswerId'] as String?,
+      approvalStatus: _stringToApprovalStatus(json['approvalStatus'] as String? ?? 'pending'),
     );
   }
 
@@ -64,6 +74,7 @@ class ForumQuestion {
       'answerCount': answerCount,
       'status': _statusToString(status),
       'acceptedAnswerId': acceptedAnswerId,
+      'approvalStatus': _approvalStatusToString(approvalStatus),
     };
   }
 
@@ -80,6 +91,7 @@ class ForumQuestion {
     int? answerCount,
     QuestionStatus? status,
     String? acceptedAnswerId,
+    ApprovalStatus? approvalStatus,
   }) {
     return ForumQuestion(
       id: id ?? this.id,
@@ -94,6 +106,7 @@ class ForumQuestion {
       answerCount: answerCount ?? this.answerCount,
       status: status ?? this.status,
       acceptedAnswerId: acceptedAnswerId ?? this.acceptedAnswerId,
+      approvalStatus: approvalStatus ?? this.approvalStatus,
     );
   }
 
@@ -122,6 +135,35 @@ class ForumQuestion {
         return 'open';
     }
   }
+
+  static ApprovalStatus _stringToApprovalStatus(String statusString) {
+    switch (statusString) {
+      case 'approved':
+        return ApprovalStatus.approved;
+      case 'rejected':
+        return ApprovalStatus.rejected;
+      case 'pending':
+      default:
+        return ApprovalStatus.pending;
+    }
+  }
+
+  static String _approvalStatusToString(ApprovalStatus status) {
+    switch (status) {
+      case ApprovalStatus.approved:
+        return 'approved';
+      case ApprovalStatus.rejected:
+        return 'rejected';
+      case ApprovalStatus.pending:
+        return 'pending';
+    }
+  }
+
+  /// Check if question is visible to public (approved)
+  bool get isApproved => approvalStatus == ApprovalStatus.approved;
+
+  /// Check if question is pending moderation
+  bool get isPending => approvalStatus == ApprovalStatus.pending;
 
   @override
   bool operator ==(Object other) {

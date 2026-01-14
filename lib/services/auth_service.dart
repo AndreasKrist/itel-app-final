@@ -186,6 +186,10 @@ Future<void> loadUserData() async {
       print('Employee account - Company ID: $companyId');
     }
 
+    // Load user role (for Ask ITEL staff functionality)
+    final UserRole role = User.parseRole(userProfile?['role']);
+    print('Loaded user role: ${role.displayName} (${role.canAnswerQuestions ? "CAN ANSWER QUESTIONS" : "REGULAR USER"})');
+
     // Update the currentUser with the loaded data
     User.currentUser = User(
       id: firebaseUser.uid,
@@ -205,6 +209,7 @@ Future<void> loadUserData() async {
       giveAccess: giveAccess, // Use the loaded giveAccess value
       trainingCredits: trainingCredits,
       trainingCreditHistory: trainingCreditHistory,
+      role: role, // Load user role for Ask ITEL feature
     );
 
     print('User data loaded successfully. Favorites: ${User.currentUser.favoriteCoursesIds.length} items');

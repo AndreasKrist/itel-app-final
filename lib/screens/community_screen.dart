@@ -75,14 +75,14 @@ class _CommunityScreenState extends State<CommunityScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Community',
+                          'Ask ITEL',
                           style:
                               Theme.of(context).textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
                         Text(
-                          'Connect, ask, and share knowledge',
+                          'Get answers from ITEL experts',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -137,8 +137,8 @@ class _CommunityScreenState extends State<CommunityScreen>
                 ),
                 tabs: const [
                   Tab(
-                    icon: Icon(Icons.forum, size: 20),
-                    text: 'Q&A Forum',
+                    icon: Icon(Icons.question_answer, size: 20),
+                    text: 'Ask ITEL',
                   ),
                   Tab(
                     icon: Icon(Icons.chat, size: 20),
@@ -278,10 +278,10 @@ class _CommunityScreenState extends State<CommunityScreen>
             ),
           ),
 
-        // Questions list
+        // Questions list (only approved questions)
         Expanded(
           child: StreamBuilder<List<ForumQuestion>>(
-            stream: _forumService.getQuestionsStream(),
+            stream: _forumService.getApprovedQuestionsStream(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -359,7 +359,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.forum_outlined,
+                        Icon(Icons.question_answer_outlined,
                             size: 64, color: Colors.grey[400]),
                         const SizedBox(height: 16),
                         Text(
@@ -375,7 +375,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                         const SizedBox(height: 8),
                         Text(
                           _filterStatus == 'all'
-                              ? 'Be the first to ask a question!'
+                              ? 'Ask ITEL experts your questions!'
                               : 'Try a different filter',
                           style: TextStyle(color: Colors.grey[500]),
                         ),
@@ -392,7 +392,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                               );
                             },
                             icon: const Icon(Icons.add),
-                            label: const Text('Ask a Question'),
+                            label: const Text('Ask ITEL'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0056AC),
                               foregroundColor: Colors.white,

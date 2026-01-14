@@ -45,6 +45,17 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
       return;
     }
 
+    // Check if user is staff
+    if (!currentUser.isStaff) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Only ITEL staff can answer questions'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     if (_answerController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -64,6 +75,7 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
         authorName: currentUser.name,
         authorEmail: currentUser.email,
         content: _answerController.text.trim(),
+        isStaff: currentUser.isStaff,  // Pass staff status
       );
       _answerController.clear();
       _answerFocusNode.unfocus();
@@ -120,6 +132,7 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
   Widget build(BuildContext context) {
     final currentUser = User.currentUser;
     final isGuest = currentUser.id.isEmpty || currentUser.email.isEmpty;
+    final isStaff = currentUser.isStaff;  // Check if user is ITEL staff
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -457,8 +470,8 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
                 ),
               ),
 
-              // Answer input (only for logged-in users)
-              if (!isGuest)
+              // Answer input (only for ITEL staff)
+              if (isStaff)
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -475,65 +488,121 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
                     ],
                   ),
                   child: SafeArea(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _answerController,
-                            focusNode: _answerFocusNode,
-                            decoration: InputDecoration(
-                              hintText: 'Write your answer...',
-                              hintStyle: TextStyle(color: Colors.grey[400]),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
-                                borderSide:
-                                    BorderSide(color: Colors.grey[300]!),
+                        // Staff badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          margin: const EdgeInsets.only(bottom: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0056AC).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.verified, size: 14, color: Color(0xFF0056AC)),
+                              SizedBox(width: 4),
+                              Text(
+                                'Answering as ITEL Staff',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF0056AC),
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
-                                borderSide:
-                                    BorderSide(color: Colors.grey[300]!),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
-                                borderSide: const BorderSide(
-                                    color: Color(0xFF0056AC)),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 12,
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey[50],
-                            ),
-                            maxLines: 4,
-                            minLines: 1,
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0056AC),
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: IconButton(
-                            onPressed: _isSubmitting
-                                ? null
-                                : () => _submitAnswer(question),
-                            icon: _isSubmitting
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : const Icon(
-                                    Icons.send,
-                                    color: Colors.white,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _answerController,
+                                focusNode: _answerFocusNode,
+                                decoration: InputDecoration(
+                                  hintText: 'Write your official answer...',
+                                  hintStyle: TextStyle(color: Colors.grey[400]),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[300]!),
                                   ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xFF0056AC)),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 12,
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.grey[50],
+                                ),
+                                maxLines: 4,
+                                minLines: 1,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0056AC),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: IconButton(
+                                onPressed: _isSubmitting
+                                    ? null
+                                    : () => _submitAnswer(question),
+                                icon: _isSubmitting
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : const Icon(
+                                        Icons.send,
+                                        color: Colors.white,
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              // Info message for regular users (non-staff, non-guest)
+              if (!isGuest && !isStaff)
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    border: Border(
+                      top: BorderSide(color: Colors.blue[200]!),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Row(
+                      children: [
+                        Icon(Icons.info_outline, color: Colors.blue[700]),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Questions are answered by ITEL experts',
+                            style: TextStyle(color: Colors.blue[700]),
                           ),
                         ),
                       ],
@@ -558,7 +627,7 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Sign in to answer this question',
+                            'Sign in to ask questions to ITEL experts',
                             style: TextStyle(color: Colors.orange[700]),
                           ),
                         ),

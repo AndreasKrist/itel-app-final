@@ -1,6 +1,29 @@
 // lib/models/user.dart
 import 'enrolled_course.dart';
 
+/// User roles for access control
+enum UserRole {
+  user,   // Regular user - can ask questions, view answers
+  staff,  // ITEL staff - can answer questions
+  admin,  // Admin - full access (future use)
+}
+
+extension UserRoleExtension on UserRole {
+  String get displayName {
+    switch (this) {
+      case UserRole.user:
+        return 'User';
+      case UserRole.staff:
+        return 'ITEL Staff';
+      case UserRole.admin:
+        return 'Administrator';
+    }
+  }
+
+  bool get canAnswerQuestions => this == UserRole.staff || this == UserRole.admin;
+  bool get canModerateQuestions => this == UserRole.staff || this == UserRole.admin;
+}
+
 enum MembershipTier {
   standard,
   tier1,    // 15% discount, 1 year free
@@ -82,6 +105,7 @@ class User {
   final int giveAccess;  // 0 = locked, 1 = can access complimentary courses
   final double trainingCredits;  // Available training credits for corporate accounts
   final List<Map<String, dynamic>> trainingCreditHistory;  // History of credit usage
+  final UserRole role;  // User role for access control (user, staff, admin)
 
   // Updated constructor with safer defaults
   User({
@@ -103,6 +127,7 @@ class User {
     this.giveAccess = 0,  // Default to locked (0)
     this.trainingCredits = 0.0,  // Default to 0 credits
     this.trainingCreditHistory = const [],  // Default to empty history
+    this.role = UserRole.user,  // Default to regular user role
   });
 
   User copyWith({
@@ -124,6 +149,7 @@ class User {
     int? giveAccess,
     double? trainingCredits,
     List<Map<String, dynamic>>? trainingCreditHistory,
+    UserRole? role,
   }) {
     return User(
       id: id ?? this.id,
@@ -144,6 +170,7 @@ class User {
       giveAccess: giveAccess ?? this.giveAccess,
       trainingCredits: trainingCredits ?? this.trainingCredits,
       trainingCreditHistory: trainingCreditHistory ?? this.trainingCreditHistory,
+      role: role ?? this.role,
     );
   }
 
@@ -216,6 +243,7 @@ class User {
     membershipExpiryDate: 'Not applicable',
     giveAccess: 0,  // Guests are locked by default
     accountType: 'private',
+    role: UserRole.user,
   );
 
   // Sample user for logged-in state - will be replaced by Firebase user data
@@ -236,5 +264,34 @@ class User {
     giveAccess: 0,  // Default to locked (0)
     trainingCredits: 0.0,  // Default to 0 credits
     trainingCreditHistory: [], // Start with empty history
+    role: UserRole.user,  // Default role - will be loaded from Firebase
   );
+
+  /// Helper method to check if user is ITEL staff
+  bool get isStaff => role.canAnswerQuestions;
+
+  /// Helper method to parse role from Firebase string
+  static UserRole parseRole(String? roleString) {
+    switch (roleString) {
+      case 'staff':
+        return UserRole.staff;
+      case 'admin':
+        return UserRole.admin;
+      case 'user':
+      default:
+        return UserRole.user;
+    }
+  }
+
+  /// Convert role to string for Firebase storage
+  String get roleString {
+    switch (role) {
+      case UserRole.staff:
+        return 'staff';
+      case UserRole.admin:
+        return 'admin';
+      case UserRole.user:
+        return 'user';
+    }
+  }
 }

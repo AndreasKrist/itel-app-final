@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/forum_question.dart';
 import '../models/forum_answer.dart';
+import '../models/user.dart';
 
 class ForumService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -13,9 +14,42 @@ class ForumService {
 
   // ============ QUESTIONS ============
 
-  /// Stream of all questions ordered by newest first
+  /// Stream of APPROVED questions only (for public view)
+  /// This is what regular users see
+  Stream<List<ForumQuestion>> getApprovedQuestionsStream() {
+    return _questionsCollection
+        .where('approvalStatus', isEqualTo: 'approved')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return ForumQuestion.fromJson(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+      }).toList();
+    });
+  }
+
+  /// Stream of all questions ordered by newest first (for staff/admin moderation)
   Stream<List<ForumQuestion>> getQuestionsStream() {
     return _questionsCollection
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return ForumQuestion.fromJson(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+      }).toList();
+    });
+  }
+
+  /// Stream of questions by a specific user (shows their own questions regardless of status)
+  Stream<List<ForumQuestion>> getUserQuestionsStream(String userId) {
+    return _questionsCollection
+        .where('authorId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
@@ -58,7 +92,7 @@ class ForumService {
     }
   }
 
-  /// Create a new question
+  /// Create a new question (defaults to pending approval status)
   Future<String> createQuestion({
     required String authorId,
     required String authorName,
@@ -81,11 +115,42 @@ class ForumService {
         'answerCount': 0,
         'status': 'open',
         'acceptedAnswerId': null,
+        'approvalStatus': 'pending',  // Questions need approval before showing publicly
       });
-      print('Question created with ID: ${docRef.id}');
+      print('Question created with ID: ${docRef.id} (pending approval)');
       return docRef.id;
     } catch (e) {
       print('Error creating question: $e');
+      rethrow;
+    }
+  }
+
+  /// Update question approval status (staff/admin only)
+  Future<void> updateQuestionApprovalStatus(
+    String questionId,
+    ApprovalStatus status,
+  ) async {
+    try {
+      String statusString;
+      switch (status) {
+        case ApprovalStatus.approved:
+          statusString = 'approved';
+          break;
+        case ApprovalStatus.rejected:
+          statusString = 'rejected';
+          break;
+        case ApprovalStatus.pending:
+          statusString = 'pending';
+          break;
+      }
+
+      await _questionsCollection.doc(questionId).update({
+        'approvalStatus': statusString,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      print('Question $questionId approval status updated to: $statusString');
+    } catch (e) {
+      print('Error updating question approval status: $e');
       rethrow;
     }
   }
@@ -152,18 +217,25 @@ class ForumService {
     });
   }
 
-  /// Create a new answer
+  /// Create a new answer (staff only)
+  /// The isStaff flag indicates if the answer is from ITEL staff
   Future<String> createAnswer({
     required String questionId,
     required String authorId,
     required String authorName,
     required String authorEmail,
     required String content,
+    required bool isStaff,
   }) async {
     try {
+      // Only staff can answer questions
+      if (!isStaff) {
+        throw Exception('Only ITEL staff can answer questions');
+      }
+
       final batch = _firestore.batch();
 
-      // Create answer document
+      // Create answer document with staff indicator
       final answerRef = _answersCollection(questionId).doc();
       batch.set(answerRef, {
         'questionId': questionId,
@@ -173,6 +245,7 @@ class ForumService {
         'content': content,
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'isAccepted': false,
+        'isStaffAnswer': true,  // Mark as official ITEL staff answer
       });
 
       // Increment answer count on question
@@ -183,7 +256,7 @@ class ForumService {
       });
 
       await batch.commit();
-      print('Answer created with ID: ${answerRef.id}');
+      print('Staff answer created with ID: ${answerRef.id}');
       return answerRef.id;
     } catch (e) {
       print('Error creating answer: $e');
