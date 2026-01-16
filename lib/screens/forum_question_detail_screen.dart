@@ -4,6 +4,7 @@ import '../models/forum_answer.dart';
 import '../models/user.dart';
 import '../services/forum_service.dart';
 import '../widgets/forum_answer_card.dart';
+import 'direct_message_chat_screen.dart';
 
 class ForumQuestionDetailScreen extends StatefulWidget {
   final String questionId;
@@ -305,44 +306,64 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
                             const Divider(),
                             const SizedBox(height: 12),
 
-                            // Author info
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 16,
-                                  backgroundColor: const Color(0xFF0056AC),
-                                  child: Text(
-                                    question.authorName.isNotEmpty
-                                        ? question.authorName[0].toUpperCase()
-                                        : '?',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
+                            // Author info - tappable for DM
+                            GestureDetector(
+                              onTap: !isGuest && !isAuthor
+                                  ? () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DirectMessageChatScreen(
+                                            otherUserId: question.authorId,
+                                            otherUserName: question.authorName,
+                                            otherUserEmail: question.authorEmail,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  : null,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 16,
+                                    backgroundColor: const Color(0xFF0056AC),
+                                    child: Text(
+                                      question.authorName.isNotEmpty
+                                          ? question.authorName[0].toUpperCase()
+                                          : '?',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      question.authorName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        question.authorName,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                          color: !isGuest && !isAuthor
+                                              ? const Color(0xFF0056AC)
+                                              : Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      'Asked ${_formatDate(question.createdAt)}',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[500],
+                                      Text(
+                                        'Asked ${_formatDate(question.createdAt)}',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[500],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -449,6 +470,7 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
                                 const SizedBox(height: 12),
                             itemBuilder: (context, index) {
                               final answer = sortedAnswers[index];
+                              final canDMAnswer = !isGuest && answer.authorId != currentUser.id;
                               return ForumAnswerCard(
                                 answer: answer,
                                 isQuestionAuthor: isAuthor,
@@ -456,6 +478,20 @@ class _ForumQuestionDetailScreenState extends State<ForumQuestionDetailScreen> {
                                         !answer.isAccepted &&
                                         question.status != QuestionStatus.resolved
                                     ? () => _acceptAnswer(answer.id)
+                                    : null,
+                                onTapAuthor: canDMAnswer
+                                    ? () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => DirectMessageChatScreen(
+                                              otherUserId: answer.authorId,
+                                              otherUserName: answer.authorName,
+                                              otherUserEmail: answer.authorEmail,
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     : null,
                               );
                             },

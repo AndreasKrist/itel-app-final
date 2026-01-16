@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import '../models/forum_question.dart';
 import '../models/user.dart';
 import '../services/forum_service.dart';
+import '../services/direct_message_service.dart';
 import '../widgets/forum_question_card.dart';
 import 'forum_question_detail_screen.dart';
 import 'forum_create_question_screen.dart';
 import 'global_chat_screen.dart';
+import 'conversations_list_screen.dart';
+import 'direct_message_chat_screen.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -19,6 +22,7 @@ class _CommunityScreenState extends State<CommunityScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ForumService _forumService = ForumService();
+  final DirectMessageService _dmService = DirectMessageService();
   String _filterStatus = 'all';
 
   @override
@@ -118,6 +122,60 @@ class _CommunityScreenState extends State<CommunityScreen>
                       return const SizedBox.shrink();
                     },
                   ),
+                  // Messages icon with unread badge
+                  if (!isGuest)
+                    StreamBuilder<int>(
+                      stream: _dmService.getTotalUnreadCountStream(currentUser.id),
+                      builder: (context, snapshot) {
+                        final unreadCount = snapshot.data ?? 0;
+                        return IconButton(
+                          icon: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Icon(
+                                Icons.mail_outline,
+                                color: unreadCount > 0
+                                    ? const Color(0xFF0056AC)
+                                    : Colors.grey[600],
+                              ),
+                              if (unreadCount > 0)
+                                Positioned(
+                                  right: -6,
+                                  top: -6,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 18,
+                                      minHeight: 18,
+                                    ),
+                                    child: Text(
+                                      unreadCount > 99 ? '99+' : '$unreadCount',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ConversationsListScreen(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
@@ -419,6 +477,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                       const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final question = questions[index];
+                    final canDM = !isGuest && question.authorId != User.currentUser.id;
                     return ForumQuestionCard(
                       question: question,
                       onTap: () {
@@ -431,6 +490,20 @@ class _CommunityScreenState extends State<CommunityScreen>
                           ),
                         );
                       },
+                      onTapAuthor: canDM
+                          ? () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DirectMessageChatScreen(
+                                    otherUserId: question.authorId,
+                                    otherUserName: question.authorName,
+                                    otherUserEmail: question.authorEmail,
+                                  ),
+                                ),
+                              );
+                            }
+                          : null,
                     );
                   },
                 ),

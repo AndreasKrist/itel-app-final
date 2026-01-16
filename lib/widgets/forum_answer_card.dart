@@ -5,12 +5,14 @@ class ForumAnswerCard extends StatelessWidget {
   final ForumAnswer answer;
   final bool isQuestionAuthor;
   final VoidCallback? onAccept;
+  final VoidCallback? onTapAuthor;  // Callback for tapping on author to start DM
 
   const ForumAnswerCard({
     super.key,
     required this.answer,
     required this.isQuestionAuthor,
     this.onAccept,
+    this.onTapAuthor,
   });
 
   @override
@@ -99,41 +101,52 @@ class ForumAnswerCard extends StatelessWidget {
           // Author and actions row
           Row(
             children: [
-              CircleAvatar(
-                radius: 12,
-                backgroundColor: const Color(0xFF0056AC),
-                child: Text(
-                  answer.authorName.isNotEmpty
-                      ? answer.authorName[0].toUpperCase()
-                      : '?',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              // Tappable author for DM
+              GestureDetector(
+                onTap: onTapAuthor,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      answer.authorName,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                    CircleAvatar(
+                      radius: 12,
+                      backgroundColor: const Color(0xFF0056AC),
+                      child: Text(
+                        answer.authorName.isNotEmpty
+                            ? answer.authorName[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
                       ),
                     ),
-                    Text(
-                      _formatDate(answer.createdAt),
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey[500],
-                      ),
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          answer.authorName,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: onTapAuthor != null
+                                ? const Color(0xFF0056AC)
+                                : Colors.black,
+                          ),
+                        ),
+                        Text(
+                          _formatDate(answer.createdAt),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
+              const Spacer(),
 
               // Accept button (only for question author and non-accepted answers)
               if (isQuestionAuthor && !answer.isAccepted && onAccept != null)

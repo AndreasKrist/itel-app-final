@@ -7,6 +7,7 @@ class ChatMessageBubble extends StatelessWidget {
   final bool isCurrentUser;
   final VoidCallback? onDelete;
   final VoidCallback? onLongPress;
+  final VoidCallback? onTapAuthor;  // Callback for tapping on author to start DM
 
   const ChatMessageBubble({
     super.key,
@@ -14,6 +15,7 @@ class ChatMessageBubble extends StatelessWidget {
     required this.isCurrentUser,
     this.onDelete,
     this.onLongPress,
+    this.onTapAuthor,
   });
 
   @override
@@ -30,19 +32,23 @@ class ChatMessageBubble extends StatelessWidget {
             isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // Avatar for other users (left side)
+          // Avatar for other users (left side) - tappable for DM
           if (!isCurrentUser) ...[
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: _getAvatarColor(message.authorName),
-              child: Text(
-                message.authorName.isNotEmpty
-                    ? message.authorName[0].toUpperCase()
-                    : '?',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onTapAuthor,
+              child: CircleAvatar(
+                radius: 16,
+                backgroundColor: _getAvatarColor(message.authorName),
+                child: Text(
+                  message.authorName.isNotEmpty
+                      ? message.authorName[0].toUpperCase()
+                      : '?',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -82,16 +88,25 @@ class ChatMessageBubble extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Author name (only for other users)
+                    // Author name (only for other users) - tappable for DM
                     if (!isCurrentUser)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          message.authorName,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: _getAvatarColor(message.authorName),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: onTapAuthor,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Text(
+                            message.authorName,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: onTapAuthor != null
+                                  ? const Color(0xFF0056AC)
+                                  : _getAvatarColor(message.authorName),
+                              decoration: onTapAuthor != null
+                                  ? TextDecoration.underline
+                                  : null,
+                            ),
                           ),
                         ),
                       ),

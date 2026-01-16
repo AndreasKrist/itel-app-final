@@ -4,6 +4,7 @@ import '../models/chat_message.dart';
 import '../models/user.dart';
 import '../services/chat_service.dart';
 import '../widgets/chat_message_bubble.dart';
+import 'direct_message_chat_screen.dart';
 
 class GlobalChatScreen extends StatefulWidget {
   const GlobalChatScreen({super.key});
@@ -136,6 +137,33 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
     }
   }
 
+  void _startDirectMessage(ChatMessage message) {
+    final currentUser = User.currentUser;
+    if (currentUser.id.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please sign in to send direct messages'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    // Don't allow DM to yourself
+    if (message.authorId == currentUser.id) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DirectMessageChatScreen(
+          otherUserId: message.authorId,
+          otherUserName: message.authorName,
+          otherUserEmail: message.authorEmail,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = User.currentUser;
@@ -239,6 +267,9 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                     isCurrentUser: isCurrentUser,
                     onLongPress: isCurrentUser
                         ? () => _deleteMessage(message)
+                        : null,
+                    onTapAuthor: !isCurrentUser
+                        ? () => _startDirectMessage(message)
                         : null,
                   );
                 },

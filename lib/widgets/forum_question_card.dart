@@ -4,11 +4,13 @@ import '../models/forum_question.dart';
 class ForumQuestionCard extends StatelessWidget {
   final ForumQuestion question;
   final VoidCallback onTap;
+  final VoidCallback? onTapAuthor;  // Callback for tapping on author to start DM
 
   const ForumQuestionCard({
     super.key,
     required this.question,
     required this.onTap,
+    this.onTapAuthor,
   });
 
   @override
@@ -149,30 +151,43 @@ class ForumQuestionCard extends StatelessWidget {
             // Author and time row
             Row(
               children: [
-                CircleAvatar(
-                  radius: 12,
-                  backgroundColor: const Color(0xFF0056AC),
-                  child: Text(
-                    question.authorName.isNotEmpty
-                        ? question.authorName[0].toUpperCase()
-                        : '?',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),
+                // Tappable author for DM
+                GestureDetector(
+                  onTap: onTapAuthor,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircleAvatar(
+                        radius: 12,
+                        backgroundColor: const Color(0xFF0056AC),
+                        child: Text(
+                          question.authorName.isNotEmpty
+                              ? question.authorName[0].toUpperCase()
+                              : '?',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        question.authorName,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: onTapAuthor != null
+                              ? const Color(0xFF0056AC)
+                              : Colors.grey[700],
+                          fontWeight: onTapAuthor != null
+                              ? FontWeight.w500
+                              : FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    question.authorName,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+                const Spacer(),
                 Text(
                   _formatDate(question.createdAt),
                   style: TextStyle(
