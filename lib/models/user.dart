@@ -22,6 +22,7 @@ extension UserRoleExtension on UserRole {
 
   bool get canAnswerQuestions => this == UserRole.staff || this == UserRole.admin;
   bool get canModerateQuestions => this == UserRole.staff || this == UserRole.admin;
+  bool get canManageVouchers => this == UserRole.admin;
 }
 
 enum MembershipTier {
@@ -269,6 +270,9 @@ class User {
 
   /// Helper method to check if user is ITEL staff
   bool get isStaff => role.canAnswerQuestions;
+
+  /// Helper method to check if user can manage vouchers (admin only)
+  bool get canManageVouchers => role.canManageVouchers;
 
   /// Helper method to parse role from Firebase string
   static UserRole parseRole(String? roleString) {

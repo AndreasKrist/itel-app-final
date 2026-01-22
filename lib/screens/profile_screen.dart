@@ -19,6 +19,7 @@ import 'login_screen.dart';
 import 'signup_screen.dart';
 import '../widgets/account_switcher.dart';
 import '../providers/user_provider.dart';
+import '../widgets/my_vouchers_section.dart';
 
 class ProfileScreen extends StatefulWidget {
   final VoidCallback onSignOut;
@@ -1433,8 +1434,11 @@ Widget _buildProfileTab() {
               ],
             ),
             
+            // My Vouchers Section - visible to all users
+            const MyVouchersSection(),
+
             const SizedBox(height: 24),
-            
+
             // Enrolled Courses section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2115,6 +2119,7 @@ Widget _buildCompanyInformationSection(User currentUser) {
               );
             },
           ),
+
       ],
     ),
   );
