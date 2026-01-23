@@ -114,7 +114,7 @@ class _ForumCreateQuestionScreenState extends State<ForumCreateQuestionScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Ask ITEL'),
+        title: const Text('New Question'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,

@@ -1,0 +1,1084 @@
+// lib/screens/forum_list_screen.dart
+import 'package:flutter/material.dart';
+import '../models/forum_group.dart';
+import '../models/user.dart';
+import '../services/forum_group_service.dart';
+import 'create_forum_screen.dart';
+import 'forum_chat_screen.dart';
+
+class ForumListScreen extends StatefulWidget {
+  const ForumListScreen({super.key});
+
+  @override
+  State<ForumListScreen> createState() => _ForumListScreenState();
+}
+
+class _ForumListScreenState extends State<ForumListScreen>
+    with SingleTickerProviderStateMixin {
+  final ForumGroupService _forumService = ForumGroupService();
+  late TabController _tabController;
+  String _filter = 'all'; // all, my_forums, public, private
+
+  @override
+  void initState() {
+    super.initState();
+    final currentUser = User.currentUser;
+    final isStaff = currentUser.isStaff;
+    _tabController = TabController(length: isStaff ? 3 : 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentUser = User.currentUser;
+    final isGuest = currentUser.id.isEmpty || currentUser.email.isEmpty;
+    final isStaff = currentUser.isStaff;
+
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      body: Column(
+        children: [
+          // Tab bar
+          Container(
+            color: Colors.white,
+            child: TabBar(
+              controller: _tabController,
+              labelColor: const Color(0xFF0056AC),
+              unselectedLabelColor: Colors.grey[600],
+              indicatorColor: const Color(0xFF0056AC),
+              indicatorWeight: 3,
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+              tabs: [
+                const Tab(text: 'All Forums'),
+                const Tab(text: 'My Forums'),
+                if (isStaff) const Tab(text: 'Pending'),
+              ],
+            ),
+          ),
+          // Tab content
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildAllForumsTab(isGuest, currentUser),
+                _buildMyForumsTab(isGuest, currentUser),
+                if (isStaff) _buildPendingForumsTab(currentUser),
+              ],
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: isGuest
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateForumScreen(),
+                  ),
+                );
+              },
+              backgroundColor: const Color(0xFF0056AC),
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: const Text(
+                'Create Forum',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+              ),
+            ),
+    );
+  }
+
+  Widget _buildAllForumsTab(bool isGuest, User currentUser) {
+    return StreamBuilder<List<ForumGroup>>(
+      stream: _forumService.getApprovedForumsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return _buildErrorView(snapshot.error.toString());
+        }
+
+        final forums = snapshot.data ?? [];
+
+        if (forums.isEmpty) {
+          return _buildEmptyView(
+            'No forums yet',
+            'Be the first to create a forum!',
+            showCreateButton: !isGuest,
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => setState(() {}),
+          child: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: forums.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final forum = forums[index];
+              return _buildForumCard(forum, currentUser);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMyForumsTab(bool isGuest, User currentUser) {
+    if (isGuest) {
+      return _buildGuestView();
+    }
+
+    return StreamBuilder<List<ForumGroup>>(
+      stream: _forumService.getUserForumsStream(currentUser.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return _buildErrorView(snapshot.error.toString());
+        }
+
+        final forums = snapshot.data ?? [];
+
+        if (forums.isEmpty) {
+          return _buildEmptyView(
+            'No forums yet',
+            'Join or create a forum to get started!',
+            showCreateButton: true,
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => setState(() {}),
+          child: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: forums.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final forum = forums[index];
+              return _buildMyForumCard(forum, currentUser);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPendingForumsTab(User currentUser) {
+    return StreamBuilder<List<ForumGroup>>(
+      stream: _forumService.getPendingForumsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return _buildErrorView(snapshot.error.toString());
+        }
+
+        final forums = snapshot.data ?? [];
+
+        if (forums.isEmpty) {
+          return _buildEmptyView(
+            'No pending forums',
+            'All forums have been reviewed!',
+            showCreateButton: false,
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => setState(() {}),
+          child: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: forums.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final forum = forums[index];
+              return _buildPendingForumCard(forum, currentUser);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildForumCard(ForumGroup forum, User currentUser,
+      {bool showJoinStatus = true}) {
+    final isMember = forum.isMember(currentUser.id);
+    final isCreator = forum.isCreator(currentUser.id);
+    final isGuest = currentUser.id.isEmpty;
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: isMember
+            ? () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ForumChatScreen(forumId: forum.id),
+                  ),
+                );
+              }
+            : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  // Forum icon
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0056AC).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      forum.isPublic ? Icons.public : Icons.lock,
+                      color: const Color(0xFF0056AC),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          forum.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'by ${forum.creatorName}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Visibility badge
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: forum.isPublic
+                          ? Colors.green[50]
+                          : Colors.orange[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      forum.isPublic ? 'Public' : 'Private',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: forum.isPublic ? Colors.green : Colors.orange,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (forum.description.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(
+                  forum.description,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[700],
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(Icons.people_outline, size: 16, color: Colors.grey[500]),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${forum.memberCount} members',
+                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                  ),
+                  const Spacer(),
+                  if (forum.lastMessageAt != null)
+                    Text(
+                      _formatDate(forum.lastMessageAt!),
+                      style: TextStyle(fontSize: 11, color: Colors.grey[400]),
+                    ),
+                ],
+              ),
+              if (showJoinStatus && !isMember && !isGuest) ...[
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => _handleJoin(forum, currentUser),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0056AC),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                        forum.isPublic ? 'Join Forum' : 'Request to Join'),
+                  ),
+                ),
+              ],
+              if (isMember && !isCreator) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0056AC).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle,
+                          size: 14, color: Color(0xFF0056AC)),
+                      SizedBox(width: 4),
+                      Text(
+                        'Member',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF0056AC),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              if (isCreator) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green[50],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.star, size: 14, color: Colors.green),
+                      SizedBox(width: 4),
+                      Text(
+                        'Creator',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMyForumCard(ForumGroup forum, User currentUser) {
+    final isCreator = forum.isCreator(currentUser.id);
+    final isRejected = forum.approvalStatus == ForumApprovalStatus.rejected;
+    final isPending = forum.approvalStatus == ForumApprovalStatus.pending;
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: (isRejected || isPending)
+            ? null
+            : () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ForumChatScreen(forumId: forum.id),
+                  ),
+                );
+              },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  // Forum icon
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: isRejected
+                          ? Colors.red.withOpacity(0.1)
+                          : isPending
+                              ? Colors.orange.withOpacity(0.1)
+                              : const Color(0xFF0056AC).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      isRejected
+                          ? Icons.cancel
+                          : isPending
+                              ? Icons.hourglass_empty
+                              : forum.isPublic
+                                  ? Icons.public
+                                  : Icons.lock,
+                      color: isRejected
+                          ? Colors.red
+                          : isPending
+                              ? Colors.orange
+                              : const Color(0xFF0056AC),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          forum.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'by ${forum.creatorName}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Status badge
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isRejected
+                          ? Colors.red[50]
+                          : isPending
+                              ? Colors.orange[50]
+                              : forum.isPublic
+                                  ? Colors.green[50]
+                                  : Colors.orange[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      isRejected
+                          ? 'Rejected'
+                          : isPending
+                              ? 'Pending'
+                              : forum.isPublic
+                                  ? 'Public'
+                                  : 'Private',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: isRejected
+                            ? Colors.red
+                            : isPending
+                                ? Colors.orange
+                                : forum.isPublic
+                                    ? Colors.green
+                                    : Colors.orange,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Show rejection reason
+              if (isRejected && forum.rejectionReason != null && forum.rejectionReason!.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red[200]!),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.info_outline, size: 16, color: Colors.red[700]),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Rejection Reason:',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        forum.rejectionReason!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.red[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              // Show pending message
+              if (isPending) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.orange[200]!),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.hourglass_empty, size: 16, color: Colors.orange[700]),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Waiting for staff approval',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.orange[700],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              if (forum.description.isNotEmpty && !isRejected && !isPending) ...[
+                const SizedBox(height: 12),
+                Text(
+                  forum.description,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[700],
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(Icons.people_outline, size: 16, color: Colors.grey[500]),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${forum.memberCount} members',
+                    style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                  ),
+                  const Spacer(),
+                  if (forum.lastMessageAt != null && !isRejected && !isPending)
+                    Text(
+                      _formatDate(forum.lastMessageAt!),
+                      style: TextStyle(fontSize: 11, color: Colors.grey[400]),
+                    ),
+                ],
+              ),
+              if (isCreator && !isRejected && !isPending) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green[50],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.star, size: 14, color: Colors.green),
+                      SizedBox(width: 4),
+                      Text(
+                        'Creator',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPendingForumCard(ForumGroup forum, User currentUser) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.orange[50],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.hourglass_empty,
+                    color: Colors.orange[700],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        forum.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'by ${forum.creatorName}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.orange[50],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Pending',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.orange[700],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (forum.description.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                forum.description,
+                style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Icon(Icons.people_outline, size: 16, color: Colors.grey[500]),
+                const SizedBox(width: 4),
+                Text(
+                  '${forum.memberCount} members',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                ),
+                const SizedBox(width: 16),
+                Icon(
+                  forum.isPublic ? Icons.public : Icons.lock,
+                  size: 16,
+                  color: Colors.grey[500],
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  forum.isPublic ? 'Public' : 'Private',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => _rejectForum(forum, currentUser),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: const BorderSide(color: Colors.red),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Reject'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _approveForum(forum, currentUser),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text('Approve'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGuestView() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.forum_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Sign in to join forums',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Create or join forums to chat with others',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyView(String title, String subtitle,
+      {bool showCreateButton = false}) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.forum_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+            if (showCreateButton) ...[
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateForumScreen(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Create Forum'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0056AC),
+                  foregroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorView(String error) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 16),
+            Text(
+              'Error loading forums',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => setState(() {}),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0056AC),
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleJoin(ForumGroup forum, User currentUser) async {
+    try {
+      if (forum.isPublic) {
+        await _forumService.addMember(
+          forumId: forum.id,
+          odGptUserId: currentUser.id,
+          userName: currentUser.name,
+          userEmail: currentUser.email,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Successfully joined the forum!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          // Navigate to forum
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ForumChatScreen(forumId: forum.id),
+            ),
+          );
+        }
+      } else {
+        await _forumService.requestJoin(
+          forumId: forum.id,
+          odGptUserId: currentUser.id,
+          userName: currentUser.name,
+          userEmail: currentUser.email,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Join request sent! Waiting for approval.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _approveForum(ForumGroup forum, User currentUser) async {
+    try {
+      await _forumService.approveForum(
+        forumId: forum.id,
+        approvedById: currentUser.id,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Forum approved!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _rejectForum(ForumGroup forum, User currentUser) async {
+    final reasonController = TextEditingController();
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reject Forum'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Are you sure you want to reject "${forum.title}"?'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: reasonController,
+              decoration: const InputDecoration(
+                labelText: 'Reason (required)',
+                hintText: 'Explain why this forum is being rejected',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+              maxLength: 200,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (reasonController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please provide a reason for rejection'),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+                return;
+              }
+              Navigator.pop(context, true);
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Reject'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await _forumService.rejectForum(
+          forumId: forum.id,
+          rejectedById: currentUser.id,
+          reason: reasonController.text.trim(),
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Forum rejected'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date);
+
+    if (diff.inDays == 0) {
+      if (diff.inHours == 0) {
+        if (diff.inMinutes == 0) return 'Just now';
+        return '${diff.inMinutes}m ago';
+      }
+      return '${diff.inHours}h ago';
+    } else if (diff.inDays == 1) {
+      return 'Yesterday';
+    } else if (diff.inDays < 7) {
+      return '${diff.inDays}d ago';
+    }
+    return '${date.day}/${date.month}/${date.year}';
+  }
+}
