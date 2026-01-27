@@ -29,6 +29,20 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   bool _isSending = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Mark ticket as viewed by staff when they open it
+    _markAsViewedByStaff();
+  }
+
+  Future<void> _markAsViewedByStaff() async {
+    final currentUser = User.currentUser;
+    if (currentUser.isStaff && currentUser.id.isNotEmpty) {
+      await _ticketService.markAsViewedByStaff(widget.ticketId, currentUser.id);
+    }
+  }
+
+  @override
   void dispose() {
     _messageController.dispose();
     _scrollController.dispose();

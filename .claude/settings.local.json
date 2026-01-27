@@ -8,7 +8,9 @@
       "Bash(findstr:*)",
       "Bash(flutter build:*)",
       "Bash(dart analyze:*)",
-      "Bash(dart compile kernel:*)"
+      "Bash(dart compile kernel:*)",
+      "Bash(flutter pub:*)",
+      "Bash(flutter clean:*)"
     ]
   }
 }

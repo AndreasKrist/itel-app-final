@@ -1,6 +1,7 @@
 // lib/screens/forum_list_screen.dart
 import 'package:flutter/material.dart';
 import '../models/forum_group.dart';
+import '../models/forum_invitation.dart';
 import '../models/user.dart';
 import '../services/forum_group_service.dart';
 import 'create_forum_screen.dart';
@@ -121,14 +122,105 @@ class _ForumListScreenState extends State<ForumListScreen>
 
         return RefreshIndicator(
           onRefresh: () async => setState(() {}),
-          child: ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: forums.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final forum = forums[index];
-              return _buildForumCard(forum, currentUser);
-            },
+          child: Column(
+            children: [
+              // Show invitation alert banner if not guest
+              if (!isGuest)
+                StreamBuilder<int>(
+                  stream: _forumService.getUserInvitationsCountStream(currentUser.id),
+                  builder: (context, invSnapshot) {
+                    // Debug: print any errors
+                    if (invSnapshot.hasError) {
+                      print('Invitation count error: ${invSnapshot.error}');
+                    }
+                    final invCount = invSnapshot.data ?? 0;
+                    if (invCount == 0) return const SizedBox.shrink();
+
+                    return GestureDetector(
+                      onTap: () {
+                        // Switch to My Forums tab
+                        _tabController.animateTo(1);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.orange[400]!, Colors.orange[600]!],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.orange.withOpacity(0.3),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.mail,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'You have $invCount pending invitation${invCount > 1 ? 's' : ''}!',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  const Text(
+                                    'Tap here to view and respond',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white70,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+              // Forums list
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: forums.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final forum = forums[index];
+                    return _buildForumCard(forum, currentUser);
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -140,41 +232,381 @@ class _ForumListScreenState extends State<ForumListScreen>
       return _buildGuestView();
     }
 
-    return StreamBuilder<List<ForumGroup>>(
-      stream: _forumService.getUserForumsStream(currentUser.id),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return RefreshIndicator(
+      onRefresh: () async => setState(() {}),
+      child: CustomScrollView(
+        slivers: [
+          // Pending invitations section
+          StreamBuilder<List<ForumInvitation>>(
+            stream: _forumService.getUserInvitationsStream(currentUser.id),
+            builder: (context, invitationsSnapshot) {
+              // Debug: print any errors
+              if (invitationsSnapshot.hasError) {
+                print('Invitations error: ${invitationsSnapshot.error}');
+              }
 
-        if (snapshot.hasError) {
-          return _buildErrorView(snapshot.error.toString());
-        }
+              final invitations = invitationsSnapshot.data ?? [];
 
-        final forums = snapshot.data ?? [];
+              if (invitations.isEmpty) {
+                return const SliverToBoxAdapter(child: SizedBox.shrink());
+              }
 
-        if (forums.isEmpty) {
-          return _buildEmptyView(
-            'No forums yet',
-            'Join or create a forum to get started!',
-            showCreateButton: true,
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async => setState(() {}),
-          child: ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: forums.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final forum = forums[index];
-              return _buildMyForumCard(forum, currentUser);
+              return SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Section header
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.orange[50],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.orange[200]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.mail,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Pending Invitations',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.orange[800],
+                                    ),
+                                  ),
+                                  Text(
+                                    'You have ${invitations.length} forum invitation${invitations.length > 1 ? 's' : ''} waiting',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.orange[700],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                '${invitations.length}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Invitation cards
+                      ...invitations.map((invitation) => _buildInvitationCard(invitation)),
+                      const SizedBox(height: 8),
+                      const Divider(thickness: 1),
+                      const SizedBox(height: 8),
+                      // My Forums label
+                      Text(
+                        'My Forums',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           ),
-        );
-      },
+
+          // My forums section
+          StreamBuilder<List<ForumGroup>>(
+            stream: _forumService.getUserForumsStream(currentUser.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return SliverFillRemaining(
+                  child: _buildErrorView(snapshot.error.toString()),
+                );
+              }
+
+              final forums = snapshot.data ?? [];
+
+              if (forums.isEmpty) {
+                return SliverFillRemaining(
+                  child: _buildEmptyView(
+                    'No forums yet',
+                    'Join or create a forum to get started!',
+                    showCreateButton: true,
+                  ),
+                );
+              }
+
+              return SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final forum = forums[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _buildMyForumCard(forum, currentUser),
+                      );
+                    },
+                    childCount: forums.length,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget _buildInvitationCard(ForumInvitation invitation) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.orange[50]!, Colors.orange[100]!],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.orange[300]!, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with invitation badge
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.mail, color: Colors.white, size: 14),
+                      SizedBox(width: 4),
+                      Text(
+                        'FORUM INVITATION',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Forum title
+            Text(
+              invitation.forumTitle,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+
+            // Invited by info
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Colors.orange[300],
+                  child: Text(
+                    invitation.invitedByName.isNotEmpty
+                        ? invitation.invitedByName[0].toUpperCase()
+                        : '?',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Invited by ${invitation.invitedByName}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _declineInvitation(invitation),
+                    icon: const Icon(Icons.close, size: 18),
+                    label: const Text('Decline'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.grey[700],
+                      side: BorderSide(color: Colors.grey[400]!),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _acceptInvitation(invitation),
+                    icon: const Icon(Icons.check, size: 18),
+                    label: const Text('Accept & Join'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _acceptInvitation(ForumInvitation invitation) async {
+    try {
+      await _forumService.acceptInvitation(invitation.id);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('You joined "${invitation.forumTitle}"!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // Navigate to the forum
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ForumChatScreen(forumId: invitation.forumId),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _declineInvitation(ForumInvitation invitation) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Decline Invitation'),
+        content: Text('Decline invitation to join "${invitation.forumTitle}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Decline'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await _forumService.declineInvitation(invitation.id);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Invitation declined'),
+              backgroundColor: Colors.grey,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
   }
 
   Widget _buildPendingForumsTab(User currentUser) {
@@ -217,15 +649,17 @@ class _ForumListScreenState extends State<ForumListScreen>
 
   Widget _buildForumCard(ForumGroup forum, User currentUser,
       {bool showJoinStatus = true}) {
-    final isMember = forum.isMember(currentUser.id);
+    final isStaff = currentUser.isStaff;
+    final isMember = forum.isMember(currentUser.id, isStaff: isStaff);
     final isCreator = forum.isCreator(currentUser.id);
     final isGuest = currentUser.id.isEmpty;
+    final canAccess = isMember || isStaff;
 
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: isMember
+        onTap: canAccess
             ? () {
                 Navigator.push(
                   context,
@@ -331,7 +765,7 @@ class _ForumListScreenState extends State<ForumListScreen>
                     ),
                 ],
               ),
-              if (showJoinStatus && !isMember && !isGuest) ...[
+              if (showJoinStatus && !isMember && !isGuest && !isStaff) ...[
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
@@ -349,7 +783,33 @@ class _ForumListScreenState extends State<ForumListScreen>
                   ),
                 ),
               ],
-              if (isMember && !isCreator) ...[
+              // Staff badge (staff can access without being a member)
+              if (isStaff && !isMember) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.purple[50],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.admin_panel_settings, size: 14, color: Colors.purple),
+                      SizedBox(width: 4),
+                      Text(
+                        'Staff Access',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.purple,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              if (isMember && !isCreator && !isStaff) ...[
                 const SizedBox(height: 8),
                 Container(
                   padding:
@@ -664,6 +1124,7 @@ class _ForumListScreenState extends State<ForumListScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header with creator info and status
             Row(
               children: [
                 Container(
@@ -684,102 +1145,192 @@ class _ForumListScreenState extends State<ForumListScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        forum.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
                         'by ${forum.creatorName}',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
                         ),
                       ),
+                      const SizedBox(height: 2),
+                      Text(
+                        forum.creatorEmail,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[500],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.orange[50],
-                    borderRadius: BorderRadius.circular(8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.orange[50],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Pending',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.orange[700],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: forum.isPublic ? Colors.green[50] : Colors.blue[50],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            forum.isPublic ? Icons.public : Icons.lock,
+                            size: 10,
+                            color: forum.isPublic ? Colors.green : Colors.blue,
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            forum.isPublic ? 'Public' : 'Private',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w500,
+                              color: forum.isPublic ? Colors.green : Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Subject section
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0056AC).withOpacity(0.05),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFF0056AC).withOpacity(0.2)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.title, size: 14, color: const Color(0xFF0056AC)),
+                      const SizedBox(width: 6),
+                      Text(
+                        'SUBJECT',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF0056AC),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    'Pending',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.orange[700],
+                  const SizedBox(height: 8),
+                  Text(
+                    forum.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+
+            // Description section
             if (forum.description.isNotEmpty) ...[
               const SizedBox(height: 12),
-              Text(
-                forum.description,
-                style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[200]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.description, size: 14, color: Colors.grey[600]),
+                        const SizedBox(width: 6),
+                        Text(
+                          'DESCRIPTION',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600],
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      forum.description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(Icons.people_outline, size: 16, color: Colors.grey[500]),
-                const SizedBox(width: 4),
-                Text(
-                  '${forum.memberCount} members',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-                ),
-                const SizedBox(width: 16),
-                Icon(
-                  forum.isPublic ? Icons.public : Icons.lock,
-                  size: 16,
-                  color: Colors.grey[500],
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  forum.isPublic ? 'Public' : 'Private',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
-                ),
-              ],
-            ),
+
             const SizedBox(height: 16),
+
+            // Action buttons
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: OutlinedButton.icon(
                     onPressed: () => _rejectForum(forum, currentUser),
+                    icon: const Icon(Icons.close, size: 18),
+                    label: const Text('Reject'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Reject'),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: () => _approveForum(forum, currentUser),
+                    icon: const Icon(Icons.check, size: 18),
+                    label: const Text('Approve'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Approve'),
                   ),
                 ),
               ],
@@ -912,7 +1463,8 @@ class _ForumListScreenState extends State<ForumListScreen>
   Future<void> _handleJoin(ForumGroup forum, User currentUser) async {
     try {
       if (forum.isPublic) {
-        await _forumService.addMember(
+        // For public forums, add directly (no invitation needed)
+        await _forumService.addMemberDirectly(
           forumId: forum.id,
           odGptUserId: currentUser.id,
           userName: currentUser.name,

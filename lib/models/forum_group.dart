@@ -194,8 +194,9 @@ class ForumGroup {
   /// Check if user is the creator
   bool isCreator(String userId) => creatorId == userId;
 
-  /// Check if user is a member
-  bool isMember(String userId) => memberIds.contains(userId);
+  /// Check if user is a member (staff has implicit access to all forums)
+  bool isMember(String userId, {bool isStaff = false}) =>
+      memberIds.contains(userId) || isStaff;
 
   /// Check if forum is approved and visible
   bool get isApproved => approvalStatus == ForumApprovalStatus.approved;

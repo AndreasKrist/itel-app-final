@@ -98,6 +98,8 @@ class SupportTicketService {
         'lastMessageBy': creatorName,
         'lastMessageAt': Timestamp.fromDate(now),
         'messageCount': 1,
+        'viewedByStaff': [],       // No staff has viewed yet
+        'hasStaffReply': false,    // No staff reply yet
       });
 
       // Create initial message
@@ -178,6 +180,48 @@ class SupportTicketService {
     }
   }
 
+  /// Mark a ticket as viewed by a staff member
+  /// This adds the staff ID to the viewedByStaff list if not already present
+  Future<void> markAsViewedByStaff(String ticketId, String staffId) async {
+    try {
+      await _ticketsCollection.doc(ticketId).update({
+        'viewedByStaff': FieldValue.arrayUnion([staffId]),
+      });
+      print('Ticket $ticketId marked as viewed by staff $staffId');
+    } catch (e) {
+      print('Error marking ticket as viewed: $e');
+      // Don't rethrow - this is a non-critical operation
+    }
+  }
+
+  /// Stream of count of tickets needing staff attention
+  /// A ticket needs attention if: status is 'open' AND hasStaffReply is false
+  Stream<int> getUnattendedTicketsCountStream() {
+    return _ticketsCollection
+        .where('status', isEqualTo: 'open')
+        .where('hasStaffReply', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  /// Stream of all open tickets that haven't been replied to by staff
+  /// Used for staff notification badge
+  Stream<List<SupportTicket>> getUnattendedTicketsStream() {
+    return _ticketsCollection
+        .where('status', isEqualTo: 'open')
+        .where('hasStaffReply', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return SupportTicket.fromJson(
+          doc.data() as Map<String, dynamic>,
+          doc.id,
+        );
+      }).toList();
+    });
+  }
+
   // ============ MESSAGES ============
 
   /// Stream of messages for a ticket
@@ -236,13 +280,20 @@ class SupportTicketService {
       });
 
       // Update ticket
-      batch.update(_ticketsCollection.doc(ticketId), {
+      final updateData = {
         'lastMessage': content,
         'lastMessageBy': senderName,
         'lastMessageAt': Timestamp.fromDate(now),
         'updatedAt': Timestamp.fromDate(now),
         'messageCount': FieldValue.increment(1),
-      });
+      };
+
+      // If staff is replying, mark hasStaffReply as true
+      if (isStaff) {
+        updateData['hasStaffReply'] = true;
+      }
+
+      batch.update(_ticketsCollection.doc(ticketId), updateData);
 
       await batch.commit();
       print('Message sent in ticket $ticketId');

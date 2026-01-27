@@ -309,6 +309,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
   }
 
   Widget _buildTicketCard(SupportTicket ticket, bool isStaff) {
+    final currentUser = User.currentUser;
     final statusColor = ticket.status == TicketStatus.open
         ? const Color(0xFFFF6600)
         : ticket.status == TicketStatus.resolved
@@ -320,6 +321,14 @@ class _AskItelScreenState extends State<AskItelScreen> {
         : ticket.status == TicketStatus.resolved
             ? Icons.check_circle
             : Icons.lock;
+
+    // Staff-specific indicators
+    final bool isUnviewedByCurrentStaff = isStaff &&
+        ticket.status == TicketStatus.open &&
+        !ticket.hasBeenViewedByStaff(currentUser.id);
+    final bool needsStaffReply = isStaff &&
+        ticket.status == TicketStatus.open &&
+        !ticket.hasStaffReply;
 
     return Card(
       elevation: 2,
@@ -344,6 +353,25 @@ class _AskItelScreenState extends State<AskItelScreen> {
             children: [
               Row(
                 children: [
+                  // NEW badge for staff - unviewed ticket
+                  if (isUnviewedByCurrentStaff) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'NEW',
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                   Expanded(
                     child: Text(
                       ticket.subject,
@@ -391,13 +419,40 @@ class _AskItelScreenState extends State<AskItelScreen> {
                   children: [
                     Icon(Icons.person_outline, size: 14, color: Colors.grey[500]),
                     const SizedBox(width: 4),
-                    Text(
-                      ticket.creatorName,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                    Expanded(
+                      child: Text(
+                        ticket.creatorName,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ),
+                    // No Reply indicator for staff
+                    if (needsStaffReply)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.orange[100],
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Colors.orange[300]!),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.reply, size: 10, color: Colors.orange[700]),
+                            const SizedBox(width: 2),
+                            Text(
+                              'No Reply',
+                              style: TextStyle(
+                                fontSize: 9,
+                                color: Colors.orange[700],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ],
@@ -471,7 +526,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Contact ITEL Support'),
+        title: const Text('Contact ITEL'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,

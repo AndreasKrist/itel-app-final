@@ -21,6 +21,8 @@ class SupportTicket {
   final String? lastMessageBy;
   final DateTime? lastMessageAt;
   final int messageCount;
+  final List<String> viewedByStaff;  // Staff IDs who have opened this ticket
+  final bool hasStaffReply;          // Whether any staff has replied
 
   SupportTicket({
     required this.id,
@@ -35,6 +37,8 @@ class SupportTicket {
     this.lastMessageBy,
     this.lastMessageAt,
     this.messageCount = 0,
+    this.viewedByStaff = const [],
+    this.hasStaffReply = false,
   });
 
   factory SupportTicket.fromJson(Map<String, dynamic> json, String id) {
@@ -53,6 +57,8 @@ class SupportTicket {
           ? _parseTimestamp(json['lastMessageAt'])
           : null,
       messageCount: json['messageCount'] as int? ?? 0,
+      viewedByStaff: List<String>.from(json['viewedByStaff'] ?? []),
+      hasStaffReply: json['hasStaffReply'] as bool? ?? false,
     );
   }
 
@@ -71,6 +77,8 @@ class SupportTicket {
           ? Timestamp.fromDate(lastMessageAt!)
           : null,
       'messageCount': messageCount,
+      'viewedByStaff': viewedByStaff,
+      'hasStaffReply': hasStaffReply,
     };
   }
 
@@ -87,6 +95,8 @@ class SupportTicket {
     String? lastMessageBy,
     DateTime? lastMessageAt,
     int? messageCount,
+    List<String>? viewedByStaff,
+    bool? hasStaffReply,
   }) {
     return SupportTicket(
       id: id ?? this.id,
@@ -101,6 +111,8 @@ class SupportTicket {
       lastMessageBy: lastMessageBy ?? this.lastMessageBy,
       lastMessageAt: lastMessageAt ?? this.lastMessageAt,
       messageCount: messageCount ?? this.messageCount,
+      viewedByStaff: viewedByStaff ?? this.viewedByStaff,
+      hasStaffReply: hasStaffReply ?? this.hasStaffReply,
     );
   }
 
@@ -136,6 +148,12 @@ class SupportTicket {
 
   /// Check if the ticket is still open
   bool get isOpen => status == TicketStatus.open;
+
+  /// Check if a specific staff member has viewed this ticket
+  bool hasBeenViewedByStaff(String staffId) => viewedByStaff.contains(staffId);
+
+  /// Check if this ticket needs attention (open + no staff reply yet)
+  bool get needsStaffAttention => status == TicketStatus.open && !hasStaffReply;
 
   /// Check if a user can reply to this ticket
   bool canReply(String userId, bool isStaff) {

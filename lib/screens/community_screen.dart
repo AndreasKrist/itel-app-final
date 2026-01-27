@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../services/direct_message_service.dart';
+import '../services/support_ticket_service.dart';
+import '../services/forum_group_service.dart';
 import 'global_chat_screen.dart';
 import 'conversations_list_screen.dart';
 import 'ask_itel_screen.dart';
@@ -18,6 +20,8 @@ class _CommunityScreenState extends State<CommunityScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final DirectMessageService _dmService = DirectMessageService();
+  final SupportTicketService _ticketService = SupportTicketService();
+  final ForumGroupService _forumService = ForumGroupService();
 
   @override
   void initState() {
@@ -160,16 +164,116 @@ class _CommunityScreenState extends State<CommunityScreen>
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
-                tabs: const [
+                tabs: [
+                  // Ask ITEL tab with badge for staff
                   Tab(
-                    icon: Icon(Icons.support_agent, size: 20),
-                    text: 'Ask ITEL',
+                    child: currentUser.isStaff
+                        ? StreamBuilder<int>(
+                            stream: _ticketService.getUnattendedTicketsCountStream(),
+                            builder: (context, snapshot) {
+                              final count = snapshot.data ?? 0;
+                              return Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.support_agent, size: 20),
+                                  const SizedBox(width: 4),
+                                  const Text('Ask ITEL'),
+                                  if (count > 0) ...[
+                                    const SizedBox(width: 4),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 18,
+                                        minHeight: 18,
+                                      ),
+                                      child: Text(
+                                        count > 99 ? '99+' : '$count',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              );
+                            },
+                          )
+                        : const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.support_agent, size: 20),
+                              SizedBox(width: 4),
+                              Text('Ask ITEL'),
+                            ],
+                          ),
                   ),
+                  // Forum tab with badge for pending invitations
                   Tab(
-                    icon: Icon(Icons.forum, size: 20),
-                    text: 'Forum',
+                    child: !isGuest
+                        ? StreamBuilder<int>(
+                            stream: _forumService.getUserInvitationsCountStream(currentUser.id),
+                            builder: (context, snapshot) {
+                              final count = snapshot.data ?? 0;
+                              return Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.forum, size: 20),
+                                  const SizedBox(width: 4),
+                                  const Text('Forum'),
+                                  if (count > 0) ...[
+                                    const SizedBox(width: 4),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 2,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.orange,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 18,
+                                        minHeight: 18,
+                                      ),
+                                      child: Text(
+                                        count > 99 ? '99+' : '$count',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              );
+                            },
+                          )
+                        : const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.forum, size: 20),
+                              SizedBox(width: 4),
+                              Text('Forum'),
+                            ],
+                          ),
                   ),
-                  Tab(
+                  const Tab(
                     icon: Icon(Icons.chat, size: 20),
                     text: 'ITEL Community',
                   ),

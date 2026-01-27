@@ -130,6 +130,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
     final currentUser = User.currentUser;
     final isCreator = forum.isCreator(currentUser.id);
     final isStaff = currentUser.isStaff;
+    final isActualMember = forum.memberIds.contains(currentUser.id);
 
     showModalBottomSheet(
       context: context,
@@ -160,34 +161,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
             ),
             const SizedBox(height: 16),
 
-            // View members
-            ListTile(
-              leading: const Icon(Icons.people, color: Color(0xFF0056AC)),
-              title: const Text('View Members'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ForumMembersScreen(forumId: widget.forumId),
-                  ),
-                );
-              },
-            ),
-
-            // Invite members (only for creator)
-            if (isCreator)
-              ListTile(
-                leading: const Icon(Icons.person_add, color: Colors.green),
-                title: const Text('Invite Members'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _showInviteMembersDialog(forum);
-                },
-              ),
-
-            // Join requests (only for creator)
+            // Join requests (only for creator of private forums)
             if (isCreator && !forum.isPublic)
               StreamBuilder<List<ForumJoinRequest>>(
                 stream: _forumService.getJoinRequestsStream(widget.forumId),
@@ -229,8 +203,8 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
                 },
               ),
 
-            // Leave forum (for non-creators)
-            if (!isCreator)
+            // Leave forum (for actual members who are not creators, not for staff-only access)
+            if (isActualMember && !isCreator)
               ListTile(
                 leading: const Icon(Icons.exit_to_app, color: Colors.orange),
                 title: const Text('Leave Forum'),
@@ -240,11 +214,30 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
                 },
               ),
 
-            // Remove forum (staff only)
+            // Kick any member (staff only)
+            if (isStaff)
+              ListTile(
+                leading: const Icon(Icons.person_remove, color: Colors.orange),
+                title: const Text('Kick Member'),
+                subtitle: const Text('Remove any member from forum', style: TextStyle(fontSize: 12)),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ForumMembersScreen(forumId: widget.forumId),
+                    ),
+                  );
+                },
+              ),
+
+            // Close/Remove forum (staff only)
             if (isStaff)
               ListTile(
                 leading: const Icon(Icons.delete_forever, color: Colors.red),
-                title: const Text('Remove Forum'),
+                title: const Text('Close Forum'),
+                subtitle: const Text('Permanently remove this forum', style: TextStyle(fontSize: 12)),
                 onTap: () async {
                   Navigator.pop(context);
                   await _removeForum(forum);
@@ -571,7 +564,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Search users by email to add them to your forum',
+                  'Search users by email. They will receive an invitation that they need to accept.',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -755,12 +748,13 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
 
     for (final member in members) {
       try {
-        await _forumService.addMember(
+        await _forumService.inviteMember(
           forumId: forum.id,
           odGptUserId: member['userId']!,
           userName: member['userName']!,
           userEmail: member['userEmail']!,
-          invitedBy: currentUser.id,
+          invitedById: currentUser.id,
+          invitedByName: currentUser.name,
         );
         successCount++;
       } catch (e) {
@@ -772,21 +766,21 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
       if (successCount > 0 && failCount == 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Successfully invited $successCount member${successCount > 1 ? 's' : ''}'),
+            content: Text('Invitation sent to $successCount user${successCount > 1 ? 's' : ''}'),
             backgroundColor: Colors.green,
           ),
         );
       } else if (successCount > 0 && failCount > 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Invited $successCount member${successCount > 1 ? 's' : ''}, $failCount failed'),
+            content: Text('Sent $successCount invitation${successCount > 1 ? 's' : ''}, $failCount failed'),
             backgroundColor: Colors.orange,
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to invite members'),
+            content: Text('Failed to send invitations'),
             backgroundColor: Colors.red,
           ),
         );
@@ -841,7 +835,10 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
           );
         }
 
-        final isMember = forum.isMember(currentUser.id);
+        final isStaff = currentUser.isStaff;
+        final isMember = forum.isMember(currentUser.id, isStaff: isStaff);
+        final isCreator = forum.isCreator(currentUser.id);
+        final canManage = isCreator || isStaff;
 
         return Scaffold(
           backgroundColor: Colors.grey[100],
@@ -892,6 +889,28 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
               ],
             ),
             actions: [
+              // View members button
+              IconButton(
+                icon: const Icon(Icons.people_outline),
+                tooltip: 'View Members',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ForumMembersScreen(forumId: widget.forumId),
+                    ),
+                  );
+                },
+              ),
+              // Invite button (only for creator)
+              if (isCreator)
+                IconButton(
+                  icon: const Icon(Icons.person_add_outlined),
+                  tooltip: 'Invite Members',
+                  onPressed: () => _showInviteMembersDialog(forum),
+                ),
+              // More options
               IconButton(
                 icon: const Icon(Icons.more_vert),
                 onPressed: () => _showForumOptions(forum),

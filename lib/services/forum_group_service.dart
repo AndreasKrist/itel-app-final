@@ -4,6 +4,7 @@ import '../models/forum_member.dart';
 import '../models/forum_message.dart';
 import '../models/forum_join_request.dart';
 import '../models/forum_kick_log.dart';
+import '../models/forum_invitation.dart';
 
 class ForumGroupService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -22,6 +23,9 @@ class ForumGroupService {
 
   CollectionReference get _kickLogsCollection =>
       _firestore.collection('forum_kick_logs');
+
+  CollectionReference get _invitationsCollection =>
+      _firestore.collection('forum_invitations');
 
   // ============ FORUM CRUD ============
 
@@ -139,7 +143,7 @@ class ForumGroupService {
     }
   }
 
-  /// Create a new forum with initial members
+  /// Create a new forum (initial members will be invited, not auto-added)
   Future<String> createForum({
     required String creatorId,
     required String creatorName,
@@ -151,7 +155,8 @@ class ForumGroupService {
   }) async {
     try {
       final now = DateTime.now();
-      final memberIds = [creatorId, ...initialMembers.map((m) => m['userId']!)];
+      // Only creator is a member initially
+      final memberIds = [creatorId];
 
       // Create forum document
       final forumRef = await _forumsCollection.add({
@@ -164,8 +169,10 @@ class ForumGroupService {
         'updatedAt': Timestamp.fromDate(now),
         'visibility': visibility == ForumVisibility.public ? 'public' : 'private',
         'approvalStatus': 'pending',
-        'memberCount': memberIds.length,
+        'memberCount': 1, // Only creator
         'memberIds': memberIds,
+        // Store pending invites to send after approval
+        'pendingInvites': initialMembers,
       });
 
       final batch = _firestore.batch();
@@ -182,21 +189,6 @@ class ForumGroupService {
         'isActive': true,
       });
 
-      // Add initial members
-      for (final member in initialMembers) {
-        final memberRef = _membersCollection(forumRef.id).doc();
-        batch.set(memberRef, {
-          'forumId': forumRef.id,
-          'userId': member['userId'],
-          'userName': member['userName'],
-          'userEmail': member['userEmail'],
-          'role': 'member',
-          'joinedAt': Timestamp.fromDate(now),
-          'invitedBy': creatorId,
-          'isActive': true,
-        });
-      }
-
       await batch.commit();
       print('Forum created with ID: ${forumRef.id}');
       return forumRef.id;
@@ -207,18 +199,54 @@ class ForumGroupService {
   }
 
   /// Approve a forum (staff/admin only)
+  /// This also sends invitations to any pending invites from creation
   Future<void> approveForum({
     required String forumId,
     required String approvedById,
   }) async {
     try {
+      // Get the forum to check for pending invites
+      final forum = await getForum(forumId);
+      if (forum == null) {
+        throw Exception('Forum not found');
+      }
+
+      // Get pending invites from forum document BEFORE updating
+      final forumDoc = await _forumsCollection.doc(forumId).get();
+      final forumData = forumDoc.data() as Map<String, dynamic>?;
+      final pendingInvites = forumData?['pendingInvites'] as List<dynamic>? ?? [];
+
+      // Update approval status and remove pending invites
       await _forumsCollection.doc(forumId).update({
         'approvalStatus': 'approved',
         'approvedBy': approvedById,
         'approvedAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
+        'pendingInvites': FieldValue.delete(), // Remove pending invites after processing
       });
-      print('Forum $forumId approved');
+
+      // Send invitations to pending members
+      for (final invite in pendingInvites) {
+        final inviteMap = invite as Map<String, dynamic>;
+        try {
+          await _invitationsCollection.add({
+            'forumId': forumId,
+            'forumTitle': forum.title,
+            'invitedUserId': inviteMap['userId'],
+            'invitedUserName': inviteMap['userName'],
+            'invitedUserEmail': inviteMap['userEmail'],
+            'invitedById': forum.creatorId,
+            'invitedByName': forum.creatorName,
+            'invitedAt': Timestamp.now(),
+            'status': 'pending',
+          });
+          print('Invitation sent to ${inviteMap['userName']} for forum ${forum.title}');
+        } catch (e) {
+          print('Error sending invitation to ${inviteMap['userId']}: $e');
+        }
+      }
+
+      print('Forum $forumId approved, ${pendingInvites.length} invitations sent');
     } catch (e) {
       print('Error approving forum: $e');
       rethrow;
@@ -323,28 +351,31 @@ class ForumGroupService {
   Stream<List<ForumMember>> getMembersStream(String forumId) {
     return _membersCollection(forumId)
         .where('isActive', isEqualTo: true)
-        .orderBy('joinedAt', descending: false)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
+      final members = snapshot.docs.map((doc) {
         return ForumMember.fromJson(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
+      // Sort by joinedAt in memory to avoid composite index
+      members.sort((a, b) => a.joinedAt.compareTo(b.joinedAt));
+      return members;
     });
   }
 
   /// Get a specific member
   Future<ForumMember?> getMember(String forumId, String odGptUserId) async {
     try {
+      // Single field query, filter isActive in memory
       final snapshot = await _membersCollection(forumId)
           .where('userId', isEqualTo: odGptUserId)
-          .where('isActive', isEqualTo: true)
-          .limit(1)
           .get();
-      if (snapshot.docs.isNotEmpty) {
-        return ForumMember.fromJson(
-          snapshot.docs.first.data() as Map<String, dynamic>,
-          snapshot.docs.first.id,
-        );
+
+      // Find the active member
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        if (data['isActive'] == true) {
+          return ForumMember.fromJson(data, doc.id);
+        }
       }
       return null;
     } catch (e) {
@@ -359,8 +390,8 @@ class ForumGroupService {
     return member != null;
   }
 
-  /// Add a member to forum (for public forums or after approval)
-  Future<void> addMember({
+  /// Add a member directly to forum (for public forums join or after invitation accepted)
+  Future<void> addMemberDirectly({
     required String forumId,
     required String odGptUserId,
     required String userName,
@@ -407,6 +438,95 @@ class ForumGroupService {
     } catch (e) {
       print('Error adding member: $e');
       rethrow;
+    }
+  }
+
+  /// Invite a member to forum (creates invitation that user must accept)
+  Future<void> inviteMember({
+    required String forumId,
+    required String odGptUserId,
+    required String userName,
+    required String userEmail,
+    required String invitedById,
+    required String invitedByName,
+  }) async {
+    try {
+      // Get forum title
+      final forum = await getForum(forumId);
+      if (forum == null) {
+        throw Exception('Forum not found');
+      }
+
+      // Check if already a member
+      if (await isMember(forumId, odGptUserId)) {
+        throw Exception('User is already a member of this forum');
+      }
+
+      // Check for existing pending invitation (simplified - single field query)
+      final userInvitations = await _invitationsCollection
+          .where('invitedUserId', isEqualTo: odGptUserId)
+          .get();
+
+      // Filter in memory to avoid composite index
+      final hasPendingInvitation = userInvitations.docs.any((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return data['forumId'] == forumId && data['status'] == 'pending';
+      });
+
+      if (hasPendingInvitation) {
+        throw Exception('User already has a pending invitation to this forum');
+      }
+
+      await _invitationsCollection.add({
+        'forumId': forumId,
+        'forumTitle': forum.title,
+        'invitedUserId': odGptUserId,
+        'invitedUserName': userName,
+        'invitedUserEmail': userEmail,
+        'invitedById': invitedById,
+        'invitedByName': invitedByName,
+        'invitedAt': Timestamp.now(),
+        'status': 'pending',
+      });
+      print('Invitation sent to $odGptUserId for forum $forumId');
+    } catch (e) {
+      print('Error inviting member: $e');
+      rethrow;
+    }
+  }
+
+  /// Legacy method - now creates invitation instead of direct add when invitedBy is provided
+  Future<void> addMember({
+    required String forumId,
+    required String odGptUserId,
+    required String userName,
+    required String userEmail,
+    String? invitedBy,
+  }) async {
+    // If no inviter, add directly (for public forum self-join)
+    if (invitedBy == null || invitedBy.isEmpty) {
+      await addMemberDirectly(
+        forumId: forumId,
+        odGptUserId: odGptUserId,
+        userName: userName,
+        userEmail: userEmail,
+      );
+    } else {
+      // Create invitation instead of direct add
+      // Get inviter name
+      final inviterDoc = await _firestore.collection('users').doc(invitedBy).get();
+      final inviterName = inviterDoc.exists
+          ? (inviterDoc.data()?['name'] as String? ?? 'Unknown')
+          : 'Unknown';
+
+      await inviteMember(
+        forumId: forumId,
+        odGptUserId: odGptUserId,
+        userName: userName,
+        userEmail: userEmail,
+        invitedById: invitedBy,
+        invitedByName: inviterName,
+      );
     }
   }
 
@@ -562,14 +682,18 @@ class ForumGroupService {
 
   /// Stream of pending join requests for a forum
   Stream<List<ForumJoinRequest>> getJoinRequestsStream(String forumId) {
+    // Query only by status to avoid composite index requirement on subcollection
+    // Sort in memory instead
     return _joinRequestsCollection(forumId)
         .where('status', isEqualTo: 'pending')
-        .orderBy('requestedAt', descending: false)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
+      final requests = snapshot.docs.map((doc) {
         return ForumJoinRequest.fromJson(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
+      // Sort by requestedAt in memory
+      requests.sort((a, b) => a.requestedAt.compareTo(b.requestedAt));
+      return requests;
     });
   }
 
@@ -586,14 +710,17 @@ class ForumGroupService {
         throw Exception('You are already a member of this forum');
       }
 
-      // Check for existing pending request
-      final existingRequest = await _joinRequestsCollection(forumId)
+      // Check for existing pending request (simplified - single field query)
+      final allUserRequests = await _joinRequestsCollection(forumId)
           .where('userId', isEqualTo: odGptUserId)
-          .where('status', isEqualTo: 'pending')
-          .limit(1)
           .get();
 
-      if (existingRequest.docs.isNotEmpty) {
+      // Filter pending requests in memory to avoid composite index
+      final hasPendingRequest = allUserRequests.docs.any(
+        (doc) => (doc.data() as Map<String, dynamic>)['status'] == 'pending'
+      );
+
+      if (hasPendingRequest) {
         throw Exception('You already have a pending request to join this forum');
       }
 
@@ -602,10 +729,10 @@ class ForumGroupService {
         'userId': odGptUserId,
         'userName': userName,
         'userEmail': userEmail,
-        'requestedAt': FieldValue.serverTimestamp(),
+        'requestedAt': Timestamp.now(),
         'status': 'pending',
       });
-      print('Join request submitted for forum $forumId');
+      print('Join request submitted for forum $forumId by user $odGptUserId');
     } catch (e) {
       print('Error requesting to join: $e');
       rethrow;
@@ -636,8 +763,8 @@ class ForumGroupService {
         'processedAt': FieldValue.serverTimestamp(),
       });
 
-      // Add as member
-      await addMember(
+      // Add as member directly (not invitation since they requested to join)
+      await addMemberDirectly(
         forumId: forumId,
         odGptUserId: request.odGptUserId,
         userName: request.userName,
@@ -751,6 +878,109 @@ class ForumGroupService {
       print('Message $messageId deleted');
     } catch (e) {
       print('Error deleting message: $e');
+      rethrow;
+    }
+  }
+
+  // ============ INVITATIONS ============
+
+  /// Stream of pending invitations for a user
+  Stream<List<ForumInvitation>> getUserInvitationsStream(String userId) {
+    // Single field query to avoid composite index requirement
+    return _invitationsCollection
+        .where('invitedUserId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+      // Filter pending in memory and sort by invitedAt
+      final invitations = snapshot.docs
+          .map((doc) => ForumInvitation.fromJson(doc.data() as Map<String, dynamic>, doc.id))
+          .where((inv) => inv.status == InvitationStatus.pending)
+          .toList();
+      // Sort by invitedAt descending
+      invitations.sort((a, b) => b.invitedAt.compareTo(a.invitedAt));
+      return invitations;
+    });
+  }
+
+  /// Get count of pending invitations for a user
+  Stream<int> getUserInvitationsCountStream(String userId) {
+    // Single field query to avoid composite index requirement
+    return _invitationsCollection
+        .where('invitedUserId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+      // Filter pending in memory
+      return snapshot.docs.where((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return data['status'] == 'pending';
+      }).length;
+    });
+  }
+
+  /// Accept a forum invitation
+  Future<void> acceptInvitation(String invitationId) async {
+    try {
+      final invitationDoc = await _invitationsCollection.doc(invitationId).get();
+      if (!invitationDoc.exists) {
+        throw Exception('Invitation not found');
+      }
+
+      final invitation = ForumInvitation.fromJson(
+        invitationDoc.data() as Map<String, dynamic>,
+        invitationDoc.id,
+      );
+
+      if (invitation.status != InvitationStatus.pending) {
+        throw Exception('This invitation has already been responded to');
+      }
+
+      // Update invitation status
+      await _invitationsCollection.doc(invitationId).update({
+        'status': 'accepted',
+        'respondedAt': FieldValue.serverTimestamp(),
+      });
+
+      // Add user as member
+      await addMemberDirectly(
+        forumId: invitation.forumId,
+        odGptUserId: invitation.invitedUserId,
+        userName: invitation.invitedUserName,
+        userEmail: invitation.invitedUserEmail,
+        invitedBy: invitation.invitedById,
+      );
+
+      print('Invitation $invitationId accepted');
+    } catch (e) {
+      print('Error accepting invitation: $e');
+      rethrow;
+    }
+  }
+
+  /// Decline a forum invitation
+  Future<void> declineInvitation(String invitationId) async {
+    try {
+      final invitationDoc = await _invitationsCollection.doc(invitationId).get();
+      if (!invitationDoc.exists) {
+        throw Exception('Invitation not found');
+      }
+
+      final invitation = ForumInvitation.fromJson(
+        invitationDoc.data() as Map<String, dynamic>,
+        invitationDoc.id,
+      );
+
+      if (invitation.status != InvitationStatus.pending) {
+        throw Exception('This invitation has already been responded to');
+      }
+
+      await _invitationsCollection.doc(invitationId).update({
+        'status': 'declined',
+        'respondedAt': FieldValue.serverTimestamp(),
+      });
+
+      print('Invitation $invitationId declined');
+    } catch (e) {
+      print('Error declining invitation: $e');
       rethrow;
     }
   }
