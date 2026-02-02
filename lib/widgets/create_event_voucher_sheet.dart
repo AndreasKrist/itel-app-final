@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
-import '../models/voucher.dart';
+import '../models/event_voucher.dart';
 import '../models/user.dart';
-import '../services/voucher_service.dart';
+import '../services/event_service.dart';
 
-class CreateVoucherSheet extends StatefulWidget {
-  const CreateVoucherSheet({super.key});
+/// Sheet for staff to create vouchers inside an event
+class CreateEventVoucherSheet extends StatefulWidget {
+  final String eventId;
+  final String eventTitle;
+
+  const CreateEventVoucherSheet({
+    super.key,
+    required this.eventId,
+    required this.eventTitle,
+  });
 
   @override
-  State<CreateVoucherSheet> createState() => _CreateVoucherSheetState();
+  State<CreateEventVoucherSheet> createState() => _CreateEventVoucherSheetState();
 }
 
-class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
+class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
   final _formKey = GlobalKey<FormState>();
   final _codeController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _discountController = TextEditingController();
   final _maxClaimsController = TextEditingController();
 
-  final VoucherService _voucherService = VoucherService();
+  final EventService _eventService = EventService();
 
   DiscountType _discountType = DiscountType.percentage;
-  DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
   bool _hasMaxClaims = false;
+  bool _hasExpiry = false;
+  DateTime? _expiresAt;
   bool _isCreating = false;
 
   @override
@@ -34,82 +42,24 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     super.dispose();
   }
 
-  Future<void> _selectStartTime() async {
+  Future<void> _pickExpiryDateTime() async {
+    final now = DateTime.now();
     final date = await showDatePicker(
       context: context,
-      initialDate: _startTime,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      initialDate: _expiresAt ?? now.add(const Duration(hours: 1)),
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 365)),
     );
-    if (date == null) return;
+    if (date == null || !mounted) return;
 
-    if (!mounted) return;
     final time = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(_startTime),
+      initialTime: TimeOfDay.fromDateTime(_expiresAt ?? now.add(const Duration(hours: 1))),
     );
-    if (time == null) return;
+    if (time == null || !mounted) return;
 
     setState(() {
-      _startTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-      // Ensure end time is after start time
-      if (_endTime.isBefore(_startTime)) {
-        _endTime = _startTime.add(const Duration(hours: 1));
-      }
-    });
-  }
-
-  Future<void> _selectEndTime() async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: _endTime.isAfter(_startTime) ? _endTime : _startTime,
-      firstDate: _startTime,
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-    if (date == null) return;
-
-    if (!mounted) return;
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(_endTime),
-    );
-    if (time == null) return;
-
-    final newEndTime = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time.hour,
-      time.minute,
-    );
-
-    if (newEndTime.isBefore(_startTime)) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('End time must be after start time'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-      return;
-    }
-
-    setState(() {
-      _endTime = newEndTime;
-    });
-  }
-
-  void _setQuickDuration(Duration duration) {
-    setState(() {
-      _startTime = DateTime.now();
-      _endTime = DateTime.now().add(duration);
+      _expiresAt = DateTime(date.year, date.month, date.day, time.hour, time.minute);
     });
   }
 
@@ -121,17 +71,18 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     try {
       final currentUser = User.currentUser;
 
-      await _voucherService.createVoucher(
-        code: _codeController.text.trim(),
+      await _eventService.createEventVoucher(
+        eventId: widget.eventId,
+        code: _codeController.text.trim().toUpperCase(),
         description: _descriptionController.text.trim(),
         discountType: _discountType,
         discountValue: double.parse(_discountController.text.trim()),
-        startTime: _startTime,
-        endTime: _endTime,
         maxClaims: _hasMaxClaims && _maxClaimsController.text.isNotEmpty
             ? int.parse(_maxClaimsController.text.trim())
             : null,
+        expiresAt: _hasExpiry ? _expiresAt : null,
         createdBy: currentUser.id,
+        createdByName: currentUser.name,
       );
 
       if (mounted) {
@@ -157,12 +108,6 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     }
   }
 
-  String _formatDateTime(DateTime dt) {
-    final hour = dt.hour.toString().padLeft(2, '0');
-    final minute = dt.minute.toString().padLeft(2, '0');
-    return '${dt.day}/${dt.month}/${dt.year} $hour:$minute';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -170,9 +115,9 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: DraggableScrollableSheet(
-        initialChildSize: 0.85,
+        initialChildSize: 0.75,
         minChildSize: 0.5,
-        maxChildSize: 0.95,
+        maxChildSize: 0.9,
         expand: false,
         builder: (context, scrollController) {
           return Container(
@@ -200,32 +145,36 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0056AC).withOpacity(0.1),
+                          gradient: LinearGradient(
+                            colors: [Colors.green[400]!, Colors.green[700]!],
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
                           Icons.local_offer,
-                          color: Color(0xFF0056AC),
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Create Flash Sale e-Voucher',
+                            const Text(
+                              'Add e-Voucher',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              'This will appear in Global Chat',
+                              'For: ${widget.eventTitle}',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey,
+                                color: Colors.grey[600],
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -262,29 +211,32 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please enter an e-Voucher code';
                               }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Description
-                          TextFormField(
-                            controller: _descriptionController,
-                            decoration: const InputDecoration(
-                              labelText: 'Description',
-                              hintText: 'e.g., 50% off Flutter Course',
-                              prefixIcon: Icon(Icons.description),
-                              border: OutlineInputBorder(),
-                            ),
-                            maxLines: 2,
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Please enter a description';
+                              if (value.trim().length < 3) {
+                                return 'Code must be at least 3 characters';
                               }
                               return null;
                             },
                           ),
                           const SizedBox(height: 16),
+
+                          // Voucher Description
+                          TextFormField(
+                            controller: _descriptionController,
+                            decoration: const InputDecoration(
+                              labelText: 'e-Voucher Description',
+                              hintText: 'e.g., 50% off Flutter Course',
+                              prefixIcon: Icon(Icons.text_snippet),
+                              border: OutlineInputBorder(),
+                            ),
+                            maxLines: 2,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please enter an e-Voucher description';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
 
                           // Discount Type
                           const Text(
@@ -350,140 +302,139 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 20),
 
-                          // Quick Duration Buttons
-                          const Text(
-                            'Quick Duration',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              _QuickDurationChip(
-                                label: '5 min',
-                                onTap: () =>
-                                    _setQuickDuration(const Duration(minutes: 5)),
-                              ),
-                              _QuickDurationChip(
-                                label: '15 min',
-                                onTap: () =>
-                                    _setQuickDuration(const Duration(minutes: 15)),
-                              ),
-                              _QuickDurationChip(
-                                label: '30 min',
-                                onTap: () =>
-                                    _setQuickDuration(const Duration(minutes: 30)),
-                              ),
-                              _QuickDurationChip(
-                                label: '1 hour',
-                                onTap: () =>
-                                    _setQuickDuration(const Duration(hours: 1)),
-                              ),
-                              _QuickDurationChip(
-                                label: '24 hours',
-                                onTap: () =>
-                                    _setQuickDuration(const Duration(hours: 24)),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Start Time
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.play_arrow,
-                                color: Colors.green),
-                            title: const Text('Start Time'),
-                            subtitle: Text(_formatDateTime(_startTime)),
-                            trailing: TextButton(
-                              onPressed: _selectStartTime,
-                              child: const Text('Change'),
-                            ),
-                          ),
-
-                          // End Time
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading:
-                                const Icon(Icons.stop, color: Colors.red),
-                            title: const Text('End Time'),
-                            subtitle: Text(_formatDateTime(_endTime)),
-                            trailing: TextButton(
-                              onPressed: _selectEndTime,
-                              child: const Text('Change'),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-
-                          // Duration display
+                          // Max Claims Section
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.blue[50],
+                              color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.timer,
-                                    color: Color(0xFF0056AC), size: 20),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Duration: ${_formatDuration(_endTime.difference(_startTime))}',
-                                  style: const TextStyle(
-                                    color: Color(0xFF0056AC),
-                                    fontWeight: FontWeight.w500,
+                                SwitchListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: const Text('Limit number of claims'),
+                                  subtitle: const Text(
+                                    'Set a maximum number of people who can claim',
+                                    style: TextStyle(fontSize: 12),
                                   ),
+                                  value: _hasMaxClaims,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _hasMaxClaims = value;
+                                    });
+                                  },
                                 ),
+                                if (_hasMaxClaims) ...[
+                                  const SizedBox(height: 12),
+                                  TextFormField(
+                                    controller: _maxClaimsController,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Maximum Claims',
+                                      hintText: 'e.g., 100',
+                                      prefixIcon: Icon(Icons.people),
+                                      border: OutlineInputBorder(),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) {
+                                      if (_hasMaxClaims) {
+                                        if (value == null || value.trim().isEmpty) {
+                                          return 'Please enter maximum claims';
+                                        }
+                                        final num = int.tryParse(value.trim());
+                                        if (num == null || num <= 0) {
+                                          return 'Please enter a valid positive number';
+                                        }
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
                               ],
                             ),
                           ),
                           const SizedBox(height: 16),
 
-                          // Max Claims
-                          SwitchListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: const Text('Limit number of claims'),
-                            subtitle: const Text(
-                                'Set a maximum number of people who can claim'),
-                            value: _hasMaxClaims,
-                            onChanged: (value) {
-                              setState(() {
-                                _hasMaxClaims = value;
-                              });
-                            },
-                          ),
-                          if (_hasMaxClaims) ...[
-                            const SizedBox(height: 8),
-                            TextFormField(
-                              controller: _maxClaimsController,
-                              decoration: const InputDecoration(
-                                labelText: 'Maximum Claims',
-                                hintText: 'e.g., 100',
-                                prefixIcon: Icon(Icons.people),
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (_hasMaxClaims) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter maximum claims';
-                                  }
-                                  final num = int.tryParse(value.trim());
-                                  if (num == null || num <= 0) {
-                                    return 'Please enter a valid positive number';
-                                  }
-                                }
-                                return null;
-                              },
+                          // Voucher Expiry Section
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                          ],
-                          const SizedBox(height: 32),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SwitchListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: const Text('Set e-Voucher expiry'),
+                                  subtitle: const Text(
+                                    'e-Voucher expires at specific time (otherwise follows event)',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  value: _hasExpiry,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _hasExpiry = value;
+                                      if (value && _expiresAt == null) {
+                                        _expiresAt = DateTime.now().add(const Duration(hours: 1));
+                                      }
+                                    });
+                                  },
+                                ),
+                                if (_hasExpiry) ...[
+                                  const SizedBox(height: 12),
+                                  InkWell(
+                                    onTap: _pickExpiryDateTime,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(color: Colors.grey[300]!),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.access_time, color: Colors.orange[700]),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'Expires At',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  _expiresAt != null
+                                                      ? '${_expiresAt!.day}/${_expiresAt!.month}/${_expiresAt!.year} ${_expiresAt!.hour.toString().padLeft(2, '0')}:${_expiresAt!.minute.toString().padLeft(2, '0')}'
+                                                      : 'Tap to set',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Icon(Icons.edit, size: 18, color: Colors.grey),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
 
                           // Create Button
                           SizedBox(
@@ -491,10 +442,9 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                             child: ElevatedButton(
                               onPressed: _isCreating ? null : _createVoucher,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0056AC),
+                                backgroundColor: Colors.green[600],
                                 foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -508,12 +458,19 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Text(
-                                      'Create e-Voucher',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  : const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.add),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Create e-Voucher',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                             ),
                           ),
@@ -528,35 +485,6 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
           );
         },
       ),
-    );
-  }
-
-  String _formatDuration(Duration duration) {
-    if (duration.inDays > 0) {
-      return '${duration.inDays}d ${duration.inHours % 24}h';
-    } else if (duration.inHours > 0) {
-      return '${duration.inHours}h ${duration.inMinutes % 60}m';
-    } else {
-      return '${duration.inMinutes}m';
-    }
-  }
-}
-
-class _QuickDurationChip extends StatelessWidget {
-  final String label;
-  final VoidCallback onTap;
-
-  const _QuickDurationChip({
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ActionChip(
-      label: Text(label),
-      onPressed: onTap,
-      backgroundColor: Colors.grey[100],
     );
   }
 }

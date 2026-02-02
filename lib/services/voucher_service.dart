@@ -97,7 +97,7 @@ class VoucherService {
       // Get the voucher
       final voucherDoc = await transaction.get(_vouchersRef.doc(voucherId));
       if (!voucherDoc.exists) {
-        throw Exception('Voucher not found');
+        throw Exception('e-Voucher not found');
       }
 
       final voucher = Voucher.fromFirestore(voucherDoc);
@@ -105,14 +105,14 @@ class VoucherService {
       // Validate voucher can be claimed
       if (!voucher.isActive) {
         if (voucher.isPending) {
-          throw Exception('This voucher is not active yet');
+          throw Exception('This e-Voucher is not active yet');
         } else {
-          throw Exception('This voucher has expired');
+          throw Exception('This e-Voucher has expired');
         }
       }
 
       if (voucher.isFullyClaimed) {
-        throw Exception('This voucher has reached maximum claims');
+        throw Exception('This e-Voucher has reached maximum claims');
       }
 
       // Check if user already claimed this voucher
@@ -123,7 +123,7 @@ class VoucherService {
           .get();
 
       if (existingClaim.docs.isNotEmpty) {
-        throw Exception('You have already claimed this voucher');
+        throw Exception('You have already claimed this e-Voucher');
       }
 
       // Calculate claim delay in seconds

@@ -8,6 +8,7 @@ class ChatMessageBubble extends StatelessWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onLongPress;
   final VoidCallback? onTapAuthor;  // Callback for tapping on author to start DM
+  final Function(String eventId)? onTapEvent; // Callback for tapping event share message
 
   const ChatMessageBubble({
     super.key,
@@ -16,6 +17,7 @@ class ChatMessageBubble extends StatelessWidget {
     this.onDelete,
     this.onLongPress,
     this.onTapAuthor,
+    this.onTapEvent,
   });
 
   @override
@@ -23,6 +25,11 @@ class ChatMessageBubble extends StatelessWidget {
     // System messages (join/leave notifications)
     if (message.type == MessageType.system) {
       return _buildSystemMessage();
+    }
+
+    // Event share messages
+    if (message.type == MessageType.event_share) {
+      return _buildEventShareMessage(context);
     }
 
     return Padding(
@@ -177,6 +184,120 @@ class ChatMessageBubble extends StatelessWidget {
               fontSize: 12,
               color: Colors.grey[600],
               fontStyle: FontStyle.italic,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEventShareMessage(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: GestureDetector(
+        onTap: message.eventId != null && onTapEvent != null
+            ? () => onTapEvent!(message.eventId!)
+            : null,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange[400]!, Colors.deepOrange[500]!],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.orange.withOpacity(0.3),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(
+                        Icons.event,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        'EVENT',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                // Content
+                Text(
+                  message.content,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Tap to join button
+                if (message.eventId != null)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colors.deepOrange,
+                          size: 14,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          'Tap to join',
+                          style: TextStyle(
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                // Timestamp
+                const SizedBox(height: 4),
+                Text(
+                  _formatTime(message.createdAt),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

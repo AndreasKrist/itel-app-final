@@ -1,10 +1,15 @@
 // lib/screens/forum_list_screen.dart
 import 'package:flutter/material.dart';
+import '../models/event.dart';
 import '../models/forum_group.dart';
 import '../models/forum_invitation.dart';
 import '../models/user.dart';
+import '../services/event_service.dart';
 import '../services/forum_group_service.dart';
+import '../widgets/event_card.dart';
+import '../widgets/create_event_sheet.dart';
 import 'create_forum_screen.dart';
+import 'event_chat_screen.dart';
 import 'forum_chat_screen.dart';
 
 class ForumListScreen extends StatefulWidget {
@@ -17,8 +22,10 @@ class ForumListScreen extends StatefulWidget {
 class _ForumListScreenState extends State<ForumListScreen>
     with SingleTickerProviderStateMixin {
   final ForumGroupService _forumService = ForumGroupService();
+  final EventService _eventService = EventService();
   late TabController _tabController;
   String _filter = 'all'; // all, my_forums, public, private
+  bool _isFabExpanded = false;
 
   @override
   void initState() {
@@ -79,22 +86,79 @@ class _ForumListScreenState extends State<ForumListScreen>
       ),
       floatingActionButton: isGuest
           ? null
-          : FloatingActionButton.extended(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateForumScreen(),
+          : isStaff
+              ? _buildStaffFab()
+              : FloatingActionButton.extended(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateForumScreen(),
+                      ),
+                    );
+                  },
+                  backgroundColor: const Color(0xFF0056AC),
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  label: const Text(
+                    'Create Forum',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                   ),
-                );
-              },
-              backgroundColor: const Color(0xFF0056AC),
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text(
-                'Create Forum',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-              ),
-            ),
+                ),
+    );
+  }
+
+  /// Build expandable FAB for staff users with Create Forum and Create Event options
+  Widget _buildStaffFab() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        // Expanded options (shown when _isFabExpanded is true)
+        if (_isFabExpanded) ...[
+          // Create Event option
+          _FabOption(
+            icon: Icons.event,
+            label: 'Create Event',
+            color: Colors.deepOrange,
+            onTap: () {
+              setState(() => _isFabExpanded = false);
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const CreateEventSheet(),
+              );
+            },
+          ),
+          const SizedBox(height: 12),
+          // Create Forum option
+          _FabOption(
+            icon: Icons.forum,
+            label: 'Create Forum',
+            color: const Color(0xFF0056AC),
+            onTap: () {
+              setState(() => _isFabExpanded = false);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateForumScreen(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 12),
+        ],
+        // Main FAB button
+        FloatingActionButton(
+          onPressed: () => setState(() => _isFabExpanded = !_isFabExpanded),
+          backgroundColor: _isFabExpanded ? Colors.grey[700] : const Color(0xFF0056AC),
+          child: AnimatedRotation(
+            duration: const Duration(milliseconds: 200),
+            turns: _isFabExpanded ? 0.125 : 0, // 45 degrees rotation
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 
@@ -124,6 +188,105 @@ class _ForumListScreenState extends State<ForumListScreen>
           onRefresh: () async => setState(() {}),
           child: Column(
             children: [
+              // Live Events section
+              StreamBuilder<List<Event>>(
+                stream: _eventService.getActiveEventsStream(),
+                builder: (context, eventSnapshot) {
+                  final allEvents = eventSnapshot.data ?? [];
+                  // Filter to active and pending events
+                  final activeEvents = allEvents.where((e) => e.isActive || e.isPending).toList();
+
+                  if (activeEvents.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  // Sort by active first, then by end time
+                  activeEvents.sort((a, b) {
+                    if (a.isActive && !b.isActive) return -1;
+                    if (!a.isActive && b.isActive) return 1;
+                    return a.endTime.compareTo(b.endTime);
+                  });
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.deepOrange.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.event,
+                                color: Colors.deepOrange,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Live Events',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: activeEvents.any((e) => e.isActive) ? Colors.green : Colors.blue,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '${activeEvents.length}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Horizontal scrolling event cards
+                      SizedBox(
+                        height: 130,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          itemCount: activeEvents.length,
+                          itemBuilder: (context, index) {
+                            final event = activeEvents[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: EventCardCompact(
+                                event: event,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EventChatScreen(eventId: event.id),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  );
+                },
+              ),
+
               // Show invitation alert banner if not guest
               if (!isGuest)
                 StreamBuilder<int>(
@@ -1632,5 +1795,60 @@ class _ForumListScreenState extends State<ForumListScreen>
       return '${diff.inDays}d ago';
     }
     return '${date.day}/${date.month}/${date.year}';
+  }
+}
+
+/// FAB option widget for the expandable staff FAB
+class _FabOption extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _FabOption({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Label
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Icon button
+        FloatingActionButton.small(
+          heroTag: 'fab_$label',
+          onPressed: onTap,
+          backgroundColor: color,
+          child: Icon(icon, color: Colors.white, size: 20),
+        ),
+      ],
+    );
   }
 }

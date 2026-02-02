@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
-import '../models/voucher.dart';
 import '../models/user.dart';
-import '../services/voucher_service.dart';
+import '../services/event_service.dart';
 
-class CreateVoucherSheet extends StatefulWidget {
-  const CreateVoucherSheet({super.key});
+/// Sheet for staff to create events (vouchers are added separately inside the event)
+class CreateEventSheet extends StatefulWidget {
+  const CreateEventSheet({super.key});
 
   @override
-  State<CreateVoucherSheet> createState() => _CreateVoucherSheetState();
+  State<CreateEventSheet> createState() => _CreateEventSheetState();
 }
 
-class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
+class _CreateEventSheetState extends State<CreateEventSheet> {
   final _formKey = GlobalKey<FormState>();
-  final _codeController = TextEditingController();
+  final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _discountController = TextEditingController();
-  final _maxClaimsController = TextEditingController();
 
-  final VoucherService _voucherService = VoucherService();
+  final EventService _eventService = EventService();
 
-  DiscountType _discountType = DiscountType.percentage;
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
-  bool _hasMaxClaims = false;
   bool _isCreating = false;
 
   @override
   void dispose() {
-    _codeController.dispose();
+    _titleController.dispose();
     _descriptionController.dispose();
-    _discountController.dispose();
-    _maxClaimsController.dispose();
     super.dispose();
   }
 
@@ -113,7 +107,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     });
   }
 
-  Future<void> _createVoucher() async {
+  Future<void> _createEvent() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isCreating = true);
@@ -121,24 +115,20 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     try {
       final currentUser = User.currentUser;
 
-      await _voucherService.createVoucher(
-        code: _codeController.text.trim(),
+      await _eventService.createEvent(
+        title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
-        discountType: _discountType,
-        discountValue: double.parse(_discountController.text.trim()),
         startTime: _startTime,
         endTime: _endTime,
-        maxClaims: _hasMaxClaims && _maxClaimsController.text.isNotEmpty
-            ? int.parse(_maxClaimsController.text.trim())
-            : null,
         createdBy: currentUser.id,
+        createdByName: currentUser.name,
       );
 
       if (mounted) {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('e-Voucher created successfully!'),
+            content: Text('Event created! You can now add e-Vouchers inside the event.'),
             backgroundColor: Colors.green,
           ),
         );
@@ -147,7 +137,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error creating e-Voucher: $e'),
+            content: Text('Error creating event: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -163,6 +153,16 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     return '${dt.day}/${dt.month}/${dt.year} $hour:$minute';
   }
 
+  String _formatDuration(Duration duration) {
+    if (duration.inDays > 0) {
+      return '${duration.inDays}d ${duration.inHours % 24}h';
+    } else if (duration.inHours > 0) {
+      return '${duration.inHours}h ${duration.inMinutes % 60}m';
+    } else {
+      return '${duration.inMinutes}m';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -170,9 +170,9 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: DraggableScrollableSheet(
-        initialChildSize: 0.85,
+        initialChildSize: 0.7,
         minChildSize: 0.5,
-        maxChildSize: 0.95,
+        maxChildSize: 0.9,
         expand: false,
         builder: (context, scrollController) {
           return Container(
@@ -200,12 +200,14 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0056AC).withOpacity(0.1),
+                          gradient: LinearGradient(
+                            colors: [Colors.orange[400]!, Colors.deepOrange],
+                          ),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
-                          Icons.local_offer,
-                          color: Color(0xFF0056AC),
+                          Icons.event,
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -214,14 +216,14 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Create Flash Sale e-Voucher',
+                              'Create Event',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              'This will appear in Global Chat',
+                              'Create an event with chat. Add e-Vouchers later.',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
@@ -248,35 +250,38 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Voucher Code
+                          // Event Details Section
+                          _buildSectionHeader('Event Details', Icons.info_outline),
+                          const SizedBox(height: 12),
+
+                          // Event Title
                           TextFormField(
-                            controller: _codeController,
+                            controller: _titleController,
                             decoration: const InputDecoration(
-                              labelText: 'e-Voucher Code',
-                              hintText: 'e.g., FLASH50',
-                              prefixIcon: Icon(Icons.confirmation_number),
+                              labelText: 'Event Title',
+                              hintText: 'e.g., Flash Sale Friday!',
+                              prefixIcon: Icon(Icons.title),
                               border: OutlineInputBorder(),
                             ),
-                            textCapitalization: TextCapitalization.characters,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Please enter an e-Voucher code';
+                                return 'Please enter an event title';
                               }
                               return null;
                             },
                           ),
                           const SizedBox(height: 16),
 
-                          // Description
+                          // Event Description
                           TextFormField(
                             controller: _descriptionController,
                             decoration: const InputDecoration(
-                              labelText: 'Description',
-                              hintText: 'e.g., 50% off Flutter Course',
+                              labelText: 'Event Description',
+                              hintText: 'Describe what this event is about...',
                               prefixIcon: Icon(Icons.description),
                               border: OutlineInputBorder(),
                             ),
-                            maxLines: 2,
+                            maxLines: 3,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please enter a description';
@@ -284,73 +289,11 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 16),
-
-                          // Discount Type
-                          const Text(
-                            'Discount Type',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          SegmentedButton<DiscountType>(
-                            segments: const [
-                              ButtonSegment(
-                                value: DiscountType.percentage,
-                                label: Text('Percentage (%)'),
-                                icon: Icon(Icons.percent),
-                              ),
-                              ButtonSegment(
-                                value: DiscountType.fixed,
-                                label: Text('Fixed (\$)'),
-                                icon: Icon(Icons.attach_money),
-                              ),
-                            ],
-                            selected: {_discountType},
-                            onSelectionChanged: (selection) {
-                              setState(() {
-                                _discountType = selection.first;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Discount Value
-                          TextFormField(
-                            controller: _discountController,
-                            decoration: InputDecoration(
-                              labelText: 'Discount Value',
-                              hintText: _discountType == DiscountType.percentage
-                                  ? 'e.g., 50'
-                                  : 'e.g., 20.00',
-                              prefixIcon: Icon(
-                                _discountType == DiscountType.percentage
-                                    ? Icons.percent
-                                    : Icons.attach_money,
-                              ),
-                              border: const OutlineInputBorder(),
-                            ),
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Please enter a discount value';
-                              }
-                              final num = double.tryParse(value.trim());
-                              if (num == null || num <= 0) {
-                                return 'Please enter a valid positive number';
-                              }
-                              if (_discountType == DiscountType.percentage &&
-                                  num > 100) {
-                                return 'Percentage cannot exceed 100%';
-                              }
-                              return null;
-                            },
-                          ),
                           const SizedBox(height: 24),
+
+                          // Timing Section
+                          _buildSectionHeader('Event Timing', Icons.schedule),
+                          const SizedBox(height: 12),
 
                           // Quick Duration Buttons
                           const Text(
@@ -365,11 +308,6 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                             spacing: 8,
                             runSpacing: 8,
                             children: [
-                              _QuickDurationChip(
-                                label: '5 min',
-                                onTap: () =>
-                                    _setQuickDuration(const Duration(minutes: 5)),
-                              ),
                               _QuickDurationChip(
                                 label: '15 min',
                                 onTap: () =>
@@ -386,6 +324,11 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                                     _setQuickDuration(const Duration(hours: 1)),
                               ),
                               _QuickDurationChip(
+                                label: '2 hours',
+                                onTap: () =>
+                                    _setQuickDuration(const Duration(hours: 2)),
+                              ),
+                              _QuickDurationChip(
                                 label: '24 hours',
                                 onTap: () =>
                                     _setQuickDuration(const Duration(hours: 24)),
@@ -397,8 +340,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                           // Start Time
                           ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.play_arrow,
-                                color: Colors.green),
+                            leading: const Icon(Icons.play_arrow, color: Colors.green),
                             title: const Text('Start Time'),
                             subtitle: Text(_formatDateTime(_startTime)),
                             trailing: TextButton(
@@ -410,8 +352,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                           // End Time
                           ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading:
-                                const Icon(Icons.stop, color: Colors.red),
+                            leading: const Icon(Icons.stop, color: Colors.red),
                             title: const Text('End Time'),
                             subtitle: Text(_formatDateTime(_endTime)),
                             trailing: TextButton(
@@ -425,18 +366,18 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.blue[50],
+                              color: Colors.orange[50],
                               borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.orange[200]!),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.timer,
-                                    color: Color(0xFF0056AC), size: 20),
+                                Icon(Icons.timer, color: Colors.orange[700], size: 20),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Duration: ${_formatDuration(_endTime.difference(_startTime))}',
-                                  style: const TextStyle(
-                                    color: Color(0xFF0056AC),
+                                  style: TextStyle(
+                                    color: Colors.orange[700],
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -445,56 +386,41 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                           ),
                           const SizedBox(height: 16),
 
-                          // Max Claims
-                          SwitchListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: const Text('Limit number of claims'),
-                            subtitle: const Text(
-                                'Set a maximum number of people who can claim'),
-                            value: _hasMaxClaims,
-                            onChanged: (value) {
-                              setState(() {
-                                _hasMaxClaims = value;
-                              });
-                            },
-                          ),
-                          if (_hasMaxClaims) ...[
-                            const SizedBox(height: 8),
-                            TextFormField(
-                              controller: _maxClaimsController,
-                              decoration: const InputDecoration(
-                                labelText: 'Maximum Claims',
-                                hintText: 'e.g., 100',
-                                prefixIcon: Icon(Icons.people),
-                                border: OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (_hasMaxClaims) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return 'Please enter maximum claims';
-                                  }
-                                  final num = int.tryParse(value.trim());
-                                  if (num == null || num <= 0) {
-                                    return 'Please enter a valid positive number';
-                                  }
-                                }
-                                return null;
-                              },
+                          // Info about vouchers
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.blue[50],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.blue[200]!),
                             ),
-                          ],
-                          const SizedBox(height: 32),
+                            child: Row(
+                              children: [
+                                Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'After creating the event, you can add e-Vouchers inside the event chat.',
+                                    style: TextStyle(
+                                      color: Colors.blue[700],
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
 
                           // Create Button
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: _isCreating ? null : _createVoucher,
+                              onPressed: _isCreating ? null : _createEvent,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0056AC),
+                                backgroundColor: Colors.deepOrange,
                                 foregroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -508,12 +434,19 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Text(
-                                      'Create e-Voucher',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  : const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.event),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'Create Event',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                             ),
                           ),
@@ -531,14 +464,28 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     );
   }
 
-  String _formatDuration(Duration duration) {
-    if (duration.inDays > 0) {
-      return '${duration.inDays}d ${duration.inHours % 24}h';
-    } else if (duration.inHours > 0) {
-      return '${duration.inHours}h ${duration.inMinutes % 60}m';
-    } else {
-      return '${duration.inMinutes}m';
-    }
+  Widget _buildSectionHeader(String title, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: Colors.grey[700]),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[700],
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -556,7 +503,7 @@ class _QuickDurationChip extends StatelessWidget {
     return ActionChip(
       label: Text(label),
       onPressed: onTap,
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.orange[50],
     );
   }
 }

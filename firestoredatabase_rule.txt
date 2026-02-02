@@ -1,0 +1,239 @@
+  rules_version = '2';                                                                                             
+  service cloud.firestore {
+    match /databases/{database}/documents {                                                                           
+      // Users                                                                                                     
+      match /users/{userId} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null;
+      }
+
+      // Global Chat
+      match /global_chat/{messageId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+      }
+
+      // Direct Messages
+      match /direct_messages/{conversationId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+
+        match /messages/{messageId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+      }
+
+      // Conversations (alternate DM collection)
+      match /conversations/{conversationId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+
+        match /messages/{messageId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+      }
+
+      // Support Tickets (Ask ITEL)
+      match /support_tickets/{ticketId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+
+        match /messages/{messageId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+      }
+
+      // Forum Groups
+      match /forum_groups/{forumId} {
+        allow read: if request.auth != null;                                                                       
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+
+        match /members/{memberId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+
+        match /messages/{messageId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+
+        match /join_requests/{requestId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+      }
+
+      // Forum Kick Logs
+      match /forum_kick_logs/{logId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+      }
+
+      // Forum Questions (old forum system)
+      match /forum_questions/{questionId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+
+        match /answers/{answerId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+      }
+
+      // Vouchers
+      match /vouchers/{voucherId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+      }
+
+      // User Vouchers (claimed)
+      match /user_vouchers/{claimId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+      }
+
+      // Courses
+      match /courses/{courseId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+
+        match /{subcollection}/{docId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+      }
+
+      // Catch-all for any other collections
+      match /{collection}/{docId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null;
+
+        match /{subcollection}/{subDocId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          allow delete: if request.auth != null;
+        }
+      }
+    }
+  }
+
+  -------Indexes--------
+
+Collection ID	
+Fields indexed
+
+Query scope	Index ID		Status	
+members	
+isActive
+joinedAt
+__name__
+Collection	CICAgNiav4AJ		Enabled	
+messages	
+senderId
+readAt
+__name__
+Collection	CICAgJim14AK		Enabled	
+forum_groups	
+memberIds
+updatedAt
+__name__
+Collection	CICAgLjy8IAK		Enabled	
+support_tickets	
+odGptUserId
+updatedAt
+__name__
+Collection	CICAgNiroIEK		Enabled	
+support_tickets	
+creatorId
+updatedAt
+__name__
+Collection	CICAgJj7z4EK		Enabled	
+forum_groups	
+approvalStatus
+createdAt
+__name__
+Collection	CICAgNjpgYIK		Enabled	
+user_vouchers	
+odGptUserId
+claimedAt
+__name__
+Collection	CICAgJjF9oIK		Enabled	
+forum_groups	
+approvalStatus
+updatedAt
+__name__
+Collection	CICAgLiIkYMK		Enabled	
+direct_messages	
+participants
+lastMessageAt
+__name__
+Collection	CICAgJiUpoMK		Enabled	
+support_tickets	
+status
+updatedAt
+__name__
+Collection	CICAgOi39IkK		Enabled	
+event_bans	
+eventId
+userId
+bannedAt
+__name__
+Collection	CICAgJiUzYsK		Enabled	
+forum_kick_logs	
+forumId
+kickedAt
+__name__
+Collection	CICAgOi3kJAK		Enabled	
+forum_groups	
+creatorId
+approvalStatus
+__name__
+Collection	CICAgJiUsZIK		Enabled	
+messages	
+ticketId
+createdAt
+__name__
+Collection group	CICAgJjFqZMK		Enabled	

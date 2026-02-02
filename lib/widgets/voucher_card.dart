@@ -73,7 +73,7 @@ class _VoucherCardState extends State<VoucherCard> {
     if (currentUser.id.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please sign in to claim vouchers'),
+          content: Text('Please sign in to claim e-Vouchers'),
           backgroundColor: Colors.orange,
         ),
       );

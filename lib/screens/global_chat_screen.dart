@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:ITEL/models/chat_message.dart';
 import 'package:ITEL/models/chat_ban.dart';
 import 'package:ITEL/models/user.dart';
-import 'package:ITEL/models/voucher.dart';
 import 'package:ITEL/services/chat_service.dart';
-import 'package:ITEL/services/voucher_service.dart';
 import 'package:ITEL/widgets/chat_message_bubble.dart';
-import 'package:ITEL/widgets/voucher_card.dart';
-import 'package:ITEL/widgets/create_voucher_sheet.dart';
 import 'package:ITEL/screens/direct_message_chat_screen.dart';
+import 'package:ITEL/screens/event_chat_screen.dart';
 
 class GlobalChatScreen extends StatefulWidget {
   const GlobalChatScreen({super.key});
@@ -21,7 +18,6 @@ class GlobalChatScreen extends StatefulWidget {
 
 class _GlobalChatScreenState extends State<GlobalChatScreen> {
   final ChatService _chatService = ChatService();
-  final VoucherService _voucherService = VoucherService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
@@ -185,15 +181,6 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
           otherUserEmail: message.authorEmail,
         ),
       ),
-    );
-  }
-
-  void _showCreateVoucherSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const CreateVoucherSheet(),
     );
   }
 
@@ -502,96 +489,11 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
   Widget build(BuildContext context) {
     final currentUser = User.currentUser;
     final isGuest = currentUser.id.isEmpty || currentUser.email.isEmpty;
-    final canManageVouchers = currentUser.canManageVouchers;
 
-    return Stack(
+    return Column(
       children: [
-        Column(
-          children: [
-            // Active Vouchers Section
-            StreamBuilder<List<Voucher>>(
-              stream: _voucherService.getActiveVouchersStream(),
-              builder: (context, voucherSnapshot) {
-                final vouchers = voucherSnapshot.data ?? [];
-                final activeVouchers = vouchers
-                    .where((v) => v.isActive || v.isPending)
-                    .toList();
-
-                if (activeVouchers.isEmpty) {
-                  return const SizedBox.shrink();
-                }
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.orange,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.flash_on,
-                                    color: Colors.white, size: 14),
-                                SizedBox(width: 4),
-                                Text(
-                                  'FLASH SALES',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${activeVouchers.length} active',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 8,
-                        ),
-                        itemCount: activeVouchers.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.85,
-                            child: VoucherCard(
-                              voucher: activeVouchers[index],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const Divider(height: 1),
-                  ],
-                );
-              },
-            ),
-
-            // Chat messages
-            Expanded(
+        // Chat messages
+        Expanded(
               child: StreamBuilder<List<ChatMessage>>(
                 stream: _chatService.getMessagesStream(),
                 builder: (context, snapshot) {
@@ -691,6 +593,7 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                         onTapAuthor: !isCurrentUser
                             ? () => _startDirectMessage(message)
                             : null,
+                        onTapEvent: _openEventFromMessage,
                       );
                     },
                   );
@@ -862,22 +765,18 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                   ),
                 ),
               ),
-          ],
-        ),
-
-        // Admin FAB for creating vouchers
-        if (canManageVouchers)
-          Positioned(
-            right: 16,
-            bottom: isGuest ? 80 : 100,
-            child: FloatingActionButton.extended(
-              onPressed: _showCreateVoucherSheet,
-              backgroundColor: Colors.orange,
-              icon: const Icon(Icons.local_offer),
-              label: const Text('Create Voucher'),
-            ),
-          ),
       ],
+    );
+  }
+
+  /// Handle tapping on an event share message
+  void _openEventFromMessage(String eventId) {
+    if (eventId.isEmpty) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EventChatScreen(eventId: eventId),
+      ),
     );
   }
 }

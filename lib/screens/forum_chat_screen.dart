@@ -814,7 +814,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
           return Scaffold(
             backgroundColor: Colors.grey[100],
             appBar: AppBar(
-              title: const Text('Forum'),
+              title: const Text('Channels'),
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
               elevation: 0,

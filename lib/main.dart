@@ -19,6 +19,7 @@ import 'services/user_preferences_service.dart';
 import 'providers/user_provider.dart';
 import 'services/account_manager_service.dart';
 import 'models/user.dart';
+import 'widgets/active_event_floating_widget.dart';
 
 
 
@@ -253,18 +254,25 @@ class _AppMockupState extends State<AppMockup> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Guest banner (only visible for guest users)
-            if (widget.isGuest)
-              const GuestBanner(),
+            // Main content column
+            Column(
+              children: [
+                // Guest banner (only visible for guest users)
+                if (widget.isGuest)
+                  const GuestBanner(),
 
-            // Main Content
-            Expanded(
-              child: _currentIndex == 5 && widget.isGuest
-                  ? GuestProfileScreen(onSignOut: widget.onSignOut) // Pass sign out callback
-                  : screens[_currentIndex],
+                // Main Content
+                Expanded(
+                  child: _currentIndex == 5 && widget.isGuest
+                      ? GuestProfileScreen(onSignOut: widget.onSignOut) // Pass sign out callback
+                      : screens[_currentIndex],
+                ),
+              ],
             ),
+            // Floating event widget (appears when there are active events)
+            const ActiveEventFloatingWidget(),
           ],
         ),
       ),

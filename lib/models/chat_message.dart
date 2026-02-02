@@ -9,6 +9,7 @@ class ChatMessage {
   final String content;
   final DateTime createdAt;
   final MessageType type;
+  final String? eventId; // For event_share messages
 
   ChatMessage({
     required this.id,
@@ -18,6 +19,7 @@ class ChatMessage {
     required this.content,
     required this.createdAt,
     this.type = MessageType.text,
+    this.eventId,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json, String id) {
@@ -32,6 +34,7 @@ class ChatMessage {
         (e) => e.name == json['type'],
         orElse: () => MessageType.text,
       ),
+      eventId: json['eventId'] as String?,
     );
   }
 
@@ -43,6 +46,7 @@ class ChatMessage {
       'content': content,
       'createdAt': Timestamp.fromDate(createdAt),
       'type': type.name,
+      if (eventId != null) 'eventId': eventId,
     };
   }
 
@@ -54,6 +58,7 @@ class ChatMessage {
     String? content,
     DateTime? createdAt,
     MessageType? type,
+    String? eventId,
   }) {
     return ChatMessage(
       id: id ?? this.id,
@@ -63,6 +68,7 @@ class ChatMessage {
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       type: type ?? this.type,
+      eventId: eventId ?? this.eventId,
     );
   }
 
@@ -73,4 +79,5 @@ class ChatMessage {
 enum MessageType {
   text,
   system, // For join/leave notifications, etc.
+  event_share, // For event announcements shared to global chat
 }
