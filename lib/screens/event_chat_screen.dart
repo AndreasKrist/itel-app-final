@@ -9,6 +9,7 @@ import '../models/event_ban.dart';
 import '../models/claimed_voucher.dart';
 import '../models/user.dart';
 import '../services/event_service.dart';
+import '../utils/working_hours_helper.dart';
 import '../widgets/create_event_voucher_sheet.dart';
 import 'direct_message_chat_screen.dart';
 
@@ -1138,7 +1139,71 @@ class _EventChatScreenState extends State<EventChatScreen> {
                         ),
                       )
                     else
-                      ...vouchers.map((voucher) => _buildVoucherItem(voucher, event)),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxHeight: MediaQuery.of(context).size.height * 0.35,
+                            ),
+                            child: Stack(
+                              children: [
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  itemCount: vouchers.length,
+                                  itemBuilder: (context, index) => _buildVoucherItem(vouchers[index], event),
+                                ),
+                                // Bottom fade gradient to indicate scrollability
+                                if (vouchers.length > 2)
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    child: IgnorePointer(
+                                      child: Container(
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [
+                                              Colors.transparent,
+                                              Colors.deepOrange.withOpacity(0.3),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          // Scroll hint for many vouchers
+                          if (vouchers.length > 2)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.swipe_vertical,
+                                    color: Colors.white.withOpacity(0.7),
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Swipe to see more e-Vouchers',
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.7),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
                   ],
                 ],
               ),
@@ -1247,7 +1312,7 @@ class _EventChatScreenState extends State<EventChatScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // "X left" above CLAIM button
-                      if (voucher.maxClaims != null) ...[
+                      if (voucher.maxClaims != null && voucher.showRemainingCount) ...[
                         Text(
                           '${voucher.remainingClaims} left',
                           style: TextStyle(
@@ -1342,6 +1407,50 @@ class _EventChatScreenState extends State<EventChatScreen> {
   }
 
   Widget _buildMessageInput() {
+    // Check working hours
+    if (!WorkingHoursHelper.isWithinWorkingHours()) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          border: Border(
+            top: BorderSide(color: Colors.grey[300]!),
+          ),
+        ),
+        child: SafeArea(
+          child: Row(
+            children: [
+              Icon(Icons.access_time, color: Colors.grey[600], size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Chat unavailable outside working hours',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Mon-Fri, 9 AM - 6 PM SGT',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1489,7 +1598,9 @@ class _EventChatScreenState extends State<EventChatScreen> {
         children: [
           if (!isCurrentUser) ...[
             GestureDetector(
-              onTap: () => _startDirectMessage(message),
+              // TODO: Hidden for now - uncomment to enable DM feature
+              // onTap: () => _startDirectMessage(message),
+              onTap: null,
               child: CircleAvatar(
                 radius: 16,
                 backgroundColor: _getAvatarColor(message.senderName),
@@ -1512,7 +1623,9 @@ class _EventChatScreenState extends State<EventChatScreen> {
               onLongPress: isCurrentUser
                   ? () => _deleteMessage(message)
                   : (isStaff ? () => _showStaffModOptions(message) : null),
-              onTap: !isCurrentUser ? () => _startDirectMessage(message) : null,
+              // TODO: Hidden for now - uncomment to enable DM feature
+              // onTap: !isCurrentUser ? () => _startDirectMessage(message) : null,
+              onTap: null,
               child: Container(
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.7,

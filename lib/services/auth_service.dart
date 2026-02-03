@@ -10,10 +10,17 @@ import 'user_notification_service.dart';
 
 class AuthService {
   final firebase_auth.FirebaseAuth _firebaseAuth = firebase_auth.FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  late final GoogleSignIn _googleSignIn;
   final UserPreferencesService _preferencesService = UserPreferencesService();
   final AccountManagerService _accountManager = AccountManagerService();
   final UserNotificationService _notificationService = UserNotificationService();
+  
+  AuthService() {
+    // Initialize GoogleSignIn with Firebase Auth as the hosted domain
+    _googleSignIn = GoogleSignIn(
+      scopes: ['email', 'profile'],
+    );
+  }
 
   // Check if user is authenticated
   bool get isAuthenticated {
@@ -260,16 +267,30 @@ MembershipTier _getTierFromString(String? tierString) {
       final currentUser = _firebaseAuth.currentUser;
       final isAnonymous = currentUser?.isAnonymous ?? false;
       
+      // Ensure we're signed out from Google first to show account picker
+      try {
+        await _googleSignIn.signOut();
+      } catch (e) {
+        print('Pre-sign out from Google failed (might not be signed in): $e');
+      }
+      
       // Begin interactive sign-in process
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       
       // Abort if sign in is aborted by user
       if (googleUser == null) {
+        print('Google sign-in was cancelled by user');
         return null;
       }
       
       // Obtain auth details from the request
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      
+      // Verify we got tokens
+      if (googleAuth.accessToken == null && googleAuth.idToken == null) {
+        print('Google sign-in failed: No tokens received');
+        return null;
+      }
       
       // Create new credential for Firebase
       final firebase_auth.OAuthCredential credential = firebase_auth.GoogleAuthProvider.credential(
@@ -451,6 +472,9 @@ MembershipTier _getTierFromString(String? tierString) {
     try {
       // Clear local storage for the current user before signing out
       final currentUserId = _firebaseAuth.currentUser?.uid;
+      final isGoogleUser = _firebaseAuth.currentUser?.providerData
+          .any((info) => info.providerId == 'google.com') ?? false;
+      
       if (currentUserId != null) {
         await _preferencesService.clearLocalStorage(currentUserId);
 
@@ -458,7 +482,20 @@ MembershipTier _getTierFromString(String? tierString) {
         await _notificationService.removeUserToken(currentUserId);
       }
 
-      await _googleSignIn.signOut();
+      // Sign out from Google first (before Firebase)
+      if (isGoogleUser) {
+        try {
+          await _googleSignIn.disconnect();
+        } catch (e) {
+          print('Google disconnect failed (might not be signed in): $e');
+        }
+        try {
+          await _googleSignIn.signOut();
+        } catch (e) {
+          print('Google sign out failed: $e');
+        }
+      }
+      
       await _firebaseAuth.signOut();
     } catch (e) {
       print('Sign out failed: $e');

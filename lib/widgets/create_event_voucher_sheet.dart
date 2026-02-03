@@ -29,6 +29,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
 
   DiscountType _discountType = DiscountType.percentage;
   bool _hasMaxClaims = false;
+  bool _showRemainingCount = true;
   bool _hasExpiry = false;
   DateTime? _expiresAt;
   bool _isCreating = false;
@@ -80,6 +81,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
         maxClaims: _hasMaxClaims && _maxClaimsController.text.isNotEmpty
             ? int.parse(_maxClaimsController.text.trim())
             : null,
+        showRemainingCount: _hasMaxClaims ? _showRemainingCount : true,
         expiresAt: _hasExpiry ? _expiresAt : null,
         createdBy: currentUser.id,
         createdByName: currentUser.name,
@@ -352,6 +354,22 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                                         }
                                       }
                                       return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 12),
+                                  // Show/Hide remaining count
+                                  SwitchListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: const Text('Show remaining count'),
+                                    subtitle: const Text(
+                                      'Users can see how many vouchers are left',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    value: _showRemainingCount,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _showRemainingCount = value;
+                                      });
                                     },
                                   ),
                                 ],

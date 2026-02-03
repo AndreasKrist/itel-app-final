@@ -5,6 +5,7 @@ import 'package:ITEL/models/chat_message.dart';
 import 'package:ITEL/models/chat_ban.dart';
 import 'package:ITEL/models/user.dart';
 import 'package:ITEL/services/chat_service.dart';
+import 'package:ITEL/utils/working_hours_helper.dart';
 import 'package:ITEL/widgets/chat_message_bubble.dart';
 import 'package:ITEL/screens/direct_message_chat_screen.dart';
 import 'package:ITEL/screens/event_chat_screen.dart';
@@ -590,9 +591,11 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                         onLongPress: isCurrentUser
                             ? () => _deleteMessage(message)
                             : (isStaff ? () => _showStaffModOptions(message) : null),
-                        onTapAuthor: !isCurrentUser
-                            ? () => _startDirectMessage(message)
-                            : null,
+                        // TODO: Hidden for now - uncomment to enable DM feature
+                        // onTapAuthor: !isCurrentUser
+                        //     ? () => _startDirectMessage(message)
+                        //     : null,
+                        onTapAuthor: null,
                         onTapEvent: _openEventFromMessage,
                       );
                     },
@@ -657,7 +660,51 @@ class _GlobalChatScreenState extends State<GlobalChatScreen> {
                     return CooldownDisplay(ban: ban);
                   }
 
-                  // Normal message input
+                  // Check working hours
+                  if (!WorkingHoursHelper.isWithinWorkingHours()) {
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border(
+                          top: BorderSide(color: Colors.grey[300]!),
+                        ),
+                      ),
+                      child: SafeArea(
+                        child: Row(
+                          children: [
+                            Icon(Icons.access_time, color: Colors.grey[600], size: 20),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Chat unavailable outside working hours',
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Mon-Fri, 9 AM - 6 PM SGT',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  // Normal message input (within working hours)
                   return Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(

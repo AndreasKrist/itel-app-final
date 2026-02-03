@@ -882,6 +882,33 @@ class ForumGroupService {
     }
   }
 
+  /// Staff delete any message
+  Future<void> staffDeleteMessage({
+    required String forumId,
+    required String messageId,
+    required String staffId,
+    required bool isStaff,
+  }) async {
+    if (!isStaff) {
+      throw Exception('Only staff can perform this action');
+    }
+
+    try {
+      final messageDoc = await _messagesCollection(forumId).doc(messageId).get();
+      if (!messageDoc.exists) {
+        throw Exception('Message not found');
+      }
+
+      await _messagesCollection(forumId).doc(messageId).update({
+        'deletedAt': FieldValue.serverTimestamp(),
+        'deletedBy': staffId,
+        'deletedByStaff': true,
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // ============ INVITATIONS ============
 
   /// Stream of pending invitations for a user

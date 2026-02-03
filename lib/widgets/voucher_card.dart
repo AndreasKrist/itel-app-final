@@ -337,7 +337,7 @@ class _VoucherCardState extends State<VoucherCard> {
                 // Claims info + Claim button row
                 Row(
                   children: [
-                    if (voucher.maxClaims != null) ...[
+                    if (voucher.maxClaims != null && voucher.showRemainingCount) ...[
                       Icon(
                         Icons.people_outline,
                         color: Colors.white.withOpacity(0.7),

@@ -4,11 +4,13 @@ import '../models/user.dart';
 import '../models/event.dart';
 import '../services/direct_message_service.dart';
 import '../services/support_ticket_service.dart';
+import '../services/career_ticket_service.dart';
 import '../services/forum_group_service.dart';
 import '../services/event_service.dart';
 import 'global_chat_screen.dart';
 import 'conversations_list_screen.dart';
 import 'ask_itel_screen.dart';
+import 'career_advisory_screen.dart';
 import 'forum_list_screen.dart';
 import 'event_chat_screen.dart';
 import 'event_list_screen.dart';
@@ -25,16 +27,17 @@ class _CommunityScreenState extends State<CommunityScreen>
   TabController? _tabController;
   final DirectMessageService _dmService = DirectMessageService();
   final SupportTicketService _ticketService = SupportTicketService();
+  final CareerTicketService _careerTicketService = CareerTicketService();
   final ForumGroupService _forumService = ForumGroupService();
   final EventService _eventService = EventService();
 
   bool _showLiveEventsTab = false;
-  int _lastTabCount = 3;
+  int _lastTabCount = 4;
 
   @override
   void initState() {
     super.initState();
-    _initTabController(3);
+    _initTabController(4);
   }
 
   void _initTabController(int length) {
@@ -52,7 +55,7 @@ class _CommunityScreenState extends State<CommunityScreen>
   void _updateTabsIfNeeded(bool shouldShowLiveEvents) {
     if (_showLiveEventsTab != shouldShowLiveEvents) {
       _showLiveEventsTab = shouldShowLiveEvents;
-      final newCount = shouldShowLiveEvents ? 4 : 3;
+      final newCount = shouldShowLiveEvents ? 5 : 4;
       if (_lastTabCount != newCount) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) {
@@ -130,7 +133,8 @@ class _CommunityScreenState extends State<CommunityScreen>
                     ),
                   ),
                   // Messages icon with unread badge
-                  if (!isGuest)
+                  // TODO: Hidden for now - set to true to enable DM feature
+                  if (false && !isGuest)
                     StreamBuilder<int>(
                       stream: _dmService.getTotalUnreadCountStream(currentUser.id),
                       builder: (context, snapshot) {
@@ -316,6 +320,60 @@ class _CommunityScreenState extends State<CommunityScreen>
                                       ],
                                     ),
                             ),
+                            // Career Advisory tab with badge for staff
+                            Tab(
+                              child: currentUser.isStaff
+                                  ? StreamBuilder<int>(
+                                      stream: _careerTicketService.getUnattendedTicketsCountStream(),
+                                      builder: (context, snapshot) {
+                                        final count = snapshot.data ?? 0;
+                                        return Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Icon(Icons.work_outline, size: 20),
+                                            const SizedBox(width: 4),
+                                            const Text('Career advisory'),
+                                            if (count > 0) ...[
+                                              const SizedBox(width: 4),
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(
+                                                  horizontal: 6,
+                                                  vertical: 2,
+                                                ),
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                constraints: const BoxConstraints(
+                                                  minWidth: 18,
+                                                  minHeight: 18,
+                                                ),
+                                                child: Text(
+                                                  count > 99 ? '99+' : '$count',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ],
+                                          ],
+                                        );
+                                      },
+                                    )
+                                  : const Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.work_outline, size: 20),
+                                        SizedBox(width: 4),
+                                        Text('Career advisory'),
+                                      ],
+                                    ),
+                            ),
                             // Forum tab with badge for pending invitations
                             Tab(
                               child: !isGuest
@@ -393,6 +451,8 @@ class _CommunityScreenState extends State<CommunityScreen>
                             if (shouldShowLiveEvents) _buildLiveEventsTab(),
                             // Ask ITEL Tab (Support Chat)
                             const AskItelScreen(),
+                            // Career Advisory Tab
+                            const CareerAdvisoryScreen(),
                             // Forum Tab (Group Forums)
                             const ForumListScreen(),
                             // Global Chat Tab

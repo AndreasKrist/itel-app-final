@@ -22,6 +22,7 @@ class EventVoucher {
   final String createdByName;
   final bool isActive;       // Staff can deactivate a voucher
   final DateTime? expiresAt; // null = follows event end time
+  final bool showRemainingCount;  // Whether to show remaining claims to users
 
   EventVoucher({
     required this.id,
@@ -37,6 +38,7 @@ class EventVoucher {
     required this.createdByName,
     this.isActive = true,
     this.expiresAt,
+    this.showRemainingCount = true,
   });
 
   /// Check if voucher has reached max claims
@@ -105,6 +107,7 @@ class EventVoucher {
       createdByName: data['createdByName'] ?? '',
       isActive: data['isActive'] ?? true,
       expiresAt: (data['expiresAt'] as Timestamp?)?.toDate(),
+      showRemainingCount: data['showRemainingCount'] ?? true,
     );
   }
 
@@ -123,6 +126,7 @@ class EventVoucher {
       'createdByName': createdByName,
       'isActive': isActive,
       'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+      'showRemainingCount': showRemainingCount,
     };
   }
 
@@ -141,6 +145,7 @@ class EventVoucher {
     String? createdByName,
     bool? isActive,
     DateTime? expiresAt,
+    bool? showRemainingCount,
   }) {
     return EventVoucher(
       id: id ?? this.id,
@@ -156,6 +161,7 @@ class EventVoucher {
       createdByName: createdByName ?? this.createdByName,
       isActive: isActive ?? this.isActive,
       expiresAt: expiresAt ?? this.expiresAt,
+      showRemainingCount: showRemainingCount ?? this.showRemainingCount,
     );
   }
 }

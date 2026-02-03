@@ -1,20 +1,20 @@
-// lib/screens/ask_itel_screen.dart
+// lib/screens/career_advisory_screen.dart
 import 'package:flutter/material.dart';
-import '../models/support_ticket.dart';
+import '../models/career_ticket.dart';
 import '../models/user.dart';
-import '../services/support_ticket_service.dart';
+import '../services/career_ticket_service.dart';
 import '../utils/working_hours_helper.dart';
-import 'support_chat_screen.dart';
+import 'career_chat_screen.dart';
 
-class AskItelScreen extends StatefulWidget {
-  const AskItelScreen({super.key});
+class CareerAdvisoryScreen extends StatefulWidget {
+  const CareerAdvisoryScreen({super.key});
 
   @override
-  State<AskItelScreen> createState() => _AskItelScreenState();
+  State<CareerAdvisoryScreen> createState() => _CareerAdvisoryScreenState();
 }
 
-class _AskItelScreenState extends State<AskItelScreen> {
-  final SupportTicketService _ticketService = SupportTicketService();
+class _CareerAdvisoryScreenState extends State<CareerAdvisoryScreen> {
+  final CareerTicketService _ticketService = CareerTicketService();
   String _filterStatus = 'all';
 
   @override
@@ -57,7 +57,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
                       children: [
                         Icon(
                           _filterStatus == 'open'
-                              ? Icons.support_agent
+                              ? Icons.work_outline
                               : _filterStatus == 'resolved'
                                   ? Icons.check_circle
                                   : Icons.lock,
@@ -117,7 +117,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Sign in to contact ITEL support',
+                      'Sign in to contact ITEL Career Advisory',
                       style: TextStyle(
                         color: Colors.orange[700],
                         fontWeight: FontWeight.w500,
@@ -132,7 +132,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
           Expanded(
             child: isGuest
                 ? _buildGuestView()
-                : StreamBuilder<List<SupportTicket>>(
+                : StreamBuilder<List<CareerTicket>>(
                     stream: isStaff
                         ? _ticketService.getAllTicketsStream()
                         : _ticketService.getUserTicketsStream(currentUser.id),
@@ -198,15 +198,15 @@ class _AskItelScreenState extends State<AskItelScreen> {
                       // Apply filter
                       if (_filterStatus == 'open') {
                         tickets = tickets
-                            .where((t) => t.status == TicketStatus.open)
+                            .where((t) => t.status == CareerTicketStatus.open)
                             .toList();
                       } else if (_filterStatus == 'resolved') {
                         tickets = tickets
-                            .where((t) => t.status == TicketStatus.resolved)
+                            .where((t) => t.status == CareerTicketStatus.resolved)
                             .toList();
                       } else if (_filterStatus == 'closed') {
                         tickets = tickets
-                            .where((t) => t.status == TicketStatus.closed)
+                            .where((t) => t.status == CareerTicketStatus.closed)
                             .toList();
                       }
 
@@ -254,10 +254,10 @@ class _AskItelScreenState extends State<AskItelScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.support_agent, size: 64, color: Colors.grey[400]),
+            Icon(Icons.work_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
-              'ITEL Support',
+              'ITEL Career Advisory',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -266,7 +266,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Sign in to start a conversation with our support team',
+              'Sign in to start a conversation with our career advisors',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[500]),
             ),
@@ -287,7 +287,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
             const SizedBox(height: 16),
             Text(
               _filterStatus == 'all'
-                  ? (isStaff ? 'No support tickets' : 'No conversations yet')
+                  ? (isStaff ? 'No advisory tickets' : 'No conversations yet')
                   : 'No $_filterStatus tickets',
               style: TextStyle(
                 fontSize: 18,
@@ -298,8 +298,8 @@ class _AskItelScreenState extends State<AskItelScreen> {
             const SizedBox(height: 8),
             Text(
               isStaff
-                  ? 'Support requests will appear here'
-                  : 'Tap + to start a conversation with ITEL support',
+                  ? 'Career advisory requests will appear here'
+                  : 'Tap + to start a conversation with ITEL Career Advisory',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[500]),
             ),
@@ -309,26 +309,25 @@ class _AskItelScreenState extends State<AskItelScreen> {
     );
   }
 
-  Widget _buildTicketCard(SupportTicket ticket, bool isStaff) {
+  Widget _buildTicketCard(CareerTicket ticket, bool isStaff) {
     final currentUser = User.currentUser;
-    final statusColor = ticket.status == TicketStatus.open
+    final statusColor = ticket.status == CareerTicketStatus.open
         ? const Color(0xFFFF6600)
-        : ticket.status == TicketStatus.resolved
+        : ticket.status == CareerTicketStatus.resolved
             ? Colors.green
             : Colors.grey;
 
-    final statusIcon = ticket.status == TicketStatus.open
-        ? Icons.support_agent
-        : ticket.status == TicketStatus.resolved
+    final statusIcon = ticket.status == CareerTicketStatus.open
+        ? Icons.work_outline
+        : ticket.status == CareerTicketStatus.resolved
             ? Icons.check_circle
             : Icons.lock;
 
-    // Staff-specific indicators
     final bool isUnviewedByCurrentStaff = isStaff &&
-        ticket.status == TicketStatus.open &&
+        ticket.status == CareerTicketStatus.open &&
         !ticket.hasBeenViewedByStaff(currentUser.id);
     final bool needsStaffReply = isStaff &&
-        ticket.status == TicketStatus.open &&
+        ticket.status == CareerTicketStatus.open &&
         !ticket.hasStaffReply;
 
     return Card(
@@ -339,7 +338,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SupportChatScreen(
+              builder: (context) => CareerChatScreen(
                 ticketId: ticket.id,
                 ticketSubject: ticket.subject,
               ),
@@ -354,7 +353,6 @@ class _AskItelScreenState extends State<AskItelScreen> {
             children: [
               Row(
                 children: [
-                  // NEW badge for staff - unviewed ticket
                   if (isUnviewedByCurrentStaff) ...[
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -398,9 +396,9 @@ class _AskItelScreenState extends State<AskItelScreen> {
                         Icon(statusIcon, size: 12, color: statusColor),
                         const SizedBox(width: 4),
                         Text(
-                          ticket.status == TicketStatus.open
+                          ticket.status == CareerTicketStatus.open
                               ? 'Open'
-                              : ticket.status == TicketStatus.resolved
+                              : ticket.status == CareerTicketStatus.resolved
                                   ? 'Resolved'
                                   : 'Closed',
                           style: TextStyle(
@@ -429,7 +427,6 @@ class _AskItelScreenState extends State<AskItelScreen> {
                         ),
                       ),
                     ),
-                    // No Reply indicator for staff
                     if (needsStaffReply)
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -530,7 +527,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Contact ITEL'),
+        title: const Text('Contact Career Advisory'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -539,7 +536,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
                 controller: subjectController,
                 decoration: const InputDecoration(
                   labelText: 'Subject',
-                  hintText: 'Brief description of your issue',
+                  hintText: 'Brief description of your career question',
                   border: OutlineInputBorder(),
                 ),
                 maxLength: 100,
@@ -549,7 +546,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
                 controller: messageController,
                 decoration: const InputDecoration(
                   labelText: 'Message',
-                  hintText: 'Describe your issue in detail',
+                  hintText: 'Describe your career question in detail',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 4,
@@ -596,11 +593,10 @@ class _AskItelScreenState extends State<AskItelScreen> {
                     await WorkingHoursHelper.showWorkingHoursNotice(screenContext);
                   }
 
-                  // Navigate to the new ticket chat
                   Navigator.push(
                     screenContext,
                     MaterialPageRoute(
-                      builder: (context) => SupportChatScreen(
+                      builder: (context) => CareerChatScreen(
                         ticketId: ticketId,
                         ticketSubject: subject,
                       ),
@@ -624,33 +620,6 @@ class _AskItelScreenState extends State<AskItelScreen> {
             ),
             child: const Text('Send'),
           ),
-        ],
-      ),
-    );
-  }
-
-  PopupMenuItem<String> _buildFilterItem(
-      String value, String label, IconData icon) {
-    Color iconColor;
-    if (value == 'open') {
-      iconColor =
-          _filterStatus == 'open' ? const Color(0xFFFF6600) : Colors.grey;
-    } else if (value == 'resolved') {
-      iconColor = _filterStatus == 'resolved' ? Colors.green : Colors.grey;
-    } else if (value == 'closed') {
-      iconColor = _filterStatus == 'closed' ? Colors.grey : Colors.grey;
-    } else {
-      iconColor =
-          _filterStatus == 'all' ? const Color(0xFF0056AC) : Colors.grey;
-    }
-
-    return PopupMenuItem(
-      value: value,
-      child: Row(
-        children: [
-          Icon(icon, size: 18, color: iconColor),
-          const SizedBox(width: 8),
-          Text(label),
         ],
       ),
     );

@@ -23,6 +23,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
   bool _hasMaxClaims = false;
+  bool _showRemainingCount = true;
   bool _isCreating = false;
 
   @override
@@ -131,6 +132,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
         maxClaims: _hasMaxClaims && _maxClaimsController.text.isNotEmpty
             ? int.parse(_maxClaimsController.text.trim())
             : null,
+        showRemainingCount: _hasMaxClaims ? _showRemainingCount : true,
         createdBy: currentUser.id,
       );
 
@@ -480,6 +482,20 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                                   }
                                 }
                                 return null;
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            // Show/Hide remaining count
+                            SwitchListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: const Text('Show remaining count'),
+                              subtitle: const Text(
+                                  'Users can see how many vouchers are left'),
+                              value: _showRemainingCount,
+                              onChanged: (value) {
+                                setState(() {
+                                  _showRemainingCount = value;
+                                });
                               },
                             ),
                           ],

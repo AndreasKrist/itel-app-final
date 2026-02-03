@@ -154,10 +154,31 @@ class _LoginScreenState extends State<LoginScreen> {
           });
         }
       }
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      print('Firebase Auth error: ${e.code} - ${e.message}');
+      setState(() {
+        switch (e.code) {
+          case 'account-exists-with-different-credential':
+            _errorMessage = "An account already exists with the same email but different sign-in method.";
+            break;
+          case 'invalid-credential':
+            _errorMessage = "Invalid Google credentials. Please try again.";
+            break;
+          case 'user-disabled':
+            _errorMessage = "This account has been disabled.";
+            break;
+          case 'operation-not-allowed':
+            _errorMessage = "Google sign-in is not enabled. Please contact support.";
+            break;
+          default:
+            _errorMessage = "Google sign-in failed: ${e.message}";
+        }
+        _isGoogleLoading = false;
+      });
     } catch (e) {
       print('Google sign-in error: ${e.toString()}');
       setState(() {
-        _errorMessage = "Google sign-in failed. Please try again.";
+        _errorMessage = "Google sign-in failed. Please try again.\nError: ${e.toString()}";
         _isGoogleLoading = false;
       });
     }

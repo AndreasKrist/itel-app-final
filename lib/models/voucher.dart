@@ -21,6 +21,7 @@ class Voucher {
   final String? paymentLink; // Optional: for future payment integration
   final DateTime createdAt;
   final String createdBy;    // Admin user ID who created it
+  final bool showRemainingCount;  // Whether to show remaining claims to users
 
   Voucher({
     required this.id,
@@ -36,6 +37,7 @@ class Voucher {
     this.paymentLink,
     required this.createdAt,
     required this.createdBy,
+    this.showRemainingCount = true,
   });
 
   /// Check if voucher is currently active (within time window)
@@ -106,6 +108,7 @@ class Voucher {
       paymentLink: data['paymentLink'],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       createdBy: data['createdBy'] ?? '',
+      showRemainingCount: data['showRemainingCount'] ?? true,
     );
   }
 
@@ -142,6 +145,7 @@ class Voucher {
     String? paymentLink,
     DateTime? createdAt,
     String? createdBy,
+    bool? showRemainingCount,
   }) {
     return Voucher(
       id: id ?? this.id,
@@ -157,6 +161,7 @@ class Voucher {
       paymentLink: paymentLink ?? this.paymentLink,
       createdAt: createdAt ?? this.createdAt,
       createdBy: createdBy ?? this.createdBy,
+      showRemainingCount: showRemainingCount ?? this.showRemainingCount,
     );
   }
 }

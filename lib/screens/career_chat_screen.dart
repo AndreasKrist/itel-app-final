@@ -1,28 +1,27 @@
-// lib/screens/support_chat_screen.dart
+// lib/screens/career_chat_screen.dart
 import 'package:flutter/material.dart';
-import '../models/support_ticket.dart';
-import '../models/support_message.dart';
+import '../models/career_ticket.dart';
+import '../models/career_message.dart';
 import '../models/user.dart';
-import '../services/support_ticket_service.dart';
-import '../utils/working_hours_helper.dart';
-import '../widgets/support_message_bubble.dart';
+import '../services/career_ticket_service.dart';
+import '../widgets/career_message_bubble.dart';
 
-class SupportChatScreen extends StatefulWidget {
+class CareerChatScreen extends StatefulWidget {
   final String ticketId;
   final String ticketSubject;
 
-  const SupportChatScreen({
+  const CareerChatScreen({
     super.key,
     required this.ticketId,
     required this.ticketSubject,
   });
 
   @override
-  State<SupportChatScreen> createState() => _SupportChatScreenState();
+  State<CareerChatScreen> createState() => _CareerChatScreenState();
 }
 
-class _SupportChatScreenState extends State<SupportChatScreen> {
-  final SupportTicketService _ticketService = SupportTicketService();
+class _CareerChatScreenState extends State<CareerChatScreen> {
+  final CareerTicketService _ticketService = CareerTicketService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
@@ -32,7 +31,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Mark ticket as viewed by staff when they open it
     _markAsViewedByStaff();
   }
 
@@ -80,7 +78,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
 
       _messageController.clear();
 
-      // Scroll to bottom
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
@@ -102,7 +99,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     }
   }
 
-  Future<void> _deleteMessage(SupportMessage message) async {
+  Future<void> _deleteMessage(CareerMessage message) async {
     final currentUser = User.currentUser;
     if (message.senderId != currentUser.id) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -161,7 +158,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
     }
   }
 
-  Future<void> _showTicketOptions(SupportTicket ticket) async {
+  Future<void> _showTicketOptions(CareerTicket ticket) async {
     final currentUser = User.currentUser;
     final isCreator = ticket.creatorId == currentUser.id;
     final isStaff = currentUser.isStaff;
@@ -196,7 +193,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            if (ticket.status == TicketStatus.open) ...[
+            if (ticket.status == CareerTicketStatus.open) ...[
               ListTile(
                 leading: const Icon(Icons.check_circle, color: Colors.green),
                 title: const Text('Mark as Resolved'),
@@ -205,7 +202,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   try {
                     await _ticketService.updateTicketStatus(
                       widget.ticketId,
-                      TicketStatus.resolved,
+                      CareerTicketStatus.resolved,
                     );
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -236,7 +233,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                     try {
                       await _ticketService.updateTicketStatus(
                         widget.ticketId,
-                        TicketStatus.closed,
+                        CareerTicketStatus.closed,
                       );
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -258,7 +255,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                     }
                   },
                 ),
-            ] else if (ticket.status == TicketStatus.resolved) ...[
+            ] else if (ticket.status == CareerTicketStatus.resolved) ...[
               ListTile(
                 leading: const Icon(Icons.refresh, color: Colors.orange),
                 title: const Text('Reopen Ticket'),
@@ -267,7 +264,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   try {
                     await _ticketService.updateTicketStatus(
                       widget.ticketId,
-                      TicketStatus.open,
+                      CareerTicketStatus.open,
                     );
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -301,12 +298,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   Widget build(BuildContext context) {
     final currentUser = User.currentUser;
 
-    return StreamBuilder<SupportTicket?>(
+    return StreamBuilder<CareerTicket?>(
       stream: _ticketService.getTicketStream(widget.ticketId),
       builder: (context, ticketSnapshot) {
         final ticket = ticketSnapshot.data;
         final canReply = ticket?.canReply(currentUser.id, currentUser.isStaff) ?? false;
-        final isClosed = ticket?.status == TicketStatus.closed;
+        final isClosed = ticket?.status == CareerTicketStatus.closed;
 
         return Scaffold(
           backgroundColor: Colors.grey[100],
@@ -317,7 +314,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
             titleSpacing: 0,
             title: Row(
               children: [
-                // Support icon
                 Container(
                   width: 36,
                   height: 36,
@@ -333,13 +329,12 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                     ],
                   ),
                   child: const Icon(
-                    Icons.support_agent,
+                    Icons.work_outline,
                     color: Colors.white,
                     size: 20,
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Title and status
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,9 +354,9 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                             width: 8,
                             height: 8,
                             decoration: BoxDecoration(
-                              color: ticket?.status == TicketStatus.open
+                              color: ticket?.status == CareerTicketStatus.open
                                   ? Colors.orange
-                                  : ticket?.status == TicketStatus.resolved
+                                  : ticket?.status == CareerTicketStatus.resolved
                                       ? Colors.green
                                       : Colors.grey,
                               shape: BoxShape.circle,
@@ -369,16 +364,16 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            ticket?.status == TicketStatus.open
+                            ticket?.status == CareerTicketStatus.open
                                 ? 'Open'
-                                : ticket?.status == TicketStatus.resolved
+                                : ticket?.status == CareerTicketStatus.resolved
                                     ? 'Resolved'
                                     : 'Closed',
                             style: TextStyle(
                               fontSize: 12,
-                              color: ticket?.status == TicketStatus.open
+                              color: ticket?.status == CareerTicketStatus.open
                                   ? Colors.orange
-                                  : ticket?.status == TicketStatus.resolved
+                                  : ticket?.status == CareerTicketStatus.resolved
                                       ? Colors.green
                                       : Colors.grey,
                             ),
@@ -400,9 +395,8 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
           ),
           body: Column(
             children: [
-              // Messages list
               Expanded(
-                child: StreamBuilder<List<SupportMessage>>(
+                child: StreamBuilder<List<CareerMessage>>(
                   stream: _ticketService.getMessagesStream(widget.ticketId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -450,7 +444,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                         final message = messages[messages.length - 1 - index];
                         final isCurrentUser = message.senderId == currentUser.id;
 
-                        return SupportMessageBubble(
+                        return CareerMessageBubble(
                           message: message,
                           isCurrentUser: isCurrentUser,
                           onLongPress: isCurrentUser
@@ -462,7 +456,6 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                   },
                 ),
               ),
-              // Message input or closed notice
               if (isClosed)
                 Container(
                   padding: const EdgeInsets.all(16),

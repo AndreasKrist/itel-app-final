@@ -5,6 +5,7 @@ import '../models/forum_message.dart';
 import '../models/forum_join_request.dart';
 import '../models/user.dart';
 import '../services/forum_group_service.dart';
+import '../utils/working_hours_helper.dart';
 import 'forum_members_screen.dart';
 
 class ForumChatScreen extends StatefulWidget {
@@ -113,6 +114,120 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
           messageId: message.id,
           currentUserId: currentUser.id,
         );
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  // ============ STAFF MODERATION ============
+
+  void _showStaffModOptions(ForumMessage message) {
+    final currentUser = User.currentUser;
+    if (!currentUser.isStaff) return;
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 8),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Moderate: ${message.senderName}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message.content.length > 50
+                  ? '"${message.content.substring(0, 50)}..."'
+                  : '"${message.content}"',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Delete message
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Delete Message'),
+              subtitle: const Text('Remove this message', style: TextStyle(fontSize: 12)),
+              onTap: () {
+                Navigator.pop(context);
+                _staffDeleteMessage(message);
+              },
+            ),
+
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _staffDeleteMessage(ForumMessage message) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Message'),
+        content: const Text('Delete this message? It will be removed completely.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        final currentUser = User.currentUser;
+        await _forumService.staffDeleteMessage(
+          forumId: widget.forumId,
+          messageId: message.id,
+          staffId: currentUser.id,
+          isStaff: currentUser.isStaff,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Message deleted'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -972,8 +1087,8 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
                   },
                 ),
               ),
-              // Message input
-              if (isMember)
+              // Message input (only during working hours)
+              if (isMember && WorkingHoursHelper.isWithinWorkingHours())
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -1039,6 +1154,47 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
                                     ),
                                   )
                                 : const Icon(Icons.send, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else if (isMember && !WorkingHoursHelper.isWithinWorkingHours())
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    border: Border(
+                      top: BorderSide(color: Colors.grey[300]!),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Row(
+                      children: [
+                        Icon(Icons.access_time, color: Colors.grey[600], size: 20),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Chat unavailable outside working hours',
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Mon-Fri, 9 AM - 6 PM SGT',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -1164,8 +1320,9 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
           ],
           Flexible(
             child: GestureDetector(
-              onLongPress:
-                  isCurrentUser ? () => _deleteMessage(message) : null,
+              onLongPress: isCurrentUser
+                  ? () => _deleteMessage(message)
+                  : (User.currentUser.isStaff ? () => _showStaffModOptions(message) : null),
               child: Container(
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.7,
