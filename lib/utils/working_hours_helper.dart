@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 /// Helper class to check and handle working hours
-/// Working hours: 9 AM - 6 PM SGT (Singapore Time, UTC+8)
+/// Working hours: 9:30 AM - 6 PM SGT (Singapore Time, UTC+8)
 class WorkingHoursHelper {
   /// Singapore Time (SGT) is UTC+8
   static const int sgtOffset = 8;
@@ -12,23 +12,25 @@ class WorkingHoursHelper {
   static bool debugForceWorkingHours = false;  // Set to true = always within hours
   static bool debugForceOutsideHours = false;  // Set to true = always outside hours
 
-  /// Check if current time is within working hours (9 AM - 6 PM SGT)
+  /// Check if current time is within working hours (9:30 AM - 6 PM SGT)
   static bool isWithinWorkingHours() {
     // DEBUG MODE: Force override for testing
     if (debugForceWorkingHours) return true;
     if (debugForceOutsideHours) return false;
-    
+
     final now = DateTime.now().toUtc();
     final sgtTime = now.add(const Duration(hours: sgtOffset));
-    
+
     // Check if it's a weekend (Saturday = 6, Sunday = 7)
     if (sgtTime.weekday == DateTime.saturday || sgtTime.weekday == DateTime.sunday) {
       return false;
     }
-    
-    // Check if time is between 9 AM and 6 PM
+
+    // Check if time is between 9:30 AM and 6 PM
     final hour = sgtTime.hour;
-    return hour >= 9 && hour < 18;
+    final minute = sgtTime.minute;
+    // After 9:30 AM (hour > 9, or hour == 9 and minute >= 30) and before 6 PM (hour < 18)
+    return (hour > 9 || (hour == 9 && minute >= 30)) && hour < 18;
   }
 
   /// Get current SGT time
@@ -40,16 +42,16 @@ class WorkingHoursHelper {
   /// Get working hours status message
   static String getWorkingHoursMessage() {
     if (isWithinWorkingHours()) {
-      return 'We are currently online (9 AM - 6 PM SGT)';
+      return 'We are currently online (9:30 AM - 6 PM SGT)';
     }
     
     final sgtTime = getSGTTime();
     final isWeekend = sgtTime.weekday == DateTime.saturday || sgtTime.weekday == DateTime.sunday;
     
     if (isWeekend) {
-      return 'Working hours: Monday-Friday, 9 AM - 6 PM SGT';
+      return 'Working hours: Monday-Friday, 9:30 AM - 6 PM SGT';
     } else {
-      return 'Working hours: 9 AM - 6 PM SGT. Your question will be answered during working hours.';
+      return 'Working hours: 9:30 AM - 6 PM SGT. Your question will be answered during working hours.';
     }
   }
 
@@ -92,7 +94,7 @@ class WorkingHoursHelper {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Working Hours:\nMon-Fri, 9 AM - 6 PM SGT',
+                      'Working Hours:\nMon-Fri, 9:30 AM - 6 PM SGT',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.orange[800],
@@ -148,7 +150,7 @@ class WorkingHoursHelper {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Mon-Fri, 9 AM - 6 PM SGT',
+                    'Mon-Fri, 9:30 AM - 6 PM SGT',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[500],
@@ -173,8 +175,8 @@ class WorkingHoursHelper {
       
       // Check if it's a weekday (Mon-Fri)
       if (sgtTime.weekday >= DateTime.monday && sgtTime.weekday <= DateTime.friday) {
-        // Return 9 AM of that day
-        return DateTime(sgtTime.year, sgtTime.month, sgtTime.day, 9, 0);
+        // Return 9:30 AM of that day
+        return DateTime(sgtTime.year, sgtTime.month, sgtTime.day, 9, 30);
       }
     }
     

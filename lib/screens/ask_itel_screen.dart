@@ -287,7 +287,7 @@ class _AskItelScreenState extends State<AskItelScreen> {
             const SizedBox(height: 16),
             Text(
               _filterStatus == 'all'
-                  ? (isStaff ? 'No support tickets' : 'No conversations yet')
+                  ? (isStaff ? 'No support tickets' : 'No Questions yet')
                   : 'No $_filterStatus tickets',
               style: TextStyle(
                 fontSize: 18,

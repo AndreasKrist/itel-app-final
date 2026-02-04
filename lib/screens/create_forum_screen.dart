@@ -130,7 +130,7 @@ class _CreateForumScreenState extends State<CreateForumScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Create Forum'),
+        title: const Text('Create Channel'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -153,7 +153,7 @@ class _CreateForumScreenState extends State<CreateForumScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Forum Details',
+                      'Channel Details',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -163,8 +163,8 @@ class _CreateForumScreenState extends State<CreateForumScreen> {
                     TextFormField(
                       controller: _titleController,
                       decoration: const InputDecoration(
-                        labelText: 'Forum Title',
-                        hintText: 'Enter a title for your forum',
+                        labelText: 'Channel Title',
+                        hintText: 'Enter a title for your channel',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.title),
                       ),
@@ -395,7 +395,7 @@ class _CreateForumScreenState extends State<CreateForumScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Your forum will be reviewed by ITEL staff before becoming visible to others.',
+                        'Your channel will be reviewed by ITEL staff before becoming visible to others.',
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.blue[700],
@@ -431,7 +431,7 @@ class _CreateForumScreenState extends State<CreateForumScreen> {
                           ),
                         )
                       : const Text(
-                          'Create Forum',
+                          'Create Channel',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

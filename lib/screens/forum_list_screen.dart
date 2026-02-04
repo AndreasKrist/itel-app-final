@@ -65,8 +65,8 @@ class _ForumListScreenState extends State<ForumListScreen>
                 fontSize: 13,
               ),
               tabs: [
-                const Tab(text: 'All Forums'),
-                const Tab(text: 'My Forums'),
+                const Tab(text: 'All Channels'),
+                const Tab(text: 'My Channels'),
                 if (isStaff) const Tab(text: 'Pending'),
               ],
             ),
@@ -100,7 +100,7 @@ class _ForumListScreenState extends State<ForumListScreen>
                   backgroundColor: const Color(0xFF0056AC),
                   icon: const Icon(Icons.add, color: Colors.white),
                   label: const Text(
-                    'Create Forum',
+                    'Create Channel',
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -131,10 +131,10 @@ class _ForumListScreenState extends State<ForumListScreen>
             },
           ),
           const SizedBox(height: 12),
-          // Create Forum option
+          // Create Channel option
           _FabOption(
             icon: Icons.forum,
-            label: 'Create Forum',
+            label: 'Create Channel',
             color: const Color(0xFF0056AC),
             onTap: () {
               setState(() => _isFabExpanded = false);
@@ -178,8 +178,8 @@ class _ForumListScreenState extends State<ForumListScreen>
 
         if (forums.isEmpty) {
           return _buildEmptyView(
-            'No forums yet',
-            'Be the first to create a forum!',
+            'No Channels yet',
+            'Be the first to create a channel!',
             showCreateButton: !isGuest,
           );
         }
@@ -527,8 +527,8 @@ class _ForumListScreenState extends State<ForumListScreen>
               if (forums.isEmpty) {
                 return SliverFillRemaining(
                   child: _buildEmptyView(
-                    'No forums yet',
-                    'Join or create a forum to get started!',
+                    'No Channels yet',
+                    'Join or create a channel to get started!',
                     showCreateButton: true,
                   ),
                 );
@@ -942,7 +942,7 @@ class _ForumListScreenState extends State<ForumListScreen>
                       ),
                     ),
                     child: Text(
-                        forum.isPublic ? 'Join Forum' : 'Request to Join'),
+                        forum.isPublic ? 'Join Channel' : 'Request to Join'),
                   ),
                 ),
               ],
@@ -1568,8 +1568,8 @@ class _ForumListScreenState extends State<ForumListScreen>
                     ),
                   );
                 },
-                icon: const Icon(Icons.add),
-                label: const Text('Create Forum'),
+                icon: const Icon(Icons.add, color: Colors.white),
+                label: const Text('Create Channel'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF0056AC),
                   foregroundColor: Colors.white,

@@ -8,6 +8,7 @@ import '../services/user_preferences_service.dart';
 import '../services/auth_service.dart';
 import '../services/trending_content_service.dart';
 import '../services/course_remote_config_service.dart';
+import 'about_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(String)? onCategorySelected;
@@ -316,12 +317,44 @@ void _toggleFavorite(Course course) async {
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     'Technology Training',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                     textAlign: TextAlign.right,
                   ),
+                ),
+              ),
+              const SizedBox(width: 24),
+              // About button
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutScreen(),
+                    ),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.white.withOpacity(0.7),
+                      size: 14,
+                    ),
+                    const SizedBox(height: 1),
+                    Text(
+                      'About',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 8,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               ],

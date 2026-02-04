@@ -287,7 +287,7 @@ class _CareerAdvisoryScreenState extends State<CareerAdvisoryScreen> {
             const SizedBox(height: 16),
             Text(
               _filterStatus == 'all'
-                  ? (isStaff ? 'No advisory tickets' : 'No conversations yet')
+                  ? (isStaff ? 'No advisory tickets' : 'No Career Advisory yet')
                   : 'No $_filterStatus tickets',
               style: TextStyle(
                 fontSize: 18,

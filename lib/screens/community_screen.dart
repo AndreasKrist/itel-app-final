@@ -123,7 +123,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                                   ),
                         ),
                         Text(
-                          'Connect with ITEL community',
+                          'Connect with ITEL Community',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -333,7 +333,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                                           children: [
                                             const Icon(Icons.work_outline, size: 20),
                                             const SizedBox(width: 4),
-                                            const Text('Career advisory'),
+                                            const Text('Career Advisory'),
                                             if (count > 0) ...[
                                               const SizedBox(width: 4),
                                               Container(

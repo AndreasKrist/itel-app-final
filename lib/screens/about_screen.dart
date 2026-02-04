@@ -5,18 +5,19 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'About ITEL',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 24),
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        title: const Text('About ITEL'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           
           // Logo or image
           Center(
@@ -232,7 +233,7 @@ class AboutScreen extends StatelessWidget {
           // Copyright
           Center(
             child: Text(
-              '© 2025 ITEL. All rights reserved.',
+              '© 2026 ITEL. All rights reserved.',
               style: TextStyle(
                 color: Colors.grey[600],
                 fontSize: 12,
@@ -241,6 +242,7 @@ class AboutScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
         ],
+        ),
       ),
     );
   }
@@ -391,6 +393,7 @@ class AboutScreen extends StatelessWidget {
       style: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
+        color: Color(0xFF0056AC),
       ),
     );
   }
