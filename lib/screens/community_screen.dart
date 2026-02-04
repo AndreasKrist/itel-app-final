@@ -370,7 +370,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                                       children: [
                                         Icon(Icons.work_outline, size: 20),
                                         SizedBox(width: 4),
-                                        Text('Career advisory'),
+                                        Text('Career Advisory'),
                                       ],
                                     ),
                             ),

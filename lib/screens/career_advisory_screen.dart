@@ -298,7 +298,7 @@ class _CareerAdvisoryScreenState extends State<CareerAdvisoryScreen> {
             const SizedBox(height: 8),
             Text(
               isStaff
-                  ? 'Career advisory requests will appear here'
+                  ? 'Career Advisory requests will appear here'
                   : 'Tap + to start a conversation with ITEL Career Advisory',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[500]),
