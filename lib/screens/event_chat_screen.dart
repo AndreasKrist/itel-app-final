@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/event.dart';
 import '../models/event_voucher.dart';
 import '../models/event_message.dart';
@@ -100,6 +101,106 @@ class _EventChatScreenState extends State<EventChatScreen> {
       );
 
       _messageController.clear();
+
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSending = false);
+    }
+  }
+
+  void _showMediaUrlDialog() {
+    final urlController = TextEditingController();
+    final captionController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Share Media'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: urlController,
+              decoration: const InputDecoration(
+                labelText: 'Image or Video URL',
+                hintText: 'https://...',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.url,
+              autofocus: true,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: captionController,
+              decoration: const InputDecoration(
+                labelText: 'Caption (optional)',
+                hintText: 'Add a caption...',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final url = urlController.text.trim();
+              if (url.isEmpty) return;
+              final uri = Uri.tryParse(url);
+              if (uri == null || !uri.hasScheme || (!uri.isScheme('http') && !uri.isScheme('https'))) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please enter a valid URL'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+              Navigator.pop(context);
+              _sendMediaMessage(url, captionController.text.trim());
+            },
+            child: const Text('Send'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _sendMediaMessage(String mediaUrl, String caption) async {
+    final currentUser = User.currentUser;
+    if (!currentUser.isStaff) return;
+
+    setState(() => _isSending = true);
+
+    try {
+      await _eventService.sendMessage(
+        eventId: widget.eventId,
+        senderId: currentUser.id,
+        senderName: currentUser.name,
+        senderEmail: currentUser.email,
+        content: caption,
+        type: EventMessageType.image,
+        mediaUrl: mediaUrl,
+      );
 
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -805,6 +906,56 @@ class _EventChatScreenState extends State<EventChatScreen> {
           );
         }
 
+        // Block non-staff users from accessing pending events
+        if (event.isPending && !currentUser.isStaff) {
+          return Scaffold(
+            backgroundColor: Colors.grey[100],
+            appBar: AppBar(
+              title: Text(event.title),
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              elevation: 0,
+            ),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.schedule, size: 48, color: Colors.blue[400]),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Event hasn\'t started yet',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'This event will be available when it goes live. Come back later!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    EventCountdownTimer(event: event),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
         return Scaffold(
           backgroundColor: Colors.grey[100],
           appBar: AppBar(
@@ -1470,6 +1621,18 @@ class _EventChatScreenState extends State<EventChatScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            if (User.currentUser.isStaff)
+              Padding(
+                padding: const EdgeInsets.only(right: 8, bottom: 4),
+                child: GestureDetector(
+                  onTap: _isSending ? null : _showMediaUrlDialog,
+                  child: Icon(
+                    Icons.image_outlined,
+                    color: Colors.grey[600],
+                    size: 28,
+                  ),
+                ),
+              ),
             Expanded(
               child: TextField(
                 controller: _messageController,
@@ -1550,6 +1713,10 @@ class _EventChatScreenState extends State<EventChatScreen> {
           ),
         ),
       );
+    }
+
+    if (message.type == EventMessageType.image && message.mediaUrl != null) {
+      return _buildMediaMessageBubble(message, isCurrentUser, isStaff: isStaff);
     }
 
     if (message.isDeleted) {
@@ -1662,14 +1829,7 @@ class _EventChatScreenState extends State<EventChatScreen> {
                           ),
                         ),
                       ),
-                    Text(
-                      message.content,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: isCurrentUser ? Colors.white : Colors.black87,
-                        height: 1.3,
-                      ),
-                    ),
+                    _buildMessageContent(message.content, isCurrentUser),
                     const SizedBox(height: 4),
                     Text(
                       _formatTime(message.createdAt),
@@ -1704,6 +1864,402 @@ class _EventChatScreenState extends State<EventChatScreen> {
           ],
         ],
       ),
+    );
+  }
+
+  // ============ MEDIA MESSAGE HELPERS ============
+
+  static final _imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+
+  bool _isImageUrl(String url) {
+    final lower = url.toLowerCase().split('?').first;
+    return _imageExtensions.any((ext) => lower.endsWith('.$ext'));
+  }
+
+  /// Extract YouTube video ID for thumbnail
+  String? _getYouTubeVideoId(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return null;
+    if (uri.host.contains('youtube.com')) {
+      return uri.queryParameters['v'];
+    } else if (uri.host.contains('youtu.be')) {
+      return uri.pathSegments.isNotEmpty ? uri.pathSegments.first : null;
+    }
+    return null;
+  }
+
+  Widget _buildMediaMessageBubble(EventMessage message, bool isCurrentUser, {required bool isStaff}) {
+    final mediaUrl = message.mediaUrl!;
+    final isImage = _isImageUrl(mediaUrl);
+
+    return GestureDetector(
+      onLongPress: isStaff ? () => _showStaffModOptions(message) : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Column(
+          children: [
+            // Media content — full width, no bubble
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: isImage
+                  ? _buildInlineImage(mediaUrl)
+                  : _buildVideoPreviewCard(mediaUrl, false),
+            ),
+
+            // Caption below media (if any)
+            if (message.content.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  message.content,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[700],
+                    height: 1.3,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInlineImage(String url) {
+    return GestureDetector(
+      onTap: () => _launchUrl(url),
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        errorBuilder: (context, error, stackTrace) => Container(
+          height: 120,
+          color: Colors.grey[200],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.broken_image, color: Colors.grey[500], size: 32),
+                const SizedBox(height: 4),
+                Text('Failed to load image', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              ],
+            ),
+          ),
+        ),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            height: 150,
+            color: Colors.grey[200],
+            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildVideoPreviewCard(String url, bool isCurrentUser) {
+    final previewInfo = _getLinkPreviewInfo(url);
+    final youtubeId = _getYouTubeVideoId(url);
+
+    return GestureDetector(
+      onTap: () => _launchUrl(url),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // YouTube thumbnail or placeholder
+          if (youtubeId != null)
+            Image.network(
+              'https://img.youtube.com/vi/$youtubeId/hqdefault.jpg',
+              width: double.infinity,
+              height: 160,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => _buildVideoPlaceholder(previewInfo),
+            )
+          else
+            _buildVideoPlaceholder(previewInfo),
+
+          // Play button overlay
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: (previewInfo?.color ?? Colors.blue).withOpacity(0.9),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.play_arrow, color: Colors.white, size: 36),
+          ),
+
+          // Platform label
+          if (previewInfo != null)
+            Positioned(
+              left: 8,
+              top: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(previewInfo.icon, color: Colors.white, size: 14),
+                    const SizedBox(width: 4),
+                    Text(
+                      previewInfo.platform,
+                      style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVideoPlaceholder(_LinkPreviewInfo? previewInfo) {
+    return Container(
+      width: double.infinity,
+      height: 160,
+      color: (previewInfo?.color ?? Colors.grey).withOpacity(0.15),
+      child: Center(
+        child: Icon(
+          previewInfo?.icon ?? Icons.videocam,
+          size: 48,
+          color: (previewInfo?.color ?? Colors.grey).withOpacity(0.4),
+        ),
+      ),
+    );
+  }
+
+  // ============ RICH LINK HELPERS ============
+
+  static final RegExp _urlRegex = RegExp(
+    r'https?://[^\s]+',
+    caseSensitive: false,
+  );
+
+  Future<void> _launchUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  /// Detect platform from URL
+  _LinkPreviewInfo? _getLinkPreviewInfo(String url) {
+    final lower = url.toLowerCase();
+    if (lower.contains('youtube.com') || lower.contains('youtu.be')) {
+      return _LinkPreviewInfo(
+        platform: 'YouTube',
+        icon: Icons.play_circle_fill,
+        color: Colors.red,
+        label: 'Watch on YouTube',
+      );
+    } else if (lower.contains('facebook.com') || lower.contains('fb.watch') || lower.contains('fb.gg')) {
+      return _LinkPreviewInfo(
+        platform: 'Facebook',
+        icon: Icons.facebook,
+        color: const Color(0xFF1877F2),
+        label: 'Watch on Facebook',
+      );
+    } else if (lower.contains('instagram.com')) {
+      return _LinkPreviewInfo(
+        platform: 'Instagram',
+        icon: Icons.camera_alt,
+        color: const Color(0xFFE4405F),
+        label: 'View on Instagram',
+      );
+    } else if (lower.contains('tiktok.com')) {
+      return _LinkPreviewInfo(
+        platform: 'TikTok',
+        icon: Icons.music_note,
+        color: Colors.black,
+        label: 'Watch on TikTok',
+      );
+    } else if (lower.contains('zoom.us') || lower.contains('zoom.com')) {
+      return _LinkPreviewInfo(
+        platform: 'Zoom',
+        icon: Icons.videocam,
+        color: const Color(0xFF2D8CFF),
+        label: 'Join Zoom Meeting',
+      );
+    } else if (lower.contains('meet.google.com')) {
+      return _LinkPreviewInfo(
+        platform: 'Google Meet',
+        icon: Icons.videocam,
+        color: const Color(0xFF00897B),
+        label: 'Join Google Meet',
+      );
+    } else if (lower.contains('twitch.tv')) {
+      return _LinkPreviewInfo(
+        platform: 'Twitch',
+        icon: Icons.live_tv,
+        color: const Color(0xFF9146FF),
+        label: 'Watch on Twitch',
+      );
+    }
+    return null;
+  }
+
+  Widget _buildMessageContent(String content, bool isCurrentUser) {
+    final urlMatches = _urlRegex.allMatches(content).toList();
+
+    if (urlMatches.isEmpty) {
+      // No URLs — plain text
+      return Text(
+        content,
+        style: TextStyle(
+          fontSize: 15,
+          color: isCurrentUser ? Colors.white : Colors.black87,
+          height: 1.3,
+        ),
+      );
+    }
+
+    final widgets = <Widget>[];
+    int lastEnd = 0;
+
+    for (final match in urlMatches) {
+      // Add text before this URL
+      if (match.start > lastEnd) {
+        final textBefore = content.substring(lastEnd, match.start).trim();
+        if (textBefore.isNotEmpty) {
+          widgets.add(Text(
+            textBefore,
+            style: TextStyle(
+              fontSize: 15,
+              color: isCurrentUser ? Colors.white : Colors.black87,
+              height: 1.3,
+            ),
+          ));
+        }
+      }
+
+      final url = match.group(0)!;
+      final previewInfo = _getLinkPreviewInfo(url);
+
+      if (previewInfo != null) {
+        // Rich link preview card for known platforms
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: GestureDetector(
+              onTap: () => _launchUrl(url),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isCurrentUser
+                      ? Colors.white.withOpacity(0.15)
+                      : Colors.grey[100],
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isCurrentUser
+                        ? Colors.white.withOpacity(0.25)
+                        : Colors.grey[300]!,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: previewInfo.color.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        previewInfo.icon,
+                        color: previewInfo.color,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            previewInfo.platform,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: isCurrentUser
+                                  ? Colors.white.withOpacity(0.8)
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            previewInfo.label,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: isCurrentUser
+                                  ? Colors.white
+                                  : previewInfo.color,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Icon(
+                      Icons.open_in_new,
+                      size: 16,
+                      color: isCurrentUser
+                          ? Colors.white.withOpacity(0.7)
+                          : Colors.grey[500],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      } else {
+        // Generic URL — tappable link text
+        widgets.add(
+          GestureDetector(
+            onTap: () => _launchUrl(url),
+            child: Text(
+              url,
+              style: TextStyle(
+                fontSize: 15,
+                color: isCurrentUser ? Colors.lightBlueAccent : Colors.blue[700],
+                decoration: TextDecoration.underline,
+                decorationColor: isCurrentUser ? Colors.lightBlueAccent : Colors.blue[700],
+                height: 1.3,
+              ),
+            ),
+          ),
+        );
+      }
+
+      lastEnd = match.end;
+    }
+
+    // Add remaining text after last URL
+    if (lastEnd < content.length) {
+      final textAfter = content.substring(lastEnd).trim();
+      if (textAfter.isNotEmpty) {
+        widgets.add(Text(
+          textAfter,
+          style: TextStyle(
+            fontSize: 15,
+            color: isCurrentUser ? Colors.white : Colors.black87,
+            height: 1.3,
+          ),
+        ));
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
     );
   }
 
@@ -1968,4 +2524,19 @@ class _VoucherExpiryCountdownState extends State<VoucherExpiryCountdown> {
       ],
     );
   }
+}
+
+/// Data class for link preview info
+class _LinkPreviewInfo {
+  final String platform;
+  final IconData icon;
+  final Color color;
+  final String label;
+
+  const _LinkPreviewInfo({
+    required this.platform,
+    required this.icon,
+    required this.color,
+    required this.label,
+  });
 }

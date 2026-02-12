@@ -198,6 +198,7 @@ class EventService {
     required String senderEmail,
     required String content,
     EventMessageType type = EventMessageType.text,
+    String? mediaUrl,
   }) async {
     // Check if user is banned from this event
     final banStatus = await getUserBanStatus(eventId, senderId);
@@ -218,6 +219,7 @@ class EventService {
       content: content,
       createdAt: DateTime.now(),
       type: type,
+      mediaUrl: mediaUrl,
     );
 
     await _eventsRef

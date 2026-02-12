@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum EventMessageType {
   text,    // Regular text message
   system,  // System message (event started, voucher claimed, etc.)
+  image,   // Media message (image or video URL) — staff only
 }
 
 /// Represents a message in an event chat
@@ -16,6 +17,7 @@ class EventMessage {
   final String content;
   final DateTime createdAt;
   final EventMessageType type;
+  final String? mediaUrl;
   final DateTime? deletedAt;
   final String? deletedBy;
 
@@ -28,6 +30,7 @@ class EventMessage {
     required this.content,
     required this.createdAt,
     this.type = EventMessageType.text,
+    this.mediaUrl,
     this.deletedAt,
     this.deletedBy,
   });
@@ -45,6 +48,7 @@ class EventMessage {
         (e) => e.name == json['type'],
         orElse: () => EventMessageType.text,
       ),
+      mediaUrl: json['mediaUrl'] as String?,
       deletedAt: json['deletedAt'] != null ? _parseTimestamp(json['deletedAt']) : null,
       deletedBy: json['deletedBy'] as String?,
     );
@@ -59,6 +63,7 @@ class EventMessage {
       'content': content,
       'createdAt': Timestamp.fromDate(createdAt),
       'type': type.name,
+      'mediaUrl': mediaUrl,
       'deletedAt': deletedAt != null ? Timestamp.fromDate(deletedAt!) : null,
       'deletedBy': deletedBy,
     };
@@ -73,6 +78,7 @@ class EventMessage {
     String? content,
     DateTime? createdAt,
     EventMessageType? type,
+    String? mediaUrl,
     DateTime? deletedAt,
     String? deletedBy,
   }) {
@@ -85,6 +91,7 @@ class EventMessage {
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
       type: type ?? this.type,
+      mediaUrl: mediaUrl ?? this.mediaUrl,
       deletedAt: deletedAt ?? this.deletedAt,
       deletedBy: deletedBy ?? this.deletedBy,
     );
@@ -105,6 +112,9 @@ class EventMessage {
 
   /// Check if this is a system message
   bool get isSystemMessage => type == EventMessageType.system;
+
+  /// Check if this is a media message (image/video)
+  bool get isMediaMessage => type == EventMessageType.image;
 
   /// Get the display content (shows placeholder if deleted)
   String get displayContent {

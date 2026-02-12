@@ -14,6 +14,7 @@ import 'career_advisory_screen.dart';
 import 'forum_list_screen.dart';
 import 'event_chat_screen.dart';
 import 'event_list_screen.dart';
+import '../widgets/create_event_sheet.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -472,107 +473,158 @@ class _CommunityScreenState extends State<CommunityScreen>
     );
   }
 
+  void _showCreateEventSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const CreateEventSheet(),
+    );
+  }
+
   Widget _buildLiveEventsTab() {
     final currentUser = User.currentUser;
 
-    return StreamBuilder<List<Event>>(
-      stream: _eventService.getActiveEventsStream(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return Stack(
+      children: [
+        StreamBuilder<List<Event>>(
+          stream: _eventService.getActiveEventsStream(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        final events = snapshot.data ?? [];
+            final events = snapshot.data ?? [];
 
-        if (events.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.event_busy,
-                  size: 64,
-                  color: Colors.grey[400],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No live events',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Check back later for flash sales and events!',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                  ),
-                ),
-                if (currentUser.isStaff) ...[
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const EventListScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Manage Events'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange,
-                      foregroundColor: Colors.white,
+            if (events.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.event_busy,
+                      size: 64,
+                      color: Colors.grey[400],
                     ),
-                  ),
-                ],
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(12),
-          itemCount: events.length + (currentUser.isStaff ? 1 : 0),
-          itemBuilder: (context, index) {
-            // Staff manage button at the end
-            if (currentUser.isStaff && index == events.length) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const EventListScreen(),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No live events',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[600],
                       ),
-                    );
-                  },
-                  icon: const Icon(Icons.settings),
-                  label: const Text('Manage All Events'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.deepOrange,
-                    side: const BorderSide(color: Colors.deepOrange),
-                  ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Check back later for flash sales and events!',
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                    if (currentUser.isStaff) ...[
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const EventListScreen(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.add),
+                        label: const Text('Manage Events'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepOrange,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               );
             }
-            return _buildEventCard(events[index]);
+
+            return ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: events.length + (currentUser.isStaff ? 1 : 0),
+              itemBuilder: (context, index) {
+                // Staff manage button at the end
+                if (currentUser.isStaff && index == events.length) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 72),
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EventListScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.settings),
+                      label: const Text('Manage All Events'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.deepOrange,
+                        side: const BorderSide(color: Colors.deepOrange),
+                      ),
+                    ),
+                  );
+                }
+                return _buildEventCard(events[index]);
+              },
+            );
           },
-        );
-      },
+        ),
+
+        // FAB for staff to create events
+        if (currentUser.isStaff)
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: FloatingActionButton.extended(
+              heroTag: 'createEvent',
+              onPressed: _showCreateEventSheet,
+              backgroundColor: Colors.deepOrange,
+              foregroundColor: Colors.white,
+              icon: const Icon(Icons.add),
+              label: const Text('Create Event'),
+            ),
+          ),
+      ],
     );
   }
 
   Widget _buildEventCard(Event event) {
+    final currentUser = User.currentUser;
     final isActive = event.isActive;
     final isPending = event.isPending;
 
     return GestureDetector(
       onTap: () {
+        // Block non-staff users from entering pending events
+        if (isPending && !currentUser.isStaff) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.schedule, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '"${event.title}" hasn\'t started yet. Come back when the event is live!',
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.blue[700],
+              duration: const Duration(seconds: 3),
+            ),
+          );
+          return;
+        }
+
         Navigator.push(
           context,
           MaterialPageRoute(

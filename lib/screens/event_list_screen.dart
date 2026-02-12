@@ -162,6 +162,30 @@ class _EventListScreenState extends State<EventListScreen>
   }
 
   void _openEvent(Event event) {
+    final currentUser = User.currentUser;
+
+    // Block non-staff users from entering pending events
+    if (event.isPending && !currentUser.isStaff) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.schedule, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '"${event.title}" hasn\'t started yet. Come back when the event is live!',
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.blue[700],
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
