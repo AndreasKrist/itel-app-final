@@ -10,6 +10,7 @@ import '../models/event_ban.dart';
 import '../models/claimed_voucher.dart';
 import '../models/user.dart';
 import '../services/event_service.dart';
+import '../services/event_notification_service.dart';
 import '../utils/working_hours_helper.dart';
 import '../widgets/create_event_voucher_sheet.dart';
 import 'direct_message_chat_screen.dart';
@@ -23,11 +24,14 @@ class EventChatScreen extends StatefulWidget {
   State<EventChatScreen> createState() => _EventChatScreenState();
 }
 
-class _EventChatScreenState extends State<EventChatScreen> {
+class _EventChatScreenState extends State<EventChatScreen>
+    with WidgetsBindingObserver {
   final EventService _eventService = EventService();
+  final EventNotificationService _notificationService = EventNotificationService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
+  Event? _currentEvent; // Track for re-scheduling on app resume
 
   bool _isSending = false;
   bool _isVoucherExpanded = true;
@@ -38,11 +42,21 @@ class _EventChatScreenState extends State<EventChatScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadClaimedVouchers();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _currentEvent != null && _currentEvent!.isActive) {
+      // Re-schedule on resume — the service handles missed notifications smartly
+      _notificationService.scheduleEventNotifications(_currentEvent!);
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _messageController.dispose();
     _scrollController.dispose();
     _focusNode.dispose();
@@ -904,6 +918,14 @@ class _EventChatScreenState extends State<EventChatScreen> {
               ),
             ),
           );
+        }
+
+        // Track current event for re-scheduling on app resume
+        if (_currentEvent?.id != event.id || _currentEvent == null) {
+          _currentEvent = event;
+          if (event.isActive) {
+            _notificationService.scheduleEventNotifications(event);
+          }
         }
 
         // Block non-staff users from accessing pending events

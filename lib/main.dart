@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
 import 'services/firebase_messaging_service.dart';
+import 'services/event_notification_service.dart';
 import 'screens/home_screen.dart';
 import 'screens/courses_screen.dart';
 import 'screens/trending_screen.dart';
@@ -38,6 +39,15 @@ void main() async {
     final messagingService = FirebaseMessagingService();
     await messagingService.initialize();
     print('Firebase Messaging initialized successfully');
+
+    // Initialize local notifications for event countdowns
+    try {
+      final eventNotificationService = EventNotificationService();
+      await eventNotificationService.initialize();
+      print('Event Notification Service initialized successfully');
+    } catch (e) {
+      print('Event Notification Service initialization error: $e');
+    }
   } catch (e) {
     print('Firebase initialization error: $e');
     // Continue running the app even if Firebase fails

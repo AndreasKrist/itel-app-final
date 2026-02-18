@@ -10,7 +10,11 @@
       "Bash(dart analyze:*)",
       "Bash(dart compile kernel:*)",
       "Bash(flutter pub:*)",
-      "Bash(flutter clean:*)"
+      "Bash(flutter clean:*)",
+      "Bash(flutter run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ncheckpoint: state before event countdown local notifications\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(adb logcat:*)"
     ]
   }
 }

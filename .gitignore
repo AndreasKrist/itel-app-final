@@ -39,6 +39,11 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# Local/machine-specific files
+.claude/settings.local.json
+logcat_dump.txt
+nul
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
