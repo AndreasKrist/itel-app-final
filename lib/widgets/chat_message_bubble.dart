@@ -198,6 +198,7 @@ class ChatMessageBubble extends StatelessWidget {
         onTap: message.eventId != null && onTapEvent != null
             ? () => onTapEvent!(message.eventId!)
             : null,
+        onLongPress: onLongPress,
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

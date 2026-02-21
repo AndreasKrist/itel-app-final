@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/event.dart';
 import '../models/event_voucher.dart';
@@ -11,7 +12,6 @@ import '../models/claimed_voucher.dart';
 import '../models/user.dart';
 import '../services/event_service.dart';
 import '../services/event_notification_service.dart';
-import '../utils/working_hours_helper.dart';
 import '../widgets/create_event_voucher_sheet.dart';
 import 'direct_message_chat_screen.dart';
 
@@ -242,7 +242,7 @@ class _EventChatScreenState extends State<EventChatScreen>
     if (currentUser.id.isEmpty || currentUser.email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please sign in to claim e-Voucher'),
+          content: Text('Please sign in to claim E-Voucher'),
           backgroundColor: Colors.orange,
         ),
       );
@@ -271,16 +271,30 @@ class _EventChatScreenState extends State<EventChatScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.check_circle, color: Colors.white),
+                Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Icon(Icons.check_circle, color: Colors.white),
+                ),
                 SizedBox(width: 8),
                 Expanded(
-                  child: Text('e-Voucher claimed! Our team will email or call you to redeem the e-Voucher.'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'E-Voucher claimed successfully!',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text('You can view and redeem it in your Profile.'),
+                    ],
+                  ),
                 ),
               ],
             ),
             backgroundColor: Colors.green,
-            duration: Duration(seconds: 5),
+            duration: Duration(seconds: 6),
           ),
         );
       }
@@ -696,7 +710,8 @@ class _EventChatScreenState extends State<EventChatScreen>
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) => SafeArea(
-        child: Column(
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 8),
@@ -753,8 +768,8 @@ class _EventChatScreenState extends State<EventChatScreen>
             if (isStaff)
               ListTile(
                 leading: const Icon(Icons.add_circle, color: Colors.green),
-                title: const Text('Add e-Voucher'),
-                subtitle: const Text('Create a new e-Voucher for this event', style: TextStyle(fontSize: 12)),
+                title: const Text('Add E-Voucher'),
+                subtitle: const Text('Create a new E-Voucher for this event', style: TextStyle(fontSize: 12)),
                 onTap: () {
                   Navigator.pop(context);
                   _showAddVoucherSheet(event);
@@ -795,6 +810,7 @@ class _EventChatScreenState extends State<EventChatScreen>
             const SizedBox(height: 16),
           ],
         ),
+        ),
       ),
     );
   }
@@ -832,7 +848,7 @@ class _EventChatScreenState extends State<EventChatScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Event'),
-        content: Text('Are you sure you want to delete "${event.title}"?\n\nThis will also delete all messages and e-Vouchers. This action cannot be undone.'),
+        content: Text('Are you sure you want to delete "${event.title}"?\n\nThis will also delete all messages and E-Vouchers. This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -1227,27 +1243,20 @@ class _EventChatScreenState extends State<EventChatScreen>
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.local_offer, color: Colors.white, size: 16),
-                                const SizedBox(width: 6),
-                                Text(
-                                  '${vouchers.length} e-Voucher${vouchers.length != 1 ? 's' : ''}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.local_offer, color: Colors.white, size: 16),
+                              const SizedBox(width: 6),
+                              const Text(
+                                'E-Vouchers',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                           const Spacer(),
                           // Add voucher button for staff
@@ -1293,7 +1302,7 @@ class _EventChatScreenState extends State<EventChatScreen>
                               Icon(Icons.local_offer_outlined, color: Colors.white.withOpacity(0.7), size: 32),
                               const SizedBox(height: 8),
                               Text(
-                                'No e-Vouchers yet',
+                                'No E-Vouchers yet',
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.9),
                                   fontWeight: FontWeight.w500,
@@ -1301,7 +1310,7 @@ class _EventChatScreenState extends State<EventChatScreen>
                               ),
                               if (isStaff)
                                 Text(
-                                  'Tap + to add an e-Voucher',
+                                  'Tap + to add an E-Voucher',
                                   style: TextStyle(
                                     color: Colors.white.withOpacity(0.7),
                                     fontSize: 12,
@@ -1366,7 +1375,7 @@ class _EventChatScreenState extends State<EventChatScreen>
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    'Swipe to see more e-Vouchers',
+                                    'Swipe to see more E-Vouchers',
                                     style: TextStyle(
                                       color: Colors.white.withOpacity(0.7),
                                       fontSize: 12,
@@ -1392,83 +1401,113 @@ class _EventChatScreenState extends State<EventChatScreen>
     final isClaiming = _claimingVouchers[voucher.id] ?? false;
     final canClaim = event.isActive && voucher.canBeClaimed && !hasClaimed;
     final hasCustomExpiry = voucher.expiresAt != null;
+    final claimedVoucher = _claimedVouchersMap[voucher.id];
+    final hasImage = voucher.imageUrl != null && voucher.imageUrl!.isNotEmpty;
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
       child: Container(
-        padding: const EdgeInsets.all(10),
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
+          color: hasImage ? Colors.black : Colors.white.withOpacity(0.15),
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: hasClaimed
+                ? Colors.greenAccent
+                : Colors.white.withOpacity(0.4),
+            width: hasClaimed ? 2.5 : 1.5,
+          ),
+          image: hasImage
+              ? DecorationImage(
+                  image: NetworkImage(voucher.imageUrl!),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.45),
+                    BlendMode.darken,
+                  ),
+                )
+              : null,
         ),
+        child: Container(
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Voucher header - description on top, discount below
-            Column(
+            // Title + claimed badge on same row
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Description (top)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        voucher.description,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                Expanded(
+                  child: hasClaimed
+                      ? Text(
+                          voucher.description,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.75),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : AutoSizeText(
+                          voucher.description,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 2,
+                          minFontSize: 10,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    // Claimed badge (when already claimed) - stays with description
-                    if (hasClaimed)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.check, color: Colors.white, size: 12),
-                            SizedBox(width: 4),
-                            Text(
-                              'Claimed',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
                 ),
-                const SizedBox(height: 6),
-                // Discount badge (compact)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    voucher.discountText,
-                    style: TextStyle(
-                      color: Colors.deepOrange[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                if (hasClaimed) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.green[600],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.white, size: 13),
+                        SizedBox(width: 4),
+                        Text(
+                          'Claimed',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                ],
               ],
             ),
+            const SizedBox(height: 10),
 
+            // Discount badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: hasClaimed
+                    ? Colors.white.withOpacity(0.15)
+                    : Colors.white,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                voucher.discountText,
+                style: TextStyle(
+                  color: hasClaimed
+                      ? Colors.white.withOpacity(0.65)
+                      : Colors.deepOrange[700],
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+            ),
             const SizedBox(height: 8),
 
             // Bottom row: Expires on left, CLAIM button on right
@@ -1547,9 +1586,9 @@ class _EventChatScreenState extends State<EventChatScreen>
                   const SizedBox(width: 6),
                   Text(
                     !voucher.isActive
-                        ? 'e-Voucher inactive'
+                        ? 'E-Voucher inactive'
                         : voucher.isExpired
-                            ? 'e-Voucher expired'
+                            ? 'E-Voucher expired'
                             : voucher.isFullyClaimed
                                 ? 'Sold out'
                                 : event.isPending
@@ -1564,6 +1603,7 @@ class _EventChatScreenState extends State<EventChatScreen>
               ),
             ],
           ],
+        ),
         ),
       ),
     );
@@ -1580,50 +1620,6 @@ class _EventChatScreenState extends State<EventChatScreen>
   }
 
   Widget _buildMessageInput() {
-    // Check working hours
-    if (!WorkingHoursHelper.isWithinWorkingHours()) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          border: Border(
-            top: BorderSide(color: Colors.grey[300]!),
-          ),
-        ),
-        child: SafeArea(
-          child: Row(
-            children: [
-              Icon(Icons.access_time, color: Colors.grey[600], size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Chat unavailable outside working hours',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Mon-Fri, 9 AM - 6 PM SGT',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[500],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

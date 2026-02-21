@@ -24,6 +24,8 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
   final _descriptionController = TextEditingController();
   final _discountController = TextEditingController();
   final _maxClaimsController = TextEditingController();
+  final _originalPriceController = TextEditingController();
+  final _imageUrlController = TextEditingController();
 
   final EventService _eventService = EventService();
 
@@ -40,6 +42,8 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
     _descriptionController.dispose();
     _discountController.dispose();
     _maxClaimsController.dispose();
+    _originalPriceController.dispose();
+    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -85,13 +89,19 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
         expiresAt: _hasExpiry ? _expiresAt : null,
         createdBy: currentUser.id,
         createdByName: currentUser.name,
+        originalPrice: _originalPriceController.text.trim().isNotEmpty
+            ? double.tryParse(_originalPriceController.text.trim())
+            : null,
+        imageUrl: _imageUrlController.text.trim().isNotEmpty
+            ? _imageUrlController.text.trim()
+            : null,
       );
 
       if (mounted) {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('e-Voucher created successfully!'),
+            content: Text('E-Voucher created successfully!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -100,7 +110,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error creating e-Voucher: $e'),
+            content: Text('Error creating E-Voucher: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -163,7 +173,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Add e-Voucher',
+                              'Add E-Voucher',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -203,7 +213,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                           TextFormField(
                             controller: _codeController,
                             decoration: const InputDecoration(
-                              labelText: 'e-Voucher Code',
+                              labelText: 'E-Voucher Code',
                               hintText: 'e.g., FLASH50',
                               prefixIcon: Icon(Icons.confirmation_number),
                               border: OutlineInputBorder(),
@@ -211,7 +221,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                             textCapitalization: TextCapitalization.characters,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Please enter an e-Voucher code';
+                                return 'Please enter an E-Voucher code';
                               }
                               if (value.trim().length < 3) {
                                 return 'Code must be at least 3 characters';
@@ -225,7 +235,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                           TextFormField(
                             controller: _descriptionController,
                             decoration: const InputDecoration(
-                              labelText: 'e-Voucher Description',
+                              labelText: 'E-Voucher Description',
                               hintText: 'e.g., 50% off Flutter Course',
                               prefixIcon: Icon(Icons.text_snippet),
                               border: OutlineInputBorder(),
@@ -233,11 +243,71 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                             maxLines: 2,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Please enter an e-Voucher description';
+                                return 'Please enter an E-Voucher description';
                               }
                               return null;
                             },
                           ),
+                          const SizedBox(height: 16),
+
+                          // Original Price
+                          TextFormField(
+                            controller: _originalPriceController,
+                            decoration: const InputDecoration(
+                              labelText: 'Price (\$)',
+                              hintText: 'e.g., 2999',
+                              prefixIcon: Icon(Icons.sell_outlined),
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            validator: (value) {
+                              if (value != null && value.trim().isNotEmpty) {
+                                final num = double.tryParse(value.trim());
+                                if (num == null || num <= 0) {
+                                  return 'Please enter a valid price';
+                                }
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Image URL
+                          TextFormField(
+                            controller: _imageUrlController,
+                            decoration: const InputDecoration(
+                              labelText: 'Background Image URL (optional)',
+                              hintText: 'Paste image link here',
+                              prefixIcon: Icon(Icons.image),
+                              border: OutlineInputBorder(),
+                            ),
+                            onChanged: (_) => setState(() {}),
+                          ),
+                          if (_imageUrlController.text.trim().isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                _imageUrlController.text.trim(),
+                                height: 100,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red[50],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Center(
+                                    child: Text(
+                                      'Could not load image',
+                                      style: TextStyle(color: Colors.red, fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 20),
 
                           // Discount Type
@@ -390,9 +460,9 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                               children: [
                                 SwitchListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  title: const Text('Set e-Voucher expiry'),
+                                  title: const Text('Set E-Voucher expiry'),
                                   subtitle: const Text(
-                                    'e-Voucher expires at specific time (otherwise follows event)',
+                                    'E-Voucher expires at specific time (otherwise follows event)',
                                     style: TextStyle(fontSize: 12),
                                   ),
                                   value: _hasExpiry,
@@ -482,7 +552,7 @@ class _CreateEventVoucherSheetState extends State<CreateEventVoucherSheet> {
                                         Icon(Icons.add),
                                         SizedBox(width: 8),
                                         Text(
-                                          'Create e-Voucher',
+                                          'Create E-Voucher',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,

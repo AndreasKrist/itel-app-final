@@ -15,6 +15,8 @@ class ClaimedVoucher {
   final DateTime voucherStartTime; // When voucher started (to calculate delay)
   final bool isUsed;             // Whether voucher has been redeemed
   final DateTime? usedAt;        // When it was used
+  final double? originalPrice;   // Original course price before discount
+  final double? discountedPrice; // Price after discount applied
 
   ClaimedVoucher({
     required this.id,
@@ -30,6 +32,8 @@ class ClaimedVoucher {
     required this.voucherStartTime,
     this.isUsed = false,
     this.usedAt,
+    this.originalPrice,
+    this.discountedPrice,
   });
 
   /// Get human-readable claim speed for analytics
@@ -69,6 +73,8 @@ class ClaimedVoucher {
       usedAt: data['usedAt'] != null
           ? (data['usedAt'] as Timestamp).toDate()
           : null,
+      originalPrice: (data['originalPrice'] as num?)?.toDouble(),
+      discountedPrice: (data['discountedPrice'] as num?)?.toDouble(),
     );
   }
 
@@ -87,6 +93,8 @@ class ClaimedVoucher {
       'voucherStartTime': Timestamp.fromDate(voucherStartTime),
       'isUsed': isUsed,
       'usedAt': usedAt != null ? Timestamp.fromDate(usedAt!) : null,
+      'originalPrice': originalPrice,
+      'discountedPrice': discountedPrice,
     };
   }
 
@@ -105,6 +113,8 @@ class ClaimedVoucher {
     DateTime? voucherStartTime,
     bool? isUsed,
     DateTime? usedAt,
+    double? originalPrice,
+    double? discountedPrice,
   }) {
     return ClaimedVoucher(
       id: id ?? this.id,
@@ -120,6 +130,8 @@ class ClaimedVoucher {
       voucherStartTime: voucherStartTime ?? this.voucherStartTime,
       isUsed: isUsed ?? this.isUsed,
       usedAt: usedAt ?? this.usedAt,
+      originalPrice: originalPrice ?? this.originalPrice,
+      discountedPrice: discountedPrice ?? this.discountedPrice,
     );
   }
 }

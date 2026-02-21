@@ -1,4 +1,5 @@
 // lib/screens/community_screen.dart
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../models/event.dart';
@@ -237,7 +238,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                                   children: [
                                     const Icon(Icons.flash_on, size: 20),
                                     const SizedBox(width: 4),
-                                    const Text('Live Events'),
+                                    const Text('Live'),
                                     if (hasEvents) ...[
                                       const SizedBox(width: 4),
                                       Container(
@@ -652,7 +653,7 @@ class _CommunityScreenState extends State<CommunityScreen>
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: Row(
             children: [
               // Event icon
@@ -665,36 +666,36 @@ class _CommunityScreenState extends State<CommunityScreen>
                 child: Icon(
                   isActive ? Icons.flash_on : Icons.schedule,
                   color: Colors.white,
-                  size: 24,
+                  size: 26,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 14),
               // Event details
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    AutoSizeText(
                       event.title,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      minFontSize: 10,
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       event.description,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontSize: 12,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Icon(
@@ -722,7 +723,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -733,23 +734,23 @@ class _CommunityScreenState extends State<CommunityScreen>
                         Icon(
                           isActive ? Icons.live_tv : Icons.upcoming,
                           color: Colors.white,
-                          size: 12,
+                          size: 14,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           isActive ? 'LIVE' : 'SOON',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 10,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),

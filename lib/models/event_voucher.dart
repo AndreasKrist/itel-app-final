@@ -23,6 +23,8 @@ class EventVoucher {
   final bool isActive;       // Staff can deactivate a voucher
   final DateTime? expiresAt; // null = follows event end time
   final bool showRemainingCount;  // Whether to show remaining claims to users
+  final double? originalPrice;   // Optional: original course price before discount
+  final String? imageUrl;        // Optional: background image URL for the voucher card
 
   EventVoucher({
     required this.id,
@@ -39,6 +41,8 @@ class EventVoucher {
     this.isActive = true,
     this.expiresAt,
     this.showRemainingCount = true,
+    this.originalPrice,
+    this.imageUrl,
   });
 
   /// Check if voucher has reached max claims
@@ -69,6 +73,16 @@ class EventVoucher {
     if (expiresAt == null) return null;
     final remaining = expiresAt!.difference(DateTime.now());
     return remaining.isNegative ? Duration.zero : remaining;
+  }
+
+  /// Get price after discount applied (null if no originalPrice set)
+  double? get discountedPrice {
+    if (originalPrice == null) return null;
+    if (discountType == DiscountType.percentage) {
+      return originalPrice! * (1 - discountValue / 100);
+    } else {
+      return (originalPrice! - discountValue).clamp(0, double.infinity);
+    }
   }
 
   /// Get formatted discount text
@@ -108,6 +122,8 @@ class EventVoucher {
       isActive: data['isActive'] ?? true,
       expiresAt: (data['expiresAt'] as Timestamp?)?.toDate(),
       showRemainingCount: data['showRemainingCount'] ?? true,
+      originalPrice: (data['originalPrice'] as num?)?.toDouble(),
+      imageUrl: data['imageUrl'],
     );
   }
 
@@ -127,6 +143,8 @@ class EventVoucher {
       'isActive': isActive,
       'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
       'showRemainingCount': showRemainingCount,
+      'originalPrice': originalPrice,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -146,6 +164,8 @@ class EventVoucher {
     bool? isActive,
     DateTime? expiresAt,
     bool? showRemainingCount,
+    double? originalPrice,
+    String? imageUrl,
   }) {
     return EventVoucher(
       id: id ?? this.id,
@@ -162,6 +182,8 @@ class EventVoucher {
       isActive: isActive ?? this.isActive,
       expiresAt: expiresAt ?? this.expiresAt,
       showRemainingCount: showRemainingCount ?? this.showRemainingCount,
+      originalPrice: originalPrice ?? this.originalPrice,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }

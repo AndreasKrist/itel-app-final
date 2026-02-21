@@ -14,7 +14,10 @@
       "Bash(flutter run:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\ncheckpoint: state before event countdown local notifications\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(adb logcat:*)"
+      "Bash(adb logcat:*)",
+      "Bash(find:*)",
+      "Bash(xargs sed:*)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

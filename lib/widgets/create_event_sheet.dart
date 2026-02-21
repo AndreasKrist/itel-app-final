@@ -128,7 +128,7 @@ class _CreateEventSheetState extends State<CreateEventSheet> {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Event created! You can now add e-Vouchers inside the event.'),
+            content: Text('Event created! You can now add E-Vouchers inside the event.'),
             backgroundColor: Colors.green,
           ),
         );
@@ -223,7 +223,7 @@ class _CreateEventSheetState extends State<CreateEventSheet> {
                               ),
                             ),
                             Text(
-                              'Create an event with chat. Add e-Vouchers later.',
+                              'Create an event with chat. Add E-Vouchers later.',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
@@ -400,7 +400,7 @@ class _CreateEventSheetState extends State<CreateEventSheet> {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    'After creating the event, you can add e-Vouchers inside the event chat.',
+                                    'After creating the event, you can add E-Vouchers inside the event chat.',
                                     style: TextStyle(
                                       color: Colors.blue[700],
                                       fontSize: 13,

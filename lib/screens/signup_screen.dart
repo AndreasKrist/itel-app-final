@@ -297,6 +297,7 @@ Future<void> _signup() async {
                     controller: _companyAddressController,
                     maxLines: 3,
                     keyboardType: TextInputType.multiline,
+                    style: const TextStyle(fontSize: 14),
                     decoration: InputDecoration(
                       hintText: 'Company Address',
                       prefixIcon: Padding(
@@ -481,6 +482,7 @@ Future<void> _signup() async {
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
+        style: const TextStyle(fontSize: 14),
         decoration: InputDecoration(
           hintText: hintText,
           prefixIcon: Icon(prefixIcon, color: Colors.blue[400]),

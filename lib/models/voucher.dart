@@ -22,6 +22,7 @@ class Voucher {
   final DateTime createdAt;
   final String createdBy;    // Admin user ID who created it
   final bool showRemainingCount;  // Whether to show remaining claims to users
+  final double? originalPrice;   // Optional: original course price before discount
 
   Voucher({
     required this.id,
@@ -38,6 +39,7 @@ class Voucher {
     required this.createdAt,
     required this.createdBy,
     this.showRemainingCount = true,
+    this.originalPrice,
   });
 
   /// Check if voucher is currently active (within time window)
@@ -80,6 +82,16 @@ class Voucher {
     return maxClaims! - currentClaims;
   }
 
+  /// Get price after discount applied (null if no originalPrice set)
+  double? get discountedPrice {
+    if (originalPrice == null) return null;
+    if (discountType == DiscountType.percentage) {
+      return originalPrice! * (1 - discountValue / 100);
+    } else {
+      return (originalPrice! - discountValue).clamp(0, double.infinity);
+    }
+  }
+
   /// Get formatted discount text
   String get discountText {
     if (discountType == DiscountType.percentage) {
@@ -109,6 +121,7 @@ class Voucher {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       createdBy: data['createdBy'] ?? '',
       showRemainingCount: data['showRemainingCount'] ?? true,
+      originalPrice: (data['originalPrice'] as num?)?.toDouble(),
     );
   }
 
@@ -127,6 +140,7 @@ class Voucher {
       'paymentLink': paymentLink,
       'createdAt': Timestamp.fromDate(createdAt),
       'createdBy': createdBy,
+      'originalPrice': originalPrice,
     };
   }
 
@@ -146,6 +160,7 @@ class Voucher {
     DateTime? createdAt,
     String? createdBy,
     bool? showRemainingCount,
+    double? originalPrice,
   }) {
     return Voucher(
       id: id ?? this.id,
@@ -162,6 +177,7 @@ class Voucher {
       createdAt: createdAt ?? this.createdAt,
       createdBy: createdBy ?? this.createdBy,
       showRemainingCount: showRemainingCount ?? this.showRemainingCount,
+      originalPrice: originalPrice ?? this.originalPrice,
     );
   }
 }

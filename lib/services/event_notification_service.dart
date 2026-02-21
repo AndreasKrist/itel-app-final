@@ -16,6 +16,9 @@ class EventNotificationService {
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
+  /// Set to true to re-enable event countdown notifications in the future.
+  static const bool _enabled = false;
+
   bool _initialized = false;
 
   /// Active timers per event
@@ -30,6 +33,7 @@ class EventNotificationService {
 
   /// Initialize the notification plugin. Call once at app startup.
   Future<void> initialize() async {
+    if (!_enabled) return;
     if (_initialized) return;
 
     const androidSettings =
@@ -105,6 +109,7 @@ class EventNotificationService {
   /// 2. Re-schedule timers for upcoming thresholds
   /// 3. Skip thresholds that were already notified
   void scheduleEventNotifications(Event event) {
+    if (!_enabled) return;
     if (!_initialized) return;
 
     // Cancel existing timers (we'll re-create them)

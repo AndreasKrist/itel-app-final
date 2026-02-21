@@ -25,6 +25,7 @@ class VoucherService {
     String? courseId,
     String? paymentLink,
     required String createdBy,
+    double? originalPrice,
   }) async {
     final voucher = Voucher(
       id: '',
@@ -41,6 +42,7 @@ class VoucherService {
       paymentLink: paymentLink,
       createdAt: DateTime.now(),
       createdBy: createdBy,
+      originalPrice: originalPrice,
     );
 
     final docRef = await _vouchersRef.add(voucher.toFirestore());
@@ -99,7 +101,7 @@ class VoucherService {
       // Get the voucher
       final voucherDoc = await transaction.get(_vouchersRef.doc(voucherId));
       if (!voucherDoc.exists) {
-        throw Exception('e-Voucher not found');
+        throw Exception('E-Voucher not found');
       }
 
       final voucher = Voucher.fromFirestore(voucherDoc);
@@ -107,14 +109,14 @@ class VoucherService {
       // Validate voucher can be claimed
       if (!voucher.isActive) {
         if (voucher.isPending) {
-          throw Exception('This e-Voucher is not active yet');
+          throw Exception('This E-Voucher is not active yet');
         } else {
-          throw Exception('This e-Voucher has expired');
+          throw Exception('This E-Voucher has expired');
         }
       }
 
       if (voucher.isFullyClaimed) {
-        throw Exception('This e-Voucher has reached maximum claims');
+        throw Exception('This E-Voucher has reached maximum claims');
       }
 
       // Check if user already claimed this voucher
@@ -125,7 +127,7 @@ class VoucherService {
           .get();
 
       if (existingClaim.docs.isNotEmpty) {
-        throw Exception('You have already claimed this e-Voucher');
+        throw Exception('You have already claimed this E-Voucher');
       }
 
       // Calculate claim delay in seconds
@@ -146,6 +148,8 @@ class VoucherService {
         claimDelaySeconds: claimDelaySeconds,
         voucherStartTime: voucher.startTime,
         isUsed: false,
+        originalPrice: voucher.originalPrice,
+        discountedPrice: voucher.discountedPrice,
       );
 
       // Increment voucher claim count

@@ -120,6 +120,8 @@ class EventService {
     DateTime? expiresAt,
     required String createdBy,
     required String createdByName,
+    double? originalPrice,
+    String? imageUrl,
   }) async {
     final voucher = EventVoucher(
       id: '',
@@ -136,6 +138,8 @@ class EventService {
       createdByName: createdByName,
       isActive: true,
       expiresAt: expiresAt,
+      originalPrice: originalPrice,
+      imageUrl: imageUrl,
     );
 
     final docRef = await _eventVouchersRef.add(voucher.toFirestore());
@@ -407,22 +411,22 @@ class EventService {
       // Get the voucher
       final voucherDoc = await transaction.get(_eventVouchersRef.doc(voucherId));
       if (!voucherDoc.exists) {
-        throw Exception('e-Voucher not found');
+        throw Exception('E-Voucher not found');
       }
 
       final voucher = EventVoucher.fromFirestore(voucherDoc);
 
       // Validate voucher
       if (!voucher.isActive) {
-        throw Exception('This e-Voucher is no longer active');
+        throw Exception('This E-Voucher is no longer active');
       }
 
       if (voucher.isExpired) {
-        throw Exception('This e-Voucher has expired');
+        throw Exception('This E-Voucher has expired');
       }
 
       if (voucher.isFullyClaimed) {
-        throw Exception('All e-Vouchers have been claimed');
+        throw Exception('All E-Vouchers have been claimed');
       }
 
       // Check if user already claimed this specific voucher
@@ -433,7 +437,7 @@ class EventService {
           .get();
 
       if (existingClaim.docs.isNotEmpty) {
-        throw Exception('You have already claimed this e-Voucher');
+        throw Exception('You have already claimed this E-Voucher');
       }
 
       // Calculate claim delay in seconds
@@ -458,6 +462,8 @@ class EventService {
         claimDelaySeconds: claimDelaySeconds,
         voucherStartTime: event.startTime,
         isUsed: false,
+        originalPrice: voucher.originalPrice,
+        discountedPrice: voucher.discountedPrice,
       );
 
       // Increment voucher claim count
@@ -548,7 +554,7 @@ class EventService {
       'authorId': 'system',
       'authorName': 'ITEL Events',
       'authorEmail': '',
-      'content': '${event.title}\n\n${event.description}\n\n${voucherCount > 0 ? '$voucherCount e-Voucher${voucherCount > 1 ? 's' : ''} available!' : 'Join the event!'}',
+      'content': '${event.title}\n\n${event.description}\n\n${voucherCount > 0 ? '$voucherCount E-Voucher${voucherCount > 1 ? 's' : ''} available!' : 'Join the event!'}',
       'createdAt': Timestamp.fromDate(DateTime.now()),
       'type': 'event_share',
       'eventId': eventId,

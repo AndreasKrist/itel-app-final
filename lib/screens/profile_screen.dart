@@ -788,22 +788,22 @@ void _removeCourseFromEnrolled(String courseId) async {
                   color: Color(0xFF0056AC),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   child: Row(
                     children: [
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(
                           color: Colors.blue[100],
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white.withOpacity(0.3), width: 3),
+                          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
                         ),
                         child: Center(
                           child: Text(
                             initials,
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF0056AC),
                             ),
@@ -829,7 +829,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                                         child: Text(
                                           currentUser.name,
                                           style: const TextStyle(
-                                            fontSize: 24,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
                                           ),
@@ -837,11 +837,11 @@ void _removeCourseFromEnrolled(String courseId) async {
                                         ),
                                       ),
                                       if (hasSavedAccounts) ...[
-                                        const SizedBox(width: 8),
+                                        const SizedBox(width: 4),
                                         Icon(
                                           Icons.keyboard_arrow_down,
                                           color: Colors.white,
-                                          size: 28,
+                                          size: 20,
                                         ),
                                       ],
                                     ],
@@ -858,7 +858,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                                         ? 'Associate Corporate'
                                         : currentUser.tier.displayName,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       color: Colors.white.withOpacity(0.9),
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -1117,7 +1117,7 @@ void _removeCourseFromEnrolled(String courseId) async {
                                         size: 24,
                                       ),
                                     ),
-                                    const SizedBox(width: 12),
+                                    const SizedBox(width: 24),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1154,7 +1154,7 @@ void _removeCourseFromEnrolled(String courseId) async {
       ],
     );
   }
-  
+
 Widget _buildTabButton(String title, String tabId) {
   final isActive = activeTab == tabId;
   
@@ -1409,7 +1409,9 @@ Widget _buildProfileTab() {
             const SizedBox(height: 12),
             
             // Stats Cards
-            Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
               children: [
                 _buildStatCard(
                   'Enrolled',
@@ -1417,14 +1419,14 @@ Widget _buildProfileTab() {
                   Icons.pending_actions,
                   Color(0xFF0056AC),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 24),
                 _buildStatCard(
                   'Completed',
                   '${totalCompletedCount}',
                   Icons.check_circle,
                   Color(0xFF00FF00),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 24),
                 _buildStatCard(
                   'Enquiry',
                   '${pendingEnrollments.length}', // Use pending enrollments count
@@ -1432,6 +1434,7 @@ Widget _buildProfileTab() {
                   Color(0xFFFF6600),
                 ),
               ],
+            ),
             ),
             
             // My Vouchers Section - visible to all users
@@ -2979,34 +2982,37 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
     Color borderColor = isGreen ? const Color(0xD9013220) : color.withOpacity(0.3);
 
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
+      child: AspectRatio(
+        aspectRatio: 1.0,
+        child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: borderColor),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
               color: textColor,
-              size: 24,
+              size: 14,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 2),
             Text(
               value,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
                 color: textColor,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 1),
             Text(
               title,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 9,
                 color: textColor,
               ),
               textAlign: TextAlign.center,
@@ -3015,10 +3021,11 @@ void _handlePaymentResult(bool success, MembershipTier tier, String? invoiceId) 
             ),
           ],
         ),
+        ),
       ),
     );
   }
-  
+
   Widget _buildScheduleCard(Schedule schedule) {
     return Container(
       padding: const EdgeInsets.all(12),

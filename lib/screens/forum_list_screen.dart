@@ -457,7 +457,7 @@ class _ForumListScreenState extends State<ForumListScreen>
                                     ),
                                   ),
                                   Text(
-                                    'You have ${invitations.length} forum invitation${invitations.length > 1 ? 's' : ''} waiting',
+                                    'You have ${invitations.length} channel invitation${invitations.length > 1 ? 's' : ''} waiting',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.orange[700],
@@ -492,7 +492,7 @@ class _ForumListScreenState extends State<ForumListScreen>
                       const SizedBox(height: 8),
                       // My Forums label
                       Text(
-                        'My Forums',
+                        'My Channels',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -788,8 +788,8 @@ class _ForumListScreenState extends State<ForumListScreen>
 
         if (forums.isEmpty) {
           return _buildEmptyView(
-            'No pending forums',
-            'All forums have been reviewed!',
+            'No pending channels',
+            'All channels have been reviewed!',
             showCreateButton: false,
           );
         }
@@ -1514,7 +1514,7 @@ class _ForumListScreenState extends State<ForumListScreen>
             Icon(Icons.forum_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
-              'Sign in to join forums',
+              'Sign in to join channels',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -1523,7 +1523,7 @@ class _ForumListScreenState extends State<ForumListScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              'Create or join forums to chat with others',
+              'Create or join channels to chat with others',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[500]),
             ),
@@ -1594,7 +1594,7 @@ class _ForumListScreenState extends State<ForumListScreen>
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              'Error loading forums',
+              'Error loading channels',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -1636,7 +1636,7 @@ class _ForumListScreenState extends State<ForumListScreen>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Successfully joined the forum!'),
+              content: Text('Successfully joined the channel!'),
               backgroundColor: Colors.green,
             ),
           );
@@ -1685,7 +1685,7 @@ class _ForumListScreenState extends State<ForumListScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Forum approved!'),
+            content: Text('Channel approved!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -1708,7 +1708,7 @@ class _ForumListScreenState extends State<ForumListScreen>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Reject Forum'),
+        title: const Text('Reject Channel'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1718,7 +1718,7 @@ class _ForumListScreenState extends State<ForumListScreen>
               controller: reasonController,
               decoration: const InputDecoration(
                 labelText: 'Reason (required)',
-                hintText: 'Explain why this forum is being rejected',
+                hintText: 'Explain why this channel is being rejected',
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -1761,7 +1761,7 @@ class _ForumListScreenState extends State<ForumListScreen>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Forum rejected'),
+              content: Text('Channel rejected'),
               backgroundColor: Colors.orange,
             ),
           );

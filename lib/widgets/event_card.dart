@@ -131,7 +131,7 @@ class _EventCardState extends State<EventCard> {
                           ),
                           SizedBox(width: 4),
                           Text(
-                            'e-Vouchers',
+                            'E-Vouchers',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

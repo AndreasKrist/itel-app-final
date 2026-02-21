@@ -16,6 +16,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
   final _descriptionController = TextEditingController();
   final _discountController = TextEditingController();
   final _maxClaimsController = TextEditingController();
+  final _originalPriceController = TextEditingController();
 
   final VoucherService _voucherService = VoucherService();
 
@@ -32,6 +33,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
     _descriptionController.dispose();
     _discountController.dispose();
     _maxClaimsController.dispose();
+    _originalPriceController.dispose();
     super.dispose();
   }
 
@@ -134,13 +136,16 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
             : null,
         showRemainingCount: _hasMaxClaims ? _showRemainingCount : true,
         createdBy: currentUser.id,
+        originalPrice: _originalPriceController.text.trim().isNotEmpty
+            ? double.tryParse(_originalPriceController.text.trim())
+            : null,
       );
 
       if (mounted) {
         Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('e-Voucher created successfully!'),
+            content: Text('E-Voucher created successfully!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -149,7 +154,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error creating e-Voucher: $e'),
+            content: Text('Error creating E-Voucher: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -216,7 +221,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Create Flash Sale e-Voucher',
+                              'Create Flash Sale E-Voucher',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -254,7 +259,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                           TextFormField(
                             controller: _codeController,
                             decoration: const InputDecoration(
-                              labelText: 'e-Voucher Code',
+                              labelText: 'E-Voucher Code',
                               hintText: 'e.g., FLASH50',
                               prefixIcon: Icon(Icons.confirmation_number),
                               border: OutlineInputBorder(),
@@ -262,7 +267,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                             textCapitalization: TextCapitalization.characters,
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
-                                return 'Please enter an e-Voucher code';
+                                return 'Please enter an E-Voucher code';
                               }
                               return null;
                             },
@@ -282,6 +287,28 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please enter a description';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Original Price
+                          TextFormField(
+                            controller: _originalPriceController,
+                            decoration: const InputDecoration(
+                              labelText: 'Price (\$)',
+                              hintText: 'e.g., 2999',
+                              prefixIcon: Icon(Icons.sell_outlined),
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            validator: (value) {
+                              if (value != null && value.trim().isNotEmpty) {
+                                final num = double.tryParse(value.trim());
+                                if (num == null || num <= 0) {
+                                  return 'Please enter a valid price';
+                                }
                               }
                               return null;
                             },
@@ -525,7 +552,7 @@ class _CreateVoucherSheetState extends State<CreateVoucherSheet> {
                                       ),
                                     )
                                   : const Text(
-                                      'Create e-Voucher',
+                                      'Create E-Voucher',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

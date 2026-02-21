@@ -73,7 +73,7 @@ class _VoucherCardState extends State<VoucherCard> {
     if (currentUser.id.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please sign in to claim e-Vouchers'),
+          content: Text('Please sign in to claim E-Vouchers'),
           backgroundColor: Colors.orange,
         ),
       );
@@ -332,6 +332,38 @@ class _VoucherCardState extends State<VoucherCard> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                if (voucher.originalPrice != null) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        '\$${voucher.originalPrice!.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.6),
+                          fontSize: 11,
+                          decoration: TextDecoration.lineThrough,
+                          decorationColor: Colors.white.withOpacity(0.6),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade400,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          '\$${voucher.discountedPrice!.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 8),
 
                 // Claims info + Claim button row

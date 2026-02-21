@@ -267,7 +267,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Forum Options',
+              'Channel Options',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -322,7 +322,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
             if (isActualMember && !isCreator)
               ListTile(
                 leading: const Icon(Icons.exit_to_app, color: Colors.orange),
-                title: const Text('Leave Forum'),
+                title: const Text('Leave Channel'),
                 onTap: () async {
                   Navigator.pop(context);
                   await _leaveForum(forum);
@@ -334,7 +334,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
               ListTile(
                 leading: const Icon(Icons.person_remove, color: Colors.orange),
                 title: const Text('Kick Member'),
-                subtitle: const Text('Remove any member from forum', style: TextStyle(fontSize: 12)),
+                subtitle: const Text('Remove any member from channel', style: TextStyle(fontSize: 12)),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -351,8 +351,8 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
             if (isStaff)
               ListTile(
                 leading: const Icon(Icons.delete_forever, color: Colors.red),
-                title: const Text('Close Forum'),
-                subtitle: const Text('Permanently remove this forum', style: TextStyle(fontSize: 12)),
+                title: const Text('Close Channel'),
+                subtitle: const Text('Permanently remove this channel', style: TextStyle(fontSize: 12)),
                 onTap: () async {
                   Navigator.pop(context);
                   await _removeForum(forum);
@@ -485,7 +485,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${request.userName} has been added to the forum'),
+            content: Text('${request.userName} has been added to the channel'),
             backgroundColor: Colors.green,
           ),
         );
@@ -533,7 +533,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Leave Forum'),
+        title: const Text('Leave Channel'),
         content: Text('Are you sure you want to leave "${forum.title}"?'),
         actions: [
           TextButton(
@@ -561,7 +561,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('You have left the forum'),
+              content: Text('You have left the channel'),
               backgroundColor: Colors.orange,
             ),
           );
@@ -583,7 +583,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Remove Forum'),
+        title: const Text('Remove Channel'),
         content: Text(
             'Are you sure you want to permanently remove "${forum.title}"? This action cannot be undone.'),
         actions: [
@@ -614,7 +614,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Forum has been removed'),
+              content: Text('Channel has been removed'),
               backgroundColor: Colors.red,
             ),
           );
@@ -941,7 +941,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
                   Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
-                    'Forum not found',
+                    'Channel not found',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ],
@@ -1218,7 +1218,7 @@ class _ForumChatScreenState extends State<ForumChatScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'You are not a member of this forum',
+                            'You are not a member of this channel',
                             style: TextStyle(color: Colors.orange[700]),
                           ),
                         ),

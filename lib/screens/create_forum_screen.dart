@@ -104,7 +104,7 @@ class _CreateForumScreenState extends State<CreateForumScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                'Forum created! Waiting for staff approval before it becomes visible.'),
+                'Channel created! Waiting for staff approval before it becomes visible.'),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -115,7 +115,7 @@ class _CreateForumScreenState extends State<CreateForumScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error creating forum: $e'),
+            content: Text('Error creating channel: $e'),
             backgroundColor: Colors.red,
           ),
         );

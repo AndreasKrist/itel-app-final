@@ -312,6 +312,8 @@ class _AppMockupState extends State<AppMockup> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: Color(0xFF0056AC),
           unselectedItemColor: Colors.grey[500],
+          selectedFontSize: 10,
+          unselectedFontSize: 10,
           elevation: 0,
           items: const [
             BottomNavigationBarItem(
