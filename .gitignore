@@ -54,3 +54,4 @@ ios/Runner/GoogleService-Info.plist
 # Firebase config files
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+.claude/worktrees/admiring-moser/
