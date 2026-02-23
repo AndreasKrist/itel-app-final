@@ -22,6 +22,7 @@ class Course {
   final String? progress;
   final String? completionDate;
   final String? moodleCourseId; // The ID of this course in Moodle
+  final String? wordpressUrl; // WordPress URL for WebView display
 
   Course({
     required this.id,
@@ -29,7 +30,7 @@ class Course {
     required this.title,
     required this.category,
     this.certType,
-    required this.rating,
+    this.rating = 0.0,
     required this.duration,
     required this.price,
     this.funding,
@@ -46,6 +47,7 @@ class Course {
     this.progress,
     this.completionDate,
     this.moodleCourseId,
+    this.wordpressUrl,
   });
 
   Course copyWith({
@@ -71,6 +73,7 @@ class Course {
     String? progress,
     String? completionDate,
     String? moodleCourseId,
+    String? wordpressUrl,
   }) {
     return Course(
       id: id ?? this.id,
@@ -95,6 +98,7 @@ class Course {
       progress: progress ?? this.progress,
       completionDate: completionDate ?? this.completionDate,
       moodleCourseId: moodleCourseId ?? this.moodleCourseId,
+      wordpressUrl: wordpressUrl ?? this.wordpressUrl,
     );
   }
 

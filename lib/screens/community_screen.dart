@@ -1,4 +1,5 @@
 // lib/screens/community_screen.dart
+import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../models/user.dart';
@@ -35,11 +36,16 @@ class _CommunityScreenState extends State<CommunityScreen>
 
   bool _showLiveEventsTab = false;
   int _lastTabCount = 4;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
     _initTabController(4);
+    // Periodically refresh so event cards update status (soon→live→ended)
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (mounted) setState(() {});
+    });
   }
 
   void _initTabController(int length) {
@@ -72,6 +78,7 @@ class _CommunityScreenState extends State<CommunityScreen>
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _tabController?.dispose();
     super.dispose();
   }
@@ -696,25 +703,7 @@ class _CommunityScreenState extends State<CommunityScreen>
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.timer,
-                          color: Colors.white.withOpacity(0.8),
-                          size: 12,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          isActive
-                              ? 'Ends in ${_formatDuration(event.remainingTime)}'
-                              : 'Starts in ${_formatDuration(event.timeUntilStart)}',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 11,
-                          ),
-                        ),
-                      ],
-                    ),
+                    _EventCardCountdown(event: event),
                   ],
                 ),
               ),
@@ -773,13 +762,68 @@ class _CommunityScreenState extends State<CommunityScreen>
     );
   }
 
+}
+
+/// Lightweight countdown widget that ticks every second without rebuilding the whole screen.
+class _EventCardCountdown extends StatefulWidget {
+  final Event event;
+  const _EventCardCountdown({required this.event});
+
+  @override
+  State<_EventCardCountdown> createState() => _EventCardCountdownState();
+}
+
+class _EventCardCountdownState extends State<_EventCardCountdown> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final event = widget.event;
+    final isActive = event.isActive;
+    final text = isActive
+        ? 'Ends in ${_formatDuration(event.remainingTime)}'
+        : 'Starts in ${_formatDuration(event.timeUntilStart)}';
+
+    return Row(
+      children: [
+        Icon(
+          Icons.timer,
+          color: Colors.white.withOpacity(0.8),
+          size: 12,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 11,
+          ),
+        ),
+      ],
+    );
+  }
+
   String _formatDuration(Duration duration) {
     if (duration.inDays > 0) {
       return '${duration.inDays}d ${duration.inHours % 24}h';
     } else if (duration.inHours > 0) {
       return '${duration.inHours}h ${duration.inMinutes % 60}m';
     } else if (duration.inMinutes > 0) {
-      return '${duration.inMinutes}m';
+      return '${duration.inMinutes}m ${duration.inSeconds % 60}s';
     } else {
       return '${duration.inSeconds}s';
     }

@@ -1,0 +1,204 @@
+{
+  "courses": [
+    {
+      "id": "25",
+      "title": "EXIN SIAM Foundation",
+      "category": "IT Business Management & Strategy",
+      "certType": "SIAM",
+      "price": "$995",
+      "funding": null,
+      "duration": "2 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/exin-siam-foundation"
+    },
+    {
+      "id": "26",
+      "title": "EXIN SIAM Professional",
+      "category": "IT Business Management & Strategy",
+      "certType": "SIAM",
+      "price": "$1,395",
+      "funding": null,
+      "duration": "3 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/exin-siam-professional"
+    },
+    {
+      "id": "27",
+      "title": "VMware NSX: Troubleshooting and Operations [V4.x]",
+      "category": "Cloud Computing & Virtualization",
+      "certType": "VMWARE",
+      "price": "$4,905",
+      "funding": null,
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/vmware-nsx-troubleshooting"
+    },
+    {
+      "id": "28",
+      "title": "VMware NSX: Install, Configure, Manage [V4.0]",
+      "category": "Cloud Computing & Virtualization",
+      "certType": "VMWARE",
+      "price": "$4,905",
+      "funding": null,
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/vmware-nsx-install-configure"
+    },
+    {
+      "id": "29",
+      "title": "Cisco Certified Network Associate (CCNA) (SF)",
+      "category": "Networking Infrastructure & Architecture",
+      "certType": "CISCO",
+      "price": "$2,561.50",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/ccna"
+    },
+    {
+      "id": "30",
+      "title": "CompTIA Network+ (SF)",
+      "category": "Networking Infrastructure & Architecture",
+      "certType": "COMPTIA",
+      "price": "$2,725.00",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/comptia-network-plus"
+    },
+    {
+      "id": "31",
+      "title": "Cloud Technology Solutions Architect Associate (SF)",
+      "category": "Cloud Computing & Virtualization",
+      "certType": null,
+      "price": "$3,542.50",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/cloud-solutions-architect"
+    },
+    {
+      "id": "32",
+      "title": "CompTIA Security+ (SF)",
+      "category": "Cybersecurity",
+      "certType": "COMPTIA",
+      "price": "$2,725.00",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/comptia-security-plus"
+    },
+    {
+      "id": "33",
+      "title": "Cyber Forensics Investigator (SF)",
+      "category": "Cybersecurity",
+      "certType": null,
+      "price": "$3,215.50",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/cyber-forensics"
+    },
+    {
+      "id": "34",
+      "title": "Cyber Security Incident Handling and Response (SF)",
+      "category": "Cybersecurity",
+      "certType": "EC-Council",
+      "price": "$1,956.55",
+      "funding": "Eligible for funding",
+      "duration": "3 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/cyber-incident-response"
+    },
+    {
+      "id": "35",
+      "title": "Implementing Microsoft Azure Infrastructure Solutions (SF)",
+      "category": "Cloud Computing & Virtualization",
+      "certType": "Microsoft",
+      "price": "$3,215.50",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://itel.com.sg/course/implementing-microsoft-azure-infrastructure-solutions-sf/"
+    },
+    {
+      "id": "36",
+      "title": "Information Systems Security (SF)",
+      "category": "Cybersecurity",
+      "certType": null,
+      "price": "$3,270.00",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/information-systems-security"
+    },
+    {
+      "id": "37",
+      "title": "ITIL Foundation Certificate in Service Management (SF)",
+      "category": "IT Business Management & Strategy",
+      "certType": "ITIL",
+      "price": "$1,471.50",
+      "funding": "Eligible for funding",
+      "duration": "3 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/itil-foundation"
+    },
+    {
+      "id": "38",
+      "title": "Microsoft Certified Solutions Associate (MCSA) - 20742 (SF)",
+      "category": "Networking Infrastructure & Architecture",
+      "certType": "Microsoft",
+      "price": "$2,725.00",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/mcsa-20742"
+    },
+    {
+      "id": "39",
+      "title": "Project Management (SF)",
+      "category": "IT Business Management & Strategy",
+      "certType": null,
+      "price": "$2,997.50",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://your-wordpress-site.com/courses/project-management"
+    },
+    {
+      "id": "40",
+      "title": "MB-330 Microsoft Dynamics 365 Supply Chain Management Functional Consultant",
+      "category": "Cloud Computing & Virtualization",
+      "certType": "Microsoft",
+      "price": "$3,215.50",
+      "funding": null,
+      "duration": "5 Days",
+      "wordpressUrl": "https://itel.com.sg/course/mb-330-microsoft-dynamics-365-supply-chain-management-functional-consultant/"
+    },
+    {
+      "id": "41",
+      "title": "Implementing SQL Database Administration (SF)",
+      "category": "Big Data | Analytics | Database",
+      "certType": "Microsoft",
+      "price": "$3,215.50",
+      "funding": "Eligible for funding",
+      "duration": "5 Days",
+      "wordpressUrl": "https://itel.com.sg/course/implementing-sql-database-administration-sf/"
+    },
+    {
+      "id": "42",
+      "title": "AZ-140 Configuring and Operating Microsoft Azure Virtual Desktop",
+      "category": "Cloud Computing & Virtualization",
+      "certType": "Microsoft",
+      "price": "$3,215.50",
+      "funding": null,
+      "duration": "4 Days",
+      "wordpressUrl": "https://itel.com.sg/course/az-140-configuring-and-operating-microsoft-azure-virtual-desktop/"
+    },
+    {
+      "id": "43",
+      "title": "AZ-801 Configuring Windows Server Hybrid Advanced Services",
+      "category": "Cloud Computing & Virtualization",
+      "certType": "Microsoft",
+      "price": "$3,215.50",
+      "funding": null,
+      "duration": "4 Days",
+      "wordpressUrl": "https://itel.com.sg/course/az-801-configuring-windows-server-hybrid-advanced-services/"
+    },
+    {
+      "id": "44",
+      "title": "PL-600 Microsoft Power Platform Solution Architect",
+      "category": "Cloud Computing & Virtualization",
+      "certType": "Microsoft",
+      "price": "$3,215.50",
+      "funding": null,
+      "duration": "4 Days",
+      "wordpressUrl": "https://itel.com.sg/course/pl-600-microsoft-power-platform-solution-architect/"
+    }
+  ]
+}

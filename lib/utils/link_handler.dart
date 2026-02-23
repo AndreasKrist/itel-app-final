@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../screens/courses_screen.dart';
 import '../screens/course_detail_screen.dart';
+import '../screens/course_webview_screen.dart';
 import '../services/course_remote_config_service.dart';
 import '../models/course.dart';
 
@@ -104,7 +105,9 @@ class LinkHandler {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CourseDetailScreen(course: course),
+          builder: (context) => course.wordpressUrl != null
+              ? CourseWebViewScreen(course: course)
+              : CourseDetailScreen(course: course),
         ),
       );
     } catch (e) {

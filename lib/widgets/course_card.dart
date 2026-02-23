@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/course.dart';
 import '../models/user.dart';
 import '../screens/course_detail_screen.dart';
+import '../screens/course_webview_screen.dart';
 
 
 
@@ -28,7 +29,9 @@ class CourseCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CourseDetailScreen(course: course),
+            builder: (context) => course.wordpressUrl != null
+                      ? CourseWebViewScreen(course: course)
+                      : CourseDetailScreen(course: course),
           ),
         );
       },
@@ -216,7 +219,9 @@ class CourseCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CourseDetailScreen(course: course),
+                      builder: (context) => course.wordpressUrl != null
+                      ? CourseWebViewScreen(course: course)
+                      : CourseDetailScreen(course: course),
                     ),
                   );
                 },

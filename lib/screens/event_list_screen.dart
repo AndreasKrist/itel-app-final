@@ -1,4 +1,5 @@
 // lib/screens/event_list_screen.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/event.dart';
 import '../models/user.dart';
@@ -17,15 +18,22 @@ class _EventListScreenState extends State<EventListScreen>
     with SingleTickerProviderStateMixin {
   final EventService _eventService = EventService();
   late TabController _tabController;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    // Periodically re-evaluate event status so events move between
+    // Live / Upcoming / Past tabs without needing a navigation refresh.
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _tabController.dispose();
     super.dispose();
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/trending_item.dart';
 import '../screens/trending_detail_screen.dart';
 import '../screens/course_detail_screen.dart';
+import '../screens/course_webview_screen.dart';
 import '../models/course.dart';
 import '../utils/link_handler.dart';
 import '../services/course_remote_config_service.dart';
@@ -212,7 +213,9 @@ class TrendingCard extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CourseDetailScreen(course: course),
+          builder: (context) => course.wordpressUrl != null
+              ? CourseWebViewScreen(course: course)
+              : CourseDetailScreen(course: course),
         ),
       );
       return;
@@ -246,7 +249,9 @@ class TrendingCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CourseDetailScreen(course: remoteCourse),
+            builder: (context) => remoteCourse.wordpressUrl != null
+                ? CourseWebViewScreen(course: remoteCourse)
+                : CourseDetailScreen(course: remoteCourse),
           ),
         );
       } else {

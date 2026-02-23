@@ -8,9 +8,35 @@ class CourseRemoteConfigService {
   static const String _cacheTimestampKey = 'course_remote_cache_timestamp';
   static const Duration _cacheValidityDuration = Duration(seconds: 0); // No cache - always fetch fresh content
 
-  // GitHub raw content URL for course configuration
-  // Using the same repo as trending content
-  static const String _coursesConfigUrl = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/courses.json';
+  // Uses the existing other_content.json - just change "coursesVersion" there to switch
+  static const String _appConfigUrl = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/other_content.json';
+
+  // Course file URLs
+  static const String _coursesV1Url = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/courses.json';
+  static const String _coursesV2Url = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/courses_v2.json';
+
+  /// Resolves which courses URL to use based on app_config.json
+  Future<String> _getCoursesUrl() async {
+    try {
+      final response = await http.get(
+        Uri.parse(_appConfigUrl),
+        headers: {'Cache-Control': 'no-cache'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final config = json.decode(response.body);
+        final version = config['coursesVersion'] ?? 'v1';
+        print('App config loaded. coursesVersion: $version');
+
+        if (version == 'v2') {
+          return _coursesV2Url;
+        }
+      }
+    } catch (e) {
+      print('Failed to load app config, falling back to v1: $e');
+    }
+    return _coursesV1Url;
+  }
 
   /// Fetches course configuration from remote source with caching and fallback
   Future<List<Course>> getRemoteCourses() async {
@@ -61,8 +87,11 @@ class CourseRemoteConfigService {
 
   /// Fetches course configuration from remote URL
   Future<List<Course>> _fetchFromRemote() async {
+    final coursesUrl = await _getCoursesUrl();
+    print('Fetching courses from: $coursesUrl');
+
     final response = await http.get(
-      Uri.parse(_coursesConfigUrl),
+      Uri.parse(coursesUrl),
       headers: {
         'Cache-Control': 'no-cache',
       },
@@ -112,6 +141,7 @@ class CourseRemoteConfigService {
           progress: course['progress'],
           completionDate: course['completionDate'],
           moodleCourseId: course['moodleCourseId'],
+          wordpressUrl: course['wordpressUrl'],
         )).toList();
 
         print('Loaded ${remoteCourses.length} courses from remote');
@@ -172,6 +202,7 @@ class CourseRemoteConfigService {
             progress: courseJson['progress'],
             completionDate: courseJson['completionDate'],
             moodleCourseId: courseJson['moodleCourseId'],
+            wordpressUrl: courseJson['wordpressUrl'],
           )).toList();
         }
       }
@@ -209,6 +240,7 @@ class CourseRemoteConfigService {
         'progress': course.progress,
         'completionDate': course.completionDate,
         'moodleCourseId': course.moodleCourseId,
+        'wordpressUrl': course.wordpressUrl,
       }).toList();
 
       await prefs.setString(_cacheKey, json.encode(jsonData));

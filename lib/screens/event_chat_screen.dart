@@ -1420,15 +1420,16 @@ class _EventChatScreenState extends State<EventChatScreen>
               ? DecorationImage(
                   image: NetworkImage(voucher.imageUrl!),
                   fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.45),
-                    BlendMode.darken,
-                  ),
                 )
               : null,
         ),
         child: Container(
         padding: const EdgeInsets.all(10),
+        decoration: hasClaimed && hasImage
+            ? BoxDecoration(
+                color: Colors.black.withOpacity(0.05),
+              )
+            : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
