@@ -35,9 +35,9 @@ class _EventChatScreenState extends State<EventChatScreen>
   Event? _currentEvent; // Track for re-scheduling on app resume
 
   // Cache streams so setState doesn't recreate them (which resets StreamBuilders)
-  late final Stream<Event?> _eventStream;
-  late final Stream<List<EventMessage>> _messagesStream;
-  late final Stream<List<EventVoucher>> _vouchersStream;
+  Stream<Event?>? _eventStream;
+  Stream<List<EventMessage>>? _messagesStream;
+  Stream<List<EventVoucher>>? _vouchersStream;
   Stream<EventBan?>? _banStream;
   String? _banStreamUserId;
 
@@ -51,11 +51,10 @@ class _EventChatScreenState extends State<EventChatScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _eventStream = _eventService.getEventStream(widget.eventId);
-    _messagesStream = _eventService.getMessagesStream(widget.eventId);
-    _vouchersStream = _eventService.getEventVouchersStream(widget.eventId);
+    _eventStream ??= _eventService.getEventStream(widget.eventId);
+    _messagesStream ??= _eventService.getMessagesStream(widget.eventId);
+    _vouchersStream ??= _eventService.getEventVouchersStream(widget.eventId);
     _loadClaimedVouchers();
-    _focusNode.addListener(_onFocusChanged);
   }
 
   Stream<EventBan?> _getBanStream(String userId) {
@@ -64,12 +63,6 @@ class _EventChatScreenState extends State<EventChatScreen>
       _banStream = _eventService.getUserBanStatusStream(widget.eventId, userId);
     }
     return _banStream!;
-  }
-
-  void _onFocusChanged() {
-    if (_focusNode.hasFocus && _isVoucherExpanded) {
-      setState(() => _isVoucherExpanded = false);
-    }
   }
 
   @override
@@ -83,7 +76,6 @@ class _EventChatScreenState extends State<EventChatScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _focusNode.removeListener(_onFocusChanged);
     _messageController.dispose();
     _scrollController.dispose();
     _focusNode.dispose();
@@ -966,7 +958,7 @@ class _EventChatScreenState extends State<EventChatScreen>
     final isGuest = currentUser.id.isEmpty || currentUser.email.isEmpty;
 
     return StreamBuilder<Event?>(
-      stream: _eventStream,
+      stream: _eventStream!,
       builder: (context, eventSnapshot) {
         final event = eventSnapshot.data;
 
@@ -1066,6 +1058,9 @@ class _EventChatScreenState extends State<EventChatScreen>
           );
         }
 
+        // Read keyboard state BEFORE Scaffold (Scaffold absorbs viewInsets)
+        final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 50;
+
         return Scaffold(
           backgroundColor: Colors.grey[100],
           appBar: AppBar(
@@ -1123,14 +1118,17 @@ class _EventChatScreenState extends State<EventChatScreen>
           ),
           body: Column(
             children: [
-              // Vouchers section - hidden when keyboard is open
-              if (MediaQuery.of(context).viewInsets.bottom == 0)
-                _buildVouchersSection(event),
+              // Vouchers section — completely hidden when keyboard is open
+              if (!isKeyboardOpen)
+                Flexible(
+                  flex: 0,
+                  child: _buildVouchersSection(event),
+                ),
 
               // Chat messages
               Expanded(
                 child: StreamBuilder<List<EventMessage>>(
-                  stream: _messagesStream,
+                  stream: _messagesStream!,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -1328,7 +1326,7 @@ class _EventChatScreenState extends State<EventChatScreen>
     final isStaff = currentUser.isStaff;
 
     return StreamBuilder<List<EventVoucher>>(
-      stream: _vouchersStream,
+      stream: _vouchersStream!,
       builder: (context, snapshot) {
         final vouchers = snapshot.data ?? [];
 
@@ -1444,7 +1442,7 @@ class _EventChatScreenState extends State<EventChatScreen>
                         children: [
                           ConstrainedBox(
                             constraints: BoxConstraints(
-                              maxHeight: MediaQuery.of(context).size.height * 0.35,
+                              maxHeight: MediaQuery.of(context).size.height * 0.38,
                             ),
                             child: Stack(
                               children: [
@@ -1798,8 +1796,8 @@ class _EventChatScreenState extends State<EventChatScreen>
                 ),
                 maxLines: 4,
                 minLines: 1,
-                textInputAction: TextInputAction.newline,
-                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) => _sendMessage(),
               ),
             ),
             const SizedBox(width: 12),

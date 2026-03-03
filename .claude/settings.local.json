@@ -18,7 +18,8 @@
       "Bash(find:*)",
       "Bash(xargs sed:*)",
       "mcp__ide__getDiagnostics",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(cd C:\\\\Users\\\\andre\\\\Documents\\\\Andreas55\\\\itel-app-final:*)"
     ]
   }
 }

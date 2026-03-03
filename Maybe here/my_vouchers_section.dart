@@ -243,18 +243,6 @@ class _VoucherItemState extends State<_VoucherItem> {
             'template_params': {
               'full_name': result['fullName'],
               'email': result['email'],
-              'description': widget.voucher.voucherDescription.split('\n').length > 1
-                  ? widget.voucher.voucherDescription.split('\n')[1].trim()
-                  : widget.voucher.voucherDescription,
-              'voucher_code': widget.voucher.voucherCode,
-              'discount': widget.voucher.discountText,
-              'original_price': widget.voucher.originalPrice != null
-                  ? '\$${widget.voucher.originalPrice!.toStringAsFixed(0)}'
-                  : 'N/A',
-              'discounted_price': widget.voucher.discountedPrice != null
-                  ? '\$${widget.voucher.discountedPrice!.toStringAsFixed(0)}'
-                  : 'N/A',
-              'claimed_at': widget.voucher.claimedAt.toString(),
             },
           }),
         );
