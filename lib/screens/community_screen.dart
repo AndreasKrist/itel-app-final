@@ -90,7 +90,9 @@ class _CommunityScreenState extends State<CommunityScreen>
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: SafeArea(
+      body: Stack(
+        children: [
+          SafeArea(
         child: Column(
           children: [
             // Header with logo and title
@@ -478,6 +480,39 @@ class _CommunityScreenState extends State<CommunityScreen>
         ),
       ),
       // FAB moved to ForumListScreen to avoid overlap
+          // Black overlay that blocks all touches
+          Positioned.fill(
+            child: AbsorbPointer(
+              absorbing: true,
+              child: Container(
+                color: Colors.black.withOpacity(0.8),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.people_alt_sharp,
+                        color: Colors.white.withOpacity(0.9),
+                        size: 48,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Coming Soon!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
