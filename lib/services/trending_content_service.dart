@@ -105,15 +105,38 @@ class TrendingContentService {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
 
-      if (jsonData is Map<String, dynamic> && jsonData.containsKey('items')) {
-        final items = jsonData['items'] as List;
-        return items.map((item) => TrendingItem.fromJson(item)).toList();
+      if (jsonData is Map<String, dynamic>) {
+        // Handle 'items' format (existing articles/other content)
+        if (jsonData.containsKey('items')) {
+          final items = jsonData['items'] as List;
+          return items.map((item) => TrendingItem.fromJson(item)).toList();
+        }
+        // Handle 'posts' format (new WebView-based articles)
+        if (jsonData.containsKey('posts')) {
+          final posts = jsonData['posts'] as List;
+          return posts.map((post) => _parsePostToTrendingItem(post)).toList();
+        }
+        throw Exception('Invalid JSON structure in $url');
       } else {
         throw Exception('Invalid JSON structure in $url');
       }
     } else {
       throw Exception('Failed to fetch content from $url: ${response.statusCode}');
     }
+  }
+
+  /// Converts a 'posts' format JSON object to a TrendingItem
+  TrendingItem _parsePostToTrendingItem(Map<String, dynamic> post) {
+    return TrendingItem(
+      id: post['id'] as String? ?? '',
+      title: post['title'] as String? ?? '',
+      category: 'Featured Articles',
+      type: TrendingItemType.featuredArticles,
+      date: post['date'] as String?,
+      readTime: post['readTime'] as String?,
+      description: post['excerpt'] as String?,
+      articleUrl: post['url'] as String?,
+    );
   }
 
   /// Gets cached content from local storage

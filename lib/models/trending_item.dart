@@ -17,8 +17,9 @@ class TrendingItem {
   final String? customLink;
   final String? description;
   final List<String>? tags;
-  final String? fullContent;   
-  
+  final String? fullContent;
+  final String? articleUrl;    // URL for WebView-based articles
+
   // Add new fields specifically for events
   final String? eventTime;
   final String? eventLocation;
@@ -37,6 +38,7 @@ class TrendingItem {
     this.description,
     this.tags,
     this.fullContent,
+    this.articleUrl,
     // New parameters for event details
     this.eventTime,
     this.eventLocation,
@@ -58,6 +60,7 @@ class TrendingItem {
       description: json['description'] as String?,
       tags: (json['tags'] as List<dynamic>?)?.cast<String>(),
       fullContent: json['fullContent'] as String?,
+      articleUrl: json['articleUrl'] as String?,
       eventTime: json['eventTime'] as String?,
       eventLocation: json['eventLocation'] as String?,
       eventFormat: json['eventFormat'] as String?,
@@ -78,6 +81,7 @@ class TrendingItem {
       'description': description,
       'tags': tags,
       'fullContent': fullContent,
+      'articleUrl': articleUrl,
       'eventTime': eventTime,
       'eventLocation': eventLocation,
       'eventFormat': eventFormat,

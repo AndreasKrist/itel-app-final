@@ -3,6 +3,7 @@ import '../models/trending_item.dart';
 import '../screens/trending_detail_screen.dart';
 import '../screens/course_detail_screen.dart';
 import '../screens/course_webview_screen.dart';
+import '../screens/article_webview_screen.dart';
 import '../models/course.dart';
 import '../utils/link_handler.dart';
 import '../services/course_remote_config_service.dart';
@@ -21,12 +22,19 @@ class TrendingCard extends StatelessWidget {
       onTap: () {
         if (item.type == TrendingItemType.courseAssessor && item.customLink != null) {
           LinkHandler.openLink(
-            context, 
+            context,
             item.customLink!,
             fallbackMessage: 'Opening PTSA assessment...'
           );
         } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
           _handleCoursePromotion(context, item);
+        } else if (item.articleUrl != null && item.articleUrl!.isNotEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ArticleWebViewScreen(item: item),
+            ),
+          );
         } else {
           Navigator.push(
             context,
@@ -164,6 +172,13 @@ class TrendingCard extends StatelessWidget {
                             );
                           } else if (item.type == TrendingItemType.coursePromotion && item.customLink != null) {
                             _handleCoursePromotion(context, item);
+                          } else if (item.articleUrl != null && item.articleUrl!.isNotEmpty) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ArticleWebViewScreen(item: item),
+                              ),
+                            );
                           } else {
                             Navigator.push(
                               context,
