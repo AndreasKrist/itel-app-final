@@ -485,13 +485,13 @@ class _CommunityScreenState extends State<CommunityScreen>
             child: AbsorbPointer(
               absorbing: true,
               child: Container(
-                color: Colors.black.withOpacity(0.8),
+                color: Colors.black.withOpacity(0.7),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.people_alt_sharp,
+                        Icons.timer_sharp,
                         color: Colors.white.withOpacity(0.9),
                         size: 48,
                       ),
