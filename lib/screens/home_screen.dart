@@ -22,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Course> courses = [];
   List<TrendingItem> trendingItems = [];
+  List<String> _popularCourseIds = [];
   bool _isLoading = true;
   final TrendingContentService _contentService = TrendingContentService();
   final CourseRemoteConfigService _courseRemoteConfigService = CourseRemoteConfigService();
@@ -50,16 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      // Load courses and trending content concurrently
+      // Load courses, trending content, and popular IDs concurrently
       final results = await Future.wait([
         _courseRemoteConfigService.getRemoteCourses(),
         _contentService.getTrendingContent(),
+        _courseRemoteConfigService.getPopularCourseIds(),
       ]);
 
       if (mounted) {
         setState(() {
           courses = results[0] as List<Course>;
           trendingItems = _getHomeTrendingItems(results[1] as List<TrendingItem>);
+          _popularCourseIds = results[2] as List<String>;
           _isLoading = false;
         });
       }
@@ -71,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           courses = Course.sampleCourses;
           trendingItems = _getHomeTrendingItems([]);
+          _popularCourseIds = [];
           _isLoading = false;
         });
       }
@@ -79,16 +83,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _refreshContent() async {
     try {
-      // Force refresh both courses and trending content
+      // Force refresh courses, trending content, and popular IDs
       final results = await Future.wait([
         _courseRemoteConfigService.refreshCourses(),
         _contentService.refreshContent(),
+        _courseRemoteConfigService.getPopularCourseIds(),
       ]);
 
       if (mounted) {
         setState(() {
           courses = results[0] as List<Course>;
           trendingItems = _getHomeTrendingItems(results[1] as List<TrendingItem>);
+          _popularCourseIds = results[2] as List<String>;
         });
       }
     } catch (e) {
@@ -209,28 +215,26 @@ void _toggleFavorite(Course course) async {
       course.funding == 'Complimentary').toList();
   }
 
-  // Get popular courses (excluding complimentary courses)
+  // Get popular courses - ordered by the sequence in popularCourseIds from GitHub
   List<Course> get popularCourses {
-    // Define specific course IDs that you want to show as popular
-    final popularCourseIds = ['29', '30', '32', '33', '34', '35', '37', '41', '42', '43', '45', '54', '56', '57', '59', '120', '121', '127', '139', '141', '174', '175', '179', '194', '198', '199', '200', '202', '203', '206', '208', '209', '211', '212']; // Replace with your selected course IDs
-    
     List<Course> baseList = _isSearching ? filteredCourses : courses;
-    return baseList.where((course) => popularCourseIds.contains(course.id)).toList();
+    final courseMap = {for (var course in baseList) course.id: course};
+    return _popularCourseIds
+        .where((id) => courseMap.containsKey(id))
+        .map((id) => courseMap[id]!)
+        .toList();
   }
 
   // Get funded courses
   List<Course> get fundedCourses {
-    // Define specific course IDs for funded courses
-    final fundedCourseIds = ['29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '62', '64', '65', '66', '108', '113', '139', '181', '193', '194', '195', '196', '197', '198', '199', '200', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210', '211', '212']; // You can assign specific course IDs here
-    
     List<Course> baseList = _isSearching ? filteredCourses : courses;
-    return baseList.where((course) => fundedCourseIds.contains(course.id)).toList();
+    return baseList.where((course) => course.funding != null && course.funding!.toLowerCase().contains('funding')).toList();
   }
 
   // Get SCTP courses
   List<Course> get sctpCourses {
     // Define specific course IDs for SCTP courses
-    final sctpCourseIds = ['113', '193']; // You can assign specific course IDs here
+    final sctpCourseIds = ['18148', '13504']; // You can assign specific course IDs here
     
     List<Course> baseList = _isSearching ? filteredCourses : courses;
     return baseList.where((course) => sctpCourseIds.contains(course.id)).toList();

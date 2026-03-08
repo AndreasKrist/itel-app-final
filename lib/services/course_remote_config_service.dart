@@ -15,6 +15,26 @@ class CourseRemoteConfigService {
   static const String _coursesV1Url = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/courses.json';
   static const String _coursesV2Url = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/courses_v2.json';
 
+  /// Fetches popular course IDs from other_content.json on GitHub
+  Future<List<String>> getPopularCourseIds() async {
+    try {
+      final response = await http.get(
+        Uri.parse(_appConfigUrl),
+        headers: {'Cache-Control': 'no-cache'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final config = json.decode(response.body);
+        if (config['popularCourseIds'] != null) {
+          return List<String>.from(config['popularCourseIds']);
+        }
+      }
+    } catch (e) {
+      print('Failed to load popular course IDs: $e');
+    }
+    return [];
+  }
+
   /// Resolves which courses URL to use based on app_config.json
   Future<String> _getCoursesUrl() async {
     try {
