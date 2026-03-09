@@ -14,6 +14,7 @@ class CourseRemoteConfigService {
   // Course file URLs
   static const String _coursesV1Url = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/courses.json';
   static const String _coursesV2Url = 'https://raw.githubusercontent.com/AndreasKrist/Trending_item/main/courses_v2.json';
+  static const String _coursesV3Url = 'https://itel.com.sg/?export_courses=1';
 
   /// Fetches popular course IDs from other_content.json on GitHub
   Future<List<String>> getPopularCourseIds() async {
@@ -48,7 +49,9 @@ class CourseRemoteConfigService {
         final version = config['coursesVersion'] ?? 'v1';
         print('App config loaded. coursesVersion: $version');
 
-        if (version == 'v2') {
+        if (version == 'v3') {
+          return _coursesV3Url;
+        } else if (version == 'v2') {
           return _coursesV2Url;
         }
       }

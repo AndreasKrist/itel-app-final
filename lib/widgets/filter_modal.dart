@@ -142,69 +142,7 @@ class _FilterModalState extends State<FilterModal> {
             ],
           ),
           
-          const SizedBox(height: 16),
-          
-          // Vendor Type section
-          Text(
-            'Vendor Type',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              CategoryChip(
-                label: 'All',
-                isActive: _currentFilters['certType'] == 'all',
-                onTap: () => _updateFilter('certType', 'all'),
-              ),
-              CategoryChip(
-                label: 'Microsoft',
-                isActive: _currentFilters['certType'] == 'Microsoft',
-                onTap: () => _updateFilter('certType', 'Microsoft'),
-              ),
-              CategoryChip(
-                label: 'CISCO',
-                isActive: _currentFilters['certType'] == 'CISCO',
-                onTap: () => _updateFilter('certType', 'CISCO'),
-              ),
-              CategoryChip(
-                label: 'VMWARE',
-                isActive: _currentFilters['certType'] == 'VMWARE',
-                onTap: () => _updateFilter('certType', 'VMWARE'),
-              ),
-              CategoryChip(
-                label: 'EC-Council',
-                isActive: _currentFilters['certType'] == 'EC-Council',
-                onTap: () => _updateFilter('certType', 'EC-Council'),
-              ),
-              CategoryChip(
-                label: 'CompTia',
-                isActive: _currentFilters['certType'] == 'COMPTIA',
-                onTap: () => _updateFilter('certType', 'COMPTIA'),
-              ),
-              CategoryChip(
-                label: 'ITIL',
-                isActive: _currentFilters['certType'] == 'ITIL',
-                onTap: () => _updateFilter('certType', 'ITIL'),
-              ),
-              CategoryChip(
-                label: 'Adobe',
-                isActive: _currentFilters['certType'] == 'Adobe',
-                onTap: () => _updateFilter('certType', 'Adobe'),
-              ),
-              CategoryChip(
-                label: 'SCTP',
-                isActive: _currentFilters['certType'] == 'SCTP',
-                onTap: () => _updateFilter('certType', 'SCTP'),
-              ),
-            ],
-          ),
-          
+
           const SizedBox(height: 24),
           
           // Action buttons
